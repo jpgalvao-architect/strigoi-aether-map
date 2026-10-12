@@ -1,11 +1,11 @@
 # STRIGOI AETHER MAP
 
-**AION 2 Companion App · 0.9.0-beta.2 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.3 · Windows x64**
 
-A beta 0.9.0-beta.2 corrige a identificação do cliente AION com ExitLag, mostra ícones de classe no placar, salva e reinicia a medição ao reconhecer uma nova instância e corrige o cerco SA para 21h de Brasília. A medição continua experimental.
+A beta 0.9.0-beta.3 acrescenta um menu rápido de overlay para Sonar, mapas, combate e eventos. A leitura de combate começa automaticamente ao abrir o app e aguarda o jogo; a próxima instância reconhecida abre um placar zerado. A medição continua experimental.
 
 [Página do aplicativo](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/latest) ·
+[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.3) ·
 [English](README.en-US.md)
 
 Seu caderno de exploração: mapas, coletas, cubos e eventos em um só lugar.
@@ -64,8 +64,11 @@ nem executar como administrador. O app usa mapas e agenda locais.
 - **Donate:** apoie o criador pelo Mercado Pago ou abra o canal oficial da
   instituição escolhida no navegador. As opções indicam quem recebe o apoio.
 - **Configurações:** escolha fuso e notificações. Alertas exigem o app aberto.
-- **Combate:** ative Medir instância antes de entrar no jogo, escolha a
-  visão e o alvo, e encerre a medição ao terminar. Não há envio de resultados.
+- **Combate:** a medição começa automaticamente e aguarda o jogo. Escolha a
+  visão e o alvo; uma nova instância reconhecida reinicia o placar. Desative a
+  medição nas Configurações quando quiser. Não há envio de resultados.
+- **Menu rápido:** clique no mascote flutuante para controlar Sonar, os mapas,
+  o placar e os eventos. Ocultar o placar mantém a medição. Arraste para mover.
 
 Altgard é o padrão inicial. Escolhas posteriores, filtros e visitas persistem.
 Fechar a janela encerra o app; minimizar o mantém em execução.
@@ -93,7 +96,9 @@ Captura visual começa somente ao ativar o overlay nesta sessão. Imagens
 ficam na memória; a seleção salva somente seus limites. Preferências e visitas
 ficam neste computador. O sonar captura somente o áudio do aplicativo
 escolhido e seus processos filhos, em memória, sem microfone ou gravação.
-Overlay e sonar começam desligados a cada abertura. Não há telemetria.
+Overlay e sonar começam desligados a cada abertura. A medição de combate
+começa automaticamente quando habilitada nas Configurações e Npcap está
+disponível. Não há telemetria.
 Rede é usada apenas para uma
 agenda online configurada voluntariamente. `STRIGOI_DATA_DIR` permite uma
 pasta de dados alternativa. O app é um projeto independente de AION 2.

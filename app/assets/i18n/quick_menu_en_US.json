@@ -1,0 +1,20 @@
+{
+  "Menu rápido · clique para abrir, arraste para mover": "Quick menu · click to open, drag to move",
+  "Menu rápido do Strigoi": "Strigoi quick menu",
+  "Recolher menu rápido": "Collapse quick menu",
+  "Mapa + minimapa": "Map + minimap",
+  "Painel de combate": "Combat panel",
+  "Painel de eventos": "Events panel",
+  "Visível": "Visible",
+  "Oculto": "Hidden",
+  "Ativo": "On",
+  "Desligado": "Off",
+  "Abrir Configurações": "Open Settings",
+  "Controles durante o jogo": "In-game controls",
+  "Mostrar menu rápido de overlay": "Show overlay quick menu",
+  "Medir combate automaticamente": "Measure combat automatically",
+  "Medição automática desativada": "Automatic measurement off",
+  "Ocultar o placar mantém a medição ativa": "Hiding the meter keeps measurement active",
+  "Selecione a área do minimapa para usar os dois mapas": "Select the minimap area to use both maps",
+  "O combate é medido automaticamente enquanto o Strigoi está aberto. A próxima instância reconhecida começa com um placar zerado e preserva o histórico. Você pode desativar a medição nas Configurações.": "Combat is measured automatically while Strigoi is open. A recognized new instance starts with a fresh meter and preserves history. You can turn measurement off in Settings."
+}

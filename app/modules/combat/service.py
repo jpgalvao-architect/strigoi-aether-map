@@ -3,6 +3,8 @@
 import json
 import sqlite3
 import sys
+import os
+from pathlib import Path
 from PySide6.QtCore import QObject, QProcess, QTimer, Signal
 from app.infrastructure.storage import PACKAGE
 from app.modules.combat.engine import CombatEngine
@@ -37,6 +39,11 @@ class CombatService(QObject):
         self.auto_instances = False
         self.instance_timers = {}
         self.instance_floor = 0
+        self.runtime = False
+        self.watchdog = QTimer(self)
+        self.watchdog.setInterval(5000)
+        self.watchdog.timeout.connect(self.ensure_automatic)
+        context.changed.connect(self.ensure_automatic)
         self.timer = QTimer(self)
         self.timer.setInterval(200)
         self.timer.timeout.connect(self.changed)
@@ -44,6 +51,27 @@ class CombatService(QObject):
         self.checkpoint = QTimer(self)
         self.checkpoint.setInterval(10000)
         self.checkpoint.timeout.connect(self.save)
+
+    def enable_automatic(self):
+        self.runtime = True
+        self.watchdog.start()
+        self.ensure_automatic()
+
+    def ensure_automatic(self):
+        if self.closed or not self.runtime:
+            return
+        if not self.context.prefs.combat.auto_capture:
+            if self.process is not None:
+                self.stop()
+            self.status = "Medição automática desativada"
+        elif self.process is None:
+            if sys.platform != "win32" or not HELPER.is_file():
+                self.status = "Coletor de combate indisponível"
+            elif not (Path(os.environ.get("WINDIR", "C:/Windows")) / "System32/Npcap/wpcap.dll").is_file():
+                self.status = "Npcap necessário para medir dano"
+            else:
+                self.start()
+        self.changed.emit()
 
     def start(self, name=""):
         if self.process is not None:
@@ -252,6 +280,8 @@ class CombatService(QObject):
         self.changed.emit()
 
     def shutdown(self):
+        self.runtime = False
+        self.watchdog.stop()
         self.stop()
         self.closed = True
         if self.history is not None:

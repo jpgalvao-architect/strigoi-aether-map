@@ -9,7 +9,7 @@ using AionMeter.Core.Events;
 using AionMeter.Core.Game;
 using AionMeter.Core.Protocol;
 
-if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.2"); return; }
+if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.3"); return; }
 if (args.Contains("--probe")) {
     Console.WriteLine(JsonSerializer.Serialize(new { protocol=1, npcap=OperatingSystem.IsWindows() && LiveCapture.IsNpcapInstalled(), saValidated=false }));
     return;

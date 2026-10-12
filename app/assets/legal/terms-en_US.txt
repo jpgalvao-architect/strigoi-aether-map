@@ -1,5 +1,5 @@
 Terms of use — Strigoi Aether Map
-Version 1.1 · October 12, 2026
+Version 1.2 · October 12, 2026
 
 1. About the software and its license
 
@@ -21,7 +21,7 @@ Markers, the event panel and alerts appear in external overlay windows. Map reco
 
 Strigoi does not inject code into the game's DLLs, modify its files or read its memory. It does not perform game actions automatically. This technical description does not represent authorization from the AION 2 developer or operator.
 
-The experimental Combat module passively reads traffic received through the game's connection using Npcap when enabled by the user. It shows observed damage; results may be partial and regional compatibility needs validation. It does not send or modify game packets. Npcap is obtained from its publisher, with its own license and installation wizard.
+The experimental Combat module passively reads traffic received through the game's connection using Npcap. When automatic measurement is enabled, capture starts when Strigoi opens and waits for the game connection; it can be disabled in Settings. It shows observed damage; results may be partial and regional compatibility needs validation. It does not send or modify game packets. Npcap is obtained from its publisher, with its own license and installation wizard.
 
 4. Data and accessibility features
 
@@ -29,7 +29,7 @@ Preferences and exploration records are stored on this computer. Image and audio
 
 Combat history is also local. Raw packets are not recorded or uploaded. Observed names and results may appear in history and in text voluntarily copied by the user. Npcap download accesses the publisher's site following the choice in the installation flow.
 
-Sonar was developed as a hearing accessibility feature, converting a sound cue into a visual alert. Capture features require activation by the user. Remote schedule updates and external links, when used, access the selected services and are subject to those services' policies.
+Sonar was developed as a hearing accessibility feature, converting a sound cue into a visual alert. Sonar and map capture are enabled by the user; automatic combat measurement can start with the app, according to the preference in Settings. Remote schedule updates and external links, when used, access the selected services and are subject to those services' policies.
 
 5. Game use and account decisions
 

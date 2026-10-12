@@ -26,7 +26,7 @@ from app.core.i18n import set_language, language, tr
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, context):
+    def __init__(self, context, *, runtime=False):
         super().__init__()
         self.context = context
         set_language(context.prefs.ui_language)
@@ -124,6 +124,10 @@ class MainWindow(QMainWindow):
         self.alert_timer.start(1000)
         if context.messages:
             self.statusBar().showMessage(" / ".join(context.messages), 30000)
+        from app.ui.quick_menu import QuickMenu
+        self.quick_menu = QuickMenu(self, runtime=runtime)
+        if runtime:
+            QTimer.singleShot(0, self.combat.enable_automatic)
 
     def refresh_banner(self):
         self.banner.setVisible(self.context.dataset.demo or self.context.feed.demo)
@@ -169,7 +173,7 @@ class MainWindow(QMainWindow):
         body.addWidget(label('Como o aplicativo funciona', 'eyebrow'))
         body.addWidget(label('O Strigoi funciona ao lado do AION 2. Os marcadores, o painel de eventos e os avisos do Sonar aparecem em janelas externas de overlay sobre o jogo. Para acompanhar o mapa, o app analisa a imagem da tela; o Sonar recebe o áudio do aplicativo pelo Windows. O Atlas e a agenda consultam dados locais.', 'subtitle', True))
         body.addWidget(label('Não injetamos código nas DLLs do jogo, não alteramos seus arquivos e não lemos sua memória. Os overlays são desenhados pelo próprio Strigoi, fora do processo do AION 2.', 'subtitle', True))
-        body.addWidget(label('O módulo experimental de Combate também pode ler passivamente o tráfego recebido pela conexão do jogo, usando Npcap. A leitura começa somente por ação do usuário; pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.', 'subtitle', True))
+        body.addWidget(label('O módulo experimental de Combate também pode ler passivamente o tráfego recebido pela conexão do jogo, usando Npcap. Com a medição automática habilitada, a leitura começa ao abrir o Strigoi e aguarda o jogo. Você pode desativá-la nas Configurações. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.', 'subtitle', True))
         body.addWidget(label('Acessibilidade auditiva', 'eyebrow'))
         body.addWidget(label('O Sonar foi desenvolvido exclusivamente como recurso de acessibilidade para auxiliar pessoas surdas ou com deficiência auditiva a encontrar cubos ocultos com mais facilidade. Ele transforma uma pista sonora do jogo em um aviso visual, reduzindo a dependência da audição durante a exploração.', 'subtitle', True))
         body.addWidget(label('O aviso indica um som compatível com a referência e pode falhar. Não confirma a presença nem informa a posição exata do cubo.', 'subtitle', True))
@@ -204,6 +208,7 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
     def closeEvent(self, event):
+        self.quick_menu.shutdown()
         self.combat_page.shutdown()
         self.combat.shutdown()
         self.alert_timer.stop()

@@ -33,7 +33,7 @@ class AppContext(QObject):
             self.prefs.ui_language=selected if selected in ('pt_BR','en_US') else 'pt_BR'
         if warning:
             self.messages.append(warning)
-        # Consent is session-scoped. A saved configuration never starts capture on launch.
+        # Screen/audio capture starts off each session. Combat automation is a separate preference.
         self.prefs.overlay.enabled = False
         self.prefs.sonar_enabled = False
         self.prefs.combat.panel_visible = False

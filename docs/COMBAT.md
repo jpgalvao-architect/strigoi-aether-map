@@ -10,18 +10,24 @@ o dano do grupo ainda precisam de validação. Resultados parciais são indicado
 1. Instale pelo novo Setup. Se Npcap não estiver disponível, o próprio fluxo
    baixa a cópia oficial verificada e abre o assistente do fabricante.
    Complete o assistente e suas permissões. Npcap não é redistribuído no ZIP.
-2. Abra Combate antes de entrar na instância e clique em Medir instância.
+2. Abra o Strigoi. A medição começa automaticamente quando Npcap está
+   disponível e aguarda a conexão do jogo. Configurações permite desativá-la.
 3. Confira o estado de leitura. A primeira versão detecta automaticamente
    um único cliente e suas conexões IPv4; VPNs e outros protocolos podem
    exigir correções após a validação. Nenhuma configuração de rede é alterada.
 4. Depois dos primeiros golpes, escolha o alvo para a visão Só o alvo
    selecionado. Nomes de NPCs não são inventados: se não houver nome observado,
-   o alvo aparece por ID. O nome da instância pode ser informado manualmente.
+   o alvo aparece por ID. A instância é identificada pelo contexto recebido.
 5. Use Encontro atual ou Instância inteira. Encerrar encontro separa uma
    tentativa; a morte do alvo selecionado também encerra esse encontro.
-6. Ative Mostrar painel flutuante. Destrave para mover/redimensionar e trave
+6. No menu rápido, clique no mascote e ative Painel de combate.
+   O menu também controla Sonar, os dois mapas juntos e Painel de eventos.
+   Arraste o mascote para mover o menu; sua posição é salva.
+   Destrave o placar para mover/redimensionar e trave
    para os cliques passarem ao jogo. Restaurar painel recupera posição/tamanho.
-7. Encerrar instância para a captura. Resultados e tentativas ficam no
+7. Ocultar o painel não interrompe a medição. Fechar o aplicativo ou
+   desativar Medir combate automaticamente nas Configurações encerra a captura.
+   Resultados e tentativas ficam no
    Histórico, localmente; Copiar resultado só coloca texto na área de transferência.
 
 No portátil, use o canal oficial https://npcap.com/#download para instalar
@@ -40,7 +46,7 @@ driver não é usada. Cancelar sua instalação não bloqueia Atlas ou Sonar.
   único, sem outro jogador homônimo observado. Ambiguidades e membros ainda
   não decodificados ficam em Não atribuído; dados parciais permanecem indicados.
 - Sem roster completo, dados ausentes ou lacunas, a indicação de parcial permanece.
-- Depois de ativar Medir instância, a próxima entrada reconhecida salva o
+- Enquanto a medição automática está habilitada, a próxima entrada reconhecida salva o
   resultado anterior e abre um placar zerado automaticamente. A saída para
   outro mapa encerra o resultado, mas mantém a escuta para a próxima entrada.
 - Repetições do cronômetro, mudança da espera inicial para o limite da
@@ -48,15 +54,16 @@ driver não é usada. Cancelar sua instalação não bloqueia Atlas ou Sonar.
   do cronômetro permite distinguir outra entrada no mesmo mapa.
 - A classe vem da identidade ou do grupo recebido do jogo. O ícone aparece
   ao lado do nome na tabela e no painel; classe ausente usa símbolo neutro.
-- Encerrar instância para a escuta automática. Se a entrada não for
-  reconhecida no tráfego recebido, inicie uma medição pelo botão.
+- A leitura continua aguardando a próxima instância. Se a conexão for
+  interrompida, o app tenta retomá-la automaticamente enquanto estiver aberto.
 - Sem informações de contexto suficientes, separe tentativas manualmente.
 - Esta versão não mede cura, não reconstrói replay nem calcula ameaça.
 
 O collector usa captura passiva via Npcap e um parser substituível. Não envia
 pacotes, injeta código, altera arquivos ou lê a memória do jogo. Pacotes brutos
-não são gravados. Só eventos normalizados chegam à UI. Captura começa por
-ação explícita e para ao encerrar a sessão/fechar o aplicativo.
+não são gravados. Só eventos normalizados chegam à UI. Captura começa ao
+abrir o aplicativo quando a medição automática está habilitada e Npcap está
+disponível; para ao desativar essa opção ou fechar o aplicativo.
 
 O histórico usa `combat.sqlite` na pasta de dados do app, com até 200 resultados
 de instância e suas tentativas. Não há upload ou conta online. Uma base

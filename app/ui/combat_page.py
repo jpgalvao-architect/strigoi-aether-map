@@ -155,12 +155,8 @@ class CombatPage(QWidget):
         layout = QVBoxLayout(self); layout.setContentsMargins(28, 22, 28, 22)
         layout.addWidget(page_header("Combate", "Acompanhe o dano observado do grupo e guarde os resultados da instância."))
         layout.addWidget(label("Experimental: a leitura de combate ainda precisa de validação em SA.", "banner", True))
-        self.name = QLineEdit(); self.name.setPlaceholderText("Nome da instância (opcional)")
-        self.start_button = QPushButton("Medir instância"); self.start_button.clicked.connect(self.start)
-        self.stop_button = QPushButton("Encerrar instância"); self.stop_button.clicked.connect(service.stop)
-        layout.addLayout(row(self.name, self.start_button, self.stop_button))
         self.status = label("", "subtitle", True); layout.addWidget(self.status)
-        layout.addWidget(label("O medidor lê passivamente a conexão do jogo. Npcap é instalado separadamente; a captura só começa ao clicar em Medir instância.", "subtitle", True))
+        layout.addWidget(label("O combate é medido automaticamente enquanto o Strigoi está aberto. A próxima instância reconhecida começa com um placar zerado e preserva o histórico. Você pode desativar a medição nas Configurações.", "subtitle", True))
         component = QPushButton("Abrir download oficial do Npcap")
         component.clicked.connect(lambda: QDesktopServices.openUrl(QUrl("https://npcap.com/#download")))
         layout.addWidget(component)
@@ -204,7 +200,6 @@ class CombatPage(QWidget):
         self.refresh()
 
     def new_instance(self):
-        self.name.clear()
         self.target_ids = []
         self.target.blockSignals(True)
         self.target.clear()
@@ -212,10 +207,6 @@ class CombatPage(QWidget):
         self.target.blockSignals(False)
         self.scope.setCurrentIndex(0)
         self.refresh()
-
-    def start(self):
-        if self.service.start(self.name.text()):
-            self.scope.setCurrentIndex(0)
 
     def choose_target(self):
         self.service.engine.select_boss(self.target.currentData())
@@ -228,9 +219,9 @@ class CombatPage(QWidget):
         return self.service.engine.snapshot(self.scope.currentData() or "encounter", self.boss_only.isChecked())
 
     def refresh(self, *_):
-        active = self.service.process is not None
-        self.start_button.setEnabled(not self.service.engine.active or not active)
-        self.stop_button.setEnabled(active)
+        self.panel_visible.blockSignals(True)
+        self.panel_visible.setChecked(self.context.prefs.combat.panel_visible)
+        self.panel_visible.blockSignals(False)
         self.finish.setEnabled(self.service.engine.current is not None)
         self.status.setText(self.service.status)
         history = self.scope.currentData() == "history"

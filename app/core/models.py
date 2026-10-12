@@ -228,6 +228,7 @@ class OverlaySettings(Model):
 
 
 class CombatSettings(Model):
+    auto_capture: bool = True
     panel_visible: bool = False
     locked: bool = True
     opacity: float = Field(default=0.9, ge=0.2, le=1)
@@ -240,6 +241,11 @@ class CombatSettings(Model):
         if value is not None and not (360 <= value[0] <= 3840 and 180 <= value[1] <= 2160):
             raise ValueError("Invalid combat panel size")
         return value
+
+
+class QuickMenuSettings(Model):
+    enabled: bool = True
+    position: tuple[int, int] | None = None
 
 
 class Preferences(Model):
@@ -259,6 +265,7 @@ class Preferences(Model):
     notifications: NotificationSettings = Field(default_factory=NotificationSettings)
     overlay: OverlaySettings = Field(default_factory=OverlaySettings)
     combat: CombatSettings = Field(default_factory=CombatSettings)
+    quick_menu: QuickMenuSettings = Field(default_factory=QuickMenuSettings)
     remote_events_url: str = ""
     remote_auto_refresh: bool = False
     remote_interval_minutes: int = Field(default=30, ge=5, le=1440)

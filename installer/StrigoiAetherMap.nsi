@@ -9,7 +9,7 @@ Unicode true
   !error "Define PAYLOAD as the complete prepared portable folder."
 !endif
 !ifndef OUTPUT
-  !define OUTPUT "StrigoiAetherMap-Setup-0.9.0-beta.2.exe"
+  !define OUTPUT "StrigoiAetherMap-Setup-0.9.0-beta.3.exe"
 !endif
 !ifndef UNINSTALL_MANIFEST
   !error "Generate the exact installed-file removal manifest first."
@@ -33,11 +33,11 @@ RequestExecutionLevel user
 ManifestDPIAware true
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
-BrandingText "Strigoi Aether Map · 0.9.0-beta.2"
-VIProductVersion "0.9.0.2"
+BrandingText "Strigoi Aether Map · 0.9.0-beta.3"
+VIProductVersion "0.9.0.3"
 VIAddVersionKey /LANG=1033 "ProductName" "Strigoi Aether Map"
 VIAddVersionKey /LANG=1033 "FileDescription" "Strigoi Aether Map installer"
-VIAddVersionKey /LANG=1033 "FileVersion" "0.9.0-beta.2"
+VIAddVersionKey /LANG=1033 "FileVersion" "0.9.0-beta.3"
 VIAddVersionKey /LANG=1033 "LegalCopyright" "2026 Strigoi Aether Map contributors"
 !define MUI_ICON "..\app\assets\aether.ico"
 !define MUI_UNICON "..\app\assets\aether.ico"
@@ -139,15 +139,15 @@ Section "$(AppSection)" Core
     Abort
   ${EndIf}
   FileOpen $0 "$INSTDIR\.strigoi-install-owned" w
-  FileWrite $0 "StrigoiAetherMap-0.9.0-beta.2"
+  FileWrite $0 "StrigoiAetherMap-0.9.0-beta.3"
   FileClose $0
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "${REGKEY}" "InstallDir" "$INSTDIR"
-  WriteRegStr HKCU "${REGKEY}" "TermsVersion" "1.1"
+  WriteRegStr HKCU "${REGKEY}" "TermsVersion" "1.2"
   WriteRegStr HKCU "${REGKEY}" "TermsSHA256" "${TERMS_HASH}"
   WriteRegStr HKCU "${REGKEY}" "InstallerLanguage" "$DefaultLanguage"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayName" "Strigoi Aether Map"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.9.0-beta.2"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.9.0-beta.3"
   WriteRegStr HKCU "${UNINSTALLKEY}" "Publisher" "Strigoi Aether Map"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayIcon" "$INSTDIR\StrigoiAetherMap.exe"
   WriteRegStr HKCU "${UNINSTALLKEY}" "InstallLocation" "$INSTDIR"
@@ -160,7 +160,7 @@ Section "$(AppSection)" Core
   !endif
   CreateDirectory "$SeedDirectory"
   FileOpen $0 "$SeedDirectory\installation.json" w
-  FileWrite $0 '{$\"default_language$\":$\"$DefaultLanguage$\",$\"terms_version$\":$\"1.1$\",$\"terms_sha256$\":$\"${TERMS_HASH}$\"}'
+  FileWrite $0 '{$\"default_language$\":$\"$DefaultLanguage$\",$\"terms_version$\":$\"1.2$\",$\"terms_sha256$\":$\"${TERMS_HASH}$\"}'
   FileClose $0
   !ifndef TEST_BUILD
     CreateDirectory "$SMPROGRAMS\Strigoi Aether Map"

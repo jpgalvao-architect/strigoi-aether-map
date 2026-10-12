@@ -1,11 +1,11 @@
 # Strigoi Aether Map
 
-**AION 2 Companion App · 0.9.0-beta.2 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.3 · Windows x64**
 
-Beta 0.9.0-beta.2 fixes AION client detection with ExitLag, adds class icons to the meter, archives and resets the meter when a new instance is recognized, and corrects the SA siege start to 21:00 São Paulo time. Combat capture remains experimental.
+Beta 0.9.0-beta.3 adds an expandable overlay menu for Sonar, maps, the combat panel and events. Combat capture starts automatically when the app opens and waits for the game; a recognized new instance starts a fresh meter. Capture remains experimental.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/latest) ·
+[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.3) ·
 [Português](README.md)
 
 Your exploration journal: maps, gatherables, possible cube locations and
@@ -16,7 +16,7 @@ observed DPS/share, explicit summon ownership, target filtering and local
 history. SA capture still needs validation; results are marked partial.
 See [Combat](docs/COMBAT.md) for current scope and limitations.
 
-Run `StrigoiAetherMap-Setup-0.9.0-beta.2.exe`, choose English and review the terms
+Run `StrigoiAetherMap-Setup-0.9.0-beta.3.exe`, choose English and review the terms
 before accepting. Setup installs for the current user and includes an
 uninstaller and corresponding source code. Existing preferences and visits
 are preserved. English is the default for a fresh installation; an explicit
@@ -45,6 +45,11 @@ For Sonar, open the game, refresh applications, select AION 2 and enable
 Sonar. Audio is analyzed locally, without microphone access or recording.
 It starts off each session. A possible-cube alert is a sound cue, not proof
 of a cube or its exact location. Test visual alert is labeled as a test.
+
+Click the floating mascot to expand quick controls for Sonar, maps, combat
+and events. Drag it to move it. Hiding the combat panel keeps capture running.
+Combat starts automatically when Strigoi opens and Npcap is available; turn
+it off in Settings at any time.
 
 Strigoi uses external overlays, screen-image recognition and Windows
 application audio. It does not inject DLLs, modify game files, read game

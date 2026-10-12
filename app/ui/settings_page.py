@@ -28,6 +28,17 @@ class SettingsPage(QWidget):
         language_form.addRow(label('O idioma muda imediatamente. Sua seleção fica salva neste computador.','subtitle',True))
         self.language.currentIndexChanged.connect(self.choose_language)
         layout.addWidget(language_group)
+        quick_group = QGroupBox("Controles durante o jogo")
+        quick_form = QFormLayout(quick_group)
+        self.quick_enabled = QCheckBox("Mostrar menu rápido de overlay")
+        self.quick_enabled.setChecked(context.prefs.quick_menu.enabled)
+        self.quick_enabled.toggled.connect(self.change_quick_menu)
+        quick_form.addRow(self.quick_enabled)
+        self.combat_automatic = QCheckBox("Medir combate automaticamente")
+        self.combat_automatic.setChecked(context.prefs.combat.auto_capture)
+        self.combat_automatic.toggled.connect(self.change_combat_automatic)
+        quick_form.addRow(self.combat_automatic)
+        layout.addWidget(quick_group)
         general = QGroupBox("Horário e dados")
         form = QFormLayout(general)
         self.timezone = QComboBox()
@@ -69,6 +80,14 @@ class SettingsPage(QWidget):
         layout.addWidget(self.feedback)
         layout.addWidget(label(f"Armazenamento local: {context.directory}", "subtitle", True))
         layout.addStretch()
+
+    def change_quick_menu(self, enabled):
+        self.context.prefs.quick_menu.enabled = enabled
+        self.context.save()
+
+    def change_combat_automatic(self, enabled):
+        self.context.prefs.combat.auto_capture = enabled
+        self.context.save()
 
     def refresh_kinds(self):
         while self.kind_layout.count():

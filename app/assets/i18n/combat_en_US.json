@@ -46,7 +46,6 @@
   "Não foi possível ler a conexão do jogo": "Could not read the game connection",
   "Aguardando eventos de combate": "Waiting for combat events",
   "Não foi possível salvar o histórico de combate": "Could not save combat history",
-  "O módulo experimental de Combate também pode ler passivamente o tráfego recebido pela conexão do jogo, usando Npcap. A leitura começa somente por ação do usuário; pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.": "The experimental Combat module can also passively read traffic received through the game's connection using Npcap. Capture starts only through user action; raw packets are not recorded or uploaded. The meter shows observed damage and identifies partial data.",
   "Mais de um cliente conectado; mantenha apenas um para medir": "More than one client is connected; keep only one to measure",
   "Conexão encontrada, mas o adaptador de captura está indisponível": "Connection found, but the capture adapter is unavailable",
   "Não foi possível carregar o Npcap; verifique a instalação": "Could not load Npcap; check its installation",
@@ -60,5 +59,6 @@
   "Clérigo": "Cleric",
   "Cantor": "Chanter",
   "Lutador": "Brawler",
-  "Classe não identificada": "Class not identified"
+  "Classe não identificada": "Class not identified",
+  "O módulo experimental de Combate também pode ler passivamente o tráfego recebido pela conexão do jogo, usando Npcap. Com a medição automática habilitada, a leitura começa ao abrir o Strigoi e aguarda o jogo. Você pode desativá-la nas Configurações. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.": "The experimental Combat module can also passively read traffic received through the game's connection using Npcap. When automatic measurement is enabled, capture starts when Strigoi opens and waits for the game. You can disable it in Settings. Raw packets are not recorded or uploaded. The meter shows observed damage and identifies partial data."
 }

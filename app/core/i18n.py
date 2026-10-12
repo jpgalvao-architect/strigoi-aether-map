@@ -11,6 +11,7 @@ _language = 'pt_BR'
 _qt_translator = None
 _catalog = json.loads((Path(__file__).resolve().parents[1]/'assets/i18n/en_US.json').read_text(encoding='utf-8'))
 _catalog.update(json.loads((Path(__file__).resolve().parents[1]/'assets/i18n/combat_en_US.json').read_text(encoding='utf-8')))
+_catalog.update(json.loads((Path(__file__).resolve().parents[1]/'assets/i18n/quick_menu_en_US.json').read_text(encoding='utf-8')))
 _patterns = []
 _fragments = sorted(((a,b) for a,b in _catalog.items() if a and '{' not in a), key=lambda pair:len(pair[0]),reverse=True)
 for source, target in _catalog.items():

@@ -3,6 +3,11 @@
     "CombatSettings": {
       "additionalProperties": false,
       "properties": {
+        "auto_capture": {
+          "default": true,
+          "title": "Auto Capture",
+          "type": "boolean"
+        },
         "panel_visible": {
           "default": false,
           "title": "Panel Visible",
@@ -244,6 +249,40 @@
       },
       "title": "OverlaySettings",
       "type": "object"
+    },
+    "QuickMenuSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "position": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Position"
+        }
+      },
+      "title": "QuickMenuSettings",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -342,6 +381,9 @@
     },
     "combat": {
       "$ref": "#/$defs/CombatSettings"
+    },
+    "quick_menu": {
+      "$ref": "#/$defs/QuickMenuSettings"
     },
     "remote_events_url": {
       "default": "",

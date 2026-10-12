@@ -195,7 +195,8 @@ def test_combat_ui_translates_without_capture_and_keeps_game_names(qapp, tmp_pat
     hit(feed)
     service.changed.emit()
     set_language("en_US"); service.changed.emit(); qapp.processEvents()
-    assert page.start_button.text() == "Measure instance"
+    assert not hasattr(page, "start_button") and not hasattr(page, "stop_button")
+    assert not hasattr(page, "name")
     assert page.table.item(0, 1).text() == "Sobre"
     assert page.table.horizontalHeaderItem(2).text() == "Damage"
     page.copy_result()

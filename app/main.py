@@ -58,7 +58,7 @@ def main() -> int:
         splash.show()
         app.processEvents()
     try:
-        window = MainWindow(context)
+        window = MainWindow(context, runtime=not args.smoke_test)
         window.show()
         if splash:
             splash.finish(window)
