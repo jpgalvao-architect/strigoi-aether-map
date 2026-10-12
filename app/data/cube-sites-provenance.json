@@ -1,0 +1,58 @@
+{
+  "release": "cube-sites-v050",
+  "checked_on": "2026-10-12",
+  "commit": "a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd",
+  "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/object-sets/",
+  "license": "CC BY-NC 4.0",
+  "counts": {
+    "altgard": 1371,
+    "verteron": 1440
+  },
+  "legacy_counts": {
+    "altgard": 108,
+    "verteron": 118
+  },
+  "legacy_resource": {
+    "id": "cubes",
+    "name": "Hidden Cube • KR/TW",
+    "category": "cubes",
+    "subcategory": "cubes",
+    "rarity": "unknown",
+    "notes": "Origem asiática, anterior ao Global. Não representa cobertura Global.",
+    "source": "https://github.com/aion2-interactive-map/aion2-interactive-map",
+    "verification": "Registro comunitário; LATAM não confirmado"
+  },
+  "maps": [
+    {
+      "id": "altgard",
+      "name": "Altgard • base compartilhada",
+      "region": "asmodian",
+      "image": "maps/altgard-world.webp",
+      "width": 8192,
+      "height": 8192,
+      "source": "Mapa real: NCSOFT / Aion2 Interactive Map, distribuído por problem-xyz. Posições comunitárias KR/TW; LATAM não confirmado.",
+      "supports_overlay": true
+    },
+    {
+      "id": "verteron",
+      "name": "Verteron • base compartilhada",
+      "region": "elyos",
+      "image": "maps/verteron-world.webp",
+      "width": 8192,
+      "height": 8192,
+      "source": "Mapa real: NCSOFT / Aion2 Interactive Map, distribuído por problem-xyz. Posições comunitárias KR/TW; LATAM não confirmado.",
+      "supports_overlay": true
+    }
+  ],
+  "files": {
+    "altgard.json": "b8de0b1ef00c996326dcb3ae31805dba3d7606fbe2fdbbedfb543baa06c90a47",
+    "verteron.json": "4a31ba5d2c0a8c536e75f264137b3a9f46eb7224b7c117a9a4098c65336ce0e4"
+  },
+  "sa_exclusive": false,
+  "sa_individually_validated": false,
+  "regional_client_version": "Não declarada na fonte",
+  "semantics": "Todos os locais possíveis de aparecimento por grupo; não representam presença simultânea.",
+  "transformation": "x/100, y/100; origem superior esquerda; nenhuma inversão adicional de Y.",
+  "identity": "spawn-{map_id}-{node_id}; IDs antigos e visitas mantidos em camada histórica separada.",
+  "height": "level up/down indica altura relativa à mediana do grupo; não confirma condição subaquática."
+}

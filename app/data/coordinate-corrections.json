@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "release": "basfelt-sa-v042",
+  "checked_on": "2026-10-11",
+  "corrections": [
+    {
+      "map": {
+        "id": "altgard",
+        "name": "Altgard • base compartilhada",
+        "region": "asmodian",
+        "image": "maps/altgard-world.webp",
+        "width": 8192,
+        "height": 8192,
+        "source": "Mapa real: NCSOFT / Aion2 Interactive Map, distribuído por problem-xyz. Posições comunitárias KR/TW; LATAM não confirmado.",
+        "supports_overlay": true
+      },
+      "original": {
+        "id": "4d774abb-5349-48af-ad28-160df500b190",
+        "name": "Hidden Cube · Altgard",
+        "map_id": "altgard",
+        "resource_id": "cubes",
+        "x": 0.652587890625,
+        "y": 0.4263916015625,
+        "enabled": true,
+        "notes": "Posição da base comunitária KR/TW. Existência e posição LATAM não confirmadas. ",
+        "source": "https://github.com/aion2-interactive-map/aion2-interactive-map/blob/89ce3984d569ff1a03ee6311d064231211212981/public/data/markers/World_D_A.yaml",
+        "visible_in_overlay": true,
+        "certainty": "possible",
+        "underwater": null,
+        "route_hint": "Rota e condição subaquática não verificadas."
+      },
+      "replacement": {
+        "id": "4d774abb-5349-48af-ad28-160df500b190",
+        "name": "Hidden Cube · Basfelt Ruins · Altgard",
+        "map_id": "altgard",
+        "resource_id": "cubes",
+        "x": 0.6551470032878236,
+        "y": 0.42959950572113853,
+        "enabled": true,
+        "notes": "Basfelt Ruins: posição aproximada ajustada a partir de uma print fornecida pelo usuário em SA em 11/10/2026. O cubo está visível junto do personagem; a coordenada usa a posição do personagem no minimapa, não uma medição exata do centro do cubo. Registro original preservado no manifesto de correções. Validar a posição ao coletar. Associado ao registro comunitário mais próximo; a identidade desse registro ainda não foi comprovada.",
+        "source": "Observação do usuário no servidor SA, 11/10/2026. Referência comunitária original: https://github.com/aion2-interactive-map/aion2-interactive-map/blob/89ce3984d569ff1a03ee6311d064231211212981/public/data/markers/World_D_A.yaml",
+        "visible_in_overlay": true,
+        "certainty": "possible",
+        "underwater": null,
+        "route_hint": "Cubo observado em plataforma rochosa. Altura e caminho precisam ser confirmados no jogo."
+      },
+      "evidence": {
+        "region": "SA",
+        "location": "Basfelt Ruins",
+        "method": "Registro visual do usuário; terreno reconhecido no minimapa e posição aproximada do personagem junto ao cubo.",
+        "fixture": "user-minimap-basfelt.png",
+        "minimap_size": [
+          332,
+          222
+        ],
+        "player_anchor": [
+          165,
+          113
+        ],
+        "map_to_minimap_matrix": [
+          [
+            9021.00699754475,
+            4.593243303786827,
+            -5747.0589561328925
+          ],
+          [
+            -4.593243303786827,
+            9021.00699754475,
+            -3759.410897666308
+          ]
+        ],
+        "terrain_inliers": 94,
+        "old_marker_player_distance_pixels": 37.188159186405954,
+        "accuracy": "Aproximada; o personagem está ao lado do objeto e a captura informa movimento de queda. Nenhum deslocamento global aplicado.",
+        "association": "Registro comunitário mais próximo; identidade do objeto original não comprovada pela print."
+      }
+    }
+  ],
+  "status": "withdrawn",
+  "withdrawn_on": "2026-10-12",
+  "superseded_by": "cube-sites-v050",
+  "withdrawal_reason": "A posição do personagem não comprova a identidade do registro antigo. A fonte ampliada contém dois locais distintos próximos; restaurar somente a substituição exata da v0.4.2."
+}

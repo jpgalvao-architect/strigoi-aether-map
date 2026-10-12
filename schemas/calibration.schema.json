@@ -1,0 +1,78 @@
+{
+  "$defs": {
+    "Rect": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "minimum": 0,
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "minimum": 0,
+          "title": "Y",
+          "type": "integer"
+        },
+        "width": {
+          "minimum": 12,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "minimum": 12,
+          "title": "Height",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "title": "Rect",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "map_id": {
+      "title": "Map Id",
+      "type": "string"
+    },
+    "screen_width": {
+      "minimum": 100,
+      "title": "Screen Width",
+      "type": "integer"
+    },
+    "screen_height": {
+      "minimum": 100,
+      "title": "Screen Height",
+      "type": "integer"
+    },
+    "viewport": {
+      "$ref": "#/$defs/Rect"
+    },
+    "anchor": {
+      "$ref": "#/$defs/Rect"
+    },
+    "fingerprint": {
+      "$ref": "#/$defs/Rect"
+    },
+    "reference_image": {
+      "title": "Reference Image",
+      "type": "string"
+    }
+  },
+  "required": [
+    "map_id",
+    "screen_width",
+    "screen_height",
+    "viewport",
+    "anchor",
+    "fingerprint",
+    "reference_image"
+  ],
+  "title": "Calibration",
+  "type": "object"
+}

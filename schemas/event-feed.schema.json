@@ -1,0 +1,161 @@
+{
+  "$defs": {
+    "EventSchedule": {
+      "additionalProperties": false,
+      "properties": {
+        "timezone": {
+          "default": "UTC",
+          "title": "Timezone",
+          "type": "string"
+        },
+        "recurrence": {
+          "default": "daily",
+          "enum": [
+            "once",
+            "daily",
+            "weekly"
+          ],
+          "title": "Recurrence",
+          "type": "string"
+        },
+        "times": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Times",
+          "type": "array"
+        },
+        "weekdays": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Weekdays",
+          "type": "array"
+        },
+        "starts_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Starts At"
+        }
+      },
+      "title": "EventSchedule",
+      "type": "object"
+    },
+    "GameEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "region": {
+          "title": "Region",
+          "type": "string"
+        },
+        "schedule": {
+          "$ref": "#/$defs/EventSchedule"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "duration_minutes": {
+          "anyOf": [
+            {
+              "maximum": 1440,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Minutes"
+        },
+        "verified_on": {
+          "default": "",
+          "title": "Verified On",
+          "type": "string"
+        },
+        "verification": {
+          "default": "Não informada",
+          "title": "Verification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "region",
+        "schedule",
+        "source"
+      ],
+      "title": "GameEvent",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "demo": {
+      "default": true,
+      "title": "Demo",
+      "type": "boolean"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/GameEvent"
+      },
+      "title": "Events",
+      "type": "array"
+    },
+    "release": {
+      "default": "",
+      "title": "Release",
+      "type": "string"
+    },
+    "coverage": {
+      "default": "",
+      "title": "Coverage",
+      "type": "string"
+    }
+  },
+  "required": [
+    "events"
+  ],
+  "title": "EventFeed",
+  "type": "object"
+}

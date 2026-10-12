@@ -1,0 +1,28 @@
+{
+  "version": "0.8.0",
+  "tag": "v0.8.0",
+  "repository": "jpgalvao-architect/strigoi-aether-map",
+  "files": [
+    {
+      "file": "strigoi-aether-map-source.zip",
+      "bytes": 20323988,
+      "sha256": "bcca9ef2cd7b2bdfacd9a2c60245b06f16140f1dddf62223b822afeefab0a5e1",
+      "entries": 239
+    },
+    {
+      "file": "StrigoiAetherMap-windows-x64.zip",
+      "bytes": 145354669,
+      "sha256": "e5da9b70041a09fbbfd16e78fc9ec8b4376c973c4eb5bb0ba1e3b7720f501ff8",
+      "entries": 961
+    },
+    {
+      "file": "StrigoiAetherMap-Setup-0.8.0.exe",
+      "bytes": 112829064,
+      "sha256": "a136f14cfd35cad97e038c408fa9d8afe1ba61f3e763a6735214200a244a5113",
+      "version": "0.8.0",
+      "compiler": "NSIS Unicode 3.12",
+      "per_user": true,
+      "explicit_acceptance_required": true
+    }
+  ]
+}

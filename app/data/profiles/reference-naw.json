@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "demo": false,
+  "release": "reference-naw-v030",
+  "coverage": "NA West • agenda problem-xyz de 07/10/2026; horários divergem de outras fontes",
+  "events": [
+    {
+      "id": "reference-naw-rift",
+      "name": "Fenda espaço-temporal",
+      "kind": "Fenda",
+      "region": "NA West",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: UTC. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 60,
+      "schedule": {
+        "timezone": "UTC",
+        "recurrence": "daily",
+        "times": [
+          "00:00",
+          "03:00",
+          "06:00",
+          "09:00",
+          "12:00",
+          "15:00",
+          "18:00",
+          "21:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-naw-shugo-festival",
+      "name": "Festival de Shugo",
+      "kind": "Festival",
+      "region": "NA West",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: America/Los_Angeles. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 10,
+      "schedule": {
+        "timezone": "America/Los_Angeles",
+        "recurrence": "daily",
+        "times": [
+          "00:00",
+          "01:00",
+          "02:00",
+          "03:00",
+          "04:00",
+          "05:00",
+          "06:00",
+          "07:00",
+          "08:00",
+          "09:00",
+          "10:00",
+          "11:00",
+          "12:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "18:00",
+          "19:00",
+          "20:00",
+          "21:00",
+          "22:00",
+          "23:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-naw-artifact-siege",
+      "name": "Cerco de artefatos",
+      "kind": "Cerco",
+      "region": "NA West",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: UTC. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 30,
+      "schedule": {
+        "timezone": "UTC",
+        "recurrence": "weekly",
+        "times": [
+          "21:00"
+        ],
+        "weekdays": [
+          0,
+          3,
+          5
+        ]
+      }
+    },
+    {
+      "id": "reference-naw-siege-bosses",
+      "name": "Chefes do cerco",
+      "kind": "Chefe",
+      "region": "NA West",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: UTC. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 30,
+      "schedule": {
+        "timezone": "UTC",
+        "recurrence": "weekly",
+        "times": [
+          "21:30"
+        ],
+        "weekdays": [
+          0,
+          3,
+          5
+        ]
+      }
+    },
+    {
+      "id": "reference-naw-guardian-nahma",
+      "name": "Guardian Nahma",
+      "kind": "Chefe",
+      "region": "NA West",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: UTC. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 30,
+      "schedule": {
+        "timezone": "UTC",
+        "recurrence": "weekly",
+        "times": [
+          "21:00"
+        ],
+        "weekdays": [
+          4,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-naw-daily-reset",
+      "name": "Reset diário",
+      "kind": "Reset",
+      "region": "NA West",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: America/Los_Angeles. Horários podem divergir da agenda anterior.",
+      "duration_minutes": null,
+      "schedule": {
+        "timezone": "America/Los_Angeles",
+        "recurrence": "daily",
+        "times": [
+          "09:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-naw-weekly-reset",
+      "name": "Reset semanal",
+      "kind": "Reset",
+      "region": "NA West",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: America/Los_Angeles. Horários podem divergir da agenda anterior.",
+      "duration_minutes": null,
+      "schedule": {
+        "timezone": "America/Los_Angeles",
+        "recurrence": "weekly",
+        "times": [
+          "09:00"
+        ],
+        "weekdays": [
+          2
+        ]
+      }
+    }
+  ]
+}

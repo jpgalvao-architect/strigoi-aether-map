@@ -1,0 +1,42 @@
+[
+  {
+    "id": "reference-nae",
+    "name": "NA East • projeto de referência",
+    "file": "reference-nae.json"
+  },
+  {
+    "id": "reference-naw",
+    "name": "NA West • projeto de referência",
+    "file": "reference-naw.json"
+  },
+  {
+    "id": "reference-eu",
+    "name": "Europe • projeto de referência",
+    "file": "reference-eu.json"
+  },
+  {
+    "id": "reference-sa",
+    "name": "SA • agenda do projeto de referência",
+    "file": "reference-sa.json"
+  },
+  {
+    "id": "reference-asia",
+    "name": "Asia • projeto de referência",
+    "file": "reference-asia.json"
+  },
+  {
+    "id": "reference-kr",
+    "name": "Korea • projeto de referência",
+    "file": "reference-kr.json"
+  },
+  {
+    "id": "reference-tw",
+    "name": "Taiwan • projeto de referência",
+    "file": "reference-tw.json"
+  },
+  {
+    "id": "curated-sa",
+    "name": "SA • fontes da versão anterior",
+    "file": "curated-sa.json"
+  }
+]

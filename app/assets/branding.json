@@ -1,0 +1,30 @@
+{
+  "name": "Aether",
+  "release": "0.7.2",
+  "created_on": "2026-10-12",
+  "tool": "Built-in image_gen; transparent_background=true",
+  "files": {
+    "aether-asmodian-v2.png": "64498523841d0b8d55f3c2f6483e4c5eba85301251736db0abc1ab07bda6a728",
+    "aether-avatar-v2.png": "e5b1b2d553cc62034c0fb7a5f6b7286ffe382e952025b5e25a72cfdcecf70aee",
+    "aether.ico": "5aab45f57bcb3dd0e69a829ee5320e31f80000826c8d67925a05bcac3d850cd8"
+  },
+  "prompts": {
+    "mascot": "Use case: precise-object-edit. Asset type: full-body transparent mascot for STRIGOI AETHER MAP Windows app. Image 1 is the edit target, existing Aether mascot. Preserve this character's identity, white tousled hair with dark undercut, pale lavender-blue skin, long pointed ears, red eyes, dark feathered wings, turquoise crystal and magical folded map, chibi proportions and polished anime cartoon rendering. Make him look more wicked: sharply lowered eyebrows, narrower intense red eyes and a confident closed mischievous smirk showing two small vampire fangs. Remove the cheerful open mouth and rosy blush. Remove ALL the white decorative fur collar, white neck ruffles, white cloth cuffs and dangling white/silver star/snowflake decoration around his outfit. Replace with a clean charcoal high collar and sleek dark purple coat with restrained violet edges. Keep white hair, pale face, and tiny fangs only; these are character features, not white outfit decorations. Single centered full-body character with complete wings, feet and some breathing room around silhouette. Transparent background with genuine alpha. No white outline, white halo, frame, background decoration, text, watermarks or scenery. Preserve the map-holding and raised-hand pose.",
+    "avatar": "Use case: precise-object-edit. Asset type: transparent compact avatar icon for the STRIGOI AETHER MAP desktop app. The provided newly revised Aether character is the identity reference and edit target. Create a head-and-shoulders only avatar from precisely this character. Preserve white tousled hair with dark undercut, pale lavender-blue skin, long pointed ears, sharply lowered eyebrows and narrower intense red eyes, confident wicked closed smirk with two tiny vampire fangs. Preserve sleek charcoal high collar with violet edges. Face almost forward, square composition with generous transparent padding, large face readable at 32 and 64 pixels. Keep the character chibi and polished crisp anime cartoon. Remove arms, map, legs and sprawling wings. NO white fur collar, white neck ruffles, white outfit decorations, white halo, white outline, frame, background disk, text or watermark. Genuine transparent alpha background. Do not change his expression back to friendly. White hair and pale face are retained, clothing stays dark."
+  },
+  "reference": "Aether v1, created for this app; revised expression and dark collar without white decoration",
+  "icons": "18 original SVGs authored in project code; app/assets/icons; no external icon pack",
+  "desktop_icon": "Avatar v2 converted with Qt to PNG-backed ICO at 16, 24, 32, 48, 64, 128 and 256 pixels; alpha preserved",
+  "previous_revision": {
+    "release": "0.6.0",
+    "files": {
+      "aether-asmodian-v1.png": "c60159636cab3f60f2129313c35599a9c2d9bdf82ae77b8d0b92c0a783d4181a",
+      "aether-avatar-v1.png": "484ddb99e2421ddf815c0d93b4a9dad8612b16cd2f191e77943bf4f4f461a84c",
+      "aether.ico": "c093817b091556f8d4fd89811486d90bee06a8f8a202ccc198bae53159c3adff"
+    },
+    "prompts": {
+      "mascot": "Use case: stylized-concept. Asset type: original mascot for STRIGOI AETHER MAP desktop companion. The attached image is ONLY inspiration for a cute vampire's spirit, not an edit target or a character to copy. Create a distinctly new adorable male chibi vampire with Asmodian-inspired fantasy features: cool pale blue-lavender skin, long pointed ears, tiny two fangs in a warm mischievous smile, softly glowing coral-red eyes (both same color), fluffy snow-white hair with charcoal undercut and a small forelock. Little dark feathered wings, compact dark adventurer coat with violet lining and subtle turquoise crystal clasp, fluffy collar. Full body, tiny clawed boots and friendly rounded proportions, one hand holding a small magical folded map and the other waving. Clean premium game companion illustration, readable silhouette, confident crisp outlines, restrained highlights, polished shaded anime cartoon, warm charming expression. Centered single isolated character with breathing room around wings and feet. Genuinely transparent background, no scenery, no shadow rectangle, no text, no labels, no watermark. Visually distinct from reference: different hair, eye colors, outfit, facial silhouette, and pose. Designed to read on dark navy UI.",
+      "avatar": "Derive a compact desktop app avatar icon from this NEW Aether mascot. Preserve exactly this character's identity: snow-white messy hair with dark undercut, cool pale lavender-blue face, long pointed ears, two coral-red eyes, warm cute little vampire smile with two tiny fangs, dark coat with white fluffy collar and turquoise crystal. Head and shoulders ONLY, facing nearly forward, roughly square composition, no arms, no map, no legs, no wings sprawling outside. Simplify minor ornament details for legibility at 32 and 64 pixels while keeping polished crisp anime cartoon style. Large expressive face, clear chunky silhouette, slightly purple edge lighting. Genuine transparent background with good padding, no circular disk background, no letters, no text, no border, no watermark. It must match this provided mascot, not introduce another character."
+    }
+  }
+}

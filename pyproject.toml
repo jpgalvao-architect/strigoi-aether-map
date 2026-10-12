@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "strigoi-aether-map"
+version = "0.8.0"
+description = "Atlas desktop independente e companion experimental para AION 2"
+requires-python = ">=3.12"
+license = "GPL-3.0-only"
+license-files = ["LICENSE", "LICENSE-NOTICE.md"]
+dependencies = ["PySide6>=6.8,<7", "pydantic>=2.10,<3", "tzdata>=2025.1", "numpy>=2,<3"]
+
+[project.optional-dependencies]
+overlay = ["opencv-python-headless>=4.10,<6", "mss>=10,<11", "numpy>=2,<3"]
+dev = ["pytest>=8,<10", "pyinstaller>=6,<7", "PyYAML>=6,<7"]
+
+[project.scripts]
+strigoi = "app.main:main"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.setuptools.package-data]
+app = ["data/*.json", "data/profiles/*.json", "assets/*.svg", "assets/*.png", "assets/*.ico", "assets/*.json", "assets/icons/*.svg", "assets/maps/*.svg", "assets/maps/*.webp", "assets/sonar/*.npz", "assets/sonar/*.exe", "assets/sonar/*.json", "assets/i18n/*.json", "assets/legal/*.txt", "config/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["app/tests"]
+pythonpath = ["."]

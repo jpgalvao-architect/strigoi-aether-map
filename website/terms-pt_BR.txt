@@ -1,0 +1,52 @@
+Termos de uso — Strigoi Aether Map
+Versão 1.0 · 12 de outubro de 2026
+
+1. Sobre o software e sua licença
+
+O Strigoi Aether Map é um aplicativo independente para auxiliar a exploração em AION 2. Seu código próprio é disponibilizado sob a licença GNU GPL versão 3, que permite usar, estudar, modificar e redistribuir o software conforme suas condições. O texto completo da licença acompanha a distribuição.
+
+Mapas, dados comunitários, áudio de referência, marcas e componentes de terceiros mantêm suas respectivas licenças e direitos. A GPLv3 do código próprio não concede direitos adicionais sobre esses materiais.
+
+Estes termos não restringem as permissões concedidas pela GPLv3 nem substituem as licenças de terceiros.
+
+2. Disponibilidade e ausência de garantia
+
+O software é fornecido no estado em que se encontra, sem garantia de funcionamento contínuo, precisão dos dados ou adequação a uma finalidade específica, na extensão permitida pela legislação aplicável.
+
+Podem ocorrer falhas, mudanças de compatibilidade, informações desatualizadas e resultados incorretos. O Sonar oferece uma pista visual baseada no áudio analisado; não confirma a presença nem a posição exata de um cubo.
+
+3. Como o aplicativo funciona
+
+Os marcadores, o painel de eventos e os avisos aparecem em janelas externas de overlay. O reconhecimento do mapa analisa a imagem da tela, e o Sonar recebe o áudio do aplicativo selecionado por recursos do Windows.
+
+O Strigoi não injeta código nas DLLs do jogo, não modifica seus arquivos e não lê sua memória. Ele não realiza ações de jogo automaticamente. Essa descrição técnica não representa autorização da desenvolvedora ou da operadora do AION 2.
+
+4. Dados e recursos de acessibilidade
+
+Preferências e registros de exploração ficam armazenados neste computador. A análise de imagem e áudio ocorre localmente. O Sonar não usa o microfone nem grava o áudio analisado.
+
+O Sonar foi desenvolvido como recurso de acessibilidade auditiva, convertendo uma pista sonora em aviso visual. A ativação dos recursos de captura depende de uma ação do usuário. Atualizações remotas de agenda e links externos, quando usados, acessam os serviços escolhidos e estão sujeitos às políticas desses serviços.
+
+5. Uso com o jogo e decisões sobre a conta
+
+Cabe ao usuário consultar e cumprir os termos e as regras vigentes do AION 2 e decidir se deseja utilizar este aplicativo.
+
+Não há garantia de aprovação pela desenvolvedora, pela operadora ou pelos sistemas de proteção do jogo. Mesmo funcionando externamente e sem modificar o jogo, o aplicativo pode estar sujeito a interpretações ou mudanças dessas regras.
+
+Na extensão permitida pela legislação aplicável, o autor e os colaboradores não se responsabilizam por advertências, suspensões, banimentos, perda de acesso à conta ou outros prejuízos decorrentes de decisões da desenvolvedora ou da operadora relacionadas ao uso deste aplicativo.
+
+O autor e os colaboradores não controlam essas decisões e não prometem reversão de sanções ou recuperação de contas. O usuário reconhece essas condições ao optar pelo uso.
+
+6. Apoio financeiro
+
+Doações são voluntárias. Apoiar o criador não compra autorização para usar o aplicativo no jogo, garantia de funcionamento, prioridade de suporte ou proteção contra sanções.
+
+Os links de apoio ao criador e de doação às instituições identificam destinatários diferentes. Os pagamentos são realizados nos serviços externos; o aplicativo não os processa.
+
+7. Direitos previstos em lei
+
+Nenhuma disposição destes termos exclui responsabilidades que não possam ser afastadas por lei nem implica renúncia a direitos legalmente assegurados. As limitações de garantia e responsabilidade devem ser interpretadas conforme a GPLv3 e a legislação aplicável.
+
+8. Aceite no instalador
+
+Ao marcar “Li e aceito os termos de uso”, o usuário declara que teve acesso a este documento e concorda com suas condições. Sem o aceite, a instalação pode ser cancelada.

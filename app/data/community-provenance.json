@@ -1,0 +1,47 @@
+{
+  "checked_on": "2026-10-11",
+  "release": "altgard-real-map-2026-10-11",
+  "source_url": "https://github.com/aion2-interactive-map/aion2-interactive-map",
+  "commit": "89ce3984d569ff1a03ee6311d064231211212981",
+  "author": "Yihao Liu (tc-imba) e colaboradores",
+  "license": "CC BY-NC 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "changes": "Seleção de dois mapas e duas classes de pontos; normalização com inversão de Y, mapa integral de 8192 pixels, imagens WebP originais e nomes traduzidos.",
+  "global_validation": false,
+  "transformations": {
+    "verteron": {
+      "upstream": "World_L_A",
+      "xmin": 0,
+      "xmax": 8192,
+      "ymin": 0,
+      "ymax": 8192,
+      "conversion": "x=(source_x-xmin)/(xmax-xmin); y=(ymax-source_y)/(ymax-ymin)",
+      "counts": {
+        "monolithMaterial": 560,
+        "hiddenCube": 118
+      }
+    },
+    "altgard": {
+      "upstream": "World_D_A",
+      "xmin": 0,
+      "xmax": 8192,
+      "ymin": 0,
+      "ymax": 8192,
+      "conversion": "x=(source_x-xmin)/(xmax-xmin); y=(ymax-source_y)/(ymax-ymin)",
+      "counts": {
+        "monolithMaterial": 560,
+        "hiddenCube": 108
+      }
+    }
+  },
+  "coordinate_corrections": "coordinate-corrections.json",
+  "files": {
+    "LICENSE.txt": "ae23c16ed8d5f87e3cf852e30cdfab86e1790355ce94374d45c6bc46f705858b",
+    "maps.yaml": "2923c1081dcd2d8ffc4ea290e68220c686619dac78ea6bfc25a9ce1347ab005d",
+    "markers/World_D_A.yaml": "aa1788538e35a75bd5b63e963385eb9decb0b07fa2d6084928f27109d7faa3cb",
+    "markers/World_L_A.yaml": "8191964834b0561d2b775d149ff0463ceee20e514159db3e4d46a7a05e39ccc9",
+    "regions/World_D_A.yaml": "2485542668eadafbafb5ced808c2dc3da9f2dc2d54b1fa2165a66daf443d6ddb",
+    "regions/World_L_A.yaml": "9f29dd1fa955dd02de6e71d5ead99a7ddb481c87071b28abd02eb22053d4e7eb",
+    "types.yaml": "ec1ad29c60890226927d34f7c3de9ca52c26cc6ad5b7d4335a44e2bd71ecfc6e"
+  }
+}

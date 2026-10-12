@@ -1,0 +1,341 @@
+{
+  "$defs": {
+    "NotificationSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "lead_minutes": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Lead Minutes",
+          "type": "array"
+        },
+        "disabled_kinds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Disabled Kinds",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "title": "NotificationSettings",
+      "type": "object"
+    },
+    "OverlaySettings": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "opacity": {
+          "default": 0.8,
+          "maximum": 1,
+          "minimum": 0.1,
+          "title": "Opacity",
+          "type": "number"
+        },
+        "scale": {
+          "default": 1.0,
+          "maximum": 3,
+          "minimum": 0.5,
+          "title": "Scale",
+          "type": "number"
+        },
+        "threshold": {
+          "default": 0.96,
+          "maximum": 1,
+          "minimum": 0.8,
+          "title": "Threshold",
+          "type": "number"
+        },
+        "monitor": {
+          "default": 1,
+          "maximum": 16,
+          "minimum": 1,
+          "title": "Monitor",
+          "type": "integer"
+        },
+        "map_id": {
+          "default": "altgard",
+          "title": "Map Id",
+          "type": "string"
+        },
+        "calibration": {
+          "default": "",
+          "title": "Calibration",
+          "type": "string"
+        },
+        "capture_area": {
+          "default": "",
+          "title": "Capture Area",
+          "type": "string"
+        },
+        "tracking_mode": {
+          "default": "dynamic",
+          "enum": [
+            "dynamic",
+            "fixed"
+          ],
+          "title": "Tracking Mode",
+          "type": "string"
+        },
+        "minimum_matches": {
+          "default": 18,
+          "maximum": 80,
+          "minimum": 12,
+          "title": "Minimum Matches",
+          "type": "integer"
+        },
+        "events_panel": {
+          "default": false,
+          "title": "Events Panel",
+          "type": "boolean"
+        },
+        "events_panel_expanded": {
+          "default": false,
+          "title": "Events Panel Expanded",
+          "type": "boolean"
+        },
+        "events_panel_position": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Events Panel Position"
+        },
+        "events_panel_event": {
+          "default": "",
+          "title": "Events Panel Event",
+          "type": "string"
+        },
+        "layers": {
+          "default": "atlas",
+          "enum": [
+            "atlas",
+            "cubes",
+            "gathering",
+            "all"
+          ],
+          "title": "Layers",
+          "type": "string"
+        },
+        "map_view": {
+          "default": "large",
+          "enum": [
+            "large",
+            "minimap"
+          ],
+          "title": "Map View",
+          "type": "string"
+        },
+        "minimap_area": {
+          "default": "",
+          "title": "Minimap Area",
+          "type": "string"
+        },
+        "render_hz": {
+          "default": 240,
+          "enum": [
+            60,
+            120,
+            240
+          ],
+          "title": "Render Hz",
+          "type": "integer"
+        },
+        "capture_hz": {
+          "default": 60,
+          "maximum": 60,
+          "minimum": 10,
+          "title": "Capture Hz",
+          "type": "integer"
+        }
+      },
+      "title": "OverlaySettings",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "ui_language": {
+      "anyOf": [
+        {
+          "enum": [
+            "pt_BR",
+            "en_US"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ui Language"
+    },
+    "timezone": {
+      "default": "local",
+      "title": "Timezone",
+      "type": "string"
+    },
+    "content_release": {
+      "default": "",
+      "title": "Content Release",
+      "type": "string"
+    },
+    "cube_data_release": {
+      "default": "",
+      "title": "Cube Data Release",
+      "type": "string"
+    },
+    "map_id": {
+      "default": "altgard",
+      "title": "Map Id",
+      "type": "string"
+    },
+    "catalog_map_id": {
+      "default": "altgard",
+      "title": "Catalog Map Id",
+      "type": "string"
+    },
+    "map_defaults_release": {
+      "default": "",
+      "title": "Map Defaults Release",
+      "type": "string"
+    },
+    "agenda_profile": {
+      "default": "reference-sa",
+      "title": "Agenda Profile",
+      "type": "string"
+    },
+    "disabled_categories": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Disabled Categories",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "disabled_resources": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Disabled Resources",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "visited": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Visited",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "hide_visited": {
+      "default": false,
+      "title": "Hide Visited",
+      "type": "boolean"
+    },
+    "notifications": {
+      "$ref": "#/$defs/NotificationSettings"
+    },
+    "overlay": {
+      "$ref": "#/$defs/OverlaySettings"
+    },
+    "remote_events_url": {
+      "default": "",
+      "title": "Remote Events Url",
+      "type": "string"
+    },
+    "remote_auto_refresh": {
+      "default": false,
+      "title": "Remote Auto Refresh",
+      "type": "boolean"
+    },
+    "remote_interval_minutes": {
+      "default": 30,
+      "maximum": 1440,
+      "minimum": 5,
+      "title": "Remote Interval Minutes",
+      "type": "integer"
+    },
+    "sonar_enabled": {
+      "default": false,
+      "title": "Sonar Enabled",
+      "type": "boolean"
+    },
+    "sonar_process_name": {
+      "default": "",
+      "title": "Sonar Process Name",
+      "type": "string"
+    },
+    "sonar_sensitivity": {
+      "default": "balanced",
+      "enum": [
+        "balanced",
+        "sensitive"
+      ],
+      "title": "Sonar Sensitivity",
+      "type": "string"
+    },
+    "sonar_alert_position": {
+      "anyOf": [
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sonar Alert Position"
+    },
+    "overlay_layers_release": {
+      "default": "",
+      "title": "Overlay Layers Release",
+      "type": "string"
+    }
+  },
+  "title": "Preferences",
+  "type": "object"
+}

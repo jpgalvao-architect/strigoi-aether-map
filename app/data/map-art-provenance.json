@@ -1,0 +1,30 @@
+{
+  "source": "https://github.com/problem-xyz/aion2-map-overlay",
+  "commit": "a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd",
+  "upstream": "https://github.com/aion2-interactive-map/aion2-interactive-map",
+  "attribution": "Yihao Liu (tc-imba) e colaboradores; distribuição dos mapas por problem-xyz; arte do jogo NCSOFT",
+  "license": "CC BY-NC 4.0 conforme NOTICE do distribuidor; direitos da arte do jogo pertencem à NCSOFT",
+  "changes": "Arquivos WebP preservados byte a byte; renderização Qt sem recorte; coordenadas x/8192 e 1-y/8192.",
+  "maps": [
+    {
+      "map_id": "altgard",
+      "url": "https://raw.githubusercontent.com/problem-xyz/aion2-map-overlay/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/maps/altgard/detail.webp",
+      "git_blob": "5671f257c6bebd470316249bfc98aeff01fb416f",
+      "sha256": "9182d7f8285ac7deb757158e95d335ef5f524b2f567debeaf9fee4906b1cac01",
+      "bytes": 2632928,
+      "image": "maps/altgard-world.webp",
+      "width": 8192,
+      "height": 8192
+    },
+    {
+      "map_id": "verteron",
+      "url": "https://raw.githubusercontent.com/problem-xyz/aion2-map-overlay/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/maps/verteron/detail.webp",
+      "git_blob": "6471b5b64be320c1393c9d76e903ac8b0eedd2a7",
+      "sha256": "eddfb6d69879e1feff9d1a5c3cf8d15189781441c7046d37cecaae47449fd4cb",
+      "bytes": 5514218,
+      "image": "maps/verteron-world.webp",
+      "width": 8192,
+      "height": 8192
+    }
+  ]
+}

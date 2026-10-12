@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "timezone": "America/Sao_Paulo",
+  "overlay": {
+    "enabled": false,
+    "map_id": "altgard"
+  },
+  "sonar_enabled": false,
+  "map_id": "altgard",
+  "catalog_map_id": "altgard"
+}

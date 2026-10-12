@@ -1,0 +1,16 @@
+{
+  "commit": "a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd",
+  "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/object-sets/",
+  "license": "CC BY-NC 4.0",
+  "author": "Yihao Liu (tc-imba), colaboradores e adaptação problem-xyz",
+  "counts": {
+    "altgard": 2692,
+    "verteron": 2733
+  },
+  "changes": "Apenas pontos de coleta; x e y percentuais divididos por 100; IDs com prefixo gather-; sem inversão adicional de Y.",
+  "sa_exclusive": false,
+  "files": {
+    "altgard.json": "b8de0b1ef00c996326dcb3ae31805dba3d7606fbe2fdbbedfb543baa06c90a47",
+    "verteron.json": "4a31ba5d2c0a8c536e75f264137b3a9f46eb7224b7c117a9a4098c65336ce0e4"
+  }
+}

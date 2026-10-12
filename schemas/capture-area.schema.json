@@ -1,0 +1,86 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "map_id": {
+      "title": "Map Id",
+      "type": "string"
+    },
+    "screen_name": {
+      "title": "Screen Name",
+      "type": "string"
+    },
+    "screen_x": {
+      "title": "Screen X",
+      "type": "integer"
+    },
+    "screen_y": {
+      "title": "Screen Y",
+      "type": "integer"
+    },
+    "screen_width": {
+      "minimum": 100,
+      "title": "Screen Width",
+      "type": "integer"
+    },
+    "screen_height": {
+      "minimum": 100,
+      "title": "Screen Height",
+      "type": "integer"
+    },
+    "pixel_ratio": {
+      "exclusiveMinimum": 0,
+      "maximum": 8,
+      "title": "Pixel Ratio",
+      "type": "number"
+    },
+    "x": {
+      "minimum": 0,
+      "title": "X",
+      "type": "integer"
+    },
+    "y": {
+      "minimum": 0,
+      "title": "Y",
+      "type": "integer"
+    },
+    "width": {
+      "minimum": 80,
+      "title": "Width",
+      "type": "integer"
+    },
+    "height": {
+      "minimum": 80,
+      "title": "Height",
+      "type": "integer"
+    },
+    "view_kind": {
+      "default": "large",
+      "enum": [
+        "large",
+        "minimap"
+      ],
+      "title": "View Kind",
+      "type": "string"
+    }
+  },
+  "required": [
+    "map_id",
+    "screen_name",
+    "screen_x",
+    "screen_y",
+    "screen_width",
+    "screen_height",
+    "pixel_ratio",
+    "x",
+    "y",
+    "width",
+    "height"
+  ],
+  "title": "CaptureArea",
+  "type": "object"
+}

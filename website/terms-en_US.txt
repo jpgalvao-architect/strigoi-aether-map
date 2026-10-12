@@ -1,0 +1,52 @@
+Terms of use — Strigoi Aether Map
+Version 1.0 · October 12, 2026
+
+1. About the software and its license
+
+Strigoi Aether Map is an independent application that assists exploration in AION 2. Its original code is available under GNU GPL version 3, which permits using, studying, modifying and redistributing the software under its conditions. The complete license is included in the distribution.
+
+Maps, community data, reference audio, trademarks and third-party components retain their respective licenses and rights. The original code's GPLv3 license does not grant additional rights to these materials.
+
+These terms do not restrict permissions granted by GPLv3 or replace third-party licenses.
+
+2. Availability and disclaimer of warranty
+
+The software is provided as is, without warranties of continuous operation, data accuracy or fitness for a particular purpose, to the extent permitted by applicable law.
+
+Failures, compatibility changes, outdated information and incorrect results may occur. Sonar provides a visual cue based on analyzed audio; it does not confirm a cube's presence or exact location.
+
+3. How the application works
+
+Markers, the event panel and alerts appear in external overlay windows. Map recognition analyzes the screen image, and Sonar receives audio from the selected application through Windows features.
+
+Strigoi does not inject code into the game's DLLs, modify its files or read its memory. It does not perform game actions automatically. This technical description does not represent authorization from the AION 2 developer or operator.
+
+4. Data and accessibility features
+
+Preferences and exploration records are stored on this computer. Image and audio analysis takes place locally. Sonar does not use the microphone or record analyzed audio.
+
+Sonar was developed as a hearing accessibility feature, converting a sound cue into a visual alert. Capture features require activation by the user. Remote schedule updates and external links, when used, access the selected services and are subject to those services' policies.
+
+5. Game use and account decisions
+
+The user is responsible for reviewing and following AION 2's current terms and rules and deciding whether to use this application.
+
+Approval by the developer, operator or game protection systems is not guaranteed. Even when operating externally without modifying the game, the application may be subject to interpretations or changes in those rules.
+
+To the extent permitted by applicable law, the author and contributors are not responsible for warnings, suspensions, bans, loss of account access or other losses arising from developer or operator decisions related to the use of this application.
+
+The author and contributors do not control these decisions and do not promise reversal of sanctions or account recovery. The user acknowledges these conditions when choosing to use the application.
+
+6. Financial support
+
+Donations are voluntary. Supporting the creator does not purchase permission to use the application in the game, a warranty of operation, priority support or protection against sanctions.
+
+Creator support and institutional donation links identify different recipients. Payments take place through external services; the application does not process them.
+
+7. Statutory rights
+
+Nothing in these terms excludes liabilities that cannot legally be excluded or waives statutory rights. Disclaimers of warranty and limitations of liability must be interpreted in accordance with GPLv3 and applicable law.
+
+8. Installer acceptance
+
+By checking “I have read and accept the terms of use”, the user declares that they had access to this document and agree to its conditions. Installation can be canceled without acceptance.

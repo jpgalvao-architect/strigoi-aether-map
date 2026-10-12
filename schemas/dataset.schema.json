@@ -1,0 +1,456 @@
+{
+  "$defs": {
+    "Category": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "icon": {
+          "default": "circle",
+          "enum": [
+            "diamond",
+            "circle",
+            "leaf",
+            "wood",
+            "star",
+            "cube"
+          ],
+          "title": "Icon",
+          "type": "string"
+        },
+        "color": {
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "title": "Color",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "color"
+      ],
+      "title": "Category",
+      "type": "object"
+    },
+    "Gatherable": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "subcategory": {
+          "title": "Subcategory",
+          "type": "string"
+        },
+        "rarity": {
+          "default": "unknown",
+          "enum": [
+            "common",
+            "uncommon",
+            "rare",
+            "epic",
+            "unknown"
+          ],
+          "title": "Rarity",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "source": {
+          "default": "",
+          "title": "Source",
+          "type": "string"
+        },
+        "verification": {
+          "default": "Não informada",
+          "title": "Verification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "category",
+        "subcategory"
+      ],
+      "title": "Gatherable",
+      "type": "object"
+    },
+    "HiddenCube": {
+      "additionalProperties": false,
+      "description": "Cube-specific fields without coupling the renderer to a resource type.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "map_id": {
+          "title": "Map Id",
+          "type": "string"
+        },
+        "resource_id": {
+          "title": "Resource Id",
+          "type": "string"
+        },
+        "x": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y",
+          "type": "number"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "visible_in_overlay": {
+          "default": true,
+          "title": "Visible In Overlay",
+          "type": "boolean"
+        },
+        "certainty": {
+          "default": "demo",
+          "enum": [
+            "confirmed",
+            "possible",
+            "demo"
+          ],
+          "title": "Certainty",
+          "type": "string"
+        },
+        "underwater": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Underwater"
+        },
+        "route_hint": {
+          "default": "",
+          "title": "Route Hint",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "map_id",
+        "resource_id",
+        "x",
+        "y",
+        "source"
+      ],
+      "title": "HiddenCube",
+      "type": "object"
+    },
+    "MapDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "region": {
+          "title": "Region",
+          "type": "string"
+        },
+        "image": {
+          "title": "Image",
+          "type": "string"
+        },
+        "width": {
+          "default": 1200,
+          "maximum": 16000,
+          "minimum": 100,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "default": 800,
+          "maximum": 16000,
+          "minimum": 100,
+          "title": "Height",
+          "type": "integer"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "supports_overlay": {
+          "default": true,
+          "title": "Supports Overlay",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "region",
+        "image",
+        "source"
+      ],
+      "title": "MapDefinition",
+      "type": "object"
+    },
+    "PointOfInterest": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "map_id": {
+          "title": "Map Id",
+          "type": "string"
+        },
+        "resource_id": {
+          "title": "Resource Id",
+          "type": "string"
+        },
+        "x": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y",
+          "type": "number"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "visible_in_overlay": {
+          "default": true,
+          "title": "Visible In Overlay",
+          "type": "boolean"
+        },
+        "certainty": {
+          "default": "demo",
+          "enum": [
+            "confirmed",
+            "possible",
+            "demo"
+          ],
+          "title": "Certainty",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "map_id",
+        "resource_id",
+        "x",
+        "y",
+        "source"
+      ],
+      "title": "PointOfInterest",
+      "type": "object"
+    },
+    "Region": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Region",
+      "type": "object"
+    },
+    "Subcategory": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "category",
+        "name"
+      ],
+      "title": "Subcategory",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "demo": {
+      "default": true,
+      "title": "Demo",
+      "type": "boolean"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "release": {
+      "default": "",
+      "title": "Release",
+      "type": "string"
+    },
+    "coverage": {
+      "default": "",
+      "title": "Coverage",
+      "type": "string"
+    },
+    "checked_on": {
+      "default": "",
+      "title": "Checked On",
+      "type": "string"
+    },
+    "regions": {
+      "items": {
+        "$ref": "#/$defs/Region"
+      },
+      "title": "Regions",
+      "type": "array"
+    },
+    "maps": {
+      "items": {
+        "$ref": "#/$defs/MapDefinition"
+      },
+      "title": "Maps",
+      "type": "array"
+    },
+    "categories": {
+      "items": {
+        "$ref": "#/$defs/Category"
+      },
+      "title": "Categories",
+      "type": "array"
+    },
+    "subcategories": {
+      "items": {
+        "$ref": "#/$defs/Subcategory"
+      },
+      "title": "Subcategories",
+      "type": "array"
+    },
+    "resources": {
+      "items": {
+        "$ref": "#/$defs/Gatherable"
+      },
+      "title": "Resources",
+      "type": "array"
+    },
+    "points": {
+      "items": {
+        "$ref": "#/$defs/PointOfInterest"
+      },
+      "title": "Points",
+      "type": "array"
+    },
+    "cubes": {
+      "items": {
+        "$ref": "#/$defs/HiddenCube"
+      },
+      "title": "Cubes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "title",
+    "regions",
+    "maps",
+    "categories",
+    "subcategories",
+    "resources",
+    "points"
+  ],
+  "title": "Dataset",
+  "type": "object"
+}

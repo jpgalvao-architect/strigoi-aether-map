@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "demo": false,
+  "release": "reference-tw-v030",
+  "coverage": "Taiwan • agenda problem-xyz de 07/10/2026; horários divergem de outras fontes",
+  "events": [
+    {
+      "id": "reference-tw-rift",
+      "name": "Fenda espaço-temporal",
+      "kind": "Fenda",
+      "region": "Taiwan",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: Asia/Taipei. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 60,
+      "schedule": {
+        "timezone": "Asia/Taipei",
+        "recurrence": "daily",
+        "times": [
+          "02:00",
+          "05:00",
+          "08:00",
+          "11:00",
+          "14:00",
+          "17:00",
+          "20:00",
+          "23:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-tw-shugo-festival",
+      "name": "Festival de Shugo",
+      "kind": "Festival",
+      "region": "Taiwan",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: Asia/Taipei. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 10,
+      "schedule": {
+        "timezone": "Asia/Taipei",
+        "recurrence": "daily",
+        "times": [
+          "00:00",
+          "01:00",
+          "02:00",
+          "03:00",
+          "04:00",
+          "05:00",
+          "06:00",
+          "07:00",
+          "08:00",
+          "09:00",
+          "10:00",
+          "11:00",
+          "12:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "18:00",
+          "19:00",
+          "20:00",
+          "21:00",
+          "22:00",
+          "23:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-tw-artifact-siege",
+      "name": "Cerco de artefatos",
+      "kind": "Cerco",
+      "region": "Taiwan",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: Asia/Taipei. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 30,
+      "schedule": {
+        "timezone": "Asia/Taipei",
+        "recurrence": "weekly",
+        "times": [
+          "21:20",
+          "21:50",
+          "22:20"
+        ],
+        "weekdays": [
+          2,
+          5
+        ]
+      }
+    },
+    {
+      "id": "reference-tw-siege-bosses",
+      "name": "Chefes do cerco",
+      "kind": "Chefe",
+      "region": "Taiwan",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: Asia/Taipei. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 30,
+      "schedule": {
+        "timezone": "Asia/Taipei",
+        "recurrence": "weekly",
+        "times": [
+          "21:45",
+          "22:15",
+          "22:45"
+        ],
+        "weekdays": [
+          2,
+          5
+        ]
+      }
+    },
+    {
+      "id": "reference-tw-guardian-nahma",
+      "name": "Guardian Nahma",
+      "kind": "Chefe",
+      "region": "Taiwan",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: Asia/Taipei. Horários podem divergir da agenda anterior.",
+      "duration_minutes": 30,
+      "schedule": {
+        "timezone": "Asia/Taipei",
+        "recurrence": "weekly",
+        "times": [
+          "22:00",
+          "22:30",
+          "23:00"
+        ],
+        "weekdays": [
+          4,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-tw-daily-reset",
+      "name": "Reset diário",
+      "kind": "Reset",
+      "region": "Taiwan",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: Asia/Taipei. Horários podem divergir da agenda anterior.",
+      "duration_minutes": null,
+      "schedule": {
+        "timezone": "Asia/Taipei",
+        "recurrence": "daily",
+        "times": [
+          "05:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-tw-weekly-reset",
+      "name": "Reset semanal",
+      "kind": "Reset",
+      "region": "Taiwan",
+      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+      "verified_on": "2026-10-11",
+      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
+      "notes": "Perfil do projeto consultado. Relógio da regra: Asia/Taipei. Horários podem divergir da agenda anterior.",
+      "duration_minutes": null,
+      "schedule": {
+        "timezone": "Asia/Taipei",
+        "recurrence": "weekly",
+        "times": [
+          "05:00"
+        ],
+        "weekdays": [
+          2
+        ]
+      }
+    }
+  ]
+}

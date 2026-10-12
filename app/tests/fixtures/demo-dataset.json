@@ -1,0 +1,1201 @@
+{
+  "schema_version": 1,
+  "demo": true,
+  "title": "Atlas de demonstração • localizações fictícias",
+  "regions": [
+    {
+      "id": "demo-west",
+      "name": "Fronteira lunar (demo)",
+      "description": "Região ilustrativa, sem equivalência verificada no jogo."
+    },
+    {
+      "id": "demo-east",
+      "name": "Arquipélago etéreo (demo)"
+    }
+  ],
+  "maps": [
+    {
+      "id": "vale-lunar",
+      "name": "Vale Lunar",
+      "region": "demo-west",
+      "image": "maps/vale-lunar.svg",
+      "source": "Arte original Strigoi; mapa fictício"
+    },
+    {
+      "id": "ilhas-eter",
+      "name": "Ilhas do Éter",
+      "region": "demo-east",
+      "image": "maps/ilhas-eter.svg",
+      "source": "Arte original Strigoi; mapa fictício"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cubes",
+      "name": "Hidden Cubes",
+      "icon": "cube",
+      "color": "#a995ef"
+    },
+    {
+      "id": "ore",
+      "name": "Minérios",
+      "icon": "diamond",
+      "color": "#7ac9ec"
+    },
+    {
+      "id": "plants",
+      "name": "Ervas e plantas",
+      "icon": "leaf",
+      "color": "#8ccdaa"
+    },
+    {
+      "id": "wood",
+      "name": "Madeira",
+      "icon": "wood",
+      "color": "#d2ab7b"
+    },
+    {
+      "id": "special",
+      "name": "Recursos especiais",
+      "icon": "star",
+      "color": "#e0ca86"
+    },
+    {
+      "id": "rare",
+      "name": "Gatherables raros",
+      "icon": "star",
+      "color": "#e89db9"
+    },
+    {
+      "id": "other",
+      "name": "Outros materiais",
+      "icon": "circle",
+      "color": "#b1bcca"
+    }
+  ],
+  "subcategories": [
+    {
+      "id": "cubes-base",
+      "category": "cubes",
+      "name": "Hidden Cubes • geral"
+    },
+    {
+      "id": "ore-base",
+      "category": "ore",
+      "name": "Minérios • geral"
+    },
+    {
+      "id": "plants-base",
+      "category": "plants",
+      "name": "Ervas e plantas • geral"
+    },
+    {
+      "id": "wood-base",
+      "category": "wood",
+      "name": "Madeira • geral"
+    },
+    {
+      "id": "special-base",
+      "category": "special",
+      "name": "Recursos especiais • geral"
+    },
+    {
+      "id": "rare-base",
+      "category": "rare",
+      "name": "Gatherables raros • geral"
+    },
+    {
+      "id": "other-base",
+      "category": "other",
+      "name": "Outros materiais • geral"
+    }
+  ],
+  "resources": [
+    {
+      "id": "hidden-cube",
+      "name": "Cubo oculto",
+      "category": "cubes",
+      "subcategory": "cubes-base",
+      "rarity": "epic",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    },
+    {
+      "id": "iron",
+      "name": "Ferro lunar",
+      "category": "ore",
+      "subcategory": "ore-base",
+      "rarity": "common",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    },
+    {
+      "id": "silver",
+      "name": "Prata etérea",
+      "category": "ore",
+      "subcategory": "ore-base",
+      "rarity": "uncommon",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    },
+    {
+      "id": "azpha",
+      "name": "Azpha (exemplo)",
+      "category": "plants",
+      "subcategory": "plants-base",
+      "rarity": "common",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    },
+    {
+      "id": "moonflower",
+      "name": "Flor do crepúsculo",
+      "category": "plants",
+      "subcategory": "plants-base",
+      "rarity": "uncommon",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    },
+    {
+      "id": "wood",
+      "name": "Madeira ancestral",
+      "category": "wood",
+      "subcategory": "wood-base",
+      "rarity": "common",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    },
+    {
+      "id": "aether",
+      "name": "Fragmento de éter",
+      "category": "special",
+      "subcategory": "special-base",
+      "rarity": "rare",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    },
+    {
+      "id": "crystal",
+      "name": "Cristal de aurora",
+      "category": "rare",
+      "subcategory": "rare-base",
+      "rarity": "epic",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    },
+    {
+      "id": "shell",
+      "name": "Concha luminosa",
+      "category": "other",
+      "subcategory": "other-base",
+      "rarity": "common",
+      "notes": "Recurso de demonstração; ocorrência não verificada no AION 2."
+    }
+  ],
+  "points": [
+    {
+      "id": "vale-lunar-01",
+      "name": "Ferro lunar · 02",
+      "map_id": "vale-lunar",
+      "resource_id": "iron",
+      "x": 0.7276,
+      "y": 0.3816,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-02",
+      "name": "Prata etérea · 03",
+      "map_id": "vale-lunar",
+      "resource_id": "silver",
+      "x": 0.5068,
+      "y": 0.4125,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-03",
+      "name": "Azpha (exemplo) · 04",
+      "map_id": "vale-lunar",
+      "resource_id": "azpha",
+      "x": 0.4442,
+      "y": 0.7654,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-04",
+      "name": "Flor do crepúsculo · 05",
+      "map_id": "vale-lunar",
+      "resource_id": "moonflower",
+      "x": 0.2385,
+      "y": 0.469,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-05",
+      "name": "Madeira ancestral · 06",
+      "map_id": "vale-lunar",
+      "resource_id": "wood",
+      "x": 0.3184,
+      "y": 0.4158,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-06",
+      "name": "Fragmento de éter · 07",
+      "map_id": "vale-lunar",
+      "resource_id": "aether",
+      "x": 0.8292,
+      "y": 0.4044,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-07",
+      "name": "Cristal de aurora · 08",
+      "map_id": "vale-lunar",
+      "resource_id": "crystal",
+      "x": 0.5711,
+      "y": 0.455,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-08",
+      "name": "Concha luminosa · 09",
+      "map_id": "vale-lunar",
+      "resource_id": "shell",
+      "x": 0.6521,
+      "y": 0.4704,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-10",
+      "name": "Ferro lunar · 11",
+      "map_id": "vale-lunar",
+      "resource_id": "iron",
+      "x": 0.4393,
+      "y": 0.6639,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-11",
+      "name": "Prata etérea · 12",
+      "map_id": "vale-lunar",
+      "resource_id": "silver",
+      "x": 0.5413,
+      "y": 0.33,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-12",
+      "name": "Azpha (exemplo) · 13",
+      "map_id": "vale-lunar",
+      "resource_id": "azpha",
+      "x": 0.6147,
+      "y": 0.3871,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-13",
+      "name": "Flor do crepúsculo · 14",
+      "map_id": "vale-lunar",
+      "resource_id": "moonflower",
+      "x": 0.5078,
+      "y": 0.3431,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-14",
+      "name": "Madeira ancestral · 15",
+      "map_id": "vale-lunar",
+      "resource_id": "wood",
+      "x": 0.4411,
+      "y": 0.6602,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-15",
+      "name": "Fragmento de éter · 16",
+      "map_id": "vale-lunar",
+      "resource_id": "aether",
+      "x": 0.5104,
+      "y": 0.6413,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-16",
+      "name": "Cristal de aurora · 17",
+      "map_id": "vale-lunar",
+      "resource_id": "crystal",
+      "x": 0.6694,
+      "y": 0.5488,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-17",
+      "name": "Concha luminosa · 18",
+      "map_id": "vale-lunar",
+      "resource_id": "shell",
+      "x": 0.5958,
+      "y": 0.4425,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-19",
+      "name": "Ferro lunar · 20",
+      "map_id": "vale-lunar",
+      "resource_id": "iron",
+      "x": 0.2355,
+      "y": 0.7451,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-20",
+      "name": "Prata etérea · 21",
+      "map_id": "vale-lunar",
+      "resource_id": "silver",
+      "x": 0.4124,
+      "y": 0.2979,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-21",
+      "name": "Azpha (exemplo) · 22",
+      "map_id": "vale-lunar",
+      "resource_id": "azpha",
+      "x": 0.269,
+      "y": 0.4108,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-22",
+      "name": "Flor do crepúsculo · 23",
+      "map_id": "vale-lunar",
+      "resource_id": "moonflower",
+      "x": 0.2157,
+      "y": 0.4428,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-23",
+      "name": "Madeira ancestral · 24",
+      "map_id": "vale-lunar",
+      "resource_id": "wood",
+      "x": 0.444,
+      "y": 0.587,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-24",
+      "name": "Fragmento de éter · 25",
+      "map_id": "vale-lunar",
+      "resource_id": "aether",
+      "x": 0.4779,
+      "y": 0.7438,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-25",
+      "name": "Cristal de aurora · 26",
+      "map_id": "vale-lunar",
+      "resource_id": "crystal",
+      "x": 0.6052,
+      "y": 0.3998,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-26",
+      "name": "Concha luminosa · 27",
+      "map_id": "vale-lunar",
+      "resource_id": "shell",
+      "x": 0.7474,
+      "y": 0.6115,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-28",
+      "name": "Ferro lunar · 29",
+      "map_id": "vale-lunar",
+      "resource_id": "iron",
+      "x": 0.8073,
+      "y": 0.3349,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-29",
+      "name": "Prata etérea · 30",
+      "map_id": "vale-lunar",
+      "resource_id": "silver",
+      "x": 0.3537,
+      "y": 0.7645,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-30",
+      "name": "Azpha (exemplo) · 31",
+      "map_id": "vale-lunar",
+      "resource_id": "azpha",
+      "x": 0.1844,
+      "y": 0.7373,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-31",
+      "name": "Flor do crepúsculo · 32",
+      "map_id": "vale-lunar",
+      "resource_id": "moonflower",
+      "x": 0.7709,
+      "y": 0.2961,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-32",
+      "name": "Madeira ancestral · 33",
+      "map_id": "vale-lunar",
+      "resource_id": "wood",
+      "x": 0.2695,
+      "y": 0.7329,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-33",
+      "name": "Fragmento de éter · 34",
+      "map_id": "vale-lunar",
+      "resource_id": "aether",
+      "x": 0.8034,
+      "y": 0.707,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-34",
+      "name": "Cristal de aurora · 35",
+      "map_id": "vale-lunar",
+      "resource_id": "crystal",
+      "x": 0.6482,
+      "y": 0.6455,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-35",
+      "name": "Concha luminosa · 36",
+      "map_id": "vale-lunar",
+      "resource_id": "shell",
+      "x": 0.3732,
+      "y": 0.2241,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-37",
+      "name": "Ferro lunar · 38",
+      "map_id": "vale-lunar",
+      "resource_id": "iron",
+      "x": 0.7963,
+      "y": 0.5083,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-38",
+      "name": "Prata etérea · 39",
+      "map_id": "vale-lunar",
+      "resource_id": "silver",
+      "x": 0.1755,
+      "y": 0.3176,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-39",
+      "name": "Azpha (exemplo) · 40",
+      "map_id": "vale-lunar",
+      "resource_id": "azpha",
+      "x": 0.4664,
+      "y": 0.3491,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-40",
+      "name": "Flor do crepúsculo · 41",
+      "map_id": "vale-lunar",
+      "resource_id": "moonflower",
+      "x": 0.1883,
+      "y": 0.3279,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-41",
+      "name": "Madeira ancestral · 42",
+      "map_id": "vale-lunar",
+      "resource_id": "wood",
+      "x": 0.4999,
+      "y": 0.291,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "vale-lunar-42",
+      "name": "Fragmento de éter · 43",
+      "map_id": "vale-lunar",
+      "resource_id": "aether",
+      "x": 0.2444,
+      "y": 0.3127,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "vale-lunar-43",
+      "name": "Cristal de aurora · 44",
+      "map_id": "vale-lunar",
+      "resource_id": "crystal",
+      "x": 0.1922,
+      "y": 0.6588,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "vale-lunar-44",
+      "name": "Concha luminosa · 45",
+      "map_id": "vale-lunar",
+      "resource_id": "shell",
+      "x": 0.7413,
+      "y": 0.333,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-01",
+      "name": "Ferro lunar · 02",
+      "map_id": "ilhas-eter",
+      "resource_id": "iron",
+      "x": 0.3308,
+      "y": 0.4067,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-02",
+      "name": "Prata etérea · 03",
+      "map_id": "ilhas-eter",
+      "resource_id": "silver",
+      "x": 0.7517,
+      "y": 0.6467,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-03",
+      "name": "Azpha (exemplo) · 04",
+      "map_id": "ilhas-eter",
+      "resource_id": "azpha",
+      "x": 0.58,
+      "y": 0.6646,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-04",
+      "name": "Flor do crepúsculo · 05",
+      "map_id": "ilhas-eter",
+      "resource_id": "moonflower",
+      "x": 0.5482,
+      "y": 0.3963,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-05",
+      "name": "Madeira ancestral · 06",
+      "map_id": "ilhas-eter",
+      "resource_id": "wood",
+      "x": 0.6222,
+      "y": 0.659,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-06",
+      "name": "Fragmento de éter · 07",
+      "map_id": "ilhas-eter",
+      "resource_id": "aether",
+      "x": 0.2066,
+      "y": 0.4004,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-07",
+      "name": "Cristal de aurora · 08",
+      "map_id": "ilhas-eter",
+      "resource_id": "crystal",
+      "x": 0.3643,
+      "y": 0.7164,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-08",
+      "name": "Concha luminosa · 09",
+      "map_id": "ilhas-eter",
+      "resource_id": "shell",
+      "x": 0.3602,
+      "y": 0.5973,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-10",
+      "name": "Ferro lunar · 11",
+      "map_id": "ilhas-eter",
+      "resource_id": "iron",
+      "x": 0.5,
+      "y": 0.7212,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-11",
+      "name": "Prata etérea · 12",
+      "map_id": "ilhas-eter",
+      "resource_id": "silver",
+      "x": 0.6044,
+      "y": 0.4381,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-12",
+      "name": "Azpha (exemplo) · 13",
+      "map_id": "ilhas-eter",
+      "resource_id": "azpha",
+      "x": 0.2693,
+      "y": 0.4129,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-13",
+      "name": "Flor do crepúsculo · 14",
+      "map_id": "ilhas-eter",
+      "resource_id": "moonflower",
+      "x": 0.4808,
+      "y": 0.5818,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-14",
+      "name": "Madeira ancestral · 15",
+      "map_id": "ilhas-eter",
+      "resource_id": "wood",
+      "x": 0.829,
+      "y": 0.4019,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-15",
+      "name": "Fragmento de éter · 16",
+      "map_id": "ilhas-eter",
+      "resource_id": "aether",
+      "x": 0.7905,
+      "y": 0.73,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-16",
+      "name": "Cristal de aurora · 17",
+      "map_id": "ilhas-eter",
+      "resource_id": "crystal",
+      "x": 0.4623,
+      "y": 0.3444,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-17",
+      "name": "Concha luminosa · 18",
+      "map_id": "ilhas-eter",
+      "resource_id": "shell",
+      "x": 0.3245,
+      "y": 0.7359,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-19",
+      "name": "Ferro lunar · 20",
+      "map_id": "ilhas-eter",
+      "resource_id": "iron",
+      "x": 0.6006,
+      "y": 0.3136,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-20",
+      "name": "Prata etérea · 21",
+      "map_id": "ilhas-eter",
+      "resource_id": "silver",
+      "x": 0.1907,
+      "y": 0.5774,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-21",
+      "name": "Azpha (exemplo) · 22",
+      "map_id": "ilhas-eter",
+      "resource_id": "azpha",
+      "x": 0.2049,
+      "y": 0.5273,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-22",
+      "name": "Flor do crepúsculo · 23",
+      "map_id": "ilhas-eter",
+      "resource_id": "moonflower",
+      "x": 0.8111,
+      "y": 0.4797,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-23",
+      "name": "Madeira ancestral · 24",
+      "map_id": "ilhas-eter",
+      "resource_id": "wood",
+      "x": 0.376,
+      "y": 0.2795,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-24",
+      "name": "Fragmento de éter · 25",
+      "map_id": "ilhas-eter",
+      "resource_id": "aether",
+      "x": 0.3693,
+      "y": 0.3993,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-25",
+      "name": "Cristal de aurora · 26",
+      "map_id": "ilhas-eter",
+      "resource_id": "crystal",
+      "x": 0.2473,
+      "y": 0.6134,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-26",
+      "name": "Concha luminosa · 27",
+      "map_id": "ilhas-eter",
+      "resource_id": "shell",
+      "x": 0.5676,
+      "y": 0.622,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-28",
+      "name": "Ferro lunar · 29",
+      "map_id": "ilhas-eter",
+      "resource_id": "iron",
+      "x": 0.7805,
+      "y": 0.2249,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-29",
+      "name": "Prata etérea · 30",
+      "map_id": "ilhas-eter",
+      "resource_id": "silver",
+      "x": 0.4141,
+      "y": 0.678,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-30",
+      "name": "Azpha (exemplo) · 31",
+      "map_id": "ilhas-eter",
+      "resource_id": "azpha",
+      "x": 0.321,
+      "y": 0.3432,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-31",
+      "name": "Flor do crepúsculo · 32",
+      "map_id": "ilhas-eter",
+      "resource_id": "moonflower",
+      "x": 0.5907,
+      "y": 0.361,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-32",
+      "name": "Madeira ancestral · 33",
+      "map_id": "ilhas-eter",
+      "resource_id": "wood",
+      "x": 0.3918,
+      "y": 0.4393,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-33",
+      "name": "Fragmento de éter · 34",
+      "map_id": "ilhas-eter",
+      "resource_id": "aether",
+      "x": 0.3671,
+      "y": 0.5891,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-34",
+      "name": "Cristal de aurora · 35",
+      "map_id": "ilhas-eter",
+      "resource_id": "crystal",
+      "x": 0.6548,
+      "y": 0.6462,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-35",
+      "name": "Concha luminosa · 36",
+      "map_id": "ilhas-eter",
+      "resource_id": "shell",
+      "x": 0.8171,
+      "y": 0.2608,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-37",
+      "name": "Ferro lunar · 38",
+      "map_id": "ilhas-eter",
+      "resource_id": "iron",
+      "x": 0.6967,
+      "y": 0.6458,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-38",
+      "name": "Prata etérea · 39",
+      "map_id": "ilhas-eter",
+      "resource_id": "silver",
+      "x": 0.3167,
+      "y": 0.2919,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-39",
+      "name": "Azpha (exemplo) · 40",
+      "map_id": "ilhas-eter",
+      "resource_id": "azpha",
+      "x": 0.3517,
+      "y": 0.72,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-40",
+      "name": "Flor do crepúsculo · 41",
+      "map_id": "ilhas-eter",
+      "resource_id": "moonflower",
+      "x": 0.6653,
+      "y": 0.4255,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-41",
+      "name": "Madeira ancestral · 42",
+      "map_id": "ilhas-eter",
+      "resource_id": "wood",
+      "x": 0.6047,
+      "y": 0.6317,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    },
+    {
+      "id": "ilhas-eter-42",
+      "name": "Fragmento de éter · 43",
+      "map_id": "ilhas-eter",
+      "resource_id": "aether",
+      "x": 0.3592,
+      "y": 0.2796,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo"
+    },
+    {
+      "id": "ilhas-eter-43",
+      "name": "Cristal de aurora · 44",
+      "map_id": "ilhas-eter",
+      "resource_id": "crystal",
+      "x": 0.7053,
+      "y": 0.6164,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Próximo à margem • exemplo"
+    },
+    {
+      "id": "ilhas-eter-44",
+      "name": "Concha luminosa · 45",
+      "map_id": "ilhas-eter",
+      "resource_id": "shell",
+      "x": 0.7027,
+      "y": 0.6359,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Rota norte • exemplo"
+    }
+  ],
+  "cubes": [
+    {
+      "id": "vale-lunar-00",
+      "name": "Cubo oculto · 01",
+      "map_id": "vale-lunar",
+      "resource_id": "hidden-cube",
+      "x": 0.5318,
+      "y": 0.4137,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": true,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "vale-lunar-09",
+      "name": "Cubo oculto · 10",
+      "map_id": "vale-lunar",
+      "resource_id": "hidden-cube",
+      "x": 0.2825,
+      "y": 0.463,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": false,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "vale-lunar-18",
+      "name": "Cubo oculto · 19",
+      "map_id": "vale-lunar",
+      "resource_id": "hidden-cube",
+      "x": 0.5778,
+      "y": 0.6553,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": true,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "vale-lunar-27",
+      "name": "Cubo oculto · 28",
+      "map_id": "vale-lunar",
+      "resource_id": "hidden-cube",
+      "x": 0.8084,
+      "y": 0.6312,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": false,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "vale-lunar-36",
+      "name": "Cubo oculto · 37",
+      "map_id": "vale-lunar",
+      "resource_id": "hidden-cube",
+      "x": 0.5844,
+      "y": 0.714,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": true,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "ilhas-eter-00",
+      "name": "Cubo oculto · 01",
+      "map_id": "ilhas-eter",
+      "resource_id": "hidden-cube",
+      "x": 0.5884,
+      "y": 0.7107,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": true,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "ilhas-eter-09",
+      "name": "Cubo oculto · 10",
+      "map_id": "ilhas-eter",
+      "resource_id": "hidden-cube",
+      "x": 0.457,
+      "y": 0.4319,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": false,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "ilhas-eter-18",
+      "name": "Cubo oculto · 19",
+      "map_id": "ilhas-eter",
+      "resource_id": "hidden-cube",
+      "x": 0.2846,
+      "y": 0.583,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": true,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "ilhas-eter-27",
+      "name": "Cubo oculto · 28",
+      "map_id": "ilhas-eter",
+      "resource_id": "hidden-cube",
+      "x": 0.2407,
+      "y": 0.3602,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": false,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    },
+    {
+      "id": "ilhas-eter-36",
+      "name": "Cubo oculto · 37",
+      "map_id": "ilhas-eter",
+      "resource_id": "hidden-cube",
+      "x": 0.3394,
+      "y": 0.7724,
+      "source": "Mock criado para validar interface. Não usar como localização real.",
+      "certainty": "demo",
+      "notes": "Spawn possível • exemplo",
+      "underwater": true,
+      "route_hint": "Siga a margem ilustrada; rota fictícia."
+    }
+  ]
+}

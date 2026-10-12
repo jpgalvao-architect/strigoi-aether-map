@@ -1,0 +1,132 @@
+[
+  {
+    "name": "PySide6",
+    "version": "6.12.0",
+    "license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+    "notices": [
+      "third-party-notices\\PySide6\\pyside6-6.12.0.dist-info\\licenses\\LicenseRef-Qt-Commercial.txt"
+    ]
+  },
+  {
+    "name": "PySide6_Essentials",
+    "version": "6.12.0",
+    "license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+    "notices": [
+      "third-party-notices\\PySide6_Essentials\\pyside6_essentials-6.12.0.dist-info\\licenses\\LicenseRef-Qt-Commercial.txt"
+    ]
+  },
+  {
+    "name": "PySide6_Addons",
+    "version": "6.12.0",
+    "license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+    "notices": [
+      "third-party-notices\\PySide6_Addons\\pyside6_addons-6.12.0.dist-info\\licenses\\LicenseRef-Qt-Commercial.txt"
+    ]
+  },
+  {
+    "name": "shiboken6",
+    "version": "6.12.0",
+    "license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+    "notices": [
+      "third-party-notices\\shiboken6\\shiboken6-6.12.0.dist-info\\licenses\\LicenseRef-Qt-Commercial.txt"
+    ]
+  },
+  {
+    "name": "pydantic",
+    "version": "2.14.0",
+    "license": "MIT",
+    "notices": [
+      "third-party-notices\\pydantic\\pydantic-2.14.0.dist-info\\licenses\\LICENSE"
+    ]
+  },
+  {
+    "name": "pydantic-core",
+    "version": "2.50.0",
+    "license": "MIT",
+    "notices": [
+      "third-party-notices\\pydantic-core\\pydantic_core-2.50.0.dist-info\\licenses\\LICENSE"
+    ]
+  },
+  {
+    "name": "annotated-types",
+    "version": "0.8.0",
+    "license": "MIT",
+    "notices": [
+      "third-party-notices\\annotated-types\\annotated_types-0.8.0.dist-info\\licenses\\LICENSE"
+    ]
+  },
+  {
+    "name": "typing-extensions",
+    "version": "4.16.0",
+    "license": "PSF-2.0",
+    "notices": [
+      "third-party-notices\\typing-extensions\\typing_extensions-4.16.0.dist-info\\licenses\\LICENSE"
+    ]
+  },
+  {
+    "name": "typing-inspection",
+    "version": "0.4.4",
+    "license": "MIT",
+    "notices": [
+      "third-party-notices\\typing-inspection\\typing_inspection-0.4.4.dist-info\\licenses\\LICENSE"
+    ]
+  },
+  {
+    "name": "tzdata",
+    "version": "2026.5",
+    "license": "Apache-2.0",
+    "notices": [
+      "third-party-notices\\tzdata\\tzdata-2026.5.dist-info\\licenses\\LICENSE",
+      "third-party-notices\\tzdata\\tzdata-2026.5.dist-info\\licenses\\licenses\\LICENSE_APACHE"
+    ]
+  },
+  {
+    "name": "numpy",
+    "version": "2.5.4",
+    "license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+    "notices": [
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\LICENSE.txt",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\_core\\include\\numpy\\libdivide\\LICENSE.txt",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\_core\\src\\common\\pythoncapi-compat\\COPYING",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\_core\\src\\highway\\LICENSE",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\_core\\src\\multiarray\\dragon4_LICENSE.txt",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\_core\\src\\npysort\\x86-simd-sort\\LICENSE.md",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\_core\\src\\umath\\svml\\LICENSE",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\fft\\pocketfft\\LICENSE.md",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\linalg\\lapack_lite\\LICENSE.txt",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\ma\\LICENSE",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\random\\LICENSE.md",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\random\\src\\distributions\\LICENSE.md",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\random\\src\\mt19937\\LICENSE.md",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\random\\src\\pcg64\\LICENSE.md",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\random\\src\\philox\\LICENSE.md",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\random\\src\\sfc64\\LICENSE.md",
+      "third-party-notices\\numpy\\numpy-2.5.4.dist-info\\licenses\\numpy\\random\\src\\splitmix64\\LICENSE.md"
+    ]
+  },
+  {
+    "name": "opencv-python-headless",
+    "version": "5.0.0.93",
+    "license": "Apache 2.0",
+    "notices": [
+      "third-party-notices\\opencv-python-headless\\opencv_python_headless-5.0.0.93.dist-info\\LICENSE-3RD-PARTY.txt",
+      "third-party-notices\\opencv-python-headless\\opencv_python_headless-5.0.0.93.dist-info\\LICENSE.txt"
+    ]
+  },
+  {
+    "name": "mss",
+    "version": "10.2.0",
+    "license": "MIT License\nCopyright (c) 2013-2026, Micka\u00ebl 'Tiger-222' Schoentgen\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+    "notices": [
+      "third-party-notices\\mss\\mss-10.2.0.dist-info\\licenses\\LICENSE.txt"
+    ]
+  },
+  {
+    "name": "pyinstaller",
+    "version": "6.22.3",
+    "license": "GPLv2-or-later with a special exception which allows to use PyInstaller to build and distribute non-free programs (including commercial ones)",
+    "notices": [
+      "third-party-notices\\pyinstaller\\pyinstaller-6.22.3.dist-info\\licenses\\COPYING.txt"
+    ]
+  }
+]
