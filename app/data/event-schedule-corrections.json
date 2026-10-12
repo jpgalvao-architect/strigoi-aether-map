@@ -1,0 +1,32 @@
+{
+  "version": "sa-siege-clock-20261012",
+  "corrections": [
+    {
+      "id": "reference-sa-artifact-siege",
+      "old_sha256": "0bf0c8fc217f2b0d28cadb8bca932ae847fff24320e4e32bbafd652f55c956a6",
+      "replacement": {
+        "id": "reference-sa-artifact-siege",
+        "name": "Cerco de artefatos",
+        "kind": "Cerco",
+        "region": "SA",
+        "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
+        "verified_on": "2026-10-12",
+        "verification": "Início às 21h de Brasília confirmado pelo usuário no cliente SA em 12/10/2026",
+        "notes": "Horário regional de SA: 21h em America/Sao_Paulo. A regra anterior tratava 21h como UTC e antecipava o aviso em três horas. Dias e duração mantidos da fonte anterior; não foram novamente validados nesta observação.",
+        "duration_minutes": 30,
+        "schedule": {
+          "timezone": "America/Sao_Paulo",
+          "recurrence": "weekly",
+          "times": [
+            "21:00"
+          ],
+          "weekdays": [
+            0,
+            3,
+            5
+          ]
+        }
+      }
+    }
+  ]
+}

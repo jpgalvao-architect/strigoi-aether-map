@@ -1,16 +1,31 @@
-# Instalação • 0.8.0
+# Instalação • 0.9.0-beta.1
 
-Execute `StrigoiAetherMap-Setup-0.8.0.exe`. O primeiro diálogo permite escolher
+Execute `StrigoiAetherMap-Setup-0.9.0-beta.1.exe`. O primeiro diálogo permite escolher
 Português Brasileiro ou English. A tela de termos exige marcar o aceite;
 a caixa começa desmarcada. Sem aceite, não é possível avançar para instalar.
 Os termos gerais vêm primeiro, seguidos da descrição técnica e, na seção 5,
 das condições sobre decisões da operadora e sanções na conta.
 
-A instalação é por usuário, sem pedir administrador, com aplicativo em
+A instalação do aplicativo é por usuário, com aplicativo em
 `%LOCALAPPDATA%\Programs\StrigoiAetherMap`, atalho no menu Iniciar e atalho
 opcional na área de trabalho. O instalador inclui os textos de licença e
 o ZIP do código-fonte correspondente. Não instala Python globalmente e
 não altera o diretório do AION 2. Feche o Strigoi antes de atualizar.
+
+O componente Npcap é verificado no mesmo fluxo. Se faltar, o Setup baixa
+diretamente de npcap.com a versão 1.89, confere SHA-256 e assinatura válida
+de Nmap Software LLC e abre o assistente oficial. O assistente do driver
+pode pedir permissão de administrador; seus termos são aceitos nele próprio.
+Uma instalação existente é aproveitada. A cópia do Npcap não é embutida ou
+redistribuída. Ao cancelar/falhar, o Setup informa que o medidor depende
+desse componente; Atlas, agenda e Sonar continuam disponíveis.
+
+Na configuração atual, o hash esperado do download é
+`8aed85e900d783d1308506e919587d3e540451947af8a82f2d04f819e44305cc`.
+Versões futuras exigem nova revisão de URL, assinatura e hash antes do build.
+O download tem limite de tamanho e tempo; o temporário próprio é removido.
+`installer/install-npcap.ps1 -VerifyOnly` testa download e assinatura sem
+instalar o driver. `-CheckOnly` consulta disponibilidade sem capturar.
 
 A versão dos termos, hash dos dois textos e idioma do instalador ficam
 no registro HKCU, sob `Software\StrigoiAetherMap`. Não são enviados a um
@@ -48,6 +63,9 @@ do jogo participa da montagem.
 Instalação silenciosa exige `/S /ACCEPTTERMS` e aceita `/LANG=en_US` ou
 `/LANG=pt_BR`. Sem o parâmetro de aceite, termina com código 2 sem instalar.
 O operador deve ler os termos antes de autorizar esse modo.
+O modo silencioso não instala Npcap nem abre seu assistente. Para obter o
+componente no fluxo integrado, use a instalação interativa. Instalação
+silenciosa de Npcap exige condições OEM próprias e não foi habilitada.
 `--test-build` cria um instalador isolado com chave de registro separada e
 sem atalhos; não deve ser distribuído aos usuários.
 

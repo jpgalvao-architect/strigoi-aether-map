@@ -15,6 +15,11 @@
     'showcase.overlay.description': 'Sua escolha de camadas acompanha o minimapa e o mapa grande. Abra M e o overlay muda com você.',
     'showcase.events.title': 'Um olho na aventura. Outro no relógio.',
     'showcase.events.description': 'Escolha o evento do painel flutuante. Recolha para acompanhar o próximo horário ou expanda para ver o dia.',
+    'tab.combat': 'Combate',
+    'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
+    'showcase.combat.title': 'Seu grupo. Seu dano observado.',
+    'showcase.combat.description': 'Acompanhe dano, DPS e participação, com ícones de classe. A próxima instância reconhecida abre um novo placar e preserva o histórico.',
+    'download.beta': 'Beta com medidor de dano em instâncias, ícones de classe e reinício do placar ao reconhecer uma nova instância. A leitura de combate é experimental; os resultados podem ser parciais.',
     'showcase.sonar.title': 'O som vira uma pista na tela.',
     'showcase.sonar.description': 'Selecione o áudio do jogo, escolha a sensibilidade e ative o Sonar. Você controla quando ele começa e termina.',
   });
@@ -23,7 +28,7 @@
     'page.title': 'Strigoi Aether Map — your next discovery', 'legal.page.title': 'Terms of use — Strigoi Aether Map',
     'nav.explore': 'Explore', 'nav.sonar': 'Sonar', 'nav.download': 'Downloads',
     'hero.title': 'Your next<br>discovery<br><em>starts here.</em>',
-    'hero.description': 'Maps, gatherables, cubes and events in one place. Aether minds the map. You live the adventure.',
+    'hero.description': 'Maps, gatherables, cubes, events and combat in one place. Aether minds the map. You live the adventure.',
     'hero.tour': 'Meet the app', 'hero.platform': 'Windows 10/11 · 64-bit · PT-BR / EN-US',
     'hero.free': 'Free, with open-source code', 'hero.license': 'GPLv3 code',
     'hero.cube': 'Your next clue is nearby.', 'hero.map': 'Your exploration journal',
@@ -45,6 +50,11 @@
     'showcase.overlay.description': 'Your chosen layers follow the minimap and full map. Press M and the overlay switches with you.',
     'showcase.events.title': 'Adventure in sight. Time on your side.',
     'showcase.events.description': 'Choose the floating panel event. Collapse it to track the next occurrence or expand it to see the day.',
+    'tab.combat': 'Combat',
+    'screen.combat': 'Combat module with observed damage, DPS and group share',
+    'showcase.combat.title': 'Your group. Your observed damage.',
+    'showcase.combat.description': 'Track damage, DPS and share with class icons. A recognized new instance opens a fresh meter and preserves your history.',
+    'download.beta': 'Beta with an instance damage meter, class icons and a fresh meter when a new instance is recognized. Combat capture is experimental; results may be partial.',
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
     'showcase.sonar.description': 'Select the game audio, choose sensitivity and enable Sonar. You control when it starts and stops.',
     'explore.source': 'Real map images and community locations with documented sources. Markers indicate possible locations, not guaranteed spawns.',
@@ -63,12 +73,12 @@
     'download.eyebrow': 'YOUR LITTLE GUARDIAN IS READY', 'download.title': 'See you in Altgard.',
     'download.description': 'Choose how to use Strigoi. Both versions offer the same features and include source code.',
     'download.installer': 'Download installer', 'download.recommended': 'Recommended',
-    'download.installer.detail': 'Shortcuts, initial language and uninstaller.',
+    'download.installer.detail': 'Shortcuts, initial language, uninstaller and official Npcap setup for combat.',
     'download.portable': 'Download portable', 'download.portable.detail': 'Extract the entire folder and open the app.',
     'download.terms': 'Read the terms of use', 'download.checksums': 'Verify files · SHA-256',
     'faq.eyebrow': 'NO MYSTERY', 'faq.title': 'Before you set off.',
     'faq.one.q': 'Does the app modify the game?',
-    'faq.one.a': 'No. Markers and alerts are external overlay windows. The app analyzes the screen image and receives audio through Windows; it does not inject code into DLLs, modify files or read AION 2 memory. The terms describe the conditions of use.',
+    'faq.one.a': 'No. Markers and alerts are external overlay windows. The app analyzes the screen image and receives audio through Windows; it does not inject code into DLLs, modify files or read AION 2 memory. Combat passively reads the game connection using Npcap. The terms describe the conditions of use.',
     'faq.two.q': 'Does it work on the minimap and full map?',
     'faq.two.a': 'Yes, with a rectangular, north-fixed minimap. Select only the minimap terrain, without the title bar. Opening the full map with M switches the overlay automatically; closing it returns to the minimap.',
     'faq.three.q': 'Is the schedule for South America?',
@@ -110,7 +120,7 @@
       el.dataset.i18n = `showcase.${selectedTab}.${part}`;
       el.textContent = t[el.dataset.i18n];
     }
-    document.getElementById('showcase-number').textContent = `0${tabs.findIndex(tab => tab.dataset.tab === selectedTab) + 1} / 04`;
+    document.getElementById('showcase-number').textContent = `0${tabs.findIndex(tab => tab.dataset.tab === selectedTab) + 1} / ${String(tabs.length).padStart(2, '0')}`;
     document.getElementById('showcase-icon').src = `assets/icons/${selectedTab}.svg`;
     document.getElementById('showcase-panel').setAttribute('aria-labelledby', `tab-${selectedTab}`);
     for (const tab of tabs) {

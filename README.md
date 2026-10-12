@@ -1,6 +1,8 @@
 # STRIGOI AETHER MAP
 
-**AION 2 Companion App · 0.8.0 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.2 · Windows x64**
+
+A beta 0.9.0-beta.2 corrige a identificação do cliente AION com ExitLag, mostra ícones de classe no placar, salva e reinicia a medição ao reconhecer uma nova instância e corrige o cerco SA para 21h de Brasília. A medição continua experimental.
 
 [Página do aplicativo](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
 [Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/latest) ·
@@ -8,6 +10,12 @@
 
 Seu caderno de exploração: mapas, coletas, cubos e eventos em um só lugar.
 Aether, o pequeno vampiro asmodiano, acompanha sua jornada.
+
+A beta 0.9.0 acrescenta o medidor experimental de dano em instâncias,
+com painel, DPS/participação, invocações atribuídas, filtro por alvo e
+histórico local. A leitura ainda precisa de validação em SA; resultados
+são identificados como dados parciais. O Setup conduz o download oficial
+e abre o assistente do Npcap quando necessário. Veja [Combate](docs/COMBAT.md).
 
 Na 0.8.0, o instalador oferece português do Brasil e inglês dos EUA e exige
 aceite dos termos antes de instalar. A escolha define o idioma inicial;
@@ -56,6 +64,8 @@ nem executar como administrador. O app usa mapas e agenda locais.
 - **Donate:** apoie o criador pelo Mercado Pago ou abra o canal oficial da
   instituição escolhida no navegador. As opções indicam quem recebe o apoio.
 - **Configurações:** escolha fuso e notificações. Alertas exigem o app aberto.
+- **Combate:** ative Medir instância antes de entrar no jogo, escolha a
+  visão e o alvo, e encerre a medição ao terminar. Não há envio de resultados.
 
 Altgard é o padrão inicial. Escolhas posteriores, filtros e visitas persistem.
 Fechar a janela encerra o app; minimizar o mantém em execução.

@@ -227,6 +227,21 @@ class OverlaySettings(Model):
     capture_hz: int = Field(default=60, ge=10, le=60)
 
 
+class CombatSettings(Model):
+    panel_visible: bool = False
+    locked: bool = True
+    opacity: float = Field(default=0.9, ge=0.2, le=1)
+    position: tuple[int, int] | None = None
+    size: tuple[int, int] | None = None
+
+    @field_validator("size")
+    @classmethod
+    def valid_size(cls, value):
+        if value is not None and not (360 <= value[0] <= 3840 and 180 <= value[1] <= 2160):
+            raise ValueError("Invalid combat panel size")
+        return value
+
+
 class Preferences(Model):
     schema_version: Literal[1] = 1
     ui_language: Literal['pt_BR','en_US'] | None = None
@@ -243,6 +258,7 @@ class Preferences(Model):
     hide_visited: bool = False
     notifications: NotificationSettings = Field(default_factory=NotificationSettings)
     overlay: OverlaySettings = Field(default_factory=OverlaySettings)
+    combat: CombatSettings = Field(default_factory=CombatSettings)
     remote_events_url: str = ""
     remote_auto_refresh: bool = False
     remote_interval_minutes: int = Field(default=30, ge=5, le=1440)

@@ -36,6 +36,7 @@ class AppContext(QObject):
         # Consent is session-scoped. A saved configuration never starts capture on launch.
         self.prefs.overlay.enabled = False
         self.prefs.sonar_enabled = False
+        self.prefs.combat.panel_visible = False
         if self.prefs.overlay_layers_release != "atlas-v070":
             self.prefs.overlay.layers = "atlas"
             self.prefs.overlay_layers_release = "atlas-v070"
@@ -48,6 +49,7 @@ class AppContext(QObject):
             self.messages.append(warning)
         self.provider_status = "Cache local" if cache.exists() else "JSON local • offline"
         self.upgrade_bundled_content()
+        self.upgrade_bundled_event_schedules()
         self.upgrade_bundled_cube_sites()
         self.alerts = AlertEngine(directory / "alerts.json")
         self.normalize_map()
@@ -85,6 +87,18 @@ class AppContext(QObject):
             if self.prefs.timezone == "local":
                 self.prefs.timezone = "America/Sao_Paulo"
         self.prefs.content_release = "sa-live-overlay-v030"
+
+    def upgrade_bundled_event_schedules(self):
+        from app.modules.events.corrections import correct_bundled_schedules
+        manifest = json.loads((PACKAGE / "data/event-schedule-corrections.json").read_text(encoding="utf-8"))
+        updated, changed = correct_bundled_schedules(self.feed, manifest)
+        if changed:
+            path = self.directory / "events-cache.json"
+            backup = self.directory / "events-cache.siege-v030-backup.json"
+            if path.exists() and not backup.exists():
+                shutil.copy2(path, backup)
+            atomic_json(path, updated)
+            self.feed = updated
 
     def normalize_map(self):
         ids = {m.id for m in self.dataset.maps}

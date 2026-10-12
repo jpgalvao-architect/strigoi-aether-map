@@ -1,6 +1,8 @@
 # Strigoi Aether Map
 
-**AION 2 Companion App · 0.8.0 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.2 · Windows x64**
+
+Beta 0.9.0-beta.2 fixes AION client detection with ExitLag, adds class icons to the meter, archives and resets the meter when a new instance is recognized, and corrects the SA siege start to 21:00 São Paulo time. Combat capture remains experimental.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
 [Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/latest) ·
@@ -9,11 +11,20 @@
 Your exploration journal: maps, gatherables, possible cube locations and
 events. Aether, the Asmodian-inspired vampire, joins your journey.
 
-Run `StrigoiAetherMap-Setup-0.8.0.exe`, choose English and review the terms
+The 0.9 beta adds experimental instance damage tracking, a compact overlay,
+observed DPS/share, explicit summon ownership, target filtering and local
+history. SA capture still needs validation; results are marked partial.
+See [Combat](docs/COMBAT.md) for current scope and limitations.
+
+Run `StrigoiAetherMap-Setup-0.9.0-beta.2.exe`, choose English and review the terms
 before accepting. Setup installs for the current user and includes an
 uninstaller and corresponding source code. Existing preferences and visits
 are preserved. English is the default for a fresh installation; an explicit
 language preference from an earlier installation remains yours.
+
+If Npcap is missing, Setup downloads the verified official installer and
+opens the publisher's wizard in the same flow. Complete that wizard and its
+Windows permission prompt. No Npcap copy is embedded in our download.
 
 For the portable edition, extract the entire ZIP and open
 `StrigoiAetherMap.exe`. Keep `_internal` beside the executable. Python does

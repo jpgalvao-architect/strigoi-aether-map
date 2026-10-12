@@ -85,10 +85,17 @@ def main() -> int:
                         detector=CubeDetector(reference['pcm'])
                         assert detector.match(reference['pcm'][:int(detector.rate*detector.window_seconds)]) is not None
                     assert not window.sonar.active and window.sonar.worker is None
+                    assert window.combat.process is None
+                    assert not window.combat_page.panel.isVisible()
                     if sys.platform=='win32':
                         result=subprocess.run([str(HELPER),'--version'],capture_output=True,text=True,
                             timeout=5,check=True,creationflags=subprocess.CREATE_NO_WINDOW)
                         assert 'Strigoi Sonar Capture 1' in result.stdout
+                        from app.modules.combat.service import HELPER as COMBAT_HELPER
+                        combat_check=subprocess.run([str(COMBAT_HELPER),'--self-test'],capture_output=True,text=True,
+                            timeout=10,check=True,creationflags=subprocess.CREATE_NO_WINDOW)
+                        assert 'SELF_TEST_OK' in combat_check.stdout
+                        logging.info('SMOKE_COMBAT_OK: helper self-test, no live capture')
                     logging.info('SMOKE_SONAR_OK: reference, detector and helper checked without capture')
                     capture_window()
                     logging.info("SMOKE_OK: all %s pages rendered", window.stack.count())

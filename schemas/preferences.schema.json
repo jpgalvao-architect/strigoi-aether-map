@@ -1,5 +1,73 @@
 {
   "$defs": {
+    "CombatSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "panel_visible": {
+          "default": false,
+          "title": "Panel Visible",
+          "type": "boolean"
+        },
+        "locked": {
+          "default": true,
+          "title": "Locked",
+          "type": "boolean"
+        },
+        "opacity": {
+          "default": 0.9,
+          "maximum": 1,
+          "minimum": 0.2,
+          "title": "Opacity",
+          "type": "number"
+        },
+        "position": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Position"
+        },
+        "size": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Size"
+        }
+      },
+      "title": "CombatSettings",
+      "type": "object"
+    },
     "NotificationSettings": {
       "additionalProperties": false,
       "properties": {
@@ -271,6 +339,9 @@
     },
     "overlay": {
       "$ref": "#/$defs/OverlaySettings"
+    },
+    "combat": {
+      "$ref": "#/$defs/CombatSettings"
     },
     "remote_events_url": {
       "default": "",

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "demo": false,
-  "release": "reference-sa-v030",
-  "coverage": "S. America • agenda problem-xyz de 07/10/2026; horários divergem de outras fontes",
+  "release": "reference-sa-v031",
+  "coverage": "SA · cerco às 21h no fuso regional confirmado no cliente em 12/10/2026; demais horários mantidos de suas fontes",
   "events": [
     {
       "id": "reference-sa-rift",
@@ -94,12 +94,12 @@
       "kind": "Cerco",
       "region": "SA",
       "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
-      "verified_on": "2026-10-11",
-      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
-      "notes": "Perfil do projeto consultado. Relógio da regra: UTC. Horários podem divergir da agenda anterior.",
+      "verified_on": "2026-10-12",
+      "verification": "Início às 21h de Brasília confirmado pelo usuário no cliente SA em 12/10/2026",
+      "notes": "Horário regional de SA: 21h em America/Sao_Paulo. A regra anterior tratava 21h como UTC e antecipava o aviso em três horas. Dias e duração mantidos da fonte anterior; não foram novamente validados nesta observação.",
       "duration_minutes": 30,
       "schedule": {
-        "timezone": "UTC",
+        "timezone": "America/Sao_Paulo",
         "recurrence": "weekly",
         "times": [
           "21:00"

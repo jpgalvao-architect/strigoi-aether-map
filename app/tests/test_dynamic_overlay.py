@@ -123,7 +123,7 @@ def test_sa_profile_uses_explicit_rule_zone():
     event={e.id:e for e in feed.events}
     now=datetime(2026,10,12,tzinfo=UTC)
     siege=occurrences([event['reference-sa-artifact-siege']],now)[0]
-    assert siege.starts_at==datetime(2026,10,12,21,tzinfo=UTC) # 18h SA, as published by this project
+    assert siege.starts_at==datetime(2026,10,13,0,tzinfo=UTC) # 21h SA, confirmed in the client by the user
     reset=occurrences([event['reference-sa-daily-reset']],now)[0]
     assert reset.starts_at==datetime(2026,10,12,12,tzinfo=UTC) # 09h SA, project profile
     rift=occurrences([event['reference-sa-rift']],now)[0]

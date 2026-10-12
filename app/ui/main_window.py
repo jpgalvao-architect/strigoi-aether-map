@@ -44,6 +44,9 @@ class MainWindow(QMainWindow):
         from app.ui.donate_page import DonatePage
         self.sonar = SonarService(context)
         self.sonar_alert = SonarAlert(context)
+        from app.modules.combat.service import CombatService
+        from app.ui.combat_page import CombatPage
+        self.combat = CombatService(context)
         root = QWidget()
         root_layout = QHBoxLayout(root)
         root_layout.setContentsMargins(0, 0, 0, 0)
@@ -70,7 +73,7 @@ class MainWindow(QMainWindow):
         side.addWidget(game)
         side.addSpacing(24)
         self.nav = []
-        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Donate','donate'),('Sobre','about')]
+        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about')]
         for index, (text, name) in enumerate(entries):
             entry = QPushButton(text)
             entry.setIcon(ui_icon(name))
@@ -103,7 +106,8 @@ class MainWindow(QMainWindow):
         self.overlay_page = LiveOverlayPage(context, self.overlay)
         self.sonar_page = SonarPage(context, self.sonar, self.sonar_alert)
         self.donate = DonatePage()
-        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.donate, self.about_page()]
+        self.combat_page = CombatPage(context, self.combat)
+        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page()]
         for page in self.pages:
             scroll = QScrollArea()
             scroll.setWidgetResizable(True)
@@ -165,6 +169,7 @@ class MainWindow(QMainWindow):
         body.addWidget(label('Como o aplicativo funciona', 'eyebrow'))
         body.addWidget(label('O Strigoi funciona ao lado do AION 2. Os marcadores, o painel de eventos e os avisos do Sonar aparecem em janelas externas de overlay sobre o jogo. Para acompanhar o mapa, o app analisa a imagem da tela; o Sonar recebe o áudio do aplicativo pelo Windows. O Atlas e a agenda consultam dados locais.', 'subtitle', True))
         body.addWidget(label('Não injetamos código nas DLLs do jogo, não alteramos seus arquivos e não lemos sua memória. Os overlays são desenhados pelo próprio Strigoi, fora do processo do AION 2.', 'subtitle', True))
+        body.addWidget(label('O módulo experimental de Combate também pode ler passivamente o tráfego recebido pela conexão do jogo, usando Npcap. A leitura começa somente por ação do usuário; pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.', 'subtitle', True))
         body.addWidget(label('Acessibilidade auditiva', 'eyebrow'))
         body.addWidget(label('O Sonar foi desenvolvido exclusivamente como recurso de acessibilidade para auxiliar pessoas surdas ou com deficiência auditiva a encontrar cubos ocultos com mais facilidade. Ele transforma uma pista sonora do jogo em um aviso visual, reduzindo a dependência da audição durante a exploração.', 'subtitle', True))
         body.addWidget(label('O aviso indica um som compatível com a referência e pode falhar. Não confirma a presença nem informa a posição exata do cubo.', 'subtitle', True))
@@ -199,6 +204,8 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
     def closeEvent(self, event):
+        self.combat_page.shutdown()
+        self.combat.shutdown()
         self.alert_timer.stop()
         self.overlay.stop()
         self.sonar.stop()

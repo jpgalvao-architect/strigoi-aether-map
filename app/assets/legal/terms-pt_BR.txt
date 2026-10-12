@@ -1,5 +1,5 @@
 Termos de uso — Strigoi Aether Map
-Versão 1.0 · 12 de outubro de 2026
+Versão 1.1 · 12 de outubro de 2026
 
 1. Sobre o software e sua licença
 
@@ -21,9 +21,13 @@ Os marcadores, o painel de eventos e os avisos aparecem em janelas externas de o
 
 O Strigoi não injeta código nas DLLs do jogo, não modifica seus arquivos e não lê sua memória. Ele não realiza ações de jogo automaticamente. Essa descrição técnica não representa autorização da desenvolvedora ou da operadora do AION 2.
 
+O módulo experimental de Combate lê passivamente o tráfego recebido pela conexão do jogo por meio do Npcap, quando ativado pelo usuário. Ele apresenta dano observado; resultados podem ser parciais e a compatibilidade regional precisa ser validada. Não envia ou modifica pacotes do jogo. Npcap é obtido do fabricante, com licença e assistente de instalação próprios.
+
 4. Dados e recursos de acessibilidade
 
 Preferências e registros de exploração ficam armazenados neste computador. A análise de imagem e áudio ocorre localmente. O Sonar não usa o microfone nem grava o áudio analisado.
+
+O histórico de combate também é local. Pacotes brutos não são gravados ou enviados. Nomes observados e resultados podem constar no histórico e no texto copiado voluntariamente pelo usuário. O download do Npcap acessa o site do fabricante, após escolha no fluxo de instalação.
 
 O Sonar foi desenvolvido como recurso de acessibilidade auditiva, convertendo uma pista sonora em aviso visual. A ativação dos recursos de captura depende de uma ação do usuário. Atualizações remotas de agenda e links externos, quando usados, acessam os serviços escolhidos e estão sujeitos às políticas desses serviços.
 

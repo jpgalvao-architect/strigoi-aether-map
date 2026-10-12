@@ -112,7 +112,8 @@ class EventsPage(QWidget):
         self.profile.blockSignals(True)
         known = self.context.prefs.agenda_profile
         expected = "reference-"+known.removeprefix("reference-")+"-v030" if known.startswith("reference-") else "latam-2026-10-11"
-        selected = known if self.context.feed.release==expected else "custom"
+        matches = self.context.feed.release == expected or (known == "reference-sa" and self.context.feed.release == "reference-sa-v031")
+        selected = known if matches else "custom"
         self.profile.setCurrentIndex(max(0,self.profile.findData(selected)))
         self.profile.blockSignals(False)
 

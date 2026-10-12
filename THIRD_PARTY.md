@@ -30,3 +30,18 @@ permanecem separadas da GPLv3 do script de instalação próprio.
 
 `qtbase_pt_BR.qm` vem da instalação PySide6/Qt 6.12 e mantém os termos do Qt.
 O catálogo `en_US.json` e os controles de tradução são próprios do projeto.
+
+## Combate experimental
+
+O helper `strigoi-combat.exe` reutiliza os componentes de captura, eventos,
+GameData e protocolo de cyberbadger6969/aion2-dps-meter, commit
+414de5c1d5f3d45ce35701bd25229c2dba736bb6, sob GPL-3.0. Fonte completo dos
+componentes usados, licença, origem e alterações em `native/combat/vendor/`.
+O motor de ranking e a UI do Strigoi são próprios; não foram incorporados
+catálogos de nomes, UI ou funções de envio online do projeto de origem.
+
+SharpPcap 6.3.1 mantém MIT, PacketDotNet 1.4.8 mantém MPL-2.0 e
+K4os.Compression.LZ4 1.3.8 mantém MIT. O helper inclui runtime .NET; os
+avisos e URLs das fontes estão em `app/assets/combat/notices/`.
+Npcap é obtido diretamente do fabricante pelo usuário durante a instalação,
+com assistente e aceite próprios; o componente não é embutido na distribuição.

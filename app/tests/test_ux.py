@@ -115,7 +115,10 @@ def test_restored_panel_position_stays_on_available_screen(qapp,tmp_path):
 def test_ui_hides_technical_copy_and_uses_navigation_icons(qapp,tmp_path):
     window=MainWindow(AppContext(tmp_path));window.show();qapp.processEvents()
     try:
-        assert [b.text() for b in window.nav]==['Início','Atlas','Coletas','Cubos ocultos','Eventos','Configurações','Overlay','Sonar','Donate','Sobre']
+        assert [b.text() for b in window.nav]==['Início','Atlas','Coletas','Cubos ocultos','Eventos','Configurações','Overlay','Sonar','Combate','Donate','Sobre']
+        window.navigate(8)
+        assert window.pages[8] is window.combat_page and window.nav[8].isChecked()
+        assert 'cubes' not in window.cubes.resource_checks
         assert all(not b.icon().isNull() for b in window.nav)
         texts=' '.join(label.text() for label in window.findChildren(QLabel))
         assert 'recurso de acessibilidade' in texts and 'anticheat' not in texts and 'mascote oficial' not in texts

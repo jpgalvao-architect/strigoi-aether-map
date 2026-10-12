@@ -111,9 +111,9 @@ class AtlasPage(QWidget):
                 self.category_layout.addWidget(checkbox)
             if self.cubes_only:
                 for resource in dataset.resources:
-                    if resource.id not in ('cube-spawns', 'cubes'):
+                    if resource.id != 'cube-spawns':
                         continue
-                    checkbox = QCheckBox('Posições possíveis' if resource.id=='cube-spawns' else 'Registros antigos KR/TW')
+                    checkbox = QCheckBox('Posições possíveis')
                     checkbox.toggled.connect(lambda checked, key=resource.id: self.resource_changed(key, checked))
                     self.resource_checks[resource.id] = checkbox
                     self.category_layout.addWidget(checkbox)

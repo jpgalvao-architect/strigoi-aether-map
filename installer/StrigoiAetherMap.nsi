@@ -9,7 +9,7 @@ Unicode true
   !error "Define PAYLOAD as the complete prepared portable folder."
 !endif
 !ifndef OUTPUT
-  !define OUTPUT "StrigoiAetherMap-Setup-0.8.0.exe"
+  !define OUTPUT "StrigoiAetherMap-Setup-0.9.0-beta.2.exe"
 !endif
 !ifndef UNINSTALL_MANIFEST
   !error "Generate the exact installed-file removal manifest first."
@@ -33,11 +33,11 @@ RequestExecutionLevel user
 ManifestDPIAware true
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
-BrandingText "Strigoi Aether Map · 0.8.0"
-VIProductVersion "0.8.0.0"
+BrandingText "Strigoi Aether Map · 0.9.0-beta.2"
+VIProductVersion "0.9.0.2"
 VIAddVersionKey /LANG=1033 "ProductName" "Strigoi Aether Map"
 VIAddVersionKey /LANG=1033 "FileDescription" "Strigoi Aether Map installer"
-VIAddVersionKey /LANG=1033 "FileVersion" "0.8.0"
+VIAddVersionKey /LANG=1033 "FileVersion" "0.9.0-beta.2"
 VIAddVersionKey /LANG=1033 "LegalCopyright" "2026 Strigoi Aether Map contributors"
 !define MUI_ICON "..\app\assets\aether.ico"
 !define MUI_UNICON "..\app\assets\aether.ico"
@@ -75,6 +75,12 @@ LangString AppSection ${LANG_PORTUGUESEBR} "Aplicativo, licenças e código-font
 LangString AppSection ${LANG_ENGLISH} "Application, licenses and source code"
 LangString DesktopSection ${LANG_PORTUGUESEBR} "Atalho na área de trabalho"
 LangString DesktopSection ${LANG_ENGLISH} "Desktop shortcut"
+LangString NpcapSection ${LANG_PORTUGUESEBR} "Npcap · componente do medidor de dano"
+LangString NpcapSection ${LANG_ENGLISH} "Npcap · damage meter component"
+LangString NpcapExplain ${LANG_PORTUGUESEBR} "O instalador verificará se Npcap já está disponível. Caso necessário, baixará a cópia oficial verificada e abrirá o assistente do fabricante, que pode solicitar permissão do Windows. Conclua esse assistente para usar o medidor de dano."
+LangString NpcapExplain ${LANG_ENGLISH} "Setup checks whether Npcap is already available. If needed, it downloads the verified official copy and opens the publisher's wizard, which may request Windows permission. Complete that wizard to use the damage meter."
+LangString NpcapMissing ${LANG_PORTUGUESEBR} "Npcap não foi instalado. O Atlas e o Sonar continuam disponíveis; o medidor de dano precisará do componente. Tentar novamente?"
+LangString NpcapMissing ${LANG_ENGLISH} "Npcap was not installed. Atlas and Sonar remain available; the damage meter needs this component. Try again?"
 LangString Unsupported ${LANG_PORTUGUESEBR} "Este aplicativo requer Windows 10/11 de 64 bits."
 LangString Unsupported ${LANG_ENGLISH} "This application requires 64-bit Windows 10/11."
 LangString SilentTerms ${LANG_PORTUGUESEBR} "A instalação silenciosa exige /ACCEPTTERMS após a leitura dos termos."
@@ -133,15 +139,15 @@ Section "$(AppSection)" Core
     Abort
   ${EndIf}
   FileOpen $0 "$INSTDIR\.strigoi-install-owned" w
-  FileWrite $0 "StrigoiAetherMap-0.8.0"
+  FileWrite $0 "StrigoiAetherMap-0.9.0-beta.2"
   FileClose $0
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "${REGKEY}" "InstallDir" "$INSTDIR"
-  WriteRegStr HKCU "${REGKEY}" "TermsVersion" "1.0"
+  WriteRegStr HKCU "${REGKEY}" "TermsVersion" "1.1"
   WriteRegStr HKCU "${REGKEY}" "TermsSHA256" "${TERMS_HASH}"
   WriteRegStr HKCU "${REGKEY}" "InstallerLanguage" "$DefaultLanguage"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayName" "Strigoi Aether Map"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.8.0"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.9.0-beta.2"
   WriteRegStr HKCU "${UNINSTALLKEY}" "Publisher" "Strigoi Aether Map"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayIcon" "$INSTDIR\StrigoiAetherMap.exe"
   WriteRegStr HKCU "${UNINSTALLKEY}" "InstallLocation" "$INSTDIR"
@@ -154,12 +160,36 @@ Section "$(AppSection)" Core
   !endif
   CreateDirectory "$SeedDirectory"
   FileOpen $0 "$SeedDirectory\installation.json" w
-  FileWrite $0 '{$\"default_language$\":$\"$DefaultLanguage$\",$\"terms_version$\":$\"1.0$\",$\"terms_sha256$\":$\"${TERMS_HASH}$\"}'
+  FileWrite $0 '{$\"default_language$\":$\"$DefaultLanguage$\",$\"terms_version$\":$\"1.1$\",$\"terms_sha256$\":$\"${TERMS_HASH}$\"}'
   FileClose $0
   !ifndef TEST_BUILD
     CreateDirectory "$SMPROGRAMS\Strigoi Aether Map"
     CreateShortcut "$SMPROGRAMS\Strigoi Aether Map\Strigoi Aether Map.lnk" "$INSTDIR\StrigoiAetherMap.exe"
     CreateShortcut "$SMPROGRAMS\Strigoi Aether Map\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+  !endif
+SectionEnd
+
+Section "$(NpcapSection)" Npcap
+  SectionIn RO
+  !ifdef TEST_BUILD
+    DetailPrint "Npcap integration skipped in isolated installer tests"
+  !else
+    IfSilent npcap_done 0
+    InitPluginsDir
+    SetOutPath "$PLUGINSDIR"
+    File /oname=install-npcap.ps1 "install-npcap.ps1"
+    DetailPrint "$(NpcapExplain)"
+    npcap_retry:
+      nsExec::ExecToStack '"$WINDIR\Sysnative\WindowsPowerShell\v1.0\powershell.exe" -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "$PLUGINSDIR\install-npcap.ps1" -Language "$DefaultLanguage"'
+      Pop $0
+      Pop $1
+      DetailPrint "$1"
+      ${If} $0 == "3010"
+        SetRebootFlag true
+      ${ElseIf} $0 != "0"
+        MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "$(NpcapMissing)" IDRETRY npcap_retry
+      ${EndIf}
+    npcap_done:
   !endif
 SectionEnd
 
