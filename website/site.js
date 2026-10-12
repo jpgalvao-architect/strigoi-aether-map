@@ -86,7 +86,7 @@
     'support.community.eyebrow': 'SUPPORT THE DEAF COMMUNITY TOO',
     'support.community.description': 'You can also contribute directly to Brazilian organizations that support deaf people.',
     'support.community.note': 'Donate through the organizations’ official channels. Recipients differ from personal creator support.',
-    'footer.creator': 'Made by Hyrden to join your exploration.', 'footer.source': 'Source code', 'footer.terms': 'Terms of use', 'footer.feedback': 'Feedback',
+    'footer.creator': 'Contact:', 'footer.source': 'Source code', 'footer.terms': 'Terms of use', 'footer.feedback': 'Feedback',
     'footer.note': 'An independent project with no official affiliation with AION 2 or NCSOFT. Game trademarks and images belong to their respective owners. Sources and credits are included with the app.',
     'legal.back': '← Back to the app', 'legal.title': 'Terms of use',
     'legal.intro': 'The complete terms included in the installer. Original code uses GPLv3; third-party materials retain their respective rights and licenses.',
