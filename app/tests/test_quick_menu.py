@@ -19,11 +19,17 @@ def test_quick_menu_visibility_keeps_capture_separate_and_syncs_pages(qapp, tmp_
         assert menu.panel.isVisible()
         qapp.processEvents()
         assert menu.panel.grab().toImage().pixelColor(6, 120).alpha() >= 240
-        menu.switches["combat"].setChecked(True)
+        assert menu.switches["combat"].isChecked()
+        assert menu.states["combat"].text() == "Aguardando instância"
+        assert not window.combat_page.panel.isVisible()
+        window.combat.engine.start_run()
+        window.combat.auto_instances = True
+        window.combat.accept(dict(type="hello", protocol=1, saValidated=False))
+        window.combat.accept(dict(type="event", session="synthetic-menu-instance", sequence=1,
+            time_ms=0, kind="ZoneChangedEvent", payload=dict(MapId=600001, IsDungeon=True)))
         assert window.combat_page.panel.isVisible()
         assert window.combat_page.panel_visible.isChecked()
         assert window.combat.process is None
-        window.combat.engine.start_run()
         menu.switches["combat"].setChecked(False)
         assert window.combat.engine.active and not window.combat_page.panel.isVisible()
         menu.switches["events"].setChecked(True)

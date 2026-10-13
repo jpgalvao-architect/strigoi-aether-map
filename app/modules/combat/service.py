@@ -40,6 +40,7 @@ class CombatService(QObject):
         self.instance_timers = {}
         self.instance_floor = 0
         self.runtime = False
+        self.in_instance = False
         self.watchdog = QTimer(self)
         self.watchdog.setInterval(5000)
         self.watchdog.timeout.connect(self.ensure_automatic)
@@ -87,6 +88,7 @@ class CombatService(QObject):
             self.status = "Coletor de combate indisponível"
             self.changed.emit()
             return False
+        self.in_instance = False
         self.engine.start_run(name)
         self.auto_instances = True
         self.instance_timers = {}
@@ -169,6 +171,10 @@ class CombatService(QObject):
                 self.follow_instance(message, previous_map)
         elif message.get("type") == "status":
             code = message.get("code")
+            if (code in ("Stopped", "Error", "missing_npcap")
+                    or message.get("reset_zone") is True
+                    or (code == "WaitingForGame" and "reset_zone" not in message)):
+                self.in_instance = False
             self.status = {"missing_npcap": "Npcap necessário para medir dano",
                 "WaitingForGame": "Aguardando conexão do jogo", "Starting": "Preparando leitura de combate",
                 "Capturing": "Recebendo eventos · SA experimental", "Error": "Não foi possível ler a conexão do jogo",
@@ -194,11 +200,18 @@ class CombatService(QObject):
                 self.engine.last_time = max(self.engine.last_time, stamp)
 
     def follow_instance(self, message, previous_map):
+        was_inside = self.in_instance
         payload, kind = message["payload"], message.get("kind")
+        if kind == "ZoneChangedEvent" and payload.get("IsTeleport") and payload.get("IsDungeon") is True:
+            self.in_instance = True  # A fresh reload can restore context after reconnect.
         if kind == "ZoneChangedEvent" and not payload.get("IsTeleport"):
             zone = payload["MapId"]
             changed = previous_map is not None and zone != previous_map
             first_load_after_damage = previous_map is None and bool(self.engine.encounters)
+            if changed or previous_map is None:
+                self.in_instance = payload.get("IsDungeon") is True
+            elif payload.get("IsDungeon") is True:
+                self.in_instance = True
             if changed or first_load_after_damage:
                 if self.engine.active:
                     self.engine.stop_run("map_changed")
@@ -213,7 +226,11 @@ class CombatService(QObject):
                 return  # Delayed timers from a previous map/run cannot reset the current one.
             previous = self.instance_timers.get(timer_kind)
             if previous is not None and start <= previous:
+                if start == previous and not self.in_instance:
+                    self.in_instance = True
+                    self.changed.emit()  # Current timer restores context, never restarts statistics.
                 return  # Reloads, deaths and teleport packets repeat the same server deadline.
+            self.in_instance = True  # Valid kind 1/2 denotes an instance, not a boss timer.
             next_entry = (timer_kind == 1 and previous is None
                           and start > self.instance_timers.get(2, start))
             if previous is not None or next_entry:
@@ -226,6 +243,8 @@ class CombatService(QObject):
                 self.begin_next_instance()
             self.engine.map_id = zone
             self.instance_timers[timer_kind] = start
+        if self.in_instance != was_inside:
+            self.changed.emit()
 
     def begin_next_instance(self):
         zone = self.engine.map_id
@@ -256,6 +275,7 @@ class CombatService(QObject):
         while b"\n" in self.buffer:
             self.drain()
         self.engine.stop_run("interrupted")
+        self.in_instance = False
         self.auto_instances = False
         self.save()
         self.process = None
@@ -265,6 +285,7 @@ class CombatService(QObject):
         self.changed.emit()
 
     def stop(self):
+        self.in_instance = False
         self.auto_instances = False
         self.instance_timers.clear()
         self.engine.stop_run()

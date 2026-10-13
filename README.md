@@ -1,11 +1,11 @@
 # STRIGOI AETHER MAP
 
-**AION 2 Companion App · 0.9.0-beta.3 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.4 · Windows x64**
 
-A beta 0.9.0-beta.3 acrescenta um menu rápido de overlay para Sonar, mapas, combate e eventos. A leitura de combate começa automaticamente ao abrir o app e aguarda o jogo; a próxima instância reconhecida abre um placar zerado. A medição continua experimental.
+A beta 0.9.0-beta.4 mostra o painel de combate automaticamente nas instâncias reconhecidas e o oculta ao sair. O menu rápido permite desativar a exibição sem parar a medição. A identificação e a medição nas arenas 1v1/5v5 ainda aguardam validação ao vivo; não são anunciadas como confirmadas.
 
 [Página do aplicativo](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.3) ·
+[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.4) ·
 [English](README.en-US.md)
 
 Seu caderno de exploração: mapas, coletas, cubos e eventos em um só lugar.

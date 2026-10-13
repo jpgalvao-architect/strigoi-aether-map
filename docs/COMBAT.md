@@ -20,7 +20,9 @@ o dano do grupo ainda precisam de validação. Resultados parciais são indicado
    o alvo aparece por ID. A instância é identificada pelo contexto recebido.
 5. Use Encontro atual ou Instância inteira. Encerrar encontro separa uma
    tentativa; a morte do alvo selecionado também encerra esse encontro.
-6. No menu rápido, clique no mascote e ative Painel de combate.
+6. O painel fica habilitado por padrão e aparece somente em instâncias
+   reconhecidas. Fora delas, fica oculto e o menu mostra Aguardando instância.
+   O controle Painel de combate permite desativar ou rearmar a exibição.
    O menu também controla Sonar, os dois mapas juntos e Painel de eventos.
    Arraste o mascote para mover o menu; sua posição é salva.
    Destrave o placar para mover/redimensionar e trave
@@ -84,6 +86,26 @@ o usuário não precisa instalar .NET. Npcap continua sendo componente externo.
 retransmissão, decodificação e rejeição de registro malformado. Isso não é
 validação de protocolo SA. Não existe demo misturada à sessão real.
 
-`--diagnose` verifica a conexão durante dez segundos e emite apenas estados
-e contagens por tipo de evento. Não mostra nomes nem grava pacotes. Processos
+`--diagnose` verifica a conexão durante dez segundos e emite estados,
+contagens por tipo, identificadores de mapa e espécies de cronômetro.
+`--diagnose --seconds 600` permite até dez minutos para um teste coordenado.
+Não mostra nomes nem grava pacotes. Processos
 de inicialização sem conexões não contam como outro cliente em execução.
+
+## Painel por contexto — 0.9.0-beta.4
+
+A visibilidade usa os mesmos eventos validados de mapa e cronômetro de
+instância que alimentam o reinício do placar. Cronômetros de boss não abrem
+o painel; mensagens antigas de outro mapa são rejeitadas. Teleportes internos
+mantêm a exibição. A perda da conexão limpa o contexto; voltar a receber
+pacotes, sozinho, não reapresenta um mapa antigo. Uma conexão apenas ociosa
+continua com seu contexto. Desativar a leitura também oculta o painel.
+
+A atualização habilita a política automática uma vez. Depois, a escolha
+de desativar o painel é preservada. A armação não interrompe a captura nem
+limita o histórico da janela principal.
+
+As arenas PvP 1v1 e 5v5 ainda aguardam confirmação dos identificadores e
+eventos enviados pelo cliente SA. Não há códigos de arena presumidos na
+base. O filtro de dano atual continua voltado a PvE; a medição de PvP não
+é anunciada como implementada. O teste ao vivo foi adiado pelo usuário.

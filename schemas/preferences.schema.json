@@ -9,9 +9,14 @@
           "type": "boolean"
         },
         "panel_visible": {
-          "default": false,
+          "default": true,
           "title": "Panel Visible",
           "type": "boolean"
+        },
+        "panel_mode_release": {
+          "default": "",
+          "title": "Panel Mode Release",
+          "type": "string"
         },
         "locked": {
           "default": true,

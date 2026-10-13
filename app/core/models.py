@@ -229,7 +229,8 @@ class OverlaySettings(Model):
 
 class CombatSettings(Model):
     auto_capture: bool = True
-    panel_visible: bool = False
+    panel_visible: bool = True
+    panel_mode_release: str = ""
     locked: bool = True
     opacity: float = Field(default=0.9, ge=0.2, le=1)
     position: tuple[int, int] | None = None

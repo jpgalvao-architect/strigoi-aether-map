@@ -1,11 +1,11 @@
 # Strigoi Aether Map
 
-**AION 2 Companion App · 0.9.0-beta.3 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.4 · Windows x64**
 
-Beta 0.9.0-beta.3 adds an expandable overlay menu for Sonar, maps, the combat panel and events. Combat capture starts automatically when the app opens and waits for the game; a recognized new instance starts a fresh meter. Capture remains experimental.
+Beta 0.9.0-beta.4 automatically shows the combat panel in recognized instances and hides it on exit. Quick controls can disable panel display without stopping measurement. Arena 1v1/5v5 identification and measurement still await live validation and are not advertised as confirmed.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.3) ·
+[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.4) ·
 [Português](README.md)
 
 Your exploration journal: maps, gatherables, possible cube locations and
@@ -16,7 +16,7 @@ observed DPS/share, explicit summon ownership, target filtering and local
 history. SA capture still needs validation; results are marked partial.
 See [Combat](docs/COMBAT.md) for current scope and limitations.
 
-Run `StrigoiAetherMap-Setup-0.9.0-beta.3.exe`, choose English and review the terms
+Run `StrigoiAetherMap-Setup-0.9.0-beta.4.exe`, choose English and review the terms
 before accepting. Setup installs for the current user and includes an
 uninstaller and corresponding source code. Existing preferences and visits
 are preserved. English is the default for a fresh installation; an explicit

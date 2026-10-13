@@ -137,6 +137,7 @@ class QuickMenu(QFrame):
         self.context.changed.connect(self.refresh)
         main.sonar.active_changed.connect(self.refresh)
         main.overlay.status_changed.connect(self.refresh)
+        main.combat.changed.connect(self.refresh)
         self.refresh()
 
     def refresh(self, *_):
@@ -153,6 +154,9 @@ class QuickMenu(QFrame):
         for key, checked in values.items():
             switch = self.switches[key]; switch.blockSignals(True)
             switch.setChecked(bool(checked)); switch.blockSignals(False)
+            if key == "combat" and checked and not self.main.combat.in_instance:
+                self.states[key].setText("Aguardando instância")
+                continue
             self.states[key].setText(("Visível" if checked else "Oculto") if key in ("combat", "events")
                                      else ("Ativo" if checked else "Desligado"))
         self.note.setText("Ocultar o placar mantém a medição ativa" if self.context.prefs.combat.auto_capture

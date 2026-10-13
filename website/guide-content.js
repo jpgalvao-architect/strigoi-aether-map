@@ -145,8 +145,8 @@ window.StrigoiGuide = {
             "en_US": "Menu → four controls"
           },
           "body": {
-            "pt_BR": "Sonar liga ou desliga a análise do áudio. Mapa + minimapa controla os dois mapas juntos. Painel de combate e Painel de eventos mostram ou ocultam esses painéis. Configure primeiro o minimapa e o Sonar nas respectivas abas.",
-            "en_US": "Sonar turns audio analysis on or off. Map + minimap controls both maps together. Combat panel and Events panel show or hide those panels. Set up the minimap and Sonar in their tabs first."
+            "pt_BR": "Sonar liga ou desliga a análise do áudio. Mapa + minimapa controla os dois mapas juntos. Painel de combate habilita a exibição automática em instâncias; fora delas, mostra Aguardando instância. Painel de eventos mostra ou oculta a agenda. Configure primeiro o minimapa e o Sonar nas respectivas abas.",
+            "en_US": "Sonar turns audio analysis on or off. Map + minimap controls both maps. Combat panel arms automatic display in instances; outside them, it shows Waiting for instance. Events panel shows or hides the schedule. Set up the minimap and Sonar in their tabs first."
           },
           "tip": {
             "pt_BR": "Ocultar o placar mantém a medição de combate ativa.",
@@ -535,16 +535,16 @@ window.StrigoiGuide = {
         },
         {
           "title": {
-            "pt_BR": "Mostre o placar",
-            "en_US": "Show the meter"
+            "pt_BR": "Acompanhe o painel automático",
+            "en_US": "Follow the automatic panel"
           },
           "where": {
             "pt_BR": "Menu rápido → Painel de combate",
             "en_US": "Quick menu → Combat panel"
           },
           "body": {
-            "pt_BR": "Habilite Painel de combate no menu rápido. Os primeiros golpes alimentam o placar. Para mover ou redimensionar, desmarque Travar painel · clique através na aba Combate; marque novamente para os cliques passarem ao jogo.",
-            "en_US": "Enable Combat panel in the quick menu. The first hits populate the meter. To move or resize it, uncheck Lock panel · click through in Combat; check again to let clicks pass to the game."
+            "pt_BR": "O painel fica habilitado por padrão, aparece numa instância reconhecida e se oculta ao sair. O menu rápido permite desativar ou rearmar essa exibição. Para mover ou redimensionar, desmarque Travar painel · clique através na aba Combate; marque novamente para os cliques passarem ao jogo.",
+            "en_US": "The panel is enabled by default, appears in a recognized instance, and hides on exit. Quick controls can disable or rearm display. To move or resize it, uncheck Lock panel · click through in Combat; check again to let clicks pass to the game."
           },
           "tip": {
             "pt_BR": "Restaurar painel recupera posição e tamanho. Ocultar o placar mantém a medição.",
@@ -583,8 +583,8 @@ window.StrigoiGuide = {
             "en_US": "A recognized new entry saves the previous result and starts a fresh meter. View results in History. Stop capture by disabling Measure combat automatically in Settings or closing Strigoi."
           },
           "tip": {
-            "pt_BR": "A troca depende do contexto recebido do jogo. Ao testar, confira se o placar zera entre instâncias.",
-            "en_US": "Transitions depend on context received from the game. When testing, check that the meter resets between instances."
+            "pt_BR": "A troca depende do contexto recebido do jogo. Confira se o placar zera entre instâncias. A identificação e a medição de arenas PvP 1v1/5v5 ainda aguardam validação ao vivo.",
+            "en_US": "Transitions depend on context received from the game. Check that the meter resets between instances. PvP 1v1/5v5 arena identification and measurement still await live validation."
           }
         }
       ],

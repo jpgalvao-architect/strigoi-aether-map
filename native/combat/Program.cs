@@ -9,7 +9,7 @@ using AionMeter.Core.Events;
 using AionMeter.Core.Game;
 using AionMeter.Core.Protocol;
 
-if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.3"); return; }
+if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.4"); return; }
 if (args.Contains("--probe")) {
     Console.WriteLine(JsonSerializer.Serialize(new { protocol=1, npcap=OperatingSystem.IsWindows() && LiveCapture.IsNpcapInstalled(), saValidated=false }));
     return;
@@ -52,6 +52,12 @@ if (args.Contains("--self-test")) {
     Console.WriteLine("SELF_TEST_OK: connected clients, TCP, damage, malformed record, serverless identity, partial roster; no capture"); return;
 }
 var diagnostic=args.Contains("--diagnose");
+var diagnosticSeconds=10;
+var durationArgument=Array.IndexOf(args,"--seconds");
+if(durationArgument>=0 && (!diagnostic || durationArgument+1>=args.Length ||
+    !int.TryParse(args[durationArgument+1],out diagnosticSeconds) || diagnosticSeconds is < 1 or > 600)) {
+    Console.Error.WriteLine("Diagnostic duration must be between 1 and 600 seconds."); Environment.ExitCode=2; return;
+}
 if (!args.Contains("--live") && !diagnostic) { Console.Error.WriteLine("Use --probe, --version, --self-test, --diagnose or --live"); Environment.ExitCode=2; return; }
 if (!OperatingSystem.IsWindows() || !LiveCapture.IsNpcapInstalled()) {
     Console.WriteLine(JsonSerializer.Serialize(new {type="status", code="missing_npcap"})); Environment.ExitCode=3; return;
@@ -65,11 +71,18 @@ using var capture=new LiveCapture(GameData.Empty, new LiveCaptureOptions());
 Send(new {type="hello", protocol=1, parser="global-414de5c-experimental", saValidated=false});
 capture.StatusChanged += status=>Send(new {type="status", code=status.State.ToString(),
     reason=status.State==CaptureState.Error ? ErrorReason(status.Message) : null,
+    reset_zone=status.State is CaptureState.Starting or CaptureState.Stopped or CaptureState.Error ||
+        (status.State==CaptureState.WaitingForGame &&
+         !status.Message.StartsWith("Connected ·") && !status.Message.StartsWith("Listening on")),
     detail=diagnostic && status.State==CaptureState.Error ? status.Message : null,
     packets=status.Packets, events=status.Events});
 capture.EventDecoded += ev=> {
     if(diagnostic) {
         diagnosticCounts.AddOrUpdate(ev.GetType().Name,1,(_,count)=>count+1);
+        if(ev is ZoneChangedEvent zone)
+            Send(new {type="diagnostic_zone", map_id=zone.MapId, dungeon=zone.IsDungeon, teleport=zone.IsTeleport});
+        else if(ev is InstanceTimerEvent timer)
+            Send(new {type="diagnostic_timer", map_id=timer.MapId, kind=timer.Kind});
         return; // Diagnostics expose counters only: no player names, events or packet bytes.
     }
     if (ev is not (DamageEvent or SelfIdentifiedEvent or PlayerSeenEvent or PartyRosterEvent or NpcSeenEvent or
@@ -83,7 +96,7 @@ var writer=Task.Run(async ()=>{await foreach(var item in queue.Reader.ReadAllAsy
 }});
 capture.Start();
 using var cancel=new CancellationTokenSource();
-if(diagnostic) cancel.CancelAfter(10_000);
+if(diagnostic) cancel.CancelAfter(diagnosticSeconds*1000);
 Console.CancelKeyPress += (_,e)=>{e.Cancel=true;cancel.Cancel();};
 _ = Task.Run(async ()=>{ while(await Console.In.ReadLineAsync() is { } command) if(command=="stop") {cancel.Cancel();return;} cancel.Cancel(); });
 try {

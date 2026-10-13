@@ -36,7 +36,10 @@ class AppContext(QObject):
         # Screen/audio capture starts off each session. Combat automation is a separate preference.
         self.prefs.overlay.enabled = False
         self.prefs.sonar_enabled = False
-        self.prefs.combat.panel_visible = False
+        if self.prefs.combat.panel_mode_release != "instances-v1":
+            # Upgrade once from the former session-only panel switch.
+            self.prefs.combat.panel_visible = True
+            self.prefs.combat.panel_mode_release = "instances-v1"
         if self.prefs.overlay_layers_release != "atlas-v070":
             self.prefs.overlay.layers = "atlas"
             self.prefs.overlay_layers_release = "atlas-v070"

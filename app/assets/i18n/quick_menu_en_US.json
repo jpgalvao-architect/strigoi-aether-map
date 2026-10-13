@@ -16,5 +16,7 @@
   "Medição automática desativada": "Automatic measurement off",
   "Ocultar o placar mantém a medição ativa": "Hiding the meter keeps measurement active",
   "Selecione a área do minimapa para usar os dois mapas": "Select the minimap area to use both maps",
-  "O combate é medido automaticamente enquanto o Strigoi está aberto. A próxima instância reconhecida começa com um placar zerado e preserva o histórico. Você pode desativar a medição nas Configurações.": "Combat is measured automatically while Strigoi is open. A recognized new instance starts with a fresh meter and preserves history. You can turn measurement off in Settings."
+  "A medição começa automaticamente e aguarda o jogo. O painel aparece nas instâncias reconhecidas e se oculta ao sair, mantendo a leitura ativa. A próxima entrada reconhecida zera o placar e preserva o histórico.": "Measurement starts automatically and waits for the game. The panel appears in recognized instances and hides on exit, keeping capture running. A recognized new entry resets the meter and preserves history.",
+  "Mostrar painel automaticamente em instâncias": "Show panel automatically in instances",
+  "Aguardando instância": "Waiting for instance"
 }

@@ -123,7 +123,7 @@ class CombatPanel(QFrame):
 
     def apply_settings(self):
         prefs = self.service.context.prefs.combat
-        visible = prefs.panel_visible
+        visible = prefs.panel_visible and self.service.in_instance
         self.setWindowFlag(Qt.WindowType.WindowTransparentForInput, prefs.locked)
         self.setWindowOpacity(prefs.opacity)
         if visible:
@@ -137,7 +137,7 @@ class CombatPanel(QFrame):
 
     def refresh(self):
         prefs = self.service.context.prefs.combat
-        if not prefs.panel_visible:
+        if not prefs.panel_visible or not self.service.in_instance:
             self.hide(); return
         self.show()
         snapshot = self.page.selected_snapshot()
@@ -156,7 +156,7 @@ class CombatPage(QWidget):
         layout.addWidget(page_header("Combate", "Acompanhe o dano observado do grupo e guarde os resultados da instância."))
         layout.addWidget(label("Experimental: a leitura de combate ainda precisa de validação em SA.", "banner", True))
         self.status = label("", "subtitle", True); layout.addWidget(self.status)
-        layout.addWidget(label("O combate é medido automaticamente enquanto o Strigoi está aberto. A próxima instância reconhecida começa com um placar zerado e preserva o histórico. Você pode desativar a medição nas Configurações.", "subtitle", True))
+        layout.addWidget(label("A medição começa automaticamente e aguarda o jogo. O painel aparece nas instâncias reconhecidas e se oculta ao sair, mantendo a leitura ativa. A próxima entrada reconhecida zera o placar e preserva o histórico.", "subtitle", True))
         component = QPushButton("Abrir download oficial do Npcap")
         component.clicked.connect(lambda: QDesktopServices.openUrl(QUrl("https://npcap.com/#download")))
         layout.addWidget(component)
@@ -179,7 +179,7 @@ class CombatPage(QWidget):
         self.finish = QPushButton("Encerrar encontro"); self.finish.clicked.connect(self.finish_encounter)
         self.delete = QPushButton("Excluir resultado salvo"); self.delete.clicked.connect(self.delete_saved)
         layout.addLayout(row(self.copy, self.finish, self.delete))
-        self.panel_visible = QCheckBox("Mostrar painel flutuante")
+        self.panel_visible = QCheckBox("Mostrar painel automaticamente em instâncias")
         self.panel_visible.setChecked(context.prefs.combat.panel_visible)
         self.locked = QCheckBox("Travar painel · clique através")
         self.locked.setChecked(context.prefs.combat.locked)
