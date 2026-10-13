@@ -21,7 +21,7 @@
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
     'download.beta': 'Painel automático nas dungeons e arenas 1v1/5v5 identificadas. A medição PvP é experimental e depende dos participantes confirmados. Outros mapas da rotação e a lista completa do time no 5v5 ainda precisam de validação.',
     'showcase.sonar.title': 'O som vira uma pista na tela.',
-    'showcase.sonar.description': 'Selecione o áudio do jogo, escolha a sensibilidade e ative o Sonar. Você controla quando ele começa e termina.',
+    'showcase.sonar.description': 'Ative o Sonar e acompanhe a intensidade estimada do som reconhecido na barra e no histórico do aviso.',
   });
   const en = {
     'skip': 'Skip to content', 'navigation': 'Main navigation', 'language': 'Language',
@@ -56,11 +56,11 @@
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
     'download.beta': 'Automatic panel in recognized dungeons and 1v1/5v5 arenas. PvP measurement is experimental and depends on confirmed participants. Other rotating maps and the full 5v5 team roster still need validation.',
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
-    'showcase.sonar.description': 'Select the game audio, choose sensitivity and enable Sonar. You control when it starts and stops.',
+    'showcase.sonar.description': 'Enable Sonar and follow the estimated recognized sound intensity in the alert\'s bar and recent history.',
     'explore.source': 'Real map images and community locations with documented sources. Markers indicate possible locations, not guaranteed spawns.',
     'sonar.eyebrow': 'HEARING ACCESSIBILITY',
     'sonar.title': 'A clue you<br>can <em>see.</em>',
-    'sonar.description': 'The cube sound can go unnoticed. Sonar looks for signs of that sound in the game audio and turns the cue into an on-screen alert.',
+    'sonar.description': 'Sonar looks for signs of the cube sound and shows an alert with an intensity bar and recent history. Game volume affects the reading.',
     'sonar.point1': 'Select the game application and enable it when you want.',
     'sonar.point2': 'No microphone, recording or audio uploads.',
     'sonar.point3': 'Sonar starts off each time the app opens.',
@@ -70,7 +70,7 @@
     'start.one.title': 'Install and choose your language', 'start.one.text': 'Download the installer, read the terms and choose Portuguese or English. No Python installation needed.',
     'start.two.title': 'Build your map', 'start.two.text': 'Choose your atlas layers. The same selection appears on the minimap and full map.',
     'start.three.title': 'Join the adventure', 'start.three.text': 'Enable the overlay, select the minimap terrain once and choose the event to track.',
-    'download.eyebrow': 'YOUR LITTLE GUARDIAN IS READY', 'download.title': 'See you in Altgard.',
+    'download.eyebrow': 'YOUR LITTLE GUARDIAN IS READY', 'download.title': 'See you in Atreia.',
     'download.description': 'Choose how to use Strigoi. Both versions offer the same features and include source code.',
     'download.installer': 'Download installer', 'download.recommended': 'Recommended',
     'download.installer.detail': 'Shortcuts, initial language, uninstaller and official Npcap setup for combat.',
@@ -147,7 +147,11 @@
     document.querySelectorAll('[data-i18n-aria]').forEach(el => { if (t[el.dataset.i18nAria]) el.setAttribute('aria-label', t[el.dataset.i18nAria]); });
     document.querySelectorAll('[data-language]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.language === next)));
     document.querySelectorAll('[data-legal-language]').forEach(article => { article.hidden = article.dataset.legalLanguage !== next; });
-    document.querySelectorAll('[data-alert-image]').forEach(image => { image.src = `assets/sonar-alert-${next}.webp`; });
+    document.querySelectorAll('[data-alert-image]').forEach(image => {
+      image.width = 350;
+      image.height = next === 'en_US' ? 164 : 181;
+      image.src = `assets/sonar-alert-${next}.webp`;
+    });
     updateShowcase();
     document.dispatchEvent(new CustomEvent('strigoi:language', {detail: {language: next}}));
     try { localStorage.setItem('strigoi-site-language', next); } catch { /* Reading the page never requires local storage. */ }

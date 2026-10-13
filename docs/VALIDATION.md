@@ -302,3 +302,22 @@ com texto de aceite nos dois idiomas. O teste de ciclo usou o modo silencioso
 com aceite explícito; não representa uma máquina limpa nem assinatura digital.
 Relatório do ciclo: `outputs/installer-validation-v080.json` na entrega.
 O script não exige privilégio de administrador nem toca arquivos do AION 2.
+
+## Legibilidade e intensidade — beta 6
+
+Os testes verificam os símbolos ampliados em DPI 150% e 200%, a preservação
+da projeção e a máscara dos pixels efetivamente pintados, incluindo as setas.
+A extração de alturas usa somente os indicadores presentes na fonte; pontos
+editados ou sem dado não recebem altura inferida.
+
+Com a referência fornecida atenuada em um ensaio controlado, a leitura ficou
+próxima de -61,10 dBFS com ganho 0,01 e -55,08 dBFS com ganho 0,02. Dobrar o
+ganho elevou a leitura em aproximadamente 6,02 dB, sem aumentar o score de
+semelhança normalizado. Dobrar o ruído mantendo a referência no mesmo nível
+alterou a estimativa em menos de 1,5 dB no controle testado. Ruído sem a
+referência não gerou leitura confirmada. As atualizações durante o cooldown,
+o desaparecimento após silêncio e a rejeição de sinais enfileirados após a
+parada são exercitados separadamente.
+
+Esses ensaios não medem distância nem validam a barra em combate real. As
+pré-visualizações PT-BR/EN-US usam ensaio de interface e não captura do jogo.

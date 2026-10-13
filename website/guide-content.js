@@ -329,8 +329,8 @@ window.StrigoiGuide = {
             "en_US": "Choose categories in Atlas layers and click Enable overlay. Strigoi minimizes and looks for terrain details to place markers. Then use the quick menu to control maps."
           },
           "tip": {
-            "pt_BR": "Quando não reconhece o terreno, o app oculta os pontos até recuperar a referência.",
-            "en_US": "When terrain is not recognized, the app hides markers until the reference is recovered."
+            "pt_BR": "Os símbolos do minimapa têm tamanho 2× maior. Nos cubos, ↑ e ↓ indicam altura acima ou abaixo da mediana do grupo na fonte; não comparam com o personagem. Sem reconhecer o terreno, o app oculta os pontos.",
+            "en_US": "Minimap symbols are 2× larger. Cube arrows ↑ and ↓ mean above or below the source group's median height; they do not compare with your character. Without terrain recognition, markers are hidden."
           }
         },
         {
@@ -452,8 +452,8 @@ window.StrigoiGuide = {
             "en_US": "Alert → Possible cube nearby"
           },
           "body": {
-            "pt_BR": "Quando o cartão aparecer, procure nos arredores. Você pode mover ou dispensar o aviso. Ele indica uma pista sonora, sem informar direção, distância ou posição exata do cubo.",
-            "en_US": "When the card appears, search nearby. You can move or dismiss it. It indicates a sound cue without providing cube direction, distance, or exact position."
+            "pt_BR": "Quando o cartão aparecer, procure nos arredores. A barra e o histórico acompanham a intensidade estimada do som reconhecido. O volume do jogo influencia a leitura, que não indica distância em metros. Você pode mover ou dispensar o aviso.",
+            "en_US": "When the card appears, search nearby. The bar and history follow the estimated intensity of the recognized sound. Game volume affects the reading, which does not indicate distance in meters. You can move or dismiss the alert."
           },
           "tip": {
             "pt_BR": "É um recurso de acessibilidade auditiva. O aviso pode falhar ou ocorrer por um som parecido.",

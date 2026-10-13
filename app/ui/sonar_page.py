@@ -7,6 +7,7 @@ from app.ui.localized_widgets import QComboBox, QFrame, QWidget, QToolButton
 from app.modules.sonar.capture import processes
 from app.ui.icons import icon
 from app.ui.widgets import button, card, label, page_header, row
+from app.ui.sonar_intensity import SonarIntensity
 
 
 class SonarAlert(QFrame):
@@ -15,6 +16,7 @@ class SonarAlert(QFrame):
                          Qt.WindowType.Tool|Qt.WindowType.WindowDoesNotAcceptFocus)
         self.context=context
         self.drag=None
+        self.testing=False
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setWindowTitle('Strigoi · Sonar')
         self.setFixedWidth(350)
@@ -26,7 +28,9 @@ class SonarAlert(QFrame):
         self.title=label('Possível cubo por perto')
         self.title.setStyleSheet('font-size:16px;font-weight:700;')
         self.detail=label('Procure nos arredores antes que outro jogador colete!','subtitle',True)
-        copy.addWidget(self.title);copy.addWidget(self.detail);layout.addLayout(copy,1)
+        copy.addWidget(self.title);copy.addWidget(self.detail)
+        self.intensity=SonarIntensity(compact=True);copy.addWidget(self.intensity)
+        layout.addLayout(copy,1)
         close=QToolButton();close.setIcon(icon('close'));close.setFixedSize(30,30)
         close.setAccessibleName('Dispensar aviso do sonar');close.setToolTip('Dispensar aviso')
         close.clicked.connect(self.hide)
@@ -35,6 +39,8 @@ class SonarAlert(QFrame):
         self.timer=QTimer(self);self.timer.setSingleShot(True);self.timer.timeout.connect(self.hide)
 
     def present(self,test=False):
+        self.testing=test
+        self.intensity.setVisible(not test)
         self.title.setText('Teste do aviso do sonar' if test else 'Possível cubo por perto')
         self.detail.setText('Este é apenas um teste visual.' if test else 'Procure nos arredores antes que outro jogador colete!')
         screens=QGuiApplication.screens()
@@ -48,6 +54,13 @@ class SonarAlert(QFrame):
         g=screen.availableGeometry()
         self.move(max(g.left(),min(self.x(),g.right()-self.width()+1)),max(g.top(),min(self.y(),g.bottom()-self.height()+1)))
         self.show();self.timer.start(8000)
+
+    def update_level(self, reading):
+        if reading.reset:
+            self.intensity.clear()
+        self.intensity.set_level(reading.level_db)
+        if self.isVisible() and not self.testing and reading.level_db is not None:
+            self.timer.start(8000)  # Keep the graph visible while the sound remains confirmed.
 
     def eventFilter(self,watched,event):
         if event.type()==QEvent.Type.MouseButtonPress and event.button()==Qt.MouseButton.LeftButton:
@@ -78,6 +91,8 @@ class SonarPage(QWidget):
         self.sensitivity.currentIndexChanged.connect(self.save_sensitivity)
         body.addLayout(row(label('Sensibilidade'),self.sensitivity))
         self.status=label('Desligado','eyebrow',True);body.addWidget(self.status)
+        self.intensity=SonarIntensity();body.addWidget(self.intensity)
+        body.addWidget(label('A intensidade acompanha o som reconhecido. O volume do jogo também influencia a leitura.','subtitle',True))
         self.start_button=button('Ativar sonar',self.start,True)
         self.stop_button=button('Parar sonar',service.stop)
         body.addLayout(row(self.start_button,self.stop_button,button('Testar aviso visual',lambda:alert.present(test=True))))
@@ -90,6 +105,7 @@ class SonarPage(QWidget):
         service.status_changed.connect(self.status.setText)
         service.active_changed.connect(self.refresh_active)
         service.detected.connect(self.show_detection)
+        service.level_updated.connect(self.show_level)
         self.refresh_processes();self.refresh_active(False)
 
     def refresh_processes(self):
@@ -112,6 +128,8 @@ class SonarPage(QWidget):
         self.context.save()
 
     def refresh_active(self,active):
+        if not active:
+            self.alert.hide()
         for widget in [self.process,self.refresh_button,self.sensitivity,self.start_button]:widget.setEnabled(not active)
         self.stop_button.setEnabled(active)
 
@@ -132,3 +150,9 @@ class SonarPage(QWidget):
         from datetime import datetime
         self.last_detection.setText(f'Último aviso às {datetime.now():%H:%M:%S} · som compatível com a referência.')
         self.alert.present()
+
+    def show_level(self, reading):
+        if reading.reset:
+            self.intensity.clear()
+        self.intensity.set_level(reading.level_db)
+        self.alert.update_level(reading)

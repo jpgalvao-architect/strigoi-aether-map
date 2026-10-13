@@ -73,6 +73,7 @@ class LiveOverlayPage(QWidget):
         self.events_toggle.toggled.connect(self.toggle_events)
         layout.addWidget(self.events_toggle)
         layout.addWidget(label("Ao abrir o mapa grande com M, o overlay muda automaticamente. Ao fechar, volta ao minimapa.", "subtitle",True))
+        layout.addWidget(label("Minimapa: símbolos 2× maiores. Cubos: ↑ nível superior · ↓ nível inferior do grupo de locais.", "subtitle",True))
         self.advanced_button=QToolButton()
         self.advanced_button.setText('Ajustes avançados')
         self.advanced_button.setCheckable(True)

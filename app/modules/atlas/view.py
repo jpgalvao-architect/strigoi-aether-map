@@ -11,6 +11,7 @@ from PySide6.QtWidgets import QGraphicsItem, QGraphicsPathItem, QGraphicsScene, 
 
 from app.core.models import Dataset, MapDefinition, PointOfInterest, Preferences
 from app.infrastructure.storage import resolve_map_image
+from app.modules.atlas.heights import point_marker_shape
 
 
 def marker_path(shape: str, radius: float = 7) -> QPainterPath:
@@ -30,13 +31,20 @@ def marker_path(shape: str, radius: float = 7) -> QPainterPath:
             point = QPointF(math.cos(angle)*r, math.sin(angle)*r)
             path.moveTo(point) if index == 0 else path.lineTo(point)
         path.closeSubpath()
-    elif shape == "cube":
+    elif shape in ("cube", "cube-up", "cube-down"):
         for index, (x,y) in enumerate([(0,-radius),(.87*radius,-.5*radius),(.87*radius,.5*radius),(0,radius),(-.87*radius,.5*radius),(-.87*radius,-.5*radius)]):
             path.moveTo(x,y) if index==0 else path.lineTo(x,y)
         path.closeSubpath()
         path.moveTo(0,0);path.lineTo(0,radius)
         path.moveTo(0,0);path.lineTo(.87*radius,-.5*radius)
         path.moveTo(0,0);path.lineTo(-.87*radius,-.5*radius)
+        if shape != "cube":
+            direction = -1 if shape == "cube-up" else 1
+            path.moveTo(1.3*radius, 0)
+            path.lineTo(1.8*radius, direction*.6*radius)
+            path.lineTo(2.3*radius, 0)
+            path.moveTo(1.8*radius, direction*.6*radius)
+            path.lineTo(1.8*radius, -direction*.6*radius)
     else:
         path.moveTo(0, -radius)
         path.lineTo(radius, 0)
@@ -48,7 +56,7 @@ def marker_path(shape: str, radius: float = 7) -> QPainterPath:
 
 class Marker(QGraphicsPathItem):
     def __init__(self, point, category, visited, callback):
-        super().__init__(marker_path(category.icon, 6 if category.icon == "cube" else 4))
+        super().__init__(marker_path(point_marker_shape(point, category.icon), 6 if category.icon == "cube" else 4))
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
         self.setBrush(QColor(category.color))
         self.setPen(QPen(QColor("#f2f1ff" if visited else "#101c2a"), 1.3))

@@ -1,4 +1,4 @@
-# Sonar de cubos — 0.7.0
+# Sonar de cubos
 
 O sonar usa a amostra fornecida pelo usuário para procurar um som compatível
 no áudio do aplicativo selecionado. É um recurso de acessibilidade auditiva:
@@ -12,12 +12,16 @@ um aviso visual permite acompanhar uma pista sonora durante a exploração.
 3. Escolha **Equilibrada** ou **Alta** e clique em **Ativar sonar**.
 4. Um cartão **Possível cubo por perto** aparece quando o detector confirma
    correspondências. O texto de orientação é **Procure nos arredores antes que
-   outro jogador colete!**. Ele dura oito segundos e pode ser movido ou dispensado.
+   outro jogador colete!**. A barra e o histórico acompanham a intensidade
+   estimada do som reconhecido. O cartão permanece visível enquanto há novas
+   correspondências e desaparece oito segundos após a última. Você pode
+   movê-lo ou dispensá-lo.
 5. Clique em **Parar sonar** para encerrar a captura. Fechar o app também
    encerra o componente nativo. O sonar nunca inicia sozinho ao reabrir.
 
 **Testar aviso visual** exibe um cartão identificado como teste, sem capturar
-áudio e sem declarar uma detecção. O aviso funciona com o mapa fechado e
+áudio, sem mostrar uma leitura de intensidade e sem declarar uma detecção.
+O aviso funciona com o mapa fechado e
 independe da ativação do overlay visual. Não há alerta sonoro obrigatório.
 
 O aplicativo escolhido e seus processos filhos são a fonte. Não há captura
@@ -66,6 +70,32 @@ referência temporal. Sensibilidade alta reduz o limiar e pode gerar mais
 avisos. O score interno não é uma probabilidade nem aparece como certeza
 percentual na interface. A filtragem não altera o áudio ouvido pelo usuário.
 
+## Intensidade do som reconhecido
+
+A barra e o histórico de 15 segundos aparecem na página **Sonar** e no aviso
+flutuante. As leituras continuam durante o intervalo entre notificações.
+**Fraco**, **Moderado** e **Forte** descrevem o sinal estimado; cores e texto
+acompanham a barra. O volume configurado no jogo também muda a leitura.
+
+O cálculo usa o ganho da referência no ponto de correlação correspondente,
+ponderado pelas mesmas faixas espectrais usadas na detecção. O ganho é a
+correlação dividida pela energia ponderada da referência. Multiplicá-lo pelo
+RMS da referência produz uma estimativa de nível em dBFS. Esse cálculo é
+independente do score normalizado e do RMS total da mistura. A barra usa uma
+escala fixa de -80 a -20 dBFS; o indicador não se ajusta automaticamente para
+encher quando o som está fraco.
+
+A leitura exige confirmação temporal. Sem uma correspondência recente,
+o indicador volta a **Aguardando sinal**. Parar a captura ou receber uma
+descontinuidade descarta o estado anterior. O histórico fica somente na
+memória. Fechar o aviso não faz cada nova leitura reabri-lo.
+
+A estimativa não separa perfeitamente todos os efeitos e não mede distância,
+direção ou altura do cubo. Ela acompanha a força da assinatura reconhecida,
+com latência de análise e suavização, e pode perder a correspondência em
+áudio mascarado. A relação entre essa barra e a proximidade no jogo ainda
+precisa de validação em partidas reais.
+
 ## Evidência e limites
 
 Testes controlados reconheceram a amostra misturada a ruído branco nos
@@ -103,3 +133,4 @@ validados; falhas encerram o sonar e solicitam nova ativação.
 - [Microsoft: captura de áudio por aplicativo](https://learn.microsoft.com/en-us/samples/microsoft/windows-classic-samples/applicationloopbackaudio-sample/).
 - [MIT: detecção de sinais e filtro casado em ruído, capítulo 14](https://ocw.mit.edu/courses/6-011-introduction-to-communication-control-and-signal-processing-spring-2010/61ec3ac814f18a1f05b4ce0c90e89282_MIT6_011S10_chap14.pdf).
 - [SciPy: análise espectral por janelas](https://docs.scipy.org/doc/scipy/tutorial/signal.html).
+- [NumPy: definição e normalização das transformadas FFT](https://numpy.org/doc/stable/reference/routines.fft.html).

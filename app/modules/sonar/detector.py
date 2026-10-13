@@ -12,6 +12,7 @@ class Match:
     score: float
     reference_start: float
     templates: int
+    level_db: float | None = None
 
 
 class CubeDetector:
@@ -30,6 +31,7 @@ class CubeDetector:
         self.band=(frequency>=800)&(frequency<=11500)
         self.frequency=frequency
         self.templates=np.array([reference[o:o+self.length] for o in self.offsets])
+        self.reference_rms=float(np.sqrt(np.mean(reference*reference)))
         self.spectra=np.fft.rfft(self.templates,n=self.nfft,axis=1)
         self.reverse_spectra=np.fft.rfft(self.templates[:,::-1],n=self.nfft,axis=1)
         self.threshold=8.5 if sensitivity=='balanced' else 6.5
@@ -42,6 +44,8 @@ class CubeDetector:
         self.previous=None
         self.last_alert=-float('inf')
         self.last_score=0.
+        self.last_level_db=None
+        self.analysis_count=0
 
     def match(self, audio):
         audio=np.asarray(audio,dtype=np.float64)
@@ -79,7 +83,12 @@ class CubeDetector:
                 ordered=np.sort(scores[agree])
                 value=float(ordered[-2])
                 if best is None or value>best.score:
-                    best=Match(value,float(np.median(starts[agree])),count)
+                    # Weighted projection gain estimates the reference component,
+                    # independently of similarity score or the mixture's total RMS.
+                    gains=np.abs(correlation[np.flatnonzero(agree),peaks[agree]])/np.maximum(reference_energy[agree],1e-30)
+                    amplitude=float(np.median(gains))*self.reference_rms
+                    level=float(np.clip(20*np.log10(max(amplitude,1e-12)),-120,0))
+                    best=Match(value,float(np.median(starts[agree])),count,level)
         if best is not None:
             # A time-reversed control has the same averaged spectrum. Reject
             # candidates that fit it better: tones alone do not establish order.
@@ -102,6 +111,8 @@ class CubeDetector:
         if len(self.buffer)<capacity or self.since_analysis<self.rate*self.step_seconds:
             return None
         self.since_analysis=0
+        self.analysis_count+=1
+        self.last_level_db=None
         matches=[self.match(self.buffer[:,channel]) for channel in range(2)]
         matches=[m for m in matches if m is not None]
         now=self.samples_seen/self.rate
@@ -114,6 +125,8 @@ class CubeDetector:
         previous=self.previous
         self.previous=(absolute,now)
         coherent=previous is not None and abs(previous[0]-absolute)<.08 and now-previous[1]<1.
+        if coherent:
+            self.last_level_db=candidate.level_db
         if coherent and now-self.last_alert>=15.:
             self.last_alert=now
             return candidate

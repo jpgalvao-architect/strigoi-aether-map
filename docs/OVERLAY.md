@@ -54,6 +54,19 @@ visitas. Veja [a revisão da base](COORDINATE_CORRECTION.md).
 
 ## Frequência e ajustes
 
+Os símbolos do minimapa têm tamanho 2× maior a partir da beta 6. O controle
+**Tamanho dos ícones** continua disponível; o fator do minimapa se aplica
+ao valor escolhido. O mapa grande mantém o tamanho anterior. A projeção dos
+pontos não muda com o tamanho do desenho, inclusive em monitores com DPI
+diferente.
+
+Os cubos com indicação de altura na fonte recebem **↑** ou **↓**, no Atlas,
+no minimapa e no mapa grande. A seta significa acima ou abaixo da altura
+mediana do grupo de locais da fonte. Ela não compara com o personagem.
+Registros sem esse dado ou com coordenadas editadas ficam sem seta.
+A máscara do reconhecimento exclui também os novos símbolos e as setas,
+para que os próprios desenhos não sejam usados como evidência do terreno.
+
 **Frequência visual** tem meta de 240 Hz por padrão, com opções de 60 e 120 Hz.
 O contador mede chamadas reais de desenho da janela; ele não mede a quantidade
 de quadros distintos que o monitor ou o compositor do Windows apresentam.

@@ -25,6 +25,13 @@ class SonarDetection:
     label: str = "possible_cube"
 
 
+@dataclass(frozen=True)
+class SonarLevel:
+    level_db: float | None
+    timestamp: float
+    reset: bool = False
+
+
 class LoopbackSource(Protocol):
     def frames(self) -> Iterable[AudioFrame]: ...
     def stop(self) -> None: ...
@@ -36,6 +43,7 @@ class CubeSoundDetector(Protocol):
 
 class SonarWorker(QThread):
     detected = Signal(object)
+    level_updated = Signal(object)
     status_changed = Signal(str)
     failed = Signal(str)
 
@@ -57,6 +65,7 @@ class SonarWorker(QThread):
                     raise ValueError('Formato de áudio incompatível')
                 if frame.discontinuity:
                     self.detector.reset()
+                    self.level_updated.emit(SonarLevel(None,frame.timestamp,True))
                 pcm=np.frombuffer(frame.pcm,dtype='<f4').reshape(-1,2)
                 if len(pcm):
                     last_pcm=time.monotonic()
@@ -64,10 +73,15 @@ class SonarWorker(QThread):
                     audible=len(pcm)>0 and float(np.mean(pcm*pcm))>1e-14
                     self.status_changed.emit('Ouvindo o jogo' if audible else 'Ouvindo · aguardando áudio do jogo')
                     last_status=time.monotonic()
+                before=getattr(self.detector,'analysis_count',0)
                 match=self.detector.push(pcm) if len(pcm) else None
+                if getattr(self.detector,'analysis_count',0)!=before:
+                    self.level_updated.emit(SonarLevel(self.detector.last_level_db,frame.timestamp))
                 # An empty heartbeat means no new packet, not missing evidence.
                 if not len(pcm) and time.monotonic()-last_pcm>1.:
                     self.detector.previous=None
+                    self.detector.last_level_db=None
+                    self.level_updated.emit(SonarLevel(None,frame.timestamp))
                 if match is not None and time.monotonic()-last_notice>=15.:
                     last_notice=time.monotonic()
                     self.detected.emit(SonarDetection(match.score,frame.timestamp))
@@ -81,6 +95,7 @@ class SonarWorker(QThread):
 
 class SonarService(QObject):
     detected = Signal(object)
+    level_updated = Signal(object)
     status_changed = Signal(str)
     active_changed = Signal(bool)
 
@@ -90,6 +105,7 @@ class SonarService(QObject):
         self.worker=None
         self.active=False
         self.status='Desligado'
+        self.level=None
         from app.modules.sonar.capture import HELPER
         self.available=os.name=='nt' and HELPER.is_file()
 
@@ -114,6 +130,7 @@ class SonarService(QObject):
                 detector=CubeDetector(reference['pcm'],self.context.prefs.sonar_sensitivity if self.context else 'balanced')
         self.worker=SonarWorker(source,detector)
         self.worker.detected.connect(self.on_detection)
+        self.worker.level_updated.connect(self.on_level)
         self.worker.status_changed.connect(self.on_status)
         self.worker.failed.connect(self.on_failure)
         self.worker.finished.connect(self.on_finished)
@@ -129,6 +146,15 @@ class SonarService(QObject):
         if self.active and self.sender() is self.worker:
             self.detected.emit(detection)
 
+    def on_level(self, reading):
+        if self.active and self.sender() is self.worker:
+            self.level=reading.level_db
+            self.level_updated.emit(reading)
+
+    def clear_level(self):
+        self.level=None
+        self.level_updated.emit(SonarLevel(None,time.monotonic(),True))
+
     def on_status(self, text):
         if self.active and self.sender() is self.worker:
             self.set_status(text)
@@ -143,6 +169,7 @@ class SonarService(QObject):
         worker=self.worker
         self.worker=None
         self.active=False
+        self.clear_level()
         if self.context:
             self.context.prefs.sonar_enabled=False
             self.context.save()
@@ -153,6 +180,7 @@ class SonarService(QObject):
 
     def stop(self):
         self.active=False
+        self.clear_level()
         worker=self.worker
         if worker:
             worker.requestInterruption()

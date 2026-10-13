@@ -9,7 +9,7 @@ Unicode true
   !error "Define PAYLOAD as the complete prepared portable folder."
 !endif
 !ifndef OUTPUT
-  !define OUTPUT "StrigoiAetherMap-Setup-0.9.0-beta.5.exe"
+  !define OUTPUT "StrigoiAetherMap-Setup-0.9.0-beta.6.exe"
 !endif
 !ifndef UNINSTALL_MANIFEST
   !error "Generate the exact installed-file removal manifest first."
@@ -33,11 +33,11 @@ RequestExecutionLevel user
 ManifestDPIAware true
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
-BrandingText "Strigoi Aether Map · 0.9.0-beta.5"
-VIProductVersion "0.9.0.5"
+BrandingText "Strigoi Aether Map · 0.9.0-beta.6"
+VIProductVersion "0.9.0.6"
 VIAddVersionKey /LANG=1033 "ProductName" "Strigoi Aether Map"
 VIAddVersionKey /LANG=1033 "FileDescription" "Strigoi Aether Map installer"
-VIAddVersionKey /LANG=1033 "FileVersion" "0.9.0-beta.5"
+VIAddVersionKey /LANG=1033 "FileVersion" "0.9.0-beta.6"
 VIAddVersionKey /LANG=1033 "LegalCopyright" "2026 Strigoi Aether Map contributors"
 !define MUI_ICON "..\app\assets\aether.ico"
 !define MUI_UNICON "..\app\assets\aether.ico"
@@ -139,7 +139,7 @@ Section "$(AppSection)" Core
     Abort
   ${EndIf}
   FileOpen $0 "$INSTDIR\.strigoi-install-owned" w
-  FileWrite $0 "StrigoiAetherMap-0.9.0-beta.5"
+  FileWrite $0 "StrigoiAetherMap-0.9.0-beta.6"
   FileClose $0
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "${REGKEY}" "InstallDir" "$INSTDIR"
@@ -147,7 +147,7 @@ Section "$(AppSection)" Core
   WriteRegStr HKCU "${REGKEY}" "TermsSHA256" "${TERMS_HASH}"
   WriteRegStr HKCU "${REGKEY}" "InstallerLanguage" "$DefaultLanguage"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayName" "Strigoi Aether Map"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.9.0-beta.5"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.9.0-beta.6"
   WriteRegStr HKCU "${UNINSTALLKEY}" "Publisher" "Strigoi Aether Map"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayIcon" "$INSTDIR\StrigoiAetherMap.exe"
   WriteRegStr HKCU "${UNINSTALLKEY}" "InstallLocation" "$INSTDIR"

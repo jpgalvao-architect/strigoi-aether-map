@@ -95,6 +95,14 @@ Cada ponto está marcado `possible`. Os mapas raster agora aceitam o overlay exp
 
 ## Licença e atribuição
 
+`app/data/cube-height-levels.json` conserva os 1.241 indicadores `level` de
+altura disponíveis nesses conjuntos. `scripts/build-cube-heights.py`
+reproduz a extração e verifica os hashes fixados da fonte. Somente `up` e
+`down` fornecidos são incorporados, com os mesmos IDs e coordenadas. A altura
+é relativa à mediana do grupo, não à posição do jogador. Esses indicadores
+mantêm a origem e a licença CC BY-NC 4.0 dos dados e não recebem confirmação
+regional SA adicional.
+
 Os arquivos de `/public/data` do projeto de origem são disponibilizados em **[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)**. Esta adaptação conserva autoria, licença, fonte e alterações. **O pacote de dados comunitários é para uso não comercial**; uso comercial requer autorização dos titulares. O aviso original acompanha `data-sources/community/LICENSE.txt` no código-fonte e `third-party-notices/community/LICENSE.txt` no portátil.
 
 Alterações nos dados: seleção de dois mapas e tipos de ponto, conversão de coordenadas, tradução de rótulos e metadados de cobertura. As imagens são cópias intactas da distribuição citada acima, que documenta sua origem e termos separadamente. Não foi copiado código do projeto de origem ou do distribuidor.

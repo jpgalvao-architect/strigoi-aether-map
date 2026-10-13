@@ -7,6 +7,7 @@ import time
 from PySide6.QtCore import QThread, Signal
 
 from app.modules.overlay.selection import find_monitor, physical_region
+from app.modules.overlay.stencil import apply_stencil
 
 
 class LiveMapWorker(QThread):
@@ -33,7 +34,6 @@ class LiveMapWorker(QThread):
 
     def run(self):
         try:
-            import cv2
             import mss
             import numpy as np
             from app.modules.overlay.tracking import MapRegistration
@@ -61,21 +61,7 @@ class LiveMapWorker(QThread):
                         stencil = self.paint_exclusion
                     if stencil and stencil[2]==area.view_kind:
                         registration, points, _ = stencil
-                        for point in points:
-                            x,y,radius=point[:3]
-                            shape=point[3] if len(point)>3 else 'circle'
-                            px, py = registration.project(x, y)
-                            if 0 <= px < frame.shape[1] and 0 <= py < frame.shape[0]:
-                                cx,cy=round(px),round(py)
-                                if shape in ('cube','diamond'):
-                                    vertices=([(cx,cy-radius),(cx+.9*radius,cy-.55*radius),(cx+.9*radius,cy+.55*radius),(cx,cy+radius),(cx-.9*radius,cy+.55*radius),(cx-.9*radius,cy-.55*radius)]
-                                              if shape=='cube' else [(cx,cy-radius),(cx+radius,cy),(cx,cy+radius),(cx-radius,cy)])
-                                    polygon=np.array(vertices,dtype=np.int32)
-                                    cv2.fillConvexPoly(frame,polygon,(128,128,128))
-                                    cv2.fillConvexPoly(feature_mask,polygon,0)
-                                else:
-                                    cv2.circle(frame,(cx,cy),radius,(128,128,128),-1)
-                                    cv2.circle(feature_mask,(cx,cy),radius,0,-1)
+                        apply_stencil(frame, feature_mask, registration, points)
                     return frame,feature_mask
                 while not self.stop_event.is_set():
                     started = time.perf_counter()

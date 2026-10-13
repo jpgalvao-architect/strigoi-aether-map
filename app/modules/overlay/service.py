@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Optional capture worker and independent, input-transparent Qt window."""
 import logging
+import math
 import threading
 import time
 
@@ -10,6 +11,7 @@ from PySide6.QtWidgets import QApplication, QWidget
 
 from app.infrastructure.storage import load_model, resolve_map_image
 from app.modules.atlas.view import marker_path
+from app.modules.atlas.heights import point_marker_shape
 from app.modules.gatherables.service import FilterQuery, filter_points
 from app.modules.overlay.detector import Calibration, MapDetector, project
 
@@ -105,7 +107,7 @@ class OverlayWindow(QWidget):
         self._drawing_registration=registration
         # Clear and redraw only icon rectangles, including their previous positions.
         current=QRect()
-        radius=round(9*self.scale)+2
+        radius=self.paint_radius()
         self._visible_markers=self.visible_markers(registration,radius)
         for px,py,_,_ in self._visible_markers:
             rectangle=QRect(round(px)-radius,round(py)-radius,radius*2+1,radius*2+1)
@@ -130,21 +132,38 @@ class OverlayWindow(QWidget):
                               (positions[:,1]>=-radius)&(positions[:,1]<self.height()+radius))
         return [(float(positions[i,0]),float(positions[i,1]),self.markers[i][2],self.markers[i][3]) for i in indices]
 
+    def effective_scale(self):
+        mini=self.capture_area is not None and self.capture_area.view_kind=='minimap'
+        return self.scale * (2.0 if mini else 1.0)
+
+    def shape_radius(self,shape):
+        mini=self.capture_area is not None and self.capture_area.view_kind=='minimap'
+        return 6 if shape.startswith('cube') and not mini else 4
+
+    def paint_radius(self):
+        # Includes arrows, outlines and antialiasing; the cube stays at its coordinate.
+        return math.ceil(max(10*self.effective_scale()+2,
+            (self.shape_radius('cube')*2.3+.65)*self.effective_scale()+2))
+
     def symbol(self,color,shape):
         mini=self.capture_area is not None and self.capture_area.view_kind=='minimap'
         key=(color,shape,self.scale,self.ratio,mini)
         if key not in self._symbols:
-            size=round(20*self.scale)+4
+            scale=self.effective_scale()
+            size=round(20*scale)+4
+            if shape in ('cube-up','cube-down'):
+                size=max(size,2*math.ceil((2.3*self.shape_radius(shape)+.65)*scale+2))
             pixmap=QPixmap(round(size*self.ratio),round(size*self.ratio))
             pixmap.setDevicePixelRatio(self.ratio)
             pixmap.fill(Qt.GlobalColor.transparent)
             painter=QPainter(pixmap)
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-            painter.translate(size/2,size/2)
-            painter.scale(self.scale,self.scale)
+            logical=pixmap.deviceIndependentSize()
+            painter.translate(logical.width()/2,logical.height()/2)
+            painter.scale(scale,scale)
             painter.setPen(QPen(QColor('#e7ffff'),1.3))
             painter.setBrush(QColor(color))
-            painter.drawPath(marker_path(shape,6 if shape=='cube' and not mini else 4))
+            painter.drawPath(marker_path(shape,self.shape_radius(shape)))
             painter.end()
             # Bound cache growth after many scale/DPI changes.
             if len(self._symbols)>100:self._symbols.clear()
@@ -192,13 +211,9 @@ class OverlayWindow(QWidget):
                 # The Qt window covers exactly the selected area, clipping hidden map points.
                 if not 0 <= px/self.ratio < self.width() or not 0 <= py/self.ratio < self.height():
                     continue
-            painter.save()
-            painter.translate(QPointF(px/self.ratio, py/self.ratio))
-            painter.scale(self.scale, self.scale)
-            painter.setPen(QPen(QColor("#e7ffff"), 1.3))
-            painter.setBrush(QColor(color))
-            painter.drawPath(marker_path(shape, 6 if shape == "cube" else 4))
-            painter.restore()
+            pixmap=self.symbol(color,shape)
+            painter.drawPixmap(QPointF(px/self.ratio-pixmap.deviceIndependentSize().width()/2,
+                py/self.ratio-pixmap.deviceIndependentSize().height()/2),pixmap)
 
 
 class OverlayService(QObject):
@@ -381,8 +396,9 @@ class OverlayService(QObject):
 
     def set_exclusion(self,registration,radius):
         # Mask the painted silhouette, preserving terrain between dense candidates.
-        mini=self.capture_area is not None and self.capture_area.view_kind=='minimap'
-        points=[(x,y,round(((6 if shape=='cube' and not mini else 4)+.65)*self.window.scale*self.window.ratio)+(1 if shape=='cube' and not mini else 2),shape)
+        scale=self.window.effective_scale()*self.window.ratio
+        points=[(x,y,math.ceil((self.window.shape_radius(shape)*(1.3 if shape in ('leaf','wood') else 1)+.8)*scale)+2,shape,
+                 self.window.shape_radius(shape)*scale,1.3*scale)
                 for x,y,_,shape in self.window.markers]
         if self.capture_area:
             self.worker.set_exclusion(registration,points,self.capture_area.view_kind)
@@ -398,7 +414,8 @@ class OverlayService(QObject):
         resources = {r.id: r for r in self.context.dataset.resources}
         categories = {c.id: c for c in self.context.dataset.categories}
         points = filter_points(self.context.dataset, prefs, FilterQuery(map_id=prefs.overlay.map_id, overlay=True))
-        self.window.markers = [(p.x, p.y, categories[resources[p.resource_id].category].color, categories[resources[p.resource_id].category].icon) for p in points]
+        self.window.markers = [(p.x, p.y, categories[resources[p.resource_id].category].color,
+            point_marker_shape(p,categories[resources[p.resource_id].category].icon)) for p in points]
         self.window.scale = prefs.overlay.scale
         self.window.set_render_rate(prefs.overlay.render_hz)
         self.window.setWindowOpacity(prefs.overlay.opacity)
