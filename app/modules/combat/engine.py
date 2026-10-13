@@ -37,6 +37,8 @@ class Encounter:
     local_id: int = 0
     boss: int | None = None
     issues: set[str] = field(default_factory=set)
+    pvp: bool = False
+    team_pvp: bool = False
 
 
 class CombatEngine:
@@ -63,9 +65,11 @@ class CombatEngine:
         self.capture_session = ""
         self.last_sequence = 0
         self.map_id: int | None = None
+        self.pvp = False
+        self.team_pvp = False
         self.issues: set[str] = {"sa_unvalidated"}
 
-    def start_run(self, name=""):
+    def start_run(self, name="", *, pvp=False, team_pvp=True):
         if self.active:
             raise ValueError("An instance is already being measured")
         self.run_id = uuid4().hex
@@ -75,7 +79,11 @@ class CombatEngine:
         self.boss = None
         self.active = True
         self.map_id = None
+        self.pvp = pvp is True
+        self.team_pvp = self.pvp and team_pvp is True
         self.issues = {"sa_unvalidated"}
+        if self.pvp:
+            self.issues.add("pvp_experimental")
 
     def mark_partial(self, reason):
         self.issues.add(reason)
@@ -236,7 +244,7 @@ class CombatEngine:
         target_entity = self.entities.get(target)
         if source_entity and source_entity.kind == "npc":
             return
-        if target_entity and target_entity.kind in ("player", "summon"):
+        if not self.pvp and target_entity and target_entity.kind in ("player", "summon"):
             return
         encounter = self.current
         if encounter is None and self.encounters:
@@ -247,7 +255,7 @@ class CombatEngine:
         if encounter is None:
             encounter = Encounter(start=timestamp, entities=dict(self.entities), roster=set(self.roster),
                                   roster_complete=self.roster_complete, local_id=self.local_id,
-                                  boss=self.boss, issues=set(self.issues))
+                                  boss=self.boss, issues=set(self.issues), pvp=self.pvp, team_pvp=self.team_pvp)
             self.encounters.append(encounter)
             self.current = encounter
         if len(encounter.hits) >= self.MAX_HITS:
@@ -292,6 +300,13 @@ class CombatEngine:
                  if entity.kind == "player" and entity.name == owner.name and entity.id != owner.id]
         return matches[0] if len(matches) == 1 and not peers else None
 
+    @staticmethod
+    def _pvp_friendly(owner, encounter):
+        return owner.id == encounter.local_id or (
+            encounter.team_pvp and
+            CombatEngine._roster_key(owner, encounter.roster, encounter.entities) is not None
+        )
+
     def snapshot(self, scope="encounter", boss_only=False, encounter_id=None):
         selected = self.encounters if scope == "instance" else [next((e for e in reversed(self.encounters)
                     if encounter_id is None or e.id == encounter_id), None)]
@@ -300,6 +315,8 @@ class CombatEngine:
         unknown = 0
         duration_ms = 0
         issues = set(self.issues)
+        if self.team_pvp and not selected and (not self.roster or not self.roster_complete):
+            issues.add("missing_roster")
         for encounter in selected:
             issues |= encounter.issues
             end = encounter.end if encounter.end is not None else self.last_time
@@ -311,8 +328,26 @@ class CombatEngine:
                 target = encounter.entities.get(hit.target)
                 if actor and actor.kind == "npc":
                     continue
-                if target and target.kind in ("player", "summon"):
+                if not encounter.pvp and target and target.kind in ("player", "summon"):
                     continue
+                if encounter.pvp:
+                    attacker = self._owner(hit.source, encounter)
+                    if attacker is None:
+                        # An unknown source may be an opponent; never add it to our team's total.
+                        issues.add("unattributed")
+                        continue
+                    if not self._pvp_friendly(attacker, encounter):
+                        continue
+                    if target is None or target.kind == "unknown":
+                        issues.add("unknown_target")
+                        continue
+                    if target.kind in ("player", "summon"):
+                        defender = self._owner(hit.target, encounter)
+                        if defender is None:
+                            issues.add("unknown_target")
+                            continue
+                        if self._pvp_friendly(defender, encounter):
+                            continue
                 if boss_only and scope != "instance":
                     if encounter.boss is None:
                         issues.add("missing_target")
@@ -353,4 +388,6 @@ class CombatEngine:
                 "encounter_id": selected[-1].id if len(selected) == 1 else None,
                 "result": selected[-1].result if selected else "waiting", "duration_ms": duration_ms,
                 "total": total, "unattributed": unknown, "rows": rows, "issues": sorted(issues),
-                "active": self.active, "encounters": len(self.encounters)}
+                "active": self.active, "encounters": len(self.encounters),
+                "pvp": selected[-1].pvp if selected else self.pvp,
+                "team_pvp": selected[-1].team_pvp if selected else self.team_pvp}

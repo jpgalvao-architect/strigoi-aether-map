@@ -29,6 +29,10 @@ def duration(ms):
     return f"{seconds // 60:02}:{seconds % 60:02}"
 
 
+def team_pending(snapshot):
+    return snapshot.get("team_pvp", False) and "missing_roster" in snapshot["issues"]
+
+
 def damage_table():
     table = QTableWidget(0, 5)
     table.setIconSize(QSize(20, 20))
@@ -142,7 +146,8 @@ class CombatPanel(QFrame):
         self.show()
         snapshot = self.page.selected_snapshot()
         self.heading.setText("Dano observado · {tempo}".format(tempo=duration(snapshot["duration_ms"])))
-        self.state.setText("Dados parciais · SA experimental" if snapshot["total"] else self.service.status)
+        self.state.setText("Time ainda não identificado · dano confirmado apenas" if team_pending(snapshot)
+            else "Dados parciais · SA experimental" if snapshot["total"] else self.service.status)
         fill_table(self.table, snapshot)
 
 
@@ -243,7 +248,8 @@ class CombatPage(QWidget):
         snapshot = self.selected_snapshot()
         self.copy.setEnabled(snapshot["total"] > 0)
         fill_table(self.table, snapshot)
-        self.quality.setText("Dados parciais · SA experimental" if snapshot["total"] else "Aguardando dano observado")
+        self.quality.setText("Time ainda não identificado · dano confirmado apenas" if team_pending(snapshot)
+            else "Dados parciais · SA experimental" if snapshot["total"] else "Aguardando dano observado")
         self.total.setText("Dano observado: {dano} · Tempo: {tempo}".format(
             dano=short_number(snapshot["total"]), tempo=duration(snapshot["duration_ms"])))
 

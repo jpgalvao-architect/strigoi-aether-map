@@ -583,8 +583,8 @@ window.StrigoiGuide = {
             "en_US": "A recognized new entry saves the previous result and starts a fresh meter. View results in History. Stop capture by disabling Measure combat automatically in Settings or closing Strigoi."
           },
           "tip": {
-            "pt_BR": "A troca depende do contexto recebido do jogo. Confira se o placar zera entre instâncias. A identificação e a medição de arenas PvP 1v1/5v5 ainda aguardam validação ao vivo.",
-            "en_US": "Transitions depend on context received from the game. Check that the meter resets between instances. PvP 1v1/5v5 arena identification and measurement still await live validation."
+            "pt_BR": "A troca depende do contexto recebido do jogo. Confira se o placar zera entre instâncias. Um mapa de 1v1 e um de 5v5 foram identificados em SA; outros mapas da rotação continuam pendentes. O dano PvP é experimental. No 5v5, sem a lista do time, o painel mostra apenas o dano dos participantes confirmados.",
+            "en_US": "Transitions depend on context received from the game. Check that the meter resets between instances. One 1v1 and one 5v5 map were identified in SA; other rotating maps remain pending. PvP damage is experimental. Without a team roster, the 5v5 panel shows damage from confirmed participants only."
           }
         }
       ],

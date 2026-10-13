@@ -8,6 +8,7 @@ from pathlib import Path
 from PySide6.QtCore import QObject, QProcess, QTimer, Signal
 from app.infrastructure.storage import PACKAGE
 from app.modules.combat.engine import CombatEngine
+from app.modules.combat.arenas import arena_mode, timer_matches_map
 from app.modules.combat.history import CombatHistory
 
 HELPER = PACKAGE / "assets/combat/strigoi-combat.exe"
@@ -202,15 +203,16 @@ class CombatService(QObject):
     def follow_instance(self, message, previous_map):
         was_inside = self.in_instance
         payload, kind = message["payload"], message.get("kind")
-        if kind == "ZoneChangedEvent" and payload.get("IsTeleport") and payload.get("IsDungeon") is True:
+        recognized = payload.get("IsDungeon") is True or arena_mode(payload.get("MapId")) is not None
+        if kind == "ZoneChangedEvent" and payload.get("IsTeleport") and recognized:
             self.in_instance = True  # A fresh reload can restore context after reconnect.
         if kind == "ZoneChangedEvent" and not payload.get("IsTeleport"):
             zone = payload["MapId"]
             changed = previous_map is not None and zone != previous_map
             first_load_after_damage = previous_map is None and bool(self.engine.encounters)
             if changed or previous_map is None:
-                self.in_instance = payload.get("IsDungeon") is True
-            elif payload.get("IsDungeon") is True:
+                self.in_instance = recognized
+            elif recognized:
                 self.in_instance = True
             if changed or first_load_after_damage:
                 if self.engine.active:
@@ -218,11 +220,16 @@ class CombatService(QObject):
                     self.save()
                 self.instance_timers.clear()
                 self.instance_floor = 0
-            if payload.get("IsDungeon") is True and not self.engine.active:
+            if recognized and (not self.engine.active or
+                    self.engine.pvp != (arena_mode(zone) is not None)):
+                if self.engine.active:
+                    self.engine.stop_run("mode_changed")
+                    self.save()
                 self.begin_next_instance()
         elif kind == "InstanceTimerEvent" and payload.get("Kind") in (1, 2):
             zone, start, timer_kind = payload["MapId"], payload["StartMs"], payload["Kind"]
-            if self.engine.map_id not in (None, zone) or start < self.instance_floor:
+            current_map = self.engine.map_id
+            if (current_map is not None and not timer_matches_map(current_map, zone)) or start < self.instance_floor:
                 return  # Delayed timers from a previous map/run cannot reset the current one.
             previous = self.instance_timers.get(timer_kind)
             if previous is not None and start <= previous:
@@ -241,14 +248,20 @@ class CombatService(QObject):
                 self.begin_next_instance()
             elif not self.engine.active:
                 self.begin_next_instance()
-            self.engine.map_id = zone
+            self.engine.map_id = current_map if current_map is not None else zone
             self.instance_timers[timer_kind] = start
         if self.in_instance != was_inside:
             self.changed.emit()
 
     def begin_next_instance(self):
         zone = self.engine.map_id
-        self.engine.start_run()
+        mode = arena_mode(zone)
+        if mode is not None:
+            # A world/dungeon party is not evidence of the next arena's team.
+            self.engine.roster = set()
+            self.engine.roster_jobs = {}
+            self.engine.roster_complete = False
+        self.engine.start_run(pvp=mode is not None, team_pvp=mode == "5v5")
         self.engine.map_id = zone
         self.run_started.emit()
         self.changed.emit()

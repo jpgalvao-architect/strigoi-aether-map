@@ -19,7 +19,7 @@
     'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
     'showcase.combat.title': 'Seu grupo. Seu dano observado.',
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
-    'download.beta': 'O painel de combate aparece automaticamente nas instâncias reconhecidas e se oculta ao sair. A leitura continua experimental; os resultados podem ser parciais. Arenas PvP 1v1/5v5 ainda aguardam validação.',
+    'download.beta': 'Painel automático nas dungeons e arenas 1v1/5v5 identificadas. A medição PvP é experimental e depende dos participantes confirmados. Outros mapas da rotação e a lista completa do time no 5v5 ainda precisam de validação.',
     'showcase.sonar.title': 'O som vira uma pista na tela.',
     'showcase.sonar.description': 'Selecione o áudio do jogo, escolha a sensibilidade e ative o Sonar. Você controla quando ele começa e termina.',
   });
@@ -54,7 +54,7 @@
     'screen.combat': 'Combat module with observed damage, DPS and group share',
     'showcase.combat.title': 'Your group. Your observed damage.',
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
-    'download.beta': 'The combat panel automatically appears in recognized instances and hides on exit. Capture remains experimental; results may be partial. PvP 1v1/5v5 arenas still await validation.',
+    'download.beta': 'Automatic panel in recognized dungeons and 1v1/5v5 arenas. PvP measurement is experimental and depends on confirmed participants. Other rotating maps and the full 5v5 team roster still need validation.',
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
     'showcase.sonar.description': 'Select the game audio, choose sensitivity and enable Sonar. You control when it starts and stops.',
     'explore.source': 'Real map images and community locations with documented sources. Markers indicate possible locations, not guaranteed spawns.',
