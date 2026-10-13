@@ -102,8 +102,10 @@
     'legal.intro': 'The complete terms included in the installer. Original code uses GPLv3; third-party materials retain their respective rights and licenses.',
     'legal.license': 'Read the complete GPLv3 license →',
   };
+  Object.assign(pt, window.StrigoiGuide?.ui.pt_BR || {'nav.guide':'Guia de uso','start.guide':'Abrir guia interativo'});
+  Object.assign(en, window.StrigoiGuide?.ui.en_US || {'nav.guide':'User guide','start.guide':'Open interactive guide'});
   const translations = { pt_BR: pt, en_US: en };
-  const htmlKeys = new Set(['hero.title', 'explore.title', 'sonar.title']);
+  const htmlKeys = new Set(['hero.title', 'explore.title', 'sonar.title', 'guide.title']);
   const tabs = [...document.querySelectorAll('[data-tab]')];
   let selectedTab = 'atlas';
   let language = 'pt_BR';
@@ -134,7 +136,7 @@
     language = next;
     const t = translations[next];
     document.documentElement.lang = next === 'en_US' ? 'en-US' : 'pt-BR';
-    document.title = t[document.body.dataset.page === 'terms' ? 'legal.page.title' : 'page.title'];
+    document.title = t[document.body.dataset.page === 'terms' ? 'legal.page.title' : document.body.dataset.page === 'guide' ? 'guide.page.title' : 'page.title'];
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const text = t[el.dataset.i18n];
       if (text === undefined) return;
@@ -147,6 +149,7 @@
     document.querySelectorAll('[data-legal-language]').forEach(article => { article.hidden = article.dataset.legalLanguage !== next; });
     document.querySelectorAll('[data-alert-image]').forEach(image => { image.src = `assets/sonar-alert-${next}.webp`; });
     updateShowcase();
+    document.dispatchEvent(new CustomEvent('strigoi:language', {detail: {language: next}}));
     try { localStorage.setItem('strigoi-site-language', next); } catch { /* Reading the page never requires local storage. */ }
   }
   for (const button of document.querySelectorAll('[data-language]')) button.addEventListener('click', () => setLanguage(button.dataset.language));
