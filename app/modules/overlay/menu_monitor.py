@@ -30,7 +30,9 @@ def classify_lines(lines, width, height, full_close=False):
             return 'map'
         if text in MENU_TITLES and y < height*.45 and not (x > width*.8 and y < height*.3):
             return 'menu'
-    return 'fullscreen' if full_close else 'play'
+    # Gameplay HUD and scenery can contain the same crossing diagonals as a
+    # close button. Geometry alone is not evidence that a menu is open.
+    return 'play'
 
 
 def fullscreen_close(frame, full_height=None):
@@ -135,8 +137,8 @@ class MenuMonitor(QThread):
                             # No image/text is saved or logged. Capture only the active game.
                             if self.probe.game_foreground() == game:
                                 close=fullscreen_close(frame,game.height)
-                                # Cross geometry needs the original full-frame aspect ratio.
-                                if close: self.observed.emit(job,'fullscreen')
+                                # Wait for header recognition; an isolated X also occurs
+                                # during normal gameplay and must never suppress the HUD.
                                 width=min(1920,game.width);height=round(game.height*width/game.width)
                                 image=cv2.resize(frame,(width,round(height*.45)))
                                 lines=self.ocr.recognize(image)

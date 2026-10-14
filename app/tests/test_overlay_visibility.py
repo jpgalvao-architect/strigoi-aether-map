@@ -121,7 +121,37 @@ def test_header_recognition_excludes_quest_text_small_labels_and_minimap_titles(
     assert classify_lines([dict(text='Settings',x=10,y=20,height=8)],1920,1080)=='play'
     assert classify_lines([dict(text='Inventory',x=1700,y=80,height=16)],1920,1080)=='play'
     assert classify_lines([dict(text='Map: Verteron',x=50,y=20,height=28)],1920,1080)=='map'
-    assert classify_lines([],1920,1080,True)=='fullscreen'
+    assert classify_lines([],1920,1080,True)=='play'
+
+
+def test_gameplay_cross_without_menu_header_does_not_hide_hud():
+    # Live city observations: close geometry was positive, but there was no
+    # recognized menu header and the game retained foreground focus.
+    assert classify_lines([],1920,1080,True)=='play'
+    assert classify_lines([dict(text='A nearby player',x=900,y=140,height=24)],1920,1080,True)=='play'
+    assert classify_lines([dict(text='Settings',x=30,y=25,height=26)],1920,1080,True)=='menu'
+    assert classify_lines([dict(text='Map: Altgard',x=30,y=25,height=26)],1920,1080,True)=='map'
+
+
+def test_monitor_emits_only_confirmed_classification(monkeypatch):
+    from app.modules.overlay.menu_monitor import MenuMonitor
+    import mss
+    game=Probe.game
+    monitor=MenuMonitor(Probe());job=(game,0);monitor.set_game(job)
+    class Capture:
+        def __enter__(self):return self
+        def __exit__(self,*args):pass
+        def grab(self,area):return np.zeros((area['height'],area['width'],4),np.uint8)
+    monkeypatch.setattr(mss,'MSS',Capture)
+    monkeypatch.setattr('app.modules.overlay.menu_monitor.fullscreen_close',lambda *args:True)
+    def recognize(image):
+        monitor.stopped.set()
+        return []
+    monkeypatch.setattr(monitor.ocr,'recognize',recognize)
+    observed=[]
+    monitor.observed.connect(lambda token,mode:observed.append((token,mode)))
+    monitor.run()
+    assert observed==[(job,'play')]
 
 
 @pytest.mark.parametrize('width',[1280,1920,3840])

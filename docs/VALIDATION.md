@@ -337,3 +337,19 @@ As imagens e o texto extraído não acompanham o código ou os downloads.
 Geometria de fechamento e títulos conhecidos também são exercitados com
 dados sintéticos em várias resoluções. Isso não comprova cobertura de
 todos os menus nem representa um teste ao vivo da alternância Alt+Tab.
+
+## Correção de visibilidade — beta 8
+
+Em monitoramento autorizado do jogo em 3840 × 2160, foram registrados sinais
+de fechamento sem título de menu reconhecido enquanto a janela continuava
+ativa. A beta 7 ocultava os painéis nesse caso, inclusive antes do retorno
+do OCR. A beta 8 remove essa ocultação antecipada e exige o reconhecimento
+do título. Os registros locais contêm somente decisões e horários, sem
+imagens, áudio ou nomes de jogadores, e não acompanham a distribuição.
+
+Os testes de regressão verificam que o sinal geométrico isolado mantém o
+modo normal e que o monitor não emite um estado transitório de menu antes
+da classificação. Os controles de Settings e Map: Altgard permanecem
+corretos. O usuário confirmou o funcionamento do Alt+Tab na beta 7.
+Não foi confirmado qual elemento específico da cidade originou a forma
+parecida com “X”, nem a cobertura de todos os menus do jogo.

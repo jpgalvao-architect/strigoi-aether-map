@@ -1,15 +1,15 @@
 # Strigoi Aether Map
 
-**AION 2 Companion App · 0.9.0-beta.7 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.8 · Windows x64**
 
-Beta 7 hides every overlay when the game loses foreground focus and in recognized menus. The full map keeps its markers. Capture continues, preferences are preserved, and old Sonar alerts are not replayed. Menu recognition is local and coverage is not universal.
+Beta 8 fixes overlays disappearing during gameplay: an X-shaped screen detail alone cannot identify a menu. Alt+Tab hiding still works. Menus require local recognition of known titles; coverage is not universal. The full map keeps its markers, capture continues, and old Sonar alerts are not replayed.
 
 The app doubles minimap symbols, adds arrows to cube sites with supplied height flags, and adds an intensity bar and recent history to Sonar. Arrows follow the source group's relative height; the bar estimates the recognized sound and is affected by game volume. Its relationship with in-game proximity still needs validation.
 
 The app shows the combat panel in recognized dungeons and 1v1/5v5 arenas and hides it on exit. Entry and exit signals were observed for one map per arena mode in SA; other rotating maps still need identification. PvP totals include outgoing attacks by confirmed participants and exclude received damage. Calculation remains experimental without live accuracy validation; the complete 5v5 team roster is not confirmed yet. Quick controls can hide the panel without stopping capture.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.7) ·
+[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.8) ·
 [Português](README.md)
 
 Your exploration journal: maps, gatherables, possible cube locations and
@@ -20,7 +20,7 @@ observed DPS/share, explicit summon ownership, target filtering and local
 history. SA capture still needs validation; results are marked partial.
 See [Combat](docs/COMBAT.md) for current scope and limitations.
 
-Run `StrigoiAetherMap-Setup-0.9.0-beta.7.exe`, choose English and review the terms
+Run `StrigoiAetherMap-Setup-0.9.0-beta.8.exe`, choose English and review the terms
 before accepting. Setup installs for the current user and includes an
 uninstaller and corresponding source code. Existing preferences and visits
 are preserved. English is the default for a fresh installation; an explicit

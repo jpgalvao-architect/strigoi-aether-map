@@ -177,8 +177,8 @@ Ocultar não desliga o Sonar nem a medição de combate e não altera as
 preferências. Avisos do Sonar recebidos enquanto ocultos não são reapresentados.
 
 Menus reconhecidos ocultam os painéis. No mapa grande, somente os marcadores
-permanecem disponíveis. O reconhecimento usa o botão de fechar dos menus
-em tela cheia e títulos conhecidos em inglês/português, por OCR local do
+permanecem disponíveis. A partir da beta 8, o reconhecimento exige títulos
+conhecidos em inglês/português, por OCR local do
 Windows. A análise recebe apenas um recorte superior da janela ativa do
 jogo, em memória, sem salvar imagens ou texto. Funciona independentemente
 do overlay de mapas estar ativado. A janela ativa é conferida a cada 100 ms;
@@ -187,8 +187,10 @@ ou mais para serem reconhecidos, conforme o computador.
 
 Nem todo menu, idioma ou disposição de interface foi validado. Se o OCR
 do Windows estiver indisponível, a ocultação ao sair do jogo continua
-funcionando, e a identificação visual fica limitada ao botão de fechar
-dos menus em tela cheia. O app não intercepta teclas nem injeta código.
+funcionando, mas a identificação visual de menus fica indisponível.
+Um desenho parecido com “X” não é suficiente para ocultar os overlays:
+essa geometria também aparece na HUD e no cenário durante o jogo.
+O app não intercepta teclas nem injeta código.
 
 Ao usar **Testar aviso visual** fora do jogo, a prévia abre dentro de um
 diálogo normal do aplicativo. Ela não captura áudio nem cria um overlay
