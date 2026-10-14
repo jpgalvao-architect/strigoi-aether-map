@@ -9,7 +9,7 @@ using AionMeter.Core.Events;
 using AionMeter.Core.Game;
 using AionMeter.Core.Protocol;
 
-if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.9"); return; }
+if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.10"); return; }
 if (args.Contains("--probe")) {
     Console.WriteLine(JsonSerializer.Serialize(new { protocol=1, npcap=OperatingSystem.IsWindows() && LiveCapture.IsNpcapInstalled(), saValidated=false }));
     return;
@@ -49,6 +49,38 @@ if (args.Contains("--self-test")) {
     parser.Handle(Opcodes.PartyRoster,roster.ToArray());
     if(!events.OfType<PartyRosterEvent>().Any(e=>e.Members.Count==1 && !e.Complete))
         throw new Exception("Partial roster detection failed");
+    static List<byte> Group(int count)
+    {
+        var bytes=new List<byte>(new byte[4]);bytes.Add(0);bytes.Add((byte)count);
+        bytes.AddRange(new byte[17]);bytes.Add((byte)count);return bytes;
+    }
+    static void Member(List<byte> bytes,byte slot,string name,ushort server,uint job,bool badPower=false,int tail=0)
+    {
+        bytes.Add(30);bytes.Add(slot);bytes.AddRange(new byte[6]);
+        bytes.AddRange(BitConverter.GetBytes(server));bytes.Add((byte)name.Length);
+        bytes.AddRange(System.Text.Encoding.UTF8.GetBytes(name));
+        bytes.AddRange(BitConverter.GetBytes(job));bytes.AddRange(BitConverter.GetBytes((uint)45));
+        bytes.AddRange(BitConverter.GetBytes((uint)1000));bytes.AddRange(BitConverter.GetBytes(server));
+        bytes.AddRange(new byte[3]);bytes.AddRange(BitConverter.GetBytes(badPower?ulong.MaxValue:10000UL));
+        bytes.AddRange(Enumerable.Repeat((byte)0xee,tail));
+    }
+    var five=Group(5);
+    Member(five,0,"Alpha",2401,5,tail:60);Member(five,1,"Beta",2401,17);
+    Member(five,2,"Gamma",2402,21,badPower:true);Member(five,3,"Delta",1402,29);
+    Member(five,4,"Epsilon",1501,33);
+    parser.Handle(Opcodes.PartyRoster,five.ToArray());
+    if(!events.OfType<PartyRosterEvent>().Any(e=>e.Complete && e.Members.Count==5 && e.Members[2].CombatPower==0))
+        throw new Exception("Optional metadata/long tails truncated five-member roster");
+    var vacant=Group(3);vacant.AddRange(new byte[11]);
+    Member(vacant,1,"Alpha",2401,5);Member(vacant,2,"Beta",1402,29);
+    parser.Handle(Opcodes.PartyRoster,vacant.ToArray());
+    if(!events.OfType<PartyRosterEvent>().Any(e=>e.Complete && e.Members.Count==2))
+        throw new Exception("Vacant first slot hid later members");
+    var unread=Group(3);unread.AddRange(new byte[]{30,0,0,0,0,0,0,0,0,0,255});
+    unread.AddRange(new byte[20]);Member(unread,1,"Alpha",2401,5);Member(unread,2,"Beta",1402,29);
+    parser.Handle(Opcodes.PartyRoster,unread.ToArray());
+    if(!events.OfType<PartyRosterEvent>().Any(e=>!e.Complete && e.Members.Count==2))
+        throw new Exception("Unread first member hid valid later members");
     var namedSpirit=new List<byte>{7,0x1C,0,0,0,1,8};
     namedSpirit.AddRange(System.Text.Encoding.UTF8.GetBytes("FixtureB"));
     namedSpirit.AddRange(new byte[]{0x80,0x75,0xD5,0x2A,0xBB,0x03,0,0,2});
@@ -63,7 +95,7 @@ if (args.Contains("--self-test")) {
     if(!events.OfType<CastEvent>().Any(e=>e.ActorId==2 && e.SkillCode==16280140 && e.TargetId==50))
         throw new Exception("Raw cast variant was lost");
     if(!events.OfType<DamageEvent>().Any(e=>e.PowerScalar==16000))throw new Exception("Damage scalar was lost");
-    Console.WriteLine("SELF_TEST_OK: connected clients, TCP, damage, malformed record, serverless identity, partial roster, spirit owner, raw cast, scalar; no capture"); return;
+    Console.WriteLine("SELF_TEST_OK: connected clients, TCP, damage, malformed record, serverless identity, partial/full roster, optional stats, vacant/unread slots, spirit owner, raw cast, scalar; no capture"); return;
 }
 var diagnostic=args.Contains("--diagnose");
 var diagnosticSeconds=10;

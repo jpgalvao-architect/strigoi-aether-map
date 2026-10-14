@@ -583,21 +583,44 @@ public sealed class PacketParser
 
         var members = new List<PartyMemberInfo>();
         var vacantTail = false;
+        var vacantSlots = 0;
+        var unreadSlot = false;
         for (var i = 0; i < count && o + 11 <= b.Length; i++)
         {
+            var start = o;
             var mask = b[o];
             var slot = b[o + 1];
             var server = Wire.U16(b, o + 8);
             int nameLength = b[o + 10];
-            if (nameLength == 0) { vacantTail = true; break; } // the rest are vacant too
+            if (nameLength == 0)
+            {
+                var afterVacancy = FindRosterMember(b, o + 11, (byte)(slot + 1));
+                if (afterVacancy < 0) { vacantTail = true; break; }
+                vacantSlots++;
+                o = afterVacancy;
+                continue;  // A vacant slot does not imply every later slot is vacant.
+            }
             if (server is 0 or > 9_999 || nameLength > 40 || o + 11 + nameLength + 12 > b.Length ||
-                !Wire.TryName(b.Slice(o + 11, nameLength), out var name)) break;
+                !Wire.TryName(b.Slice(o + 11, nameLength), out var name))
+            {
+                unreadSlot = true;
+                o = FindRosterMember(b, start + 1, (byte)(slot + 1));
+                if (o < 0) break;
+                continue;
+            }
             o += 11 + nameLength;
             var cls = GameData.ClassFromWire(Wire.U32(b, o));
             var level = Wire.U32(b, o + 4);
             var gear = Wire.U32(b, o + 8);
             o += 12;
-            if (level is < 1 or > 200) break;
+            if (level is < 1 or > 200)
+            {
+                unreadSlot = true;
+                o = FindRosterMember(b, start + 1, (byte)(slot + 1));
+                if (o < 0) break;
+                continue;
+            }
+            var fieldsEnd = o;
             if ((mask & 0x01) != 0 && gear < 100 && o + 4 <= b.Length && Wire.U32(b, o) is var next and >= 100 and <= 50_000)
             {
                 gear = next;
@@ -607,19 +630,23 @@ public sealed class PacketParser
             var anchor = -1;
             for (var at = o; at <= Math.Min(o + 10, b.Length - 2); at++)
                 if (Wire.U16(b, at) == server) { anchor = at; break; }
-            if (anchor < 0 || anchor + 5 + 8 > b.Length) break;
-            var power = BinaryPrimitives.ReadUInt64LittleEndian(b[(anchor + 5)..]);
-            if (power > MaxCombatPower) break;
-            o = anchor + 5 + 8;
+            // CP is optional metadata. A changed stats tail must not discard
+            // an already validated name/server/class or the following members.
+            ulong power = 0;
+            if (anchor >= 0 && anchor + 13 <= b.Length)
+            {
+                var candidate = BinaryPrimitives.ReadUInt64LittleEndian(b[(anchor + 5)..]);
+                if (candidate <= MaxCombatPower) power = candidate;
+            }
             members.Add(new PartyMemberInfo(name, server, (int)level, gear is >= 1 and <= 50_000 ? (int)gear : 0, (long)power, cls));
 
             if (i + 1 == count) break;
-            var nextMember = FindRosterMember(b, o, (byte)(slot + 1));
+            var nextMember = FindRosterMember(b, fieldsEnd, (byte)(slot + 1));
             if (nextMember < 0) break;
             o = nextMember;
         }
         if (members.Count == 0) return false;
-        Emit(new PartyRosterEvent(TimeMs, members, Complete: vacantTail || members.Count == count));
+        Emit(new PartyRosterEvent(TimeMs, members, Complete: !unreadSlot && (vacantTail || members.Count + vacantSlots == count)));
         return true;
     }
 
@@ -630,16 +657,19 @@ public sealed class PacketParser
             if (b[i] == 0x02 && b[i + 1] == 0x97 && ParsePartyRoster(b[(i + 2)..])) return;
     }
 
-    /// <summary>The start of the roster record for <paramref name="slot"/>, by its header shape, within 32 bytes.</summary>
+    /// <summary>Bounded resynchronization past variable stats tails; validate the full identity header.</summary>
     private static int FindRosterMember(ReadOnlySpan<byte> b, int from, byte slot)
     {
-        for (var i = from; i <= Math.Min(from + 32, b.Length - 12); i++)
+        for (var i = from; i <= Math.Min(from + 128, b.Length - 23); i++)
         {
             if (b[i + 1] != slot) continue;
             var server = Wire.U16(b, i + 8);
             int nameLength = b[i + 10];
-            if (server is 0 or > 9_999 || nameLength is 0 or > 40 || i + 11 + nameLength > b.Length) continue;
-            if (Wire.TryName(b.Slice(i + 11, nameLength), out _)) return i;
+            if (server is 0 or > 9_999 || nameLength is 0 or > 36 || i + 23 + nameLength > b.Length) continue;
+            if (!Wire.TryName(b.Slice(i + 11, nameLength), out _)) continue;
+            var job = GameData.ClassFromWire(Wire.U32(b, i + 11 + nameLength));
+            var level = Wire.U32(b, i + 15 + nameLength);
+            if (job != GameClass.Unknown && level is >= 1 and <= 200) return i;
         }
         return -1;
     }

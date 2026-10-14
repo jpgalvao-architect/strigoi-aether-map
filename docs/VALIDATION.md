@@ -370,3 +370,20 @@ em 14/10/2026. O mapeamento acompanha o catálogo Global e os hashes conferem
 com os bytes originais; nenhuma cor ou forma foi redesenhada. Classes sem
 imagem oficial verificada usam símbolo neutro. Esses assets mantêm direitos
 separados da licença do código.
+
+## Leitura do grupo — beta 10
+
+Em diagnóstico autorizado de uma instância SA, foram observadas cinco
+origens de ataques de personagens. Na saída, uma atualização continha
+identidade válida de outro membro, mas a leitura do grupo permanecia
+incompleta. O diagnóstico não salvou nomes, pacotes brutos, imagens ou áudio.
+Não foi determinado qual campo do registro original da entrada impediu a
+identificação de cada jogador ausente.
+
+O helper agora testa cinco membros com cauda de metadados longa e poder
+opcional inválido, além de posições vazias e registros obrigatórios
+ilegíveis antes de membros válidos. O motor recebe um cadastro recuperado
+e passa de três para cinco linhas sem alterar o total, recalculando DPS
+e participação. Dano sem identidade observada continua não atribuído.
+A partida encerrou antes da alteração: a recuperação completa no jogo
+ainda precisa ser confirmada numa nova instância.

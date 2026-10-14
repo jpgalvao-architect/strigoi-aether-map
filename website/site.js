@@ -19,7 +19,7 @@
     'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
     'showcase.combat.title': 'Seu grupo. Seu dano observado.',
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
-    'download.beta': 'Beta 9: melhora a atribuição do dano do spirit ao Spiritmaster e usa os ícones oficiais das oito classes Global. Ambiguidades continuam não atribuídas; a correção aguarda confirmação ao vivo em SA. Combate e PvP permanecem experimentais.',
+    'download.beta': 'Beta 10: melhora a leitura dos membros do grupo quando há registros incompletos. A recuperação de cinco jogadores passou em testes controlados e aguarda confirmação em SA. Combate e PvP continuam experimentais; dados sem identidade observada permanecem não atribuídos.',
     'showcase.sonar.title': 'O som vira uma pista na tela.',
     'showcase.sonar.description': 'Ative o Sonar e acompanhe a intensidade estimada do som reconhecido na barra e no histórico do aviso.',
   });
@@ -54,7 +54,7 @@
     'screen.combat': 'Combat module with observed damage, DPS and group share',
     'showcase.combat.title': 'Your group. Your observed damage.',
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
-    'download.beta': 'Beta 9 improves Spiritmaster summon attribution and uses official icons for the eight Global classes. Ambiguous damage stays unattributed; live SA confirmation is pending. Combat and PvP remain experimental.',
+    'download.beta': 'Beta 10 improves party decoding when records are incomplete. Five-player recovery passed controlled tests and awaits SA confirmation. Combat and PvP remain experimental; damage without an observed identity stays unattributed.',
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
     'showcase.sonar.description': 'Enable Sonar and follow the estimated recognized sound intensity in the alert\'s bar and recent history.',
     'explore.source': 'Real map images and community locations with documented sources. Markers indicate possible locations, not guaranteed spawns.',

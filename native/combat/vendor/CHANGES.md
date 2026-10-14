@@ -20,3 +20,9 @@ ownerless kind 0x1C now emits SummonSeenEvent like the other summon kinds.
 The bridge forwards already-decoded raw CastEvent variants. Normalized damage
 PowerScalar is preserved for bounded, ambiguity-rejecting reconciliation.
 No packet recording or additional network access is introduced.
+
+2026-10-14 roster recovery: optional CP/stat-tail failures no longer discard
+validated name/server/class fields. Next-slot recovery scans at most128bytes
+with name, server, class and level checks, independently of the optional CP
+offset. Vacant or unreadable earlier slots no longer hide valid later members;
+unreadable mandatory fields still mark the roster incomplete.

@@ -55,6 +55,11 @@ driver não é usada. Cancelar sua instalação não bloqueia Atlas ou Sonar.
   Quando o vínculo chega, o dano anterior da tentativa é somado sem duplicar
   o total, incluindo o recálculo de DPS, participação e posição.
 - Jogadores fora do roster reconhecido não entram no ranking do grupo.
+- Na beta 10, falhas nos dados opcionais de poder de combate não descartam
+  identidades válidas. A leitura continua após registros extras maiores,
+  posições vazias e membros não decodificados, com validação de nome,
+  servidor, classe e nível. Registros obrigatórios ausentes continuam
+  indicados como incompletos; nomes não são inferidos a partir da classe.
 - Identidades sem servidor são associadas ao grupo somente se o nome for
   único, sem outro jogador homônimo observado. Ambiguidades e membros ainda
   não decodificados ficam em Não atribuído; dados parciais permanecem indicados.
