@@ -10,6 +10,7 @@ from app.modules.events.service import countdown,occurrences
 from app.ui.icons import icon,event_icon
 from app.ui.widgets import label
 from app.core.i18n import tr, clock, calendar_date
+from app.ui.overlay_visibility import OverlayVisibilityMixin
 
 
 class EventCard(QFrame):
@@ -57,7 +58,7 @@ class EventCard(QFrame):
         self.remaining.setToolTip('Horário de início' if passed else ('Evento em andamento' if active else 'Tempo até o início'))
 
 
-class EventPanel(QFrame):
+class EventPanel(OverlayVisibilityMixin, QFrame):
     def __init__(self,context):
         super().__init__(None,Qt.WindowType.FramelessWindowHint|Qt.WindowType.WindowStaysOnTopHint|Qt.WindowType.Tool)
         self.context=context;self.shutting_down=False;self.drag=None

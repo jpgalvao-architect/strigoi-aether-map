@@ -126,7 +126,15 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(" / ".join(context.messages), 30000)
         from app.ui.quick_menu import QuickMenu
         self.quick_menu = QuickMenu(self, runtime=runtime)
+        self.overlay_visibility = None
         if runtime:
+            from app.ui.overlay_visibility import OverlayVisibility
+            self.overlay_visibility = OverlayVisibility(self)
+            for window, role in [(self.overlay.window, 'map'), (self.event_panel, 'hud'),
+                                 (self.combat_page.panel, 'hud'), (self.sonar_alert, 'alert'),
+                                 (self.quick_menu, 'hud'), (self.quick_menu.panel, 'hud')]:
+                self.overlay_visibility.register(window, role)
+            self.overlay_visibility.start()
             QTimer.singleShot(0, self.combat.enable_automatic)
 
     def refresh_banner(self):
@@ -208,6 +216,7 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
     def closeEvent(self, event):
+        if self.overlay_visibility: self.overlay_visibility.shutdown()
         self.quick_menu.shutdown()
         self.combat_page.shutdown()
         self.combat.shutdown()

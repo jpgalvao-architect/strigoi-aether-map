@@ -329,8 +329,8 @@ window.StrigoiGuide = {
             "en_US": "Choose categories in Atlas layers and click Enable overlay. Strigoi minimizes and looks for terrain details to place markers. Then use the quick menu to control maps."
           },
           "tip": {
-            "pt_BR": "Os símbolos do minimapa têm tamanho 2× maior. Nos cubos, ↑ e ↓ indicam altura acima ou abaixo da mediana do grupo na fonte; não comparam com o personagem. Sem reconhecer o terreno, o app oculta os pontos.",
-            "en_US": "Minimap symbols are 2× larger. Cube arrows ↑ and ↓ mean above or below the source group's median height; they do not compare with your character. Without terrain recognition, markers are hidden."
+            "pt_BR": "Os símbolos do minimapa têm tamanho 2× maior. Nos cubos, ↑ e ↓ indicam altura acima ou abaixo da mediana do grupo na fonte; não comparam com o personagem. Sem reconhecer o terreno, o app oculta os pontos. Alt+Tab oculta todos os overlays. Menus reconhecidos também ocultam os painéis; o mapa grande mantém seus marcadores. A medição continua.",
+            "en_US": "Minimap symbols are 2× larger. Cube arrows ↑ and ↓ mean above or below the source group's median height; they do not compare with your character. Without terrain recognition, markers are hidden. Alt+Tab hides every overlay. Recognized menus also hide panels; the full map keeps its markers. Measurement continues."
           }
         },
         {

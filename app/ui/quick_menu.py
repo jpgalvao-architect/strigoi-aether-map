@@ -9,6 +9,7 @@ from app.ui.widgets import label
 from app.ui.icons import icon
 from app.ui.mascot import AVATAR_PATH
 from app.infrastructure.storage import PACKAGE
+from app.ui.overlay_visibility import OverlayVisibilityMixin
 
 
 FLAGS = (Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint |
@@ -62,7 +63,7 @@ class LauncherButton(QToolButton):
             super().mouseReleaseEvent(event)
 
 
-class MenuPanel(QFrame):
+class MenuPanel(OverlayVisibilityMixin, QFrame):
     def paintEvent(self, event):
         # Translucent top-level windows need an explicit painted surface.
         painter = QPainter(self)
@@ -72,7 +73,7 @@ class MenuPanel(QFrame):
         painter.drawRoundedRect(QRectF(self.rect()).adjusted(.5, .5, -.5, -.5), 7, 7)
 
 
-class QuickMenu(QFrame):
+class QuickMenu(OverlayVisibilityMixin, QFrame):
     def __init__(self, main, *, runtime=False):
         super().__init__(None, FLAGS)
         self.main, self.context = main, main.context

@@ -321,3 +321,19 @@ parada são exercitados separadamente.
 
 Esses ensaios não medem distância nem validam a barra em combate real. As
 pré-visualizações PT-BR/EN-US usam ensaio de interface e não captura do jogo.
+
+## Visibilidade automática — beta 7
+
+Os testes cobrem seis janelas, chamadas periódicas de atualização enquanto
+ocultas, restauração, alterações de preferências durante a ocultação,
+preservação da sessão de combate, descarte de avisos do Sonar e de respostas
+visuais antigas após Alt+Tab. As verificações de propriedade da janela
+incluem nomes exatos de executáveis, minimização, origem negativa de um
+monitor secundário e foco em um overlay versus na janela principal do app.
+
+Em análise local de imagens fornecidas anteriormente pelo usuário, o OCR
+do Windows distinguiu Settings, Map: Altgard e uma tela normal do jogo.
+As imagens e o texto extraído não acompanham o código ou os downloads.
+Geometria de fechamento e títulos conhecidos também são exercitados com
+dados sintéticos em várias resoluções. Isso não comprova cobertura de
+todos os menus nem representa um teste ao vivo da alternância Alt+Tab.

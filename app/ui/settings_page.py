@@ -34,6 +34,7 @@ class SettingsPage(QWidget):
         self.quick_enabled.setChecked(context.prefs.quick_menu.enabled)
         self.quick_enabled.toggled.connect(self.change_quick_menu)
         quick_form.addRow(self.quick_enabled)
+        quick_form.addRow(label("Os overlays se ocultam ao sair do jogo ou abrir um menu reconhecido. A medição continua.", "subtitle", True))
         self.combat_automatic = QCheckBox("Medir combate automaticamente")
         self.combat_automatic.setChecked(context.prefs.combat.auto_capture)
         self.combat_automatic.toggled.connect(self.change_combat_automatic)

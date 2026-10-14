@@ -3,14 +3,15 @@
 from PySide6.QtCore import Qt, QTimer, QEvent
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout
-from app.ui.localized_widgets import QComboBox, QFrame, QWidget, QToolButton
+from app.ui.localized_widgets import QComboBox, QDialog, QFrame, QWidget, QToolButton
 from app.modules.sonar.capture import processes
 from app.ui.icons import icon
 from app.ui.widgets import button, card, label, page_header, row
 from app.ui.sonar_intensity import SonarIntensity
+from app.ui.overlay_visibility import OverlayVisibilityMixin
 
 
-class SonarAlert(QFrame):
+class SonarAlert(OverlayVisibilityMixin, QFrame):
     def __init__(self, context):
         super().__init__(None,Qt.WindowType.FramelessWindowHint|Qt.WindowType.WindowStaysOnTopHint|
                          Qt.WindowType.Tool|Qt.WindowType.WindowDoesNotAcceptFocus)
@@ -63,6 +64,7 @@ class SonarAlert(QFrame):
             self.timer.start(8000)  # Keep the graph visible while the sound remains confirmed.
 
     def eventFilter(self,watched,event):
+        if not self.isWindow(): return super().eventFilter(watched,event)
         if event.type()==QEvent.Type.MouseButtonPress and event.button()==Qt.MouseButton.LeftButton:
             self.drag=event.globalPosition().toPoint()-self.pos();return True
         if event.type()==QEvent.Type.MouseMove and self.drag is not None:
@@ -95,7 +97,7 @@ class SonarPage(QWidget):
         body.addWidget(label('A intensidade acompanha o som reconhecido. O volume do jogo também influencia a leitura.','subtitle',True))
         self.start_button=button('Ativar sonar',self.start,True)
         self.stop_button=button('Parar sonar',service.stop)
-        body.addLayout(row(self.start_button,self.stop_button,button('Testar aviso visual',lambda:alert.present(test=True))))
+        body.addLayout(row(self.start_button,self.stop_button,button('Testar aviso visual',self.test_notice)))
         body.addWidget(label('O aviso indica um som compatível, sem revelar posição ou distância. A detecção pode falhar em meio a outros efeitos.','subtitle',True))
         body.addWidget(label('O áudio é analisado neste computador e não é gravado. O sonar começa desligado a cada abertura.','subtitle',True))
         layout.addWidget(frame)
@@ -107,6 +109,23 @@ class SonarPage(QWidget):
         service.detected.connect(self.show_detection)
         service.level_updated.connect(self.show_level)
         self.refresh_processes();self.refresh_active(False)
+
+    def test_notice(self):
+        gate=getattr(self.alert,'_visibility_gate',None)
+        if gate is None or gate.allows('alert'):
+            self.alert.present(test=True)
+            return
+        # A preview belongs to the app window; it is never an always-on-top HUD.
+        dialog=QDialog(self);dialog.setWindowTitle('Teste do aviso do sonar')
+        body=QVBoxLayout(dialog)
+        preview=SonarAlert(self.context)
+        preview.setParent(dialog);preview.setWindowFlags(Qt.WindowType.Widget)
+        preview.testing=True;preview.title.setText('Teste do aviso do sonar')
+        preview.detail.setText('Este é apenas um teste visual.');preview.intensity.hide()
+        for close in preview.findChildren(QToolButton):close.clicked.connect(dialog.accept)
+        body.addWidget(preview);preview.show()
+        body.addWidget(button('Fechar',dialog.accept))
+        dialog.exec();preview.timer.stop();dialog.deleteLater()
 
     def refresh_processes(self):
         current=self.process.currentData()

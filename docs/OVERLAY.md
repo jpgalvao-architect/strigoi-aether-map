@@ -166,3 +166,30 @@ até a pessoa escolher outro evento ou voltar ao modo automático.
 O painel de eventos tem cabeçalho curto e linhas compactas inspiradas na
 organização da HUD do jogo. O ícone de calendário no cabeçalho abre a escolha
 do evento; a seta expande ou recolhe a lista. Cores e fonte permanecem próprias.
+
+## Visibilidade automática — beta 7
+
+Todos os overlays se ocultam quando o AION 2 deixa de ser a janela ativa,
+incluindo Alt+Tab, minimização e seleção da janela principal do Strigoi.
+Ao voltar ao jogo, os painéis habilitados reaparecem conforme o contexto:
+o combate continua condicionado à entrada em uma instância reconhecida.
+Ocultar não desliga o Sonar nem a medição de combate e não altera as
+preferências. Avisos do Sonar recebidos enquanto ocultos não são reapresentados.
+
+Menus reconhecidos ocultam os painéis. No mapa grande, somente os marcadores
+permanecem disponíveis. O reconhecimento usa o botão de fechar dos menus
+em tela cheia e títulos conhecidos em inglês/português, por OCR local do
+Windows. A análise recebe apenas um recorte superior da janela ativa do
+jogo, em memória, sem salvar imagens ou texto. Funciona independentemente
+do overlay de mapas estar ativado. A janela ativa é conferida a cada 100 ms;
+menus são verificados em segundo plano e podem levar cerca de um segundo
+ou mais para serem reconhecidos, conforme o computador.
+
+Nem todo menu, idioma ou disposição de interface foi validado. Se o OCR
+do Windows estiver indisponível, a ocultação ao sair do jogo continua
+funcionando, e a identificação visual fica limitada ao botão de fechar
+dos menus em tela cheia. O app não intercepta teclas nem injeta código.
+
+Ao usar **Testar aviso visual** fora do jogo, a prévia abre dentro de um
+diálogo normal do aplicativo. Ela não captura áudio nem cria um overlay
+permanente sobre outras janelas.

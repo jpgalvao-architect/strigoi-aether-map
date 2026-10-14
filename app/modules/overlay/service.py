@@ -14,6 +14,7 @@ from app.modules.atlas.view import marker_path
 from app.modules.atlas.heights import point_marker_shape
 from app.modules.gatherables.service import FilterQuery, filter_points
 from app.modules.overlay.detector import Calibration, MapDetector, project
+from app.ui.overlay_visibility import OverlayVisibilityMixin
 
 
 class CaptureWorker(QThread):
@@ -45,7 +46,7 @@ class CaptureWorker(QThread):
             self.failed.emit(str(exc))
 
 
-class OverlayWindow(QWidget):
+class OverlayWindow(OverlayVisibilityMixin, QWidget):
     def __init__(self):
         super().__init__(None, Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool | Qt.WindowType.WindowTransparentForInput | Qt.WindowType.WindowDoesNotAcceptFocus)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)

@@ -11,6 +11,7 @@ from app.ui.localized_widgets import (QWidget, QFrame, QComboBox, QCheckBox, QLi
 from app.ui.widgets import label, page_header, row
 from app.core.i18n import tr, clock, calendar_date
 from app.ui.combat_classes import class_icon, class_label
+from app.ui.overlay_visibility import OverlayVisibilityMixin
 
 
 def short_number(value):
@@ -71,7 +72,7 @@ def fill_table(table, snapshot):
             table.setItem(index, column, cell)
 
 
-class CombatPanel(QFrame):
+class CombatPanel(OverlayVisibilityMixin, QFrame):
     def __init__(self, service, page):
         super().__init__(None, Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint |
             Qt.WindowType.Tool | Qt.WindowType.WindowDoesNotAcceptFocus)

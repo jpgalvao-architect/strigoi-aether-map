@@ -345,6 +345,7 @@
   "A barra acompanha o som reconhecido. O volume do jogo influencia a leitura; não indica distância em metros.": "The bar follows the recognized sound. Game volume affects the reading; it does not indicate distance in meters.",
   "A intensidade acompanha o som reconhecido. O volume do jogo também influencia a leitura.": "Intensity follows the recognized sound. Game volume also affects the reading.",
   "Ocultar": "Hide",
+  "Os overlays se ocultam ao sair do jogo ou abrir um menu reconhecido. A medição continua.": "Overlays hide when you leave the game window or open a recognized menu. Measurement continues.",
   "Salvar": "Save",
   "Cancelar": "Cancel",
   "Nenhum": "None",
