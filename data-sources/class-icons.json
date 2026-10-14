@@ -1,0 +1,65 @@
+{
+  "copyright": "NC Corporation",
+  "retrieved": "2026-10-14",
+  "assets": [
+    {
+      "class_name": "gladiator",
+      "file": "gladiator.png",
+      "url": "https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_gladiator.png",
+      "sha256": "53092f6f62c0a9d4e45692335edd0e53a8a09f70983f04c49f3461cead7666d5",
+      "bytes": 63279
+    },
+    {
+      "class_name": "templar",
+      "file": "templar.png",
+      "url": "https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_templar.png",
+      "sha256": "155a850fd6ccacfbf1db3082a0a42cbc11a8c74411e3f91a8a4c0c398424f233",
+      "bytes": 85923
+    },
+    {
+      "class_name": "ranger",
+      "file": "ranger.png",
+      "url": "https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_ranger.png",
+      "sha256": "c5fbe9f5717c17d0446c2608c77d7896890cabb4ac60fb7e9d1510b8629010b4",
+      "bytes": 71889
+    },
+    {
+      "class_name": "assassin",
+      "file": "assassin.png",
+      "url": "https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_assassin.png",
+      "sha256": "16b09513571debbe846179406dcef11940e76ea5e7a461e22983508196750016",
+      "bytes": 73036
+    },
+    {
+      "class_name": "sorcerer",
+      "file": "sorcerer.png",
+      "url": "https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_sorcerer.png",
+      "sha256": "c591c4bfa93b8022373d39959d3127c7a721163dbccd8d6a622d105140c6735d",
+      "bytes": 89532
+    },
+    {
+      "class_name": "elementalist",
+      "file": "elementalist.png",
+      "url": "https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_elementalist.png",
+      "sha256": "30805b77b7326bb6d7ff1e5924780d1a35d4783558511c5120c077bf069a6b55",
+      "bytes": 94120
+    },
+    {
+      "class_name": "cleric",
+      "file": "cleric.png",
+      "url": "https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_cleric.png",
+      "sha256": "ac9e95793cacf2615e79a2195204be8decff90453403c500c9417b427af83ed0",
+      "bytes": 86343
+    },
+    {
+      "class_name": "chanter",
+      "file": "chanter.png",
+      "url": "https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_chanter.png",
+      "sha256": "3536c810fe375c9922fda1d290d347b5636afdfc00badc50297968b3b005b3fe",
+      "bytes": 94069
+    }
+  ],
+  "origin": "https://aion2.plaync.com/en-us/characters/index",
+  "catalog": "https://aion2.plaync.com/en-us/api/gameinfo/pcdata?lang=en",
+  "unchanged_original_bytes": true
+}

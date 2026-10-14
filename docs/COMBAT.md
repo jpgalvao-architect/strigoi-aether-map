@@ -43,6 +43,17 @@ driver não é usada. Cancelar sua instalação não bloqueia Atlas ou Sonar.
 - DPS da instância usa a soma das durações dos encontros, sem deslocamentos.
 - Percentuais são sobre o dano observado da visão, incluindo Não atribuído.
 - Dano de invocações só vai ao dono quando há vínculo identificado.
+- Na beta 9, vínculos por ID/nome são preservados em anúncios incompletos.
+  O coletor prioriza o ID explícito do spirit e transmite os sinais de
+  conjuração. Uma variante de habilidade permite ligar uma entidade ao
+  conjurador único na janela de criação. Em PvE, uma invocação anunciada sem
+  dono pode ser associada ao SM por multiplicador observado compatível,
+  alvo comum e rotação de pelo menos três habilidades, somente se nenhum
+  outro jogador observado compartilhar esse multiplicador. Essa associação
+  é uma inferência, registrada no resultado como `inferred_summon_owner`;
+  não é usada como fallback no PvP. Ambiguidades permanecem não atribuídas.
+  Quando o vínculo chega, o dano anterior da tentativa é somado sem duplicar
+  o total, incluindo o recálculo de DPS, participação e posição.
 - Jogadores fora do roster reconhecido não entram no ranking do grupo.
 - Identidades sem servidor são associadas ao grupo somente se o nome for
   único, sem outro jogador homônimo observado. Ambiguidades e membros ainda

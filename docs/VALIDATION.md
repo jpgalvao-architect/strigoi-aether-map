@@ -353,3 +353,20 @@ da classificação. Os controles de Settings e Map: Altgard permanecem
 corretos. O usuário confirmou o funcionamento do Alt+Tab na beta 7.
 Não foi confirmado qual elemento específico da cidade originou a forma
 parecida com “X”, nem a cobertura de todos os menus do jogo.
+
+## Spirits e ícones — beta 9
+
+Os ensaios cobrem a soma retroativa de dano/DPS/participação sem duplicação,
+dois SMs com sinais distintos ou iguais, prioridade e preservação do dono
+explícito, variantes de conjuração ambíguas, ausência de fallback escalar no
+PvP e nova vida de um spirit após desaparecimento. O helper exercita o ID
+ancorado com nome presente, a emissão do tipo 0x1C sem dono, a variante bruta
+de conjuração e a conservação do multiplicador. Não há pacotes brutos nos
+testes: os exemplos são sintéticos. A validação dessa correção em SA ainda
+depende de uma partida com Spiritmaster.
+
+Os oito PNGs de classes foram obtidos do site oficial de personagens da NC
+em 14/10/2026. O mapeamento acompanha o catálogo Global e os hashes conferem
+com os bytes originais; nenhuma cor ou forma foi redesenhada. Classes sem
+imagem oficial verificada usam símbolo neutro. Esses assets mantêm direitos
+separados da licença do código.

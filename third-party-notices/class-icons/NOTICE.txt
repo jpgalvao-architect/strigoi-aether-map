@@ -1,0 +1,15 @@
+AION 2 class icons
+
+Copyright NC Corporation. All rights reserved.
+These game images are not licensed under the GPLv3 license of Strigoi's code.
+No ownership of the images, endorsement or official affiliation is claimed.
+
+Source: official AION 2 Character Info page
+https://aion2.plaync.com/en-us/characters/index
+Class catalogue: https://aion2.plaync.com/en-us/api/gameinfo/pcdata?lang=en
+Original image files: https://assets.playnccdn.com/static-aion2/characters/img/class/class_icon_<class>.png
+
+Retrieved 2026-10-14. The original PNG bytes and colors are unchanged.
+Qt scales the images for display. Class-to-file mapping and SHA-256 digests
+are recorded in data-sources/class-icons.json. The Global catalogue has eight
+classes; classes without a verified image use the neutral unknown icon.

@@ -19,7 +19,7 @@
     'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
     'showcase.combat.title': 'Seu grupo. Seu dano observado.',
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
-    'download.beta': 'Beta 8: corrige os sumiços indevidos dos overlays durante o jogo, preservando a ocultação por Alt+Tab e títulos de menus reconhecidos. Combate e PvP continuam experimentais; outros mapas da rotação e o time completo do 5v5 ainda precisam de validação.',
+    'download.beta': 'Beta 9: melhora a atribuição do dano do spirit ao Spiritmaster e usa os ícones oficiais das oito classes Global. Ambiguidades continuam não atribuídas; a correção aguarda confirmação ao vivo em SA. Combate e PvP permanecem experimentais.',
     'showcase.sonar.title': 'O som vira uma pista na tela.',
     'showcase.sonar.description': 'Ative o Sonar e acompanhe a intensidade estimada do som reconhecido na barra e no histórico do aviso.',
   });
@@ -54,7 +54,7 @@
     'screen.combat': 'Combat module with observed damage, DPS and group share',
     'showcase.combat.title': 'Your group. Your observed damage.',
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
-    'download.beta': 'Beta 8 fixes overlays disappearing during gameplay while keeping Alt+Tab and recognized menu-title hiding. Combat and PvP remain experimental; other rotating maps and the complete 5v5 roster still need validation.',
+    'download.beta': 'Beta 9 improves Spiritmaster summon attribution and uses official icons for the eight Global classes. Ambiguous damage stays unattributed; live SA confirmation is pending. Combat and PvP remain experimental.',
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
     'showcase.sonar.description': 'Enable Sonar and follow the estimated recognized sound intensity in the alert\'s bar and recent history.',
     'explore.source': 'Real map images and community locations with documented sources. Markers indicate possible locations, not guaranteed spawns.',

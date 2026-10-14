@@ -10,6 +10,15 @@ A distribuição usa DLLs Qt externas na pasta `_internal`, sem integração est
 
 Nenhum nome, marca ou associação oficial com os titulares de AION 2 é reivindicado. Os nomes do jogo citados identificam apenas o propósito do companion.
 
+## Ícones de classes • beta 9
+
+Os ícones das oito classes do catálogo Global vêm da página oficial de
+informações de personagens da NC Corporation, sem redesenho ou recoloração.
+Esses PNGs são imagens do jogo e mantêm os direitos de seu titular,
+separados da GPLv3 do código. Fonte, correspondência e hashes constam em
+`data-sources/class-icons.json`; o aviso acompanha `third-party-notices/class-icons/`.
+Classes sem uma imagem verificada usam o símbolo neutro.
+
 ## Referência sonora • 0.7.0
 
 A amostra `c8eb3f2d9330002d-hidden-cube-hum.mp3` foi fornecida pelo usuário

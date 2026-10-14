@@ -14,3 +14,9 @@ Connection ownership is retained from the TCP table for this distinction.
 Party rosters report completeness so a partial decode cannot silently classify
 unread teammates as outsiders. Empty trailing slots are distinguished from a
 failed member decode. The parser's original wire validation remains in place.
+
+2026-10-14: spirit-anchor owner ids take precedence over inline owner names;
+ownerless kind 0x1C now emits SummonSeenEvent like the other summon kinds.
+The bridge forwards already-decoded raw CastEvent variants. Normalized damage
+PowerScalar is preserved for bounded, ambiguity-rejecting reconciliation.
+No packet recording or additional network access is introduced.

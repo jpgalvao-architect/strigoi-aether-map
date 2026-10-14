@@ -2,6 +2,7 @@
 """Observed damage only. Independent of capture, Qt, and wall-clock time."""
 from dataclasses import dataclass, field, replace
 from uuid import uuid4
+from app.modules.combat.summons import inferred_owners
 
 
 @dataclass
@@ -13,6 +14,7 @@ class Entity:
     owner: int = 0
     owner_name: str = ""
     job: int = 0
+    spawn_time: int = 0
 
 
 @dataclass
@@ -21,6 +23,15 @@ class Hit:
     source: int
     target: int
     damage: int
+    skill: int
+    power_scalar: int = 0
+
+
+@dataclass
+class Cast:
+    time: int
+    actor: int
+    target: int
     skill: int
 
 
@@ -39,11 +50,14 @@ class Encounter:
     issues: set[str] = field(default_factory=set)
     pvp: bool = False
     team_pvp: bool = False
+    casts: list[Cast] = field(default_factory=list)
+    observed_until: int = 0
 
 
 class CombatEngine:
     MAX_HITS = 100_000
     MAX_ENTITIES = 10_000
+    MAX_CASTS = 20_000
 
     @staticmethod
     def normalized_class(value):
@@ -51,6 +65,7 @@ class CombatEngine:
 
     def __init__(self):
         self.entities: dict[int, Entity] = {}
+        self.casts: list[Cast] = []
         self.roster: set[tuple[str, int]] = set()
         self.roster_jobs: dict[tuple[str, int], int] = {}
         self.roster_complete = False
@@ -121,6 +136,7 @@ class CombatEngine:
             if self.capture_session:
                 self.finish_encounter("interrupted")
                 self.entities = {}
+                self.casts = []
                 self.roster = set()
                 self.roster_jobs = {}
                 self.roster_complete = False
@@ -163,13 +179,19 @@ class CombatEngine:
                 name = payload.get("Name") or ""
                 entity = Entity(actor, str(name)[:100], kind="npc")
             else:
-                entity = Entity(actor, kind="summon", owner=int(payload.get("OwnerId", 0)),
-                                owner_name=str(payload.get("OwnerName") or "")[:100])
+                owner = payload.get("OwnerId", 0)
+                if type(owner) is not int or not 0 <= owner <= 0xFFFFFFFF:
+                    raise ValueError("Invalid summon owner")
+                same_summon = old is not None and old.kind == "summon"
+                entity = Entity(actor, kind="summon", owner=owner or (old.owner if same_summon else 0),
+                                owner_name=str(payload.get("OwnerName") or (old.owner_name if same_summon else ""))[:100],
+                                spawn_time=old.spawn_time if same_summon else timestamp)
             self.entities[actor] = entity
             if self.current:
                 # Do not rewrite historical attribution after an identified id is reused.
                 prior = self.current.entities.get(actor)
                 if prior and prior.kind != "unknown" and (prior.kind != entity.kind or
+                    (prior.kind == "summon" and old is None) or
                     (prior.kind == "player" and prior.name and prior.name != entity.name)):
                     self.finish_encounter("interrupted")
                     self.mark_partial("entity_reused")
@@ -182,6 +204,19 @@ class CombatEngine:
                 if timestamp - closed.end <= 2000 and actor not in closed.entities:
                     closed.entities[actor] = entity
                     closed.local_id = self.local_id
+            return
+        if kind == "CastEvent":
+            actor, target = entity_id("ActorId"), entity_id("TargetId")
+            skill = payload.get("SkillCode", 0)
+            if type(skill) is not int or not 0 < skill <= 299_999_999:
+                raise ValueError("Invalid cast skill")
+            cast = Cast(timestamp, actor, target, skill)
+            self.casts = [c for c in self.casts[-999:] if c.time >= timestamp - 6000]
+            self.casts.append(cast)
+            if self.current and len(self.current.casts) < self.MAX_CASTS:
+                self.current.casts.append(cast)
+            elif self.current:
+                self.mark_partial("event_limit")
             return
         if kind == "PartyRosterEvent":
             members = payload.get("Members", [])
@@ -216,6 +251,7 @@ class CombatEngine:
                 self.finish_encounter("interrupted")
                 self.active = False
                 self.entities = {}
+                self.casts = []
                 # Party membership persists until a roster update; map-local actor ids do not.
                 self.local_id = 0
                 self.boss = None
@@ -229,6 +265,8 @@ class CombatEngine:
             return
         if kind == "DeathEvent":
             actor = entity_id("ActorId")
+            if self.entities.get(actor) and self.entities[actor].kind == "summon":
+                del self.entities[actor]  # Preserve the encounter copy; a respawn is a new lifetime.
             if self.current and not payload.get("AlreadyDead") and actor == self.current.boss:
                 self.finish_encounter("target_defeated", timestamp)
             return
@@ -256,18 +294,22 @@ class CombatEngine:
             encounter = Encounter(start=timestamp, entities=dict(self.entities), roster=set(self.roster),
                                   roster_complete=self.roster_complete, local_id=self.local_id,
                                   boss=self.boss, issues=set(self.issues), pvp=self.pvp, team_pvp=self.team_pvp)
+            encounter.casts = list(self.casts)
             self.encounters.append(encounter)
             self.current = encounter
         if len(encounter.hits) >= self.MAX_HITS:
             encounter.issues.add("event_limit")
             self.mark_partial("event_limit")
             return
-        encounter.hits.append(Hit(timestamp, source, target, damage, int(payload.get("SkillCode", 0))))
+        scalar = payload.get("PowerScalar", 0)
+        if type(scalar) is not int or not 0 <= scalar <= 200_000:
+            raise ValueError("Invalid damage scalar")
+        encounter.hits.append(Hit(timestamp, source, target, damage, int(payload.get("SkillCode", 0)), scalar))
         if target_entity is None:
             encounter.issues.add("unknown_target")
 
     @staticmethod
-    def _owner(source, encounter):
+    def _owner(source, encounter, inferred=None):
         visited = set()
         for _ in range(8):
             if source in visited:
@@ -285,6 +327,9 @@ class CombatEngine:
                 continue
             candidates = [e for e in encounter.entities.values() if e.kind == "player"
                           and e.name and e.name == entity.owner_name]
+            if not entity.owner_name and inferred and source in inferred:
+                source = inferred[source][0]
+                continue
             return candidates[0] if len(candidates) == 1 else None
         return None
 
@@ -318,6 +363,10 @@ class CombatEngine:
         if self.team_pvp and not selected and (not self.roster or not self.roster_complete):
             issues.add("missing_roster")
         for encounter in selected:
+            encounter.observed_until = self.last_time
+            links = inferred_owners(encounter)
+            if links:
+                issues.add("inferred_summon_owner")
             issues |= encounter.issues
             end = encounter.end if encounter.end is not None else self.last_time
             duration_ms += max(0, end - encounter.start)
@@ -331,7 +380,7 @@ class CombatEngine:
                 if not encounter.pvp and target and target.kind in ("player", "summon"):
                     continue
                 if encounter.pvp:
-                    attacker = self._owner(hit.source, encounter)
+                    attacker = self._owner(hit.source, encounter, links)
                     if attacker is None:
                         # An unknown source may be an opponent; never add it to our team's total.
                         issues.add("unattributed")
@@ -342,7 +391,7 @@ class CombatEngine:
                         issues.add("unknown_target")
                         continue
                     if target.kind in ("player", "summon"):
-                        defender = self._owner(hit.target, encounter)
+                        defender = self._owner(hit.target, encounter, links)
                         if defender is None:
                             issues.add("unknown_target")
                             continue
@@ -354,7 +403,7 @@ class CombatEngine:
                         continue
                     if hit.target != encounter.boss:
                         continue
-                owner = self._owner(hit.source, encounter)
+                owner = self._owner(hit.source, encounter, links)
                 if owner is None:
                     unknown += hit.damage
                     continue

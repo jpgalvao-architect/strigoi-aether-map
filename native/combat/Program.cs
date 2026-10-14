@@ -9,7 +9,7 @@ using AionMeter.Core.Events;
 using AionMeter.Core.Game;
 using AionMeter.Core.Protocol;
 
-if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.4"); return; }
+if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.9"); return; }
 if (args.Contains("--probe")) {
     Console.WriteLine(JsonSerializer.Serialize(new { protocol=1, npcap=OperatingSystem.IsWindows() && LiveCapture.IsNpcapInstalled(), saValidated=false }));
     return;
@@ -49,7 +49,21 @@ if (args.Contains("--self-test")) {
     parser.Handle(Opcodes.PartyRoster,roster.ToArray());
     if(!events.OfType<PartyRosterEvent>().Any(e=>e.Members.Count==1 && !e.Complete))
         throw new Exception("Partial roster detection failed");
-    Console.WriteLine("SELF_TEST_OK: connected clients, TCP, damage, malformed record, serverless identity, partial roster; no capture"); return;
+    var namedSpirit=new List<byte>{7,0x1C,0,0,0,1,8};
+    namedSpirit.AddRange(System.Text.Encoding.UTF8.GetBytes("FixtureB"));
+    namedSpirit.AddRange(new byte[]{0x80,0x75,0xD5,0x2A,0xBB,0x03,0,0,2});
+    parser.Handle(Opcodes.Spawn,namedSpirit.ToArray());
+    if(!events.OfType<SummonSeenEvent>().Any(e=>e.ActorId==7 && e.OwnerId==2 && e.OwnerName=="FixtureB"))
+        throw new Exception("Spirit anchored owner must take priority over inline name");
+    parser.Handle(Opcodes.Spawn,new byte[]{8,0x1C,0,0,0,0});
+    if(!events.OfType<SummonSeenEvent>().Any(e=>e.ActorId==8 && e.OwnerId==0))
+        throw new Exception("Ownerless summon kind 1C was dropped");
+    var cast=new List<byte>{2,0};cast.AddRange(BitConverter.GetBytes((uint)16280140));
+    cast.AddRange(new byte[]{0,0,50});parser.Handle(Opcodes.Cast,cast.ToArray());
+    if(!events.OfType<CastEvent>().Any(e=>e.ActorId==2 && e.SkillCode==16280140 && e.TargetId==50))
+        throw new Exception("Raw cast variant was lost");
+    if(!events.OfType<DamageEvent>().Any(e=>e.PowerScalar==16000))throw new Exception("Damage scalar was lost");
+    Console.WriteLine("SELF_TEST_OK: connected clients, TCP, damage, malformed record, serverless identity, partial roster, spirit owner, raw cast, scalar; no capture"); return;
 }
 var diagnostic=args.Contains("--diagnose");
 var diagnosticSeconds=10;
@@ -86,7 +100,7 @@ capture.EventDecoded += ev=> {
         return; // Diagnostics expose counters only: no player names, events or packet bytes.
     }
     if (ev is not (DamageEvent or SelfIdentifiedEvent or PlayerSeenEvent or PartyRosterEvent or NpcSeenEvent or
-        SummonSeenEvent or DeathEvent or ZoneChangedEvent or HitNoticeEvent or InstanceTimerEvent)) return;
+        SummonSeenEvent or CastEvent or DeathEvent or ZoneChangedEvent or HitNoticeEvent or InstanceTimerEvent)) return;
     // FieldBossListEvent.Raw and all uninterpreted bytes are deliberately excluded.
     Send(new {type="event", session, sequence=Interlocked.Increment(ref sequence), time_ms=(long)clock.Elapsed.TotalMilliseconds,
         kind=ev.GetType().Name, payload=JsonSerializer.SerializeToElement(ev,ev.GetType())});

@@ -693,17 +693,22 @@ public sealed class PacketParser
             Emit(new SummonSeenEvent(TimeMs, id, owner, null, npcCode));
             return;
         }
+        var anchoredOwner = summonish ? FindSpiritOwner(b, maskStart) : null;
+        if (anchoredOwner is { } spirit && spirit != id)
+        {
+            Emit(new SummonSeenEvent(TimeMs, id, spirit, spawnName, npcCode));
+            return;
+        }
         if (summonish && spawnName is not null)
         {
             Emit(new SummonSeenEvent(TimeMs, id, 0, spawnName, npcCode));
             return;
         }
-        if (kind is 0x5F or 0x1F or 0x1D or 0x5D)
+        if (summonish)
         {
             // Spirits, pets and lingering skill effects (Bittercold Wind, Fire Wall …). Without an owner link the
             // entity is still announced: whatever class skills it uses, it must never be counted as a player.
-            var spiritOwner = FindSpiritOwner(b, maskStart);
-            Emit(new SummonSeenEvent(TimeMs, id, spiritOwner is { } so && so != id ? so : 0, null, npcCode));
+            Emit(new SummonSeenEvent(TimeMs, id, 0, null, npcCode));
             return;
         }
         if (kind is 0x0C or 0x0D || (!summonish && npcCode != 0))

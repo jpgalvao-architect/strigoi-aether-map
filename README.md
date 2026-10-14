@@ -1,6 +1,13 @@
 # STRIGOI AETHER MAP
 
-**AION 2 Companion App · 0.9.0-beta.8 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.9 · Windows x64**
+
+A beta 9 melhora a atribuição do dano de spirits ao Spiritmaster: prioriza
+o dono anunciado, conserva vínculos em atualizações incompletas e usa sinais
+de conjuração e uma inferência conservadora de combate em PvE. Casos ambíguos
+continuam não atribuídos. Os ícones das oito classes Global são os PNGs
+oficiais, com suas cores originais. A correção de atribuição passou em testes
+controlados; ainda precisa de confirmação ao vivo em SA.
 
 A beta 8 corrige os sumiços indevidos dos overlays durante o jogo: um desenho parecido com “X” na tela não basta para reconhecer um menu. A ocultação por Alt+Tab continua funcionando. Menus dependem da leitura local de títulos conhecidos; a cobertura não é universal. O mapa grande preserva seus marcadores, a medição continua em segundo plano e avisos antigos do Sonar não reaparecem.
 
@@ -9,7 +16,7 @@ O aplicativo amplia os símbolos do minimapa em 100%, mostra setas nas posiçõe
 O aplicativo mostra o painel de combate nas dungeons e arenas 1v1/5v5 identificadas e o oculta ao sair. Foram observados os sinais de entrada e saída de um mapa de cada modalidade em SA; outros mapas da rotação ainda precisam de identificação. O dano PvP contabiliza ataques de participantes confirmados e exclui o dano recebido. O cálculo continua experimental, sem validação de precisão ao vivo; no 5v5, a lista completa do time ainda não foi confirmada. O menu rápido permite ocultar o painel sem parar a medição.
 
 [Página do aplicativo](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.8) ·
+[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.9) ·
 [English](README.en-US.md)
 
 Seu caderno de exploração: mapas, coletas, cubos e eventos em um só lugar.
