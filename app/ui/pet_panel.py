@@ -11,9 +11,10 @@ from app.ui.localized_widgets import QFrame, QToolButton, QWidget
 from app.ui.overlay_visibility import OverlayVisibilityMixin
 from app.ui.pets_page import progress_caption
 from app.ui.widgets import label
+from app.ui.hud import HudSurface
 
 
-class PetPanel(OverlayVisibilityMixin, QFrame):
+class PetPanel(HudSurface):
     def __init__(self, context, service, open_collection):
         flags = (Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint |
                  Qt.WindowType.Tool | Qt.WindowType.WindowDoesNotAcceptFocus)
@@ -25,16 +26,16 @@ class PetPanel(OverlayVisibilityMixin, QFrame):
         self.initial_position = False
         self.saved_position = context.prefs.pets.panel_position
         self.structure = None
-        self.setWindowTitle('Strigoi · Pets')
+        self.setWindowTitle('Azphelumbra · Pets')
         self.setObjectName('petPanel')
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
-        self.setFixedWidth(280)
+        self.setFixedWidth(250)
         self.setStyleSheet('''
-            QFrame#petPanel{background:#11171e;border:1px solid #53616d;border-radius:3px;}
-            QFrame#petHeader{background:#0a0e13;border:0;border-bottom:1px solid #384652;}
-            QFrame#petRow{background:transparent;border:0;border-bottom:1px solid #2c3b46;}
+            QFrame#petPanel{background:transparent;border:0;}
+            QFrame#petHeader{background:transparent;border:0;border-bottom:1px solid #30303e;}
+            QFrame#petRow{background:transparent;border:0;border-bottom:1px solid #30303e;}
             QLabel{border:0;color:#edf4fb;background:transparent;font-size:11px;}
-            QLabel#petProgress{color:#a5dedd;font-size:10px;}
+            QLabel#petProgress{color:#c2b2fc;font-size:10px;}
             QToolButton{background:transparent;border:0;padding:3px;color:#afc4d4;}
             QToolButton:hover{background:#293b49;}
             QScrollArea,QWidget#petList{border:0;background:transparent;}
@@ -83,13 +84,13 @@ class PetPanel(OverlayVisibilityMixin, QFrame):
                 entry = self.service.store.entry(pet.id)
                 row = QFrame(); row.setObjectName('petRow'); row.setFixedHeight(55)
                 box = QHBoxLayout(row); box.setContentsMargins(3,4,3,4); box.setSpacing(7)
-                portrait = label(''); portrait.setFixedSize(38,38)
+                portrait = label(''); portrait.setFixedSize(43,43)
                 portrait.setPixmap(QPixmap(str(PACKAGE/'assets'/pet.portrait)).scaled(
-                    38,38,Qt.AspectRatioMode.KeepAspectRatio,Qt.TransformationMode.SmoothTransformation))
+                    43,43,Qt.AspectRatioMode.KeepAspectRatio,Qt.TransformationMode.SmoothTransformation))
                 box.addWidget(portrait)
                 copy = QVBoxLayout(); copy.setSpacing(2)
                 name = label(pet.name); name.setToolTip(pet.name)
-                name.setText(name.fontMetrics().elidedText(pet.name,Qt.TextElideMode.ElideRight,205))
+                name.setText(name.fontMetrics().elidedText(pet.name,Qt.TextElideMode.ElideRight,175))
                 copy.addWidget(name)
                 caption = tr(progress_caption(entry))
                 progress = entry.progress

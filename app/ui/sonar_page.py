@@ -9,9 +9,10 @@ from app.ui.icons import icon
 from app.ui.widgets import button, card, label, page_header, row
 from app.ui.sonar_intensity import SonarIntensity
 from app.ui.overlay_visibility import OverlayVisibilityMixin
+from app.ui.hud import HudSurface
 
 
-class SonarAlert(OverlayVisibilityMixin, QFrame):
+class SonarAlert(HudSurface):
     def __init__(self, context):
         super().__init__(None,Qt.WindowType.FramelessWindowHint|Qt.WindowType.WindowStaysOnTopHint|
                          Qt.WindowType.Tool|Qt.WindowType.WindowDoesNotAcceptFocus)
@@ -19,15 +20,15 @@ class SonarAlert(OverlayVisibilityMixin, QFrame):
         self.drag=None
         self.testing=False
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
-        self.setWindowTitle('Strigoi · Sonar')
+        self.setWindowTitle('Azphelumbra · Sonar')
         self.setFixedWidth(350)
-        self.setStyleSheet('SonarAlert {background:#22253d;border:2px solid #9de0de;border-radius:14px;} QLabel {color:#effcff;}')
         layout=QHBoxLayout(self)
+        layout.setContentsMargins(12,10,9,10); layout.setSpacing(9)
         picture=label('');picture.setPixmap(icon('cube').pixmap(38,38))
         layout.addWidget(picture)
         copy=QVBoxLayout()
         self.title=label('Possível cubo por perto')
-        self.title.setStyleSheet('font-size:16px;font-weight:700;')
+        self.title.setStyleSheet('font-size:13px;font-weight:600;')
         self.detail=label('Procure nos arredores antes que outro jogador colete!','subtitle',True)
         copy.addWidget(self.title);copy.addWidget(self.detail)
         self.intensity=SonarIntensity(compact=True);copy.addWidget(self.intensity)

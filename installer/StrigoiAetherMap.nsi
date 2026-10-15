@@ -9,7 +9,7 @@ Unicode true
   !error "Define PAYLOAD as the complete prepared portable folder."
 !endif
 !ifndef OUTPUT
-  !define OUTPUT "StrigoiAetherMap-Setup-0.9.0-beta.12.exe"
+  !define OUTPUT "StrigoiAetherMap-Setup-0.10.0-beta.1.exe"
 !endif
 !ifndef UNINSTALL_MANIFEST
   !error "Generate the exact installed-file removal manifest first."
@@ -25,7 +25,7 @@ Unicode true
   !define UNINSTALLKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\StrigoiAetherMap"
 !endif
 
-Name "Strigoi Aether Map"
+Name "Azphelumbra"
 OutFile "${OUTPUT}"
 InstallDir "$LOCALAPPDATA\Programs\StrigoiAetherMap"
 InstallDirRegKey HKCU "${REGKEY}" "InstallDir"
@@ -33,14 +33,14 @@ RequestExecutionLevel user
 ManifestDPIAware true
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
-BrandingText "Strigoi Aether Map · 0.9.0-beta.12"
-VIProductVersion "0.9.0.12"
-VIAddVersionKey /LANG=1033 "ProductName" "Strigoi Aether Map"
-VIAddVersionKey /LANG=1033 "FileDescription" "Strigoi Aether Map installer"
-VIAddVersionKey /LANG=1033 "FileVersion" "0.9.0-beta.12"
+BrandingText "Azphelumbra · 0.10.0-beta.1"
+VIProductVersion "0.10.0.1"
+VIAddVersionKey /LANG=1033 "ProductName" "Azphelumbra"
+VIAddVersionKey /LANG=1033 "FileDescription" "Azphelumbra installer"
+VIAddVersionKey /LANG=1033 "FileVersion" "0.10.0-beta.1"
 VIAddVersionKey /LANG=1033 "LegalCopyright" "2026 Strigoi Aether Map contributors"
-!define MUI_ICON "..\app\assets\aether.ico"
-!define MUI_UNICON "..\app\assets\aether.ico"
+!define MUI_ICON "..\app\assets\azphelumbra.ico"
+!define MUI_UNICON "..\app\assets\azphelumbra.ico"
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TEXT "$(WelcomeText)"
 !insertmacro MUI_PAGE_WELCOME
@@ -139,16 +139,16 @@ Section "$(AppSection)" Core
     Abort
   ${EndIf}
   FileOpen $0 "$INSTDIR\.strigoi-install-owned" w
-  FileWrite $0 "StrigoiAetherMap-0.9.0-beta.12"
+  FileWrite $0 "StrigoiAetherMap-0.10.0-beta.1"
   FileClose $0
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "${REGKEY}" "InstallDir" "$INSTDIR"
   WriteRegStr HKCU "${REGKEY}" "TermsVersion" "1.2"
   WriteRegStr HKCU "${REGKEY}" "TermsSHA256" "${TERMS_HASH}"
   WriteRegStr HKCU "${REGKEY}" "InstallerLanguage" "$DefaultLanguage"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayName" "Strigoi Aether Map"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.9.0-beta.12"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "Publisher" "Strigoi Aether Map"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayName" "Azphelumbra"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.10.0-beta.1"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "Publisher" "Thoth Worlds"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayIcon" "$INSTDIR\StrigoiAetherMap.exe"
   WriteRegStr HKCU "${UNINSTALLKEY}" "InstallLocation" "$INSTDIR"
   WriteRegStr HKCU "${UNINSTALLKEY}" "UninstallString" '$\"$INSTDIR\Uninstall.exe$\"'
@@ -163,8 +163,10 @@ Section "$(AppSection)" Core
   FileWrite $0 '{$\"default_language$\":$\"$DefaultLanguage$\",$\"terms_version$\":$\"1.2$\",$\"terms_sha256$\":$\"${TERMS_HASH}$\"}'
   FileClose $0
   !ifndef TEST_BUILD
+    Delete "$DESKTOP\Strigoi Aether Map.lnk"
+    Delete "$SMPROGRAMS\Strigoi Aether Map\Strigoi Aether Map.lnk"
     CreateDirectory "$SMPROGRAMS\Strigoi Aether Map"
-    CreateShortcut "$SMPROGRAMS\Strigoi Aether Map\Strigoi Aether Map.lnk" "$INSTDIR\StrigoiAetherMap.exe"
+    CreateShortcut "$SMPROGRAMS\Strigoi Aether Map\Azphelumbra.lnk" "$INSTDIR\StrigoiAetherMap.exe"
     CreateShortcut "$SMPROGRAMS\Strigoi Aether Map\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   !endif
 SectionEnd
@@ -195,7 +197,7 @@ SectionEnd
 
 Section /o "$(DesktopSection)" Desktop
   !ifndef TEST_BUILD
-    CreateShortcut "$DESKTOP\Strigoi Aether Map.lnk" "$INSTDIR\StrigoiAetherMap.exe"
+    CreateShortcut "$DESKTOP\Azphelumbra.lnk" "$INSTDIR\StrigoiAetherMap.exe"
   !endif
 SectionEnd
 
@@ -220,6 +222,8 @@ Section "Uninstall"
     Delete "$DESKTOP\Strigoi Aether Map.lnk"
     Delete "$SMPROGRAMS\Strigoi Aether Map\Strigoi Aether Map.lnk"
     Delete "$SMPROGRAMS\Strigoi Aether Map\Uninstall.lnk"
+    Delete "$DESKTOP\Azphelumbra.lnk"
+    Delete "$SMPROGRAMS\Strigoi Aether Map\Azphelumbra.lnk"
     RMDir "$SMPROGRAMS\Strigoi Aether Map"
   !endif
   DeleteRegKey HKCU "${UNINSTALLKEY}"

@@ -1,6 +1,8 @@
-# STRIGOI AETHER MAP
+# Azphelumbra
 
-**AION 2 Companion App · 0.9.0-beta.12 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.1 · Windows x64**
+
+A interface Vigília reúne os módulos ao lado da sessão. O overlay de combate Impacto mostra barras proporcionais ao DPS, com ícones e cores por classe. A faixa Fita acompanha eventos em formato compacto e expande os horários do dia. Use o emblema flutuante para abrir o menu rápido. Preferências, visitas e coleções anteriores são preservadas.
 
 A beta 12 deixa os controles de frequência à vista em **Overlay → Fluidez do overlay**. Escolha de 15 a 360 Hz para o desenho e de 10 a 60 fps para a leitura do minimapa (até 30 fps no mapa grande), com aplicação imediata e preferência salva. Novas instalações começam em 60 Hz/30 fps; escolhas anteriores são preservadas. Marcadores parados deixam de ser redesenhados continuamente, e o processamento visual usa um orçamento menor de threads. A melhoria de FPS no jogo ainda precisa ser conferida após atualizar.
 
@@ -26,7 +28,7 @@ O aplicativo amplia os símbolos do minimapa em 100%, mostra setas nas posiçõe
 O aplicativo mostra o painel de combate nas dungeons e arenas 1v1/5v5 identificadas e o oculta ao sair. Foram observados os sinais de entrada e saída de um mapa de cada modalidade em SA; outros mapas da rotação ainda precisam de identificação. O dano PvP contabiliza ataques de participantes confirmados e exclui o dano recebido. O cálculo continua experimental, sem validação de precisão ao vivo; no 5v5, a lista completa do time ainda não foi confirmada. O menu rápido permite ocultar o painel sem parar a medição.
 
 [Página do aplicativo](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.12) ·
+[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.1) ·
 [English](README.en-US.md)
 
 Seu caderno de exploração: mapas, coletas, cubos e eventos em um só lugar.

@@ -6,7 +6,8 @@ from PySide6.QtCore import QSize, QTimer, Qt
 from PySide6.QtGui import QIcon
 from app.ui.mascot import MascotWidget, AVATAR_PATH
 from PySide6.QtWidgets import QHBoxLayout, QScrollArea, QStackedWidget, QVBoxLayout
-from app.ui.localized_widgets import QFrame, QMainWindow, QPushButton, QWidget
+from app.ui.localized_widgets import QFrame, QMainWindow, QPushButton, QToolButton, QWidget
+from app.ui.identity import emblem_icon
 
 from app import __version__
 from app.infrastructure.storage import PACKAGE
@@ -21,7 +22,7 @@ from app.ui.events_page import EventsPage
 from app.ui.live_overlay_page import LiveOverlayPage
 from app.ui.settings_page import SettingsPage
 from app.ui.widgets import card, label, page_header
-from app.ui.icons import icon as ui_icon
+from app.ui.icons import navigation_icon as ui_icon
 from app.core.i18n import set_language, language, tr
 
 
@@ -30,10 +31,10 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.context = context
         set_language(context.prefs.ui_language)
-        self.setWindowTitle("STRIGOI AETHER MAP • AION 2 Companion App")
+        self.setWindowTitle("Azphelumbra • AION 2 Companion")
         self.resize(1380, 900)
         self.setMinimumSize(1120, 780)
-        icon = QIcon(str(AVATAR_PATH))
+        icon = emblem_icon()
         self.setWindowIcon(icon)
         self.notifications = DesktopNotifications(icon, self)
         self.notifications.fallback.connect(lambda text: self.statusBar().showMessage(text, 20000))
@@ -61,49 +62,43 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(root)
         sidebar = QFrame()
         sidebar.setObjectName("sidebar")
-        sidebar.setFixedWidth(228)
+        sidebar.setFixedWidth(58)
         side = QVBoxLayout(sidebar)
-        side.setContentsMargins(16, 22, 16, 18)
-        side.setSpacing(5)
-        brand = MascotWidget(compact=True)
-        brand.setFixedSize(74, 67)
-        side.addWidget(brand, 0, Qt.AlignmentFlag.AlignHCenter)
-        logo = label("S T R I G O I")
-        logo.setStyleSheet("font-size: 23px; font-weight: 700;")
-        logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        side.addWidget(logo)
-        subtitle = label("A E T H E R  M A P", "eyebrow")
-        subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        side.addWidget(subtitle)
-        game = label("AION 2 Companion App", "subtitle")
-        game.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        side.addWidget(game)
-        side.addSpacing(24)
+        side.setContentsMargins(7, 14, 7, 12)
+        side.setSpacing(6)
+        brand = label(''); brand.setPixmap(emblem_icon().pixmap(38,38)); brand.setToolTip('Azphelumbra')
+        side.addWidget(brand,0,Qt.AlignmentFlag.AlignHCenter)
+        side.addSpacing(14)
         entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about'),('Pets','pets')]
         self.page_indices = {name:index for index, (_, name) in enumerate(entries)}
         self.nav = [None]*len(entries)
-        # Keep existing indices compatible, with Pets visually next to exploration.
-        for index in [0,1,2,3,11,4,5,6,7,8,9,10]:
+        # Stable page identities preserve shortcuts and existing integrations.
+        for index in [0,1,11,7,8,4,5,9,10,2,3,6]:
             text, name = entries[index]
-            entry = QPushButton(text)
+            entry = QToolButton(); entry.setText(text)
+            entry.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
             entry.setIcon(ui_icon(name))
             entry.setIconSize(QSize(22,22))
             entry.setAccessibleName(text)
             entry.setObjectName("nav")
-            entry.setStyleSheet('padding:9px 16px;')
+            entry.setFixedSize(42,42)
+            entry.setToolTip(text)
             entry.setCheckable(True)
             entry.setCursor(Qt.CursorShape.PointingHandCursor)
             entry.clicked.connect(lambda checked, key=name: self.navigate(key))
-            side.addWidget(entry)
+            if index in (5,): side.addStretch()
+            if index not in (2,3,6): side.addWidget(entry)
             self.nav[index] = entry
-        side.addStretch()
-        side.addWidget(label("Seu caderno de exploração.", "subtitle", True))
-        side.addWidget(label(f"v{__version__}", "subtitle"))
         root_layout.addWidget(sidebar)
         main = QVBoxLayout()
         main.setContentsMargins(0, 0, 0, 0)
         main.setSpacing(0)
         root_layout.addLayout(main, 1)
+        session_bar = QFrame(); session_bar.setObjectName('sessionBar')
+        strip = QHBoxLayout(session_bar); strip.setContentsMargins(20,10,20,10)
+        strip.addWidget(label('A Z P H E L U M B R A', 'eyebrow'))
+        strip.addStretch(); strip.addWidget(label('AION 2 Companion','subtitle'))
+        strip.addWidget(label(f'v{__version__}','subtitle')); main.addWidget(session_bar)
         self.banner = label("", "banner", True)
         main.addWidget(self.banner)
         self.stack = QStackedWidget()
@@ -138,8 +133,24 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(" / ".join(context.messages), 30000)
         from app.ui.quick_menu import QuickMenu
         self.quick_menu = QuickMenu(self, runtime=runtime)
+        from app.ui.session_inspector import SessionInspector
+        self.inspector = SessionInspector(self)
+        root_layout.insertWidget(1,self.inspector)
+        for index in (2,3,6):
+            entry=self.nav[index]; entry.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+            entry.setFixedSize(170,32); entry.setObjectName('sectionNav')
+            self.inspector.explore.addWidget(entry)
+        context.changed.connect(self.inspector.refresh)
+        context.events_changed.connect(self.inspector.refresh)
+        self.combat.changed.connect(self.inspector.refresh)
+        self.sonar.active_changed.connect(self.inspector.refresh)
+        self.overlay.status_changed.connect(self.inspector.refresh)
+        self.alert_timer.timeout.connect(self.inspector.refresh)
+        self.inspector.refresh()
         from app.ui.pet_panel import PetPanel
         self.pet_panel = PetPanel(context,self.pets,lambda: self.quick_menu.open_page('pets'))
+        from app.ui.map_controls import MapControls
+        self.map_controls=MapControls(self)
         self.overlay_visibility = None
         if runtime:
             from app.ui.overlay_visibility import OverlayVisibility
@@ -147,6 +158,7 @@ class MainWindow(QMainWindow):
             for window, role in [(self.overlay.window, 'map'), (self.event_panel, 'hud'),
                                  (self.combat_page.panel, 'hud'), (self.sonar_alert, 'alert'),
                                  (self.pet_panel, 'hud'),
+                                 (self.map_controls, 'map'),
                                  (self.quick_menu, 'hud'), (self.quick_menu.panel, 'hud')]:
                 self.overlay_visibility.register(window, role)
             self.overlay_visibility.start()
@@ -204,18 +216,18 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         layout = QVBoxLayout(widget)
         layout.setContentsMargins(28, 22, 28, 22)
-        layout.addWidget(page_header("Pequeno guardião. Grandes descobertas.", "STRIGOI AETHER MAP / AION 2 Companion App"))
+        layout.addWidget(page_header("Pequeno guardião. Grandes descobertas.", "Azphelumbra / AION 2 Companion"))
         mascot = MascotWidget()
         mascot.setFixedSize(220, 200)
         layout.addWidget(mascot)
         frame, body = card()
-        body.addWidget(label(f"STRIGOI AETHER MAP · {__version__}", "eyebrow"))
+        body.addWidget(label(f"Azphelumbra · {__version__}", "eyebrow"))
         body.addWidget(label("Seu companheiro de exploração em AION 2. Organize coletas, encontre locais de cubos e acompanhe os eventos do dia.", wrap=True))
         body.addWidget(label("Suas visitas e preferências ficam neste computador. Mapas e agenda funcionam offline.", "subtitle", True))
         body.addWidget(label("Os mapas indicam locais possíveis; confirme a presença dos objetos no jogo. A agenda usa o perfil selecionado em Eventos.", "subtitle", True))
         body.addWidget(label('Como o aplicativo funciona', 'eyebrow'))
-        body.addWidget(label('O Strigoi funciona ao lado do AION 2. Os marcadores, o painel de eventos e os avisos do Sonar aparecem em janelas externas de overlay sobre o jogo. Para acompanhar o mapa, o app analisa a imagem da tela; o Sonar recebe o áudio do aplicativo pelo Windows. O Atlas e a agenda consultam dados locais.', 'subtitle', True))
-        body.addWidget(label('Não injetamos código nas DLLs do jogo, não alteramos seus arquivos e não lemos sua memória. Os overlays são desenhados pelo próprio Strigoi, fora do processo do AION 2.', 'subtitle', True))
+        body.addWidget(label('O Azphelumbra funciona ao lado do AION 2. Os marcadores, o painel de eventos e os avisos do Sonar aparecem em janelas externas de overlay sobre o jogo. Para acompanhar o mapa, o app analisa a imagem da tela; o Sonar recebe o áudio do aplicativo pelo Windows. O Atlas e a agenda consultam dados locais.', 'subtitle', True))
+        body.addWidget(label('Não injetamos código nas DLLs do jogo, não alteramos seus arquivos e não lemos sua memória. Os overlays são desenhados pelo próprio Azphelumbra, fora do processo do AION 2.', 'subtitle', True))
         body.addWidget(label('Combate e Pets podem ler passivamente os dados recebidos pela conexão do jogo, usando Npcap. A leitura automática aguarda o jogo e pode ser desativada nas Configurações de Combate e na aba Pets. Os dois módulos compartilham a mesma conexão. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.', 'subtitle', True))
         body.addWidget(label('Acessibilidade auditiva', 'eyebrow'))
         body.addWidget(label('O Sonar foi desenvolvido exclusivamente como recurso de acessibilidade para auxiliar pessoas surdas ou com deficiência auditiva a encontrar cubos ocultos com mais facilidade. Ele transforma uma pista sonora do jogo em um aviso visual, reduzindo a dependência da audição durante a exploração.', 'subtitle', True))
@@ -254,6 +266,7 @@ class MainWindow(QMainWindow):
         if self.overlay_visibility: self.overlay_visibility.shutdown()
         self.quick_menu.shutdown()
         self.pet_panel.shutdown()
+        self.map_controls.shutdown()
         self.combat_page.shutdown()
         self.combat.shutdown()
         self.pets.shutdown()

@@ -1,4 +1,15 @@
-# Identidade visual • 0.7.2
+# Identidade visual · Azphelumbra
+
+A revisão 0.10.0-beta.1 usa o emblema original aprovado pelo autor em
+`app/assets/azphelumbra-emblem.png`, com ícone de 16–256 pixels em
+`app/assets/azphelumbra.ico`. Os hashes estão em `app/assets/branding.json`.
+O mascote Aether continua no rodapé e na apresentação do projeto.
+
+Vigília usa fundo `#101018`, superfície `#171721`, linhas `#30303e`,
+texto `#eeedf8`, metadados `#aaa8bd` e destaque `#c2b2fc`.
+Veja [Interface e overlays](VIGILIA.md) para os controles atuais.
+
+## Revisão anterior · 0.7.2
 
 **STRIGOI AETHER MAP**, AION 2 Companion App. A interface usa português.
 O mascote próprio chama-se **Aether**: um vampirinho com aparência asmodiana,

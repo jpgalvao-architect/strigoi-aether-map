@@ -21,19 +21,19 @@ def main() -> int:
     from app.bootstrap.performance import configure_runtime
     configure_runtime()
     from app.ui.main_window import MainWindow
-    parser = argparse.ArgumentParser(description="STRIGOI AETHER MAP")
+    parser = argparse.ArgumentParser(description="Azphelumbra")
     parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument("--screenshot", type=Path, help="Save the rendered app window, without capturing the desktop")
     args = parser.parse_args()
     app = QApplication(sys.argv[:1])
-    app.setApplicationName("Strigoi Aether Map")
+    app.setApplicationName("Azphelumbra")
     app.setOrganizationName("Strigoi")
     apply_theme(app)
     directory = user_data_dir()
     configure_logging(directory)
     lock = QLockFile(str(directory / "app.lock"))
     if not lock.tryLock(0):
-        QMessageBox.information(None, "Strigoi já está aberto", "Uma instância está usando este diretório de dados.")
+        QMessageBox.information(None, "Azphelumbra", "Uma instância está usando este diretório de dados.")
         return 0
     splash = None
     try:
@@ -49,14 +49,14 @@ def main() -> int:
         pixmap = QPixmap(500, 280)
         pixmap.fill(Qt.GlobalColor.transparent)
         from PySide6.QtGui import QColor, QPainter
-        from app.ui.mascot import MASCOT_PATH
-        pixmap.fill(QColor("#191d2e"))
+        from app.ui.identity import EMBLEM
+        pixmap.fill(QColor("#171721"))
         painter = QPainter(pixmap)
-        mascot = QPixmap(str(MASCOT_PATH)).scaled(180, 165, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        mascot = QPixmap(str(EMBLEM)).scaled(180, 165, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         painter.drawPixmap((500-mascot.width())//2, 10, mascot)
         painter.end()
         splash = QSplashScreen(pixmap)
-        splash.showMessage(tr("STRIGOI AETHER MAP\nPreparando seu caderno de exploração…"), Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignHCenter, Qt.GlobalColor.white)
+        splash.showMessage(tr("Azphelumbra\nPreparando seu caderno de exploração…"), Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignHCenter, Qt.GlobalColor.white)
         splash.show()
         app.processEvents()
     try:

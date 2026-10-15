@@ -25,5 +25,5 @@ a = Analysis(['launcher.py'], pathex=['.'], binaries=[('app/assets/sonar/sonar-c
 pyz = PYZ(a.pure)
 exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name='StrigoiAetherMap',
           debug=False, bootloader_ignore_signals=False, strip=False, upx=False, console=False,
-          icon='app/assets/aether.ico')
+          icon='app/assets/azphelumbra.ico')
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name='StrigoiAetherMap')

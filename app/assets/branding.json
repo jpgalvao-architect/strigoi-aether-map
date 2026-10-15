@@ -26,5 +26,14 @@
       "mascot": "Use case: stylized-concept. Asset type: original mascot for STRIGOI AETHER MAP desktop companion. The attached image is ONLY inspiration for a cute vampire's spirit, not an edit target or a character to copy. Create a distinctly new adorable male chibi vampire with Asmodian-inspired fantasy features: cool pale blue-lavender skin, long pointed ears, tiny two fangs in a warm mischievous smile, softly glowing coral-red eyes (both same color), fluffy snow-white hair with charcoal undercut and a small forelock. Little dark feathered wings, compact dark adventurer coat with violet lining and subtle turquoise crystal clasp, fluffy collar. Full body, tiny clawed boots and friendly rounded proportions, one hand holding a small magical folded map and the other waving. Clean premium game companion illustration, readable silhouette, confident crisp outlines, restrained highlights, polished shaded anime cartoon, warm charming expression. Centered single isolated character with breathing room around wings and feet. Genuinely transparent background, no scenery, no shadow rectangle, no text, no labels, no watermark. Visually distinct from reference: different hair, eye colors, outfit, facial silhouette, and pose. Designed to read on dark navy UI.",
       "avatar": "Derive a compact desktop app avatar icon from this NEW Aether mascot. Preserve exactly this character's identity: snow-white messy hair with dark undercut, cool pale lavender-blue face, long pointed ears, two coral-red eyes, warm cute little vampire smile with two tiny fangs, dark coat with white fluffy collar and turquoise crystal. Head and shoulders ONLY, facing nearly forward, roughly square composition, no arms, no map, no legs, no wings sprawling outside. Simplify minor ornament details for legibility at 32 and 64 pixels while keeping polished crisp anime cartoon style. Large expressive face, clear chunky silhouette, slightly purple edge lighting. Genuine transparent background with good padding, no circular disk background, no letters, no text, no border, no watermark. It must match this provided mascot, not introduce another character."
     }
+  },
+  "azphelumbra": {
+    "version": "sigil-v1",
+    "created": "2026-10-15",
+    "method": "AI-generated original emblem approved by the project owner",
+    "files": {
+      "azphelumbra-emblem.png": "849deef6683cc47ec2d5707ab43bc18b19cc9e71a5250527808a2a8efbfe415c",
+      "azphelumbra.ico": "97408a2cd8030e5757ab48c5c7c32a75a6fcc4ca84a65d1fec90a7eb45e939c9"
+    }
   }
 }

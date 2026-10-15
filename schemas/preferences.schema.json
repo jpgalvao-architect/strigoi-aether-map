@@ -18,6 +18,16 @@
           "title": "Panel Mode Release",
           "type": "string"
         },
+        "panel_expanded": {
+          "default": true,
+          "title": "Panel Expanded",
+          "type": "boolean"
+        },
+        "panel_details": {
+          "default": false,
+          "title": "Panel Details",
+          "type": "boolean"
+        },
         "locked": {
           "default": true,
           "title": "Locked",
@@ -108,6 +118,28 @@
     "OverlaySettings": {
       "additionalProperties": false,
       "properties": {
+        "controls_position": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Controls Position"
+        },
         "enabled": {
           "default": false,
           "title": "Enabled",
@@ -235,17 +267,14 @@
           "type": "string"
         },
         "render_hz": {
-          "default": 240,
-          "enum": [
-            60,
-            120,
-            240
-          ],
+          "default": 60,
+          "maximum": 360,
+          "minimum": 15,
           "title": "Render Hz",
           "type": "integer"
         },
         "capture_hz": {
-          "default": 60,
+          "default": 30,
           "maximum": 60,
           "minimum": 10,
           "title": "Capture Hz",

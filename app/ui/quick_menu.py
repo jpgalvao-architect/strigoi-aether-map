@@ -10,6 +10,7 @@ from app.ui.icons import icon
 from app.ui.mascot import AVATAR_PATH
 from app.infrastructure.storage import PACKAGE
 from app.ui.overlay_visibility import OverlayVisibilityMixin
+from app.ui.identity import emblem_icon
 
 
 FLAGS = (Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint |
@@ -22,13 +23,13 @@ class LauncherButton(QToolButton):
         self.owner = owner
         self.press = None
         self.dragging = False
-        self.setIcon(QIcon(str(AVATAR_PATH)))
-        self.setIconSize(QSize(40, 40))
-        self.setFixedSize(52, 52)
+        self.setIcon(emblem_icon())
+        self.setIconSize(QSize(35, 35))
+        self.setFixedSize(47, 47)
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setToolTip("Menu rápido · clique para abrir, arraste para mover")
-        self.setAccessibleName("Menu rápido do Strigoi")
+        self.setAccessibleName("Menu rápido do Azphelumbra")
         self.clicked.connect(owner.toggle_panel)
 
     def mousePressEvent(self, event):
@@ -68,8 +69,8 @@ class MenuPanel(OverlayVisibilityMixin, QFrame):
         # Translucent top-level windows need an explicit painted surface.
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.setPen(QPen(QColor("#53616d"), 1))
-        painter.setBrush(QColor(17, 24, 32, 242))
+        painter.setPen(QPen(QColor("#484052"), 1))
+        painter.setBrush(QColor(21, 20, 30, 245))
         painter.drawRoundedRect(QRectF(self.rect()).adjusted(.5, .5, -.5, -.5), 7, 7)
 
 
@@ -79,19 +80,19 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         self.main, self.context = main, main.context
         self.runtime = runtime
         self.closed = False
-        self.setWindowTitle("Strigoi · Menu rápido")
+        self.setWindowTitle("Azphelumbra · Menu rápido")
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedSize(52, 52)
+        self.setFixedSize(47, 47)
         self.setObjectName("quickLauncher")
         box = QVBoxLayout(self); box.setContentsMargins(0, 0, 0, 0)
         self.launcher = LauncherButton(self); box.addWidget(self.launcher)
-        self.setStyleSheet("QToolButton{background:#151c25;border:1px solid #94dcdf;border-radius:12px;} QToolButton:hover{background:#263644;}")
+        self.setStyleSheet("QToolButton{background:#15141e;border:1px solid #8875ad;border-radius:10px;} QToolButton:hover{background:#302943;}")
         self.panel = MenuPanel(None, FLAGS)
-        self.panel.setWindowTitle("Strigoi · Controles rápidos")
+        self.panel.setWindowTitle("Azphelumbra · Controles rápidos")
         self.panel.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.panel.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.panel.setFixedWidth(288)
+        self.panel.setFixedWidth(265)
         self.panel.setObjectName("quickPanel")
         self.panel.setStyleSheet("""
             QFrame#quickPanel{background:transparent;border:0;}
@@ -105,7 +106,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         """.replace("OFF_IMAGE", (PACKAGE/"assets/icons/switch-off.svg").as_posix())
               .replace("ON_IMAGE", (PACKAGE/"assets/icons/switch-on.svg").as_posix()))
         body = QVBoxLayout(self.panel); body.setContentsMargins(10, 8, 10, 8); body.setSpacing(7)
-        header = QHBoxLayout(); header.addWidget(label("STRIGOI"), 1)
+        header = QHBoxLayout(); header.addWidget(label("AZPHELUMBRA"), 1)
         close = QToolButton(); close.setIcon(icon("chevron-left")); close.setToolTip("Recolher menu rápido")
         close.clicked.connect(self.panel.hide); header.addWidget(close); body.addLayout(header)
         self.switches, self.states = {}, {}
@@ -129,6 +130,8 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         gear = QToolButton(); gear.setIcon(icon("settings")); gear.setToolTip("Abrir Configurações")
         gear.clicked.connect(lambda: self.open_page('settings')); footer.addWidget(gear); body.addLayout(footer)
         self.feedback = label("", "quickStatus", True); self.feedback.hide(); body.addWidget(self.feedback)
+        open_app = QToolButton(); open_app.setText('Abrir aplicativo')
+        open_app.clicked.connect(lambda: self.open_page('home')); body.addWidget(open_app)
         position = self.context.prefs.quick_menu.position
         if position is not None:
             self.move(*position)

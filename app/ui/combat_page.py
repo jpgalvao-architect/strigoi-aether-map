@@ -4,14 +4,18 @@ from datetime import datetime
 from PySide6.QtCore import Qt, QPoint, QSize
 from PySide6.QtGui import QDesktopServices, QGuiApplication
 from PySide6.QtCore import QUrl
-from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QHeaderView, QApplication, QSizeGrip
+from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QHeaderView, QApplication, QScrollArea
 from PySide6.QtWidgets import QTableWidgetItem as DataItem
 from app.ui.localized_widgets import (QWidget, QFrame, QComboBox, QCheckBox, QLineEdit,
-    QPushButton, QTableWidget, QTableWidgetItem, QDoubleSpinBox)
+    QPushButton, QTableWidget, QTableWidgetItem, QDoubleSpinBox, QToolButton)
 from app.ui.widgets import label, page_header, row
 from app.core.i18n import tr, clock, calendar_date
-from app.ui.combat_classes import class_icon, class_label
+from app.ui.combat_classes import colored_class_icon as class_icon, class_label
 from app.ui.overlay_visibility import OverlayVisibilityMixin
+from app.ui.hud import HudSurface
+from app.ui.icons import icon
+from app.ui.identity import emblem_icon
+from app.ui.combat_bars import DpsRow, ranked_rows
 
 
 def short_number(value):
@@ -39,6 +43,7 @@ def damage_table():
     table.setIconSize(QSize(20, 20))
     table.setHorizontalHeaderLabels(["Posição", "Jogador", "Dano", "DPS", "Participação"])
     table.verticalHeader().hide()
+    table.verticalHeader().setDefaultSectionSize(42)
     table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
     table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
     table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
@@ -72,39 +77,52 @@ def fill_table(table, snapshot):
             table.setItem(index, column, cell)
 
 
-class CombatPanel(OverlayVisibilityMixin, QFrame):
+class CombatPanel(HudSurface):
     def __init__(self, service, page):
         super().__init__(None, Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint |
             Qt.WindowType.Tool | Qt.WindowType.WindowDoesNotAcceptFocus)
         self.service, self.page = service, page
         self.drag = None
-        self.setWindowTitle("Strigoi · Combate")
+        self.setWindowTitle("Azphelumbra · Combate")
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
-        self.setStyleSheet("QFrame{background:#171e26;color:#eaf0f8;border:1px solid #53616d;} QLabel{border:0;} QTableWidget{border:0;background:#171e26;} QPushButton{padding:3px 8px;}")
-        self.resize(460, 250)
-        self.setMinimumSize(360, 180)
-        self.setMaximumSize(3840, 2160)
-        layout = QVBoxLayout(self); layout.setContentsMargins(8, 6, 8, 6)
-        self.heading = label("Dano observado", "eyebrow")
+        self.setFixedWidth(346)
+        layout = QVBoxLayout(self); layout.setContentsMargins(6, 3, 6, 4); layout.setSpacing(4)
+        self.heading = label("Combate")
+        from PySide6.QtWidgets import QSizePolicy
+        self.heading.setMinimumWidth(0)
+        self.heading.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
         self.heading.mousePressEvent = self.press
         self.heading.mouseMoveEvent = self.move_panel
         self.heading.mouseReleaseEvent = self.release
-        top = QHBoxLayout(); top.addWidget(self.heading, 1)
-        hide = QPushButton("Ocultar"); hide.clicked.connect(lambda: page.panel_visible.setChecked(False)); top.addWidget(hide)
+        top = QHBoxLayout(); top.setContentsMargins(4,0,4,0); top.setSpacing(6)
+        mark = label(''); mark.setPixmap(emblem_icon().pixmap(21,21)); top.addWidget(mark)
+        top.addWidget(self.heading, 1)
+        self.lock = QToolButton(); self.lock.setFixedSize(24,24)
+        self.lock.clicked.connect(lambda: page.locked.setChecked(not page.locked.isChecked())); top.addWidget(self.lock)
+        self.expand_button = QToolButton(); self.expand_button.setFixedSize(24,24)
+        self.expand_button.clicked.connect(self.toggle_expanded); top.addWidget(self.expand_button)
         layout.addLayout(top)
-        self.state = label("", "subtitle", True); layout.addWidget(self.state)
-        self.table = damage_table(); layout.addWidget(self.table, 1)
-        layout.addWidget(QSizeGrip(self), 0, Qt.AlignmentFlag.AlignRight)
+        self.scroller = QScrollArea(); self.scroller.setWidgetResizable(True)
+        self.scroller.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.list_widget = QWidget(); self.list_widget.setObjectName('hudList')
+        self.rows_layout = QVBoxLayout(self.list_widget); self.rows_layout.setContentsMargins(0,0,0,0); self.rows_layout.setSpacing(4)
+        self.scroller.setWidget(self.list_widget); layout.addWidget(self.scroller)
+        self.rows = []; self.row_keys = None
+        self.summary = label('', 'subtitle'); layout.addWidget(self.summary)
+        self.state = label('', 'subtitle', True); layout.addWidget(self.state)
+        bottom = QHBoxLayout(); bottom.setContentsMargins(4,0,4,0)
+        self.group_total = label('', 'subtitle'); bottom.addWidget(self.group_total,1)
+        self.details_button = QToolButton(); self.details_button.setText('Detalhes +')
+        self.details_button.clicked.connect(self.toggle_details); bottom.addWidget(self.details_button)
+        layout.addLayout(bottom)
         prefs = service.context.prefs.combat
         if prefs.position:
             self.move(*prefs.position)
-        if prefs.size:
-            self.resize(*prefs.size)
         self.apply_settings()
         service.changed.connect(self.refresh)
 
     def press(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton and not self.service.context.prefs.combat.locked:
             self.drag = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
 
     def move_panel(self, event):
@@ -118,19 +136,15 @@ class CombatPanel(OverlayVisibilityMixin, QFrame):
     def save_geometry(self):
         prefs = self.service.context.prefs.combat
         prefs.position = (self.x(), self.y())
-        prefs.size = (self.width(), self.height())
         self.service.context.save()
-
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        if self.isVisible():
-            self.save_geometry()
 
     def apply_settings(self):
         prefs = self.service.context.prefs.combat
         visible = prefs.panel_visible and self.service.in_instance
-        self.setWindowFlag(Qt.WindowType.WindowTransparentForInput, prefs.locked)
+        # Pin locks dragging; controls remain usable. Hiding/capture are independent.
         self.setWindowOpacity(prefs.opacity)
+        self.lock.setIcon(icon('lock' if prefs.locked else 'unlock'))
+        self.lock.setToolTip('Destravar posição' if prefs.locked else 'Travar posição')
         if visible:
             available = QGuiApplication.screens()
             rectangle = self.frameGeometry()
@@ -145,11 +159,62 @@ class CombatPanel(OverlayVisibilityMixin, QFrame):
         if not prefs.panel_visible or not self.service.in_instance:
             self.hide(); return
         self.show()
-        snapshot = self.page.selected_snapshot()
-        self.heading.setText("Dano observado · {tempo}".format(tempo=duration(snapshot["duration_ms"])))
-        self.state.setText("Time ainda não identificado · dano confirmado apenas" if team_pending(snapshot)
-            else "Dados parciais · SA experimental" if snapshot["total"] else self.service.status)
-        fill_table(self.table, snapshot)
+        snapshot = (self.service.engine.snapshot() if self.page.scope.currentData()=='history'
+                    else self.page.selected_snapshot())
+        self.heading.setText((snapshot.get('run_name') or tr('Combate'))+'  '+duration(snapshot['duration_ms']))
+        self.heading.setToolTip(snapshot.get('run_name') or tr('Combate'))
+        self.state.setText('Time ainda não identificado · dano confirmado apenas' if team_pending(snapshot)
+                           else 'Dados parciais' if snapshot.get('issues') and snapshot['total'] else '')
+        self.state.setVisible(bool(self.state.text()))
+        data = ranked_rows(snapshot)
+        keys = tuple((r.get('actor_id'),r.get('server'),r.get('name'),r['rank'] is None) for r in data)
+        if keys != self.row_keys:
+            pool = dict(zip(self.row_keys or (),self.rows))
+            self.row_keys = keys
+            while self.rows_layout.count(): self.rows_layout.takeAt(0)
+            self.rows = []
+            for key,item in zip(keys,data):
+                row_widget = pool.pop(key,None)
+                if row_widget is None:
+                    row_widget = DpsRow(item)
+                    row_widget.clicked.connect(self.fit_content)
+                self.rows.append(row_widget)
+                self.rows_layout.addWidget(row_widget)
+            for removed in pool.values():
+                removed.hide();removed.setParent(None);removed.deleteLater()
+        for row_widget, item in zip(self.rows,data):
+            row_widget.set_data(item); row_widget.set_details(prefs.panel_details)
+        mine = next((r for r in data if r.get('local')),None)
+        self.summary.setText(tr('Você · {dps} DPS').format(dps=short_number(mine['dps'])) if mine else 'Aguardando dano observado')
+        group_dps = snapshot['total']*1000/snapshot['duration_ms'] if snapshot['duration_ms'] else None
+        self.group_total.setText(tr('Grupo · {dps} DPS').format(dps=short_number(group_dps)))
+        self.details_button.setText('Detalhes −' if prefs.panel_details else 'Detalhes +')
+        self.expand_button.setIcon(icon('chevron-up' if prefs.panel_expanded else 'chevron-down'))
+        self.expand_button.setToolTip('Recolher painel' if prefs.panel_expanded else 'Expandir painel')
+        self.fit_content()
+
+    def fit_content(self):
+        expanded = self.service.context.prefs.combat.panel_expanded
+        self.scroller.setVisible(expanded and bool(self.rows))
+        self.summary.setVisible(not expanded or not self.rows)
+        screen = QGuiApplication.screenAt(self.geometry().center()) or QGuiApplication.primaryScreen()
+        available = max(70,min(440,screen.availableGeometry().height()-160))
+        self.scroller.setFixedHeight(min(available,sum(r.height()+4 for r in self.rows)))
+        self.layout().activate()
+        self.setFixedHeight(self.layout().sizeHint().height())
+        area = screen.availableGeometry()
+        self.move(max(area.left(),min(self.x(),area.right()-self.width()+1)),
+                  max(area.top(),min(self.y(),area.bottom()-self.height()+1)))
+
+    def toggle_expanded(self):
+        prefs = self.service.context.prefs.combat
+        prefs.panel_expanded = not prefs.panel_expanded
+        self.service.context.save(); self.refresh()
+
+    def toggle_details(self):
+        prefs = self.service.context.prefs.combat
+        prefs.panel_details = not prefs.panel_details
+        self.service.context.save(); self.refresh()
 
 
 class CombatPage(QWidget):
@@ -159,13 +224,15 @@ class CombatPage(QWidget):
         self.saved = []
         self.target_ids = []
         layout = QVBoxLayout(self); layout.setContentsMargins(28, 22, 28, 22)
-        layout.addWidget(page_header("Combate", "Acompanhe o dano observado do grupo e guarde os resultados da instância."))
-        layout.addWidget(label("Experimental: a leitura de combate ainda precisa de validação em SA.", "banner", True))
-        self.status = label("", "subtitle", True); layout.addWidget(self.status)
-        layout.addWidget(label("A medição começa automaticamente e aguarda o jogo. O painel aparece nas instâncias reconhecidas e se oculta ao sair, mantendo a leitura ativa. A próxima entrada reconhecida zera o placar e preserva o histórico.", "subtitle", True))
+        layout.addWidget(page_header("Cada contribuição conta.", "Combate · relatório do grupo"))
+        self.advanced = QWidget(); options = QVBoxLayout(self.advanced); options.setContentsMargins(0,0,0,0)
+        options.addWidget(label("Experimental: a leitura de combate ainda precisa de validação em SA.", "subtitle", True))
+        self.status = label("", "subtitle", True)
+        options.addWidget(self.status)
+        options.addWidget(label("A medição começa automaticamente e aguarda o jogo. O painel aparece nas instâncias reconhecidas e se oculta ao sair, mantendo a leitura ativa. A próxima entrada reconhecida zera o placar e preserva o histórico.", "subtitle", True))
         component = QPushButton("Abrir download oficial do Npcap")
         component.clicked.connect(lambda: QDesktopServices.openUrl(QUrl("https://npcap.com/#download")))
-        layout.addWidget(component)
+        options.addWidget(component)
         self.scope = QComboBox()
         for title, value in (("Encontro atual", "encounter"), ("Instância inteira", "instance"), ("Histórico", "history")):
             self.scope.addItem(title, value)
@@ -179,22 +246,34 @@ class CombatPage(QWidget):
         layout.addLayout(row(self.scope, self.boss_only, self.target))
         layout.addWidget(self.history_combo)
         self.quality = label("", "eyebrow", True); layout.addWidget(self.quality)
+        summary = QHBoxLayout(); summary.setSpacing(35)
+        self.metrics = []
+        for title in ('Dano do grupo','Seu DPS','Tempo de combate'):
+            copy = QVBoxLayout(); copy.setSpacing(4); copy.addWidget(label(title,'subtitle'))
+            value = label('—','number'); copy.addWidget(value); summary.addLayout(copy)
+            self.metrics.append(value)
+        summary.addStretch(); layout.addLayout(summary)
         self.table = damage_table(); layout.addWidget(self.table, 1)
         self.total = label("", "subtitle", True); layout.addWidget(self.total)
         self.copy = QPushButton("Copiar resultado"); self.copy.clicked.connect(self.copy_result)
         self.finish = QPushButton("Encerrar encontro"); self.finish.clicked.connect(self.finish_encounter)
         self.delete = QPushButton("Excluir resultado salvo"); self.delete.clicked.connect(self.delete_saved)
-        layout.addLayout(row(self.copy, self.finish, self.delete))
+        actions = QHBoxLayout(); actions.addWidget(label('A medição acompanha a instância automaticamente.','subtitle'),1)
+        actions.addWidget(self.copy);layout.addLayout(actions)
+        options.addLayout(row(self.finish,self.delete))
         self.panel_visible = QCheckBox("Mostrar painel automaticamente em instâncias")
         self.panel_visible.setChecked(context.prefs.combat.panel_visible)
-        self.locked = QCheckBox("Travar painel · clique através")
+        self.locked = QCheckBox("Travar posição do painel")
         self.locked.setChecked(context.prefs.combat.locked)
         self.opacity = QDoubleSpinBox(); self.opacity.setRange(.2, 1); self.opacity.setSingleStep(.1)
         self.opacity.setValue(context.prefs.combat.opacity)
-        layout.addLayout(row(self.panel_visible, self.locked, label("Opacidade"), self.opacity))
+        options.addLayout(row(self.panel_visible, self.locked, label("Opacidade"), self.opacity))
         self.panel = CombatPanel(service, self)
         restore = QPushButton("Restaurar painel"); restore.clicked.connect(self.restore_panel)
-        layout.addWidget(restore)
+        options.addWidget(restore)
+        self.advanced_button = QPushButton('Ajustes de combate'); self.advanced_button.setCheckable(True)
+        self.advanced_button.setObjectName('quiet'); self.advanced_button.toggled.connect(self.advanced.setVisible)
+        layout.addWidget(self.advanced_button);layout.addWidget(self.advanced);self.advanced.hide()
         self.panel_visible.toggled.connect(self.set_panel)
         self.locked.toggled.connect(self.set_locked)
         self.opacity.valueChanged.connect(self.set_opacity)
@@ -253,6 +332,9 @@ class CombatPage(QWidget):
             else "Dados parciais · SA experimental" if snapshot["total"] else "Aguardando dano observado")
         self.total.setText("Dano observado: {dano} · Tempo: {tempo}".format(
             dano=short_number(snapshot["total"]), tempo=duration(snapshot["duration_ms"])))
+        mine = next((r for r in snapshot['rows'] if r.get('local')),None)
+        for widget,value in zip(self.metrics,[short_number(snapshot['total']),short_number(mine['dps']) if mine else '—',duration(snapshot['duration_ms'])]):
+            widget.setText(value)
 
     def reload_history(self):
         self.saved = []
@@ -300,7 +382,7 @@ class CombatPage(QWidget):
         self.context.save(); self.panel.apply_settings()
 
     def restore_panel(self):
-        self.panel.resize(460, 250)
+        self.panel.fit_content()
         self.panel.move(QGuiApplication.primaryScreen().availableGeometry().topLeft() + QPoint(40, 100))
         self.panel.save_geometry()
 

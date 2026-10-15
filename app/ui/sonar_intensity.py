@@ -34,11 +34,19 @@ class IntensityCanvas(QWidget):
     def __init__(self, meter, compact):
         super().__init__(meter)
         self.meter=meter
-        self.setFixedHeight(48 if compact else 76)
+        self.compact=compact
+        self.setFixedHeight(15 if compact else 76)
 
     def paintEvent(self, event):
         painter=QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        if self.compact:
+            painter.setPen(Qt.PenStyle.NoPen)
+            width=self.width()/24
+            for index in range(24):
+                painter.setBrush(QColor('#dfc48c' if index/24<self.meter.display else '#34303f'))
+                painter.drawRoundedRect(QRectF(index*width,2,max(1,width-2),10),1.5,1.5)
+            return
         w=max(1,self.width()-2)
         bar=QRectF(1,1,w,9)
         painter.setPen(Qt.PenStyle.NoPen)
@@ -79,7 +87,8 @@ class SonarIntensity(QWidget):
         self.canvas=IntensityCanvas(self,compact);layout.addWidget(self.canvas)
         legend=QHBoxLayout()
         legend.addWidget(label('Fraco','subtitle'));legend.addStretch()
-        legend.addWidget(label('Forte','subtitle'));layout.addLayout(legend)
+        legend.addWidget(label('Forte','subtitle'))
+        if not compact:layout.addLayout(legend)
         self.setAccessibleName('Intensidade estimada do som reconhecido')
         self.setToolTip('A barra acompanha o som reconhecido. O volume do jogo influencia a leitura; não indica distância em metros.')
         self.timer=QTimer(self);self.timer.setInterval(100);self.timer.timeout.connect(self.tick)

@@ -29,11 +29,10 @@ class EventCard(QFrame):
         self.clock=label('','eventTime')
         self.remaining=label('','eventCountdown')
         self.remaining.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignVCenter)
-        second=QHBoxLayout();second.setSpacing(4)
-        second.addWidget(self.clock);second.addStretch();second.addWidget(self.remaining)
-        copy.addWidget(self.name);copy.addLayout(second)
+        copy.addWidget(self.name);copy.addWidget(self.clock)
         box.addLayout(copy,1)
-        self.setFixedHeight(52)
+        box.addWidget(self.remaining)
+        self.setFixedHeight(46)
         self.setToolTip(item.event.name)
 
     def resizeEvent(self,event):
@@ -44,7 +43,7 @@ class EventCard(QFrame):
         start=self.item.starts_at
         when=local_time(start,timezone)
         today=local_time(now,timezone).date()
-        prefix='' if when.date()==today else ('Amanhã · ' if when.date()==today+timedelta(days=1) else calendar_date(when)+' · ')
+        prefix='Hoje · ' if when.date()==today else ('Amanhã · ' if when.date()==today+timedelta(days=1) else calendar_date(when)+' · ')
         self.clock.setText(prefix+clock(when))
         self.name.setText(self.name.fontMetrics().elidedText(tr(self.item.event.name),Qt.TextElideMode.ElideRight,max(0,self.name.width())))
         active=start<=now and self.item.event.duration_minutes is not None and now<start+timedelta(minutes=self.item.event.duration_minutes)
@@ -63,15 +62,15 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
         super().__init__(None,Qt.WindowType.FramelessWindowHint|Qt.WindowType.WindowStaysOnTopHint|Qt.WindowType.Tool)
         self.context=context;self.shutting_down=False;self.drag=None
         self.cards=[];self.items=[];self.structure=None;self.initial_position=False
-        self.setWindowTitle('Strigoi · Eventos')
+        self.setWindowTitle('Azphelumbra · Eventos')
         self.setObjectName('floatingAgenda')
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
-        self.setFixedWidth(260)
+        self.setFixedWidth(303)
         self.setStyleSheet("""
           QFrame#floatingAgenda { background: transparent; }
-          QFrame#agendaSurface { background:rgba(17,23,30,226); border:1px solid #53616d; border-radius:3px; }
-          QFrame#agendaHeader { background:rgba(10,14,19,230); border:0; border-bottom:1px solid #384652; }
+          QFrame#agendaSurface { background:rgba(20,21,30,245); border:1px solid #484052; border-radius:7px; }
+          QFrame#agendaHeader { background:transparent; border:0; border-bottom:1px solid #30303e; }
           QLabel#panelTitle { color:#eef4fb; font-weight:600; font-size:13px; }
           QLabel#panelSubtitle { color:#a8bbc8; font-size:10px; }
           QToolButton { border:0; background:transparent; border-radius:2px; padding:2px; }
@@ -80,16 +79,16 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
           QFrame#eventCard { background:transparent; border:0; border-bottom:1px solid #2c3b46; border-radius:0; }
           QFrame#eventCard[state="past"] QLabel { color:#7c8e9b; }
           QFrame#eventCard[state="active"] { background:rgba(35,82,81,80); }
-          QLabel#eventName { color:#eaf0f8; font-size:12px; font-weight:600; }
-          QLabel#eventTime { color:#aabfd2; font-size:10px; }
-          QLabel#eventCountdown { color:#a5e0df; font-size:11px; font-weight:600; }
+          QLabel#eventName { color:#eeedf8; font-size:12px; font-weight:500; }
+          QLabel#eventTime { color:#aaa8bd; font-size:11px; }
+          QLabel#eventCountdown { color:#f1dfb4; font-size:15px; font-weight:600; }
           QScrollArea { border:0; background:transparent; }
           QScrollArea QWidget#agendaList { background:transparent; }
         """)
         outer=QVBoxLayout(self);outer.setContentsMargins(0,0,0,0)
         self.surface=QFrame();self.surface.setObjectName('agendaSurface');outer.addWidget(self.surface)
-        box=QVBoxLayout(self.surface);box.setContentsMargins(1,1,1,4);box.setSpacing(3)
-        header=QFrame();header.setObjectName('agendaHeader')
+        box=QVBoxLayout(self.surface);box.setContentsMargins(4,0,4,0);box.setSpacing(0)
+        header=QFrame();header.setObjectName('agendaHeader'); self.header=header
         top=QHBoxLayout(header);top.setContentsMargins(7,3,4,3);top.setSpacing(4)
         moon=label('');moon.setPixmap(icon('moon').pixmap(14,14));top.addWidget(moon)
         self.heading=label('Eventos','panelTitle');top.addWidget(self.heading,1)
@@ -97,7 +96,7 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
         self.event_selector=EventPicker(context,self);self.event_selector.setFixedSize(22,22)
         top.addWidget(self.event_selector)
         self.expand_button=QToolButton();self.expand_button.setFixedSize(22,22)
-        self.expand_button.clicked.connect(self.toggle_expanded);top.addWidget(self.expand_button)
+        self.expand_button.clicked.connect(self.toggle_expanded)
         close=QToolButton();close.setIcon(icon('close'));close.setFixedSize(22,22)
         close.setToolTip('Fechar painel');close.setAccessibleName('Fechar painel')
         close.clicked.connect(self.dismiss);top.addWidget(close)
@@ -108,10 +107,13 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
         self.scroller.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.list_widget=QWidget();self.list_widget.setObjectName('agendaList')
         self.list_box=QVBoxLayout(self.list_widget);self.list_box.setContentsMargins(4,0,4,0);self.list_box.setSpacing(0)
-        self.scroller.setWidget(self.list_widget);box.addWidget(self.scroller)
+        self.scroller.setWidget(self.list_widget)
+        content=QHBoxLayout();content.setSpacing(1);content.addWidget(self.scroller,1)
+        content.addWidget(self.expand_button,0,Qt.AlignmentFlag.AlignTop)
+        box.addLayout(content)
         self.empty=label('Nenhum evento hoje.','panelSubtitle',True);box.addWidget(self.empty)
         self.footer=label('','panelSubtitle');self.footer.setContentsMargins(7,0,7,0);box.addWidget(self.footer)
-        for widget in [moon,self.heading,header]:
+        for widget in [moon,self.heading,header,self.surface]:
             widget.installEventFilter(self)
         self.context.changed.connect(self.refresh);self.context.events_changed.connect(self.refresh)
         self.timer=QTimer(self);self.timer.setInterval(1000);self.timer.timeout.connect(self.refresh);self.timer.start()
@@ -122,6 +124,7 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
             self.hide();return
         now=now or datetime.now(UTC)
         expanded=self.context.prefs.overlay.events_panel_expanded
+        self.header.setVisible(expanded)
         timezone=self.context.prefs.timezone
         selected=self.context.prefs.overlay.events_panel_event
         events=[e for e in self.context.feed.events if not selected or e.id==selected]
@@ -131,15 +134,16 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
         if key!=self.structure:
             self.structure=key
             while self.list_box.count():
-                self.list_box.takeAt(0).widget().deleteLater()
+                previous=self.list_box.takeAt(0).widget()
+                previous.hide();previous.setParent(None);previous.deleteLater()
             self.cards=[EventCard(item) for item in self.items]
             for card in self.cards:self.list_box.addWidget(card)
             screen=QGuiApplication.screenAt(self.geometry().center()) or QGuiApplication.primaryScreen()
             max_height=max(130,min(312,screen.availableGeometry().height()-120))
-            height=min(max_height,max(52,len(self.cards)*52))
-            self.scroller.setFixedHeight(height if expanded else 52)
-            self.adjustSize()
-            self.fit_screen()
+            height=min(max_height,max(46,len(self.cards)*46))
+            self.scroller.setFixedHeight(height if expanded else 46)
+            for card in self.cards:
+                card.picture.installEventFilter(self);card.name.installEventFilter(self);card.clock.installEventFilter(self)
             if expanded:QTimer.singleShot(50,self.focus_upcoming)
         for card in self.cards:card.refresh(now,timezone)
         self.heading.setText('Eventos de hoje' if expanded else 'Eventos')
@@ -153,7 +157,13 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
         self.empty.setText('Nenhum evento hoje.' if expanded else 'Nenhum evento agendado.')
         local=local_time(now,timezone);offset=local.strftime('%z')
         self.footer.setText(f'Horários locais · UTC{offset[:3]}:{offset[3:]}')
-        self.adjustSize();self.fit_screen();self.show()
+        # A fixed compact height also bypasses Qt's 100px top-level size hint.
+        height=48 if not expanded else (self.header.sizeHint().height()+self.subtitle.sizeHint().height()
+            +self.footer.sizeHint().height()+self.scroller.height()+8)
+        if not self.items and expanded:height=self.header.sizeHint().height()+self.empty.sizeHint().height()+45
+        self.setFixedHeight(height)
+        self.layout().activate()
+        self.fit_screen();self.show()
 
     def focus_upcoming(self):
         if self.shutting_down or not self.context.prefs.overlay.events_panel_expanded:return
