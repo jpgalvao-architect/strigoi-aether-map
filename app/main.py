@@ -87,6 +87,12 @@ def main() -> int:
                     assert not window.sonar.active and window.sonar.worker is None
                     assert window.combat.process is None
                     assert not window.combat_page.panel.isVisible()
+                    assert window.pets.feed is window.combat.feed and window.pets.feed.process is None
+                    from PySide6.QtGui import QImageReader
+                    assert window.pets.store.catalogue.pets
+                    assert all(QImageReader(str(PACKAGE/'assets'/pet.portrait)).canRead()
+                               for pet in window.pets.store.catalogue.pets)
+                    logging.info('SMOKE_PETS_OK: original portraits, collection and shared feed; no live capture')
                     if sys.platform=='win32':
                         result=subprocess.run([str(HELPER),'--version'],capture_output=True,text=True,
                             timeout=5,check=True,creationflags=subprocess.CREATE_NO_WINDOW)

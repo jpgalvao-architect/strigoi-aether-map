@@ -258,6 +258,8 @@ class PetSettings(Model):
     panel_position: tuple[int, int] | None = None
     auto_collection: bool = True
     region: Literal['sa', 'eu', 'nae', 'naw', 'asia', 'kr', 'tw'] = 'sa'
+    panel_locked: bool = False
+    panel_opacity: float = Field(default=.9,ge=.3,le=1)
 
 
 class Preferences(Model):

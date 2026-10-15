@@ -114,6 +114,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
             ("maps", "Mapa + minimapa", "atlas", self.toggle_maps),
             ("combat", "Painel de combate", "combat", self.toggle_combat),
             ("events", "Painel de eventos", "events", self.toggle_events),
+            ("pets", "Painel de pets", "pets", self.toggle_pets),
         ]:
             line = QHBoxLayout(); line.setContentsMargins(0, 5, 0, 5); line.setSpacing(9)
             picture = label(""); picture.setPixmap(icon(symbol).pixmap(22, 22)); line.addWidget(picture)
@@ -151,6 +152,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         values = {"sonar": self.main.sonar.active,
                   "maps": self.context.prefs.overlay.enabled and self.main.overlay.worker is not None,
                   "combat": self.context.prefs.combat.panel_visible,
+                  "pets": self.context.prefs.pets.panel_visible,
                   "events": self.context.prefs.overlay.events_panel}
         for key, checked in values.items():
             switch = self.switches[key]; switch.blockSignals(True)
@@ -158,7 +160,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
             if key == "combat" and checked and not self.main.combat.in_instance:
                 self.states[key].setText("Aguardando instância")
                 continue
-            self.states[key].setText(("Visível" if checked else "Oculto") if key in ("combat", "events")
+            self.states[key].setText(("Visível" if checked else "Oculto") if key in ("combat", "events", "pets")
                                      else ("Ativo" if checked else "Desligado"))
         self.note.setText("Ocultar o placar mantém a medição ativa" if self.context.prefs.combat.auto_capture
                           else "Medição automática desativada")
@@ -224,6 +226,11 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
 
     def toggle_events(self, visible):
         self.context.prefs.overlay.events_panel = visible
+        self.context.save()
+        self.refresh()
+
+    def toggle_pets(self, visible):
+        self.context.prefs.pets.panel_visible = visible
         self.context.save()
         self.refresh()
 

@@ -79,5 +79,17 @@
   "Atualização pendente": "Update pending",
   "Entre novamente no personagem para sincronizar a coleção.": "Log into your character again to sync the collection.",
   "Confira a evolução no jogo. As almas serão sincronizadas na próxima entrada.": "Check the level-up in the game. Souls will sync on your next login.",
-  "Combate e Pets podem ler passivamente os dados recebidos pela conexão do jogo, usando Npcap. A leitura automática aguarda o jogo e pode ser desativada nas Configurações de Combate e na aba Pets. Os dois módulos compartilham a mesma conexão. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.": "Combat and Pets can passively read data received by the game connection using Npcap. Automatic reading waits for the game and can be disabled in Combat settings and the Pets tab. Both modules share one connection. Raw packets are not recorded or uploaded. The scoreboard displays observed damage and identifies partial data."
+  "Combate e Pets podem ler passivamente os dados recebidos pela conexão do jogo, usando Npcap. A leitura automática aguarda o jogo e pode ser desativada nas Configurações de Combate e na aba Pets. Os dois módulos compartilham a mesma conexão. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.": "Combat and Pets can passively read data received by the game connection using Npcap. Automatic reading waits for the game and can be disabled in Combat settings and the Pets tab. Both modules share one connection. Raw packets are not recorded or uploaded. The scoreboard displays observed damage and identifies partial data.",
+  "Pets favoritos": "Favorite pets",
+  "Favorite um pet na coleção para acompanhá-lo aqui.": "Favorite a pet in your collection to track it here.",
+  "Abrir coleção": "Open collection",
+  "{count} almas": "{count} souls",
+  "{count} favoritos": "{count} favorites",
+  "Expandir favoritos": "Expand favorites",
+  "Destravar posição": "Unlock position",
+  "Travar posição": "Lock position",
+  "Painel de pets": "Pets panel",
+  "Mostrar painel de pets": "Show pets panel",
+  "Opacidade do painel de pets": "Pets panel opacity",
+  "Mapa dos locais de farm": "Farming locations map"
 }

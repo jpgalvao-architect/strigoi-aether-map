@@ -186,6 +186,115 @@ window.StrigoiGuide = {
       ]
     },
     {
+      "id": "pets",
+      "icon": "pets",
+      "title": {
+        "pt_BR": "Coleção de pets",
+        "en_US": "Pet collection"
+      },
+      "description": {
+        "pt_BR": "Favoritos, Insight e locais de farm.",
+        "en_US": "Favorites, Insight and farming locations."
+      },
+      "image": "pets",
+      "steps": [
+        {
+          "title": {
+            "pt_BR": "Sincronize ao entrar",
+            "en_US": "Sync at login"
+          },
+          "where": {
+            "pt_BR": "Pets → Sincronizar com o jogo",
+            "en_US": "Pets → Sync with game"
+          },
+          "body": {
+            "pt_BR": "Abra o Strigoi antes de entrar no personagem e confira a região. A coleção é recebida na entrada; não precisa deixar o menu do jogo aberto. A leitura automática usa Npcap.",
+            "en_US": "Open Strigoi before logging into your character and check the region. The collection arrives during login; you do not need to leave the game menu open. Automatic reading uses Npcap."
+          },
+          "tip": {
+            "pt_BR": "Abriu o app depois de entrar? Volte à seleção de personagem e entre novamente quando puder. A coleção manual funciona sem Npcap.",
+            "en_US": "Opened the app after login? Return to character selection and log in again when convenient. Manual records work without Npcap."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Escolha seus favoritos",
+            "en_US": "Choose your favorites"
+          },
+          "where": {
+            "pt_BR": "Pets → Busca, filtros e detalhe",
+            "en_US": "Pets → Search, filters and details"
+          },
+          "body": {
+            "pt_BR": "Busque por pet ou monstro, filtre pelo mapa e escolha uma meta de Insight. Marque Favorito para acompanhar no painel. Pet Insight é diferente do nível da família.",
+            "en_US": "Search by pet or monster, filter by map and choose an Insight goal. Mark Favorite to track it in the panel. Pet Insight differs from the genus level."
+          },
+          "tip": {
+            "pt_BR": "Informações não recebidas ficam desconhecidas. Registros manuais são separados e podem ser desfeitos com Usar informação do jogo.",
+            "en_US": "Unread information stays unknown. Manual records remain separate and can be undone with Use game information."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Leve a coleção para o jogo",
+            "en_US": "Take your collection into the game"
+          },
+          "where": {
+            "pt_BR": "Pets ou menu rápido → Painel de pets",
+            "en_US": "Pets or quick menu → Pets panel"
+          },
+          "body": {
+            "pt_BR": "Ative o painel, arraste pelo título e trave a posição. Recolha para uma linha ou expanda para até três, com rolagem para os demais favoritos. A aba Pets oferece opacidade e Restaurar painel.",
+            "en_US": "Enable the panel, drag its title and lock its position. Collapse to one row or expand to three, with scrolling for more favorites. Pets offers opacity and Restore panel controls."
+          },
+          "tip": {
+            "pt_BR": "Fechar o painel mantém a sincronização ativa. Alt+Tab e menus reconhecidos o ocultam temporariamente.",
+            "en_US": "Closing the panel keeps sync running. Alt+Tab and recognized menus hide it temporarily."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Encontre locais de farm",
+            "en_US": "Find farming locations"
+          },
+          "where": {
+            "pt_BR": "Detalhe do pet → Ver locais no Atlas",
+            "en_US": "Pet details → View locations in Atlas"
+          },
+          "body": {
+            "pt_BR": "A camada Pets pode aparecer junto de cubos e coletas nos mapas. Use Todos, Favoritos ou Metas pendentes. Os locais são referências documentadas do cliente, sem confirmação da presença atual em SA.",
+            "en_US": "The Pets layer can appear alongside cubes and gatherables on maps. Choose All, Favorites or Pending goals. Locations are documented client references; current SA presence is unconfirmed."
+          },
+          "tip": {
+            "pt_BR": "A coleção inicial foi conferida em SA. Ganho de almas ainda aguarda conferência real. Distância e direção de radar ao vivo não estão disponíveis nesta versão.",
+            "en_US": "The initial collection matched SA gameplay. Soul gains still await a live check. Live radar distance and direction are not available in this version."
+          }
+        }
+      ],
+      "help": [
+        {
+          "question": {
+            "pt_BR": "Por que minha coleção está vazia?",
+            "en_US": "Why is my collection empty?"
+          },
+          "answer": {
+            "pt_BR": "A coleção é recebida na entrada do personagem. Abra o Strigoi antes de entrar, confirme a região e a opção de sincronização e verifique se Npcap está instalado. Informações ainda não recebidas ficam desconhecidas.",
+            "en_US": "The collection arrives when logging into a character. Open Strigoi before login, check the region and sync option, and verify Npcap is installed. Unread progress stays unknown."
+          }
+        },
+        {
+          "question": {
+            "pt_BR": "Esse painel é um radar de monstros?",
+            "en_US": "Is this panel a monster radar?"
+          },
+          "answer": {
+            "pt_BR": "Nesta versão, o painel acompanha seus pets favoritos e o progresso da coleção. Os mapas mostram locais de referência. Rastreamento de NPCs, distância e direção ainda dependem de validação no jogo.",
+            "en_US": "In this version the panel tracks favorite pets and collection progress. Maps show reference sites. NPC tracking, distance and direction still require in-game validation."
+          }
+        }
+      ]
+    },
+    {
       "id": "atlas",
       "icon": "atlas",
       "title": {

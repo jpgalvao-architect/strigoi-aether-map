@@ -336,6 +336,18 @@
           ],
           "title": "Region",
           "type": "string"
+        },
+        "panel_locked": {
+          "default": false,
+          "title": "Panel Locked",
+          "type": "boolean"
+        },
+        "panel_opacity": {
+          "default": 0.9,
+          "maximum": 1,
+          "minimum": 0.3,
+          "title": "Panel Opacity",
+          "type": "number"
         }
       },
       "title": "PetSettings",

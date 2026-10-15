@@ -56,7 +56,7 @@ class PetService(QObject):
     def ensure_running(self):
         if not self.runtime or self.feed is None:
             return
-        wanted = self.context.prefs.pets.auto_collection or self.context.prefs.pets.panel_visible
+        wanted = self.context.prefs.pets.auto_collection
         if wanted:
             self.feed.acquire('pets')
         else:

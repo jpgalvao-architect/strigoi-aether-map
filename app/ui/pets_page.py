@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (QDialogButtonBox, QFileDialog, QFormLayout,
 from app.core.i18n import tr
 from app.infrastructure.storage import PACKAGE
 from app.ui.localized_widgets import (QCheckBox, QComboBox, QDialog, QLineEdit,
-    QSpinBox, QToolButton, QWidget)
+    QDoubleSpinBox, QSpinBox, QToolButton, QWidget)
 from app.ui.widgets import button, card, label, page_header, row
 
 
@@ -132,13 +132,18 @@ class PetsPage(QWidget):
         self.family.addItem('Todas as famílias', '')
         for family in ('Cogni', 'Fera', 'Natura', 'Varian', 'Special'):
             self.family.addItem('Especial' if family == 'Special' else family, family)
+        self.map_choice = QComboBox()
+        self.map_choice.addItem('Todos os mapas','')
+        for map_id,name in [('altgard','Altgard'),('verteron','Verteron')]:
+            self.map_choice.addItem(name,map_id)
+        self.map_choice.setAccessibleName('Mapa dos locais de farm')
         self.state = QComboBox()
         for text, key in [('Todo o progresso',''), ('Ainda não adquiridos','missing'),
                           ('Em evolução','growing'), ('Meta atingida','complete'),
                           ('Não registrados','unknown')]:
             self.state.addItem(text, key)
         self.favorite_filter = QCheckBox('Só favoritos')
-        layout.addLayout(row(self.search, self.family, self.state, self.favorite_filter))
+        layout.addLayout(row(self.search, self.family, self.map_choice, self.state, self.favorite_filter))
         maps = QHBoxLayout()
         self.map_layer = QCheckBox('Mostrar locais nos mapas')
         self.map_layer.setToolTip('Locais de referência do cliente; confirme a presença no jogo.')
@@ -221,6 +226,14 @@ class PetsPage(QWidget):
         self.empty = label('Nenhum pet com esses filtros. Ajuste a busca ou os filtros.', 'subtitle', True)
         self.empty.hide()
         layout.addWidget(self.empty)
+        panel = QHBoxLayout()
+        self.panel_visible = QCheckBox('Mostrar painel de pets')
+        self.panel_visible.toggled.connect(self.panel_changed); panel.addWidget(self.panel_visible)
+        panel.addStretch(); panel.addWidget(label('Opacidade','subtitle'))
+        self.panel_opacity = QDoubleSpinBox(); self.panel_opacity.setRange(.3,1); self.panel_opacity.setSingleStep(.05)
+        self.panel_opacity.setAccessibleName('Opacidade do painel de pets')
+        self.panel_opacity.valueChanged.connect(self.opacity_changed); panel.addWidget(self.panel_opacity)
+        panel.addWidget(button('Restaurar painel',self.restore_panel)); layout.addLayout(panel)
         footer = QHBoxLayout()
         self.feedback = label('', 'subtitle', True)
         footer.addWidget(self.feedback, 1)
@@ -229,6 +242,7 @@ class PetsPage(QWidget):
         layout.addLayout(footer)
         self.search.textChanged.connect(self.refresh_grid)
         self.family.currentIndexChanged.connect(self.refresh_grid)
+        self.map_choice.currentIndexChanged.connect(self.refresh_grid)
         self.state.currentIndexChanged.connect(self.refresh_grid)
         self.favorite_filter.toggled.connect(self.refresh_grid)
         service.changed.connect(self.refresh)
@@ -250,6 +264,11 @@ class PetsPage(QWidget):
         self.region.blockSignals(True)
         self.region.setCurrentIndex(self.region.findData(self.context.prefs.pets.region))
         self.region.blockSignals(False)
+        for widget,value in [(self.panel_visible,self.context.prefs.pets.panel_visible),
+                             (self.panel_opacity,self.context.prefs.pets.panel_opacity)]:
+            widget.blockSignals(True)
+            widget.setChecked(value) if widget is self.panel_visible else widget.setValue(value)
+            widget.blockSignals(False)
         self.map_layer.blockSignals(True)
         self.map_layer.setChecked('pets' not in self.context.prefs.disabled_categories)
         self.map_layer.blockSignals(False)
@@ -258,6 +277,17 @@ class PetsPage(QWidget):
         self.map_filter.blockSignals(False)
         self.clear_focus.setVisible(self.context.prefs.pets.focus_id is not None)
         self.refresh_grid()
+
+    def panel_changed(self, visible):
+        self.context.prefs.pets.panel_visible = visible; self.context.save()
+
+    def opacity_changed(self, value):
+        self.context.prefs.pets.panel_opacity = value; self.context.save()
+
+    def restore_panel(self):
+        prefs = self.context.prefs.pets
+        prefs.panel_position = None; prefs.panel_opacity = .9; prefs.panel_locked = False
+        prefs.panel_visible = True; self.context.save()
 
     def automatic_changed(self, checked):
         self.context.prefs.pets.auto_collection = checked
@@ -291,6 +321,9 @@ class PetsPage(QWidget):
         store = self.service.store
         pets = store.select(search=self.search.text(), family=self.family.currentData() or '',
             state=self.state.currentData() or '', favorites=self.favorite_filter.isChecked())
+        selected_map = self.map_choice.currentData()
+        if selected_map:
+            pets = [pet for pet in pets if any(site.map_id==selected_map for site in self.service.farm.by_pet[pet.id])]
         entries = store.profile.entries.values()
         registered = sum(entry.progress is not None and entry.progress.level is not None for entry in entries)
         favorites = sum(entry.favorite for entry in store.profile.entries.values())

@@ -1,6 +1,8 @@
 # Strigoi Aether Map
 
-**AION 2 Companion App · 0.9.0-beta.10 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.11 · Windows x64**
+
+Beta 11 adds Pets with 208 original portraits, favorites, Insight goals, a map filter, and a compact quick-menu panel. The initial collection matched two SA logins. Farming sites are client references without guaranteed current presence; live radar distance and direction are not available yet. See [Pets](docs/PETS.en-US.md).
 
 Beta 10 makes party decoding more resilient: optional combat-power metadata
 cannot discard valid identities, and later members can be recovered after
@@ -21,7 +23,7 @@ The app doubles minimap symbols, adds arrows to cube sites with supplied height 
 The app shows the combat panel in recognized dungeons and 1v1/5v5 arenas and hides it on exit. Entry and exit signals were observed for one map per arena mode in SA; other rotating maps still need identification. PvP totals include outgoing attacks by confirmed participants and exclude received damage. Calculation remains experimental without live accuracy validation; the complete 5v5 team roster is not confirmed yet. Quick controls can hide the panel without stopping capture.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.10) ·
+[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.11) ·
 [Português](README.md)
 
 Your exploration journal: maps, gatherables, possible cube locations and
@@ -32,7 +34,7 @@ observed DPS/share, explicit summon ownership, target filtering and local
 history. SA capture still needs validation; results are marked partial.
 See [Combat](docs/COMBAT.md) for current scope and limitations.
 
-Run `StrigoiAetherMap-Setup-0.9.0-beta.10.exe`, choose English and review the terms
+Run `StrigoiAetherMap-Setup-0.9.0-beta.11.exe`, choose English and review the terms
 before accepting. Setup installs for the current user and includes an
 uninstaller and corresponding source code. Existing preferences and visits
 are preserved. English is the default for a fresh installation; an explicit
