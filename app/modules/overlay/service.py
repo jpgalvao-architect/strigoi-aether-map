@@ -61,12 +61,12 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         from app.modules.overlay.cadence import FramePacer,SmoothRegistration
         from app.modules.overlay.timer_resolution import TimerResolution
         self.timer_resolution=TimerResolution()
-        self.pacer=FramePacer(240)
+        self.pacer=FramePacer(60)
         self.smoothing=SmoothRegistration()
         self.draw_timer=QTimer(self)
         self.draw_timer.setTimerType(Qt.TimerType.PreciseTimer)
+        self.draw_timer.setSingleShot(True)
         self.draw_timer.timeout.connect(self.schedule_frame)
-        self.draw_timer.setInterval(2)
         self.paint_count=0
         self.paint_hz=0.
         self.scheduled_frames=0
@@ -77,11 +77,26 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         self._symbols={}
         self._coordinates=None
         self._marker_identity=None
+        self._frame_signature=None
 
     def set_render_rate(self,hz):
-        self.pacer.hz=hz
-        self.pacer.deadline=0.
-        self.draw_timer.setInterval(max(1,int(1000/(hz*2))))
+        if self.pacer.hz!=hz:
+            self.pacer.hz=hz
+            self.pacer.deadline=0.
+            self.request_frame()
+
+    def request_frame(self):
+        if self.isVisible() and self.registration is not None:
+            delay=max(0,math.ceil((self.pacer.deadline-time.perf_counter())*1000))
+            if not self.draw_timer.isActive() or delay<self.draw_timer.remainingTime():
+                self.draw_timer.start(delay)
+
+    def invalidate_frame(self):
+        self._frame_signature=None
+        if self.registration is None:
+            self.update()  # Fixed-reference mode has no interpolation timer.
+        else:
+            self.request_frame()
 
     def clear_registration(self):
         self.registration=None
@@ -90,10 +105,12 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         self.draw_timer.stop()
         self.dirty_region=QRegion()
         self._visible_markers=[]
+        self._frame_signature=None
 
     def accept_registration(self,registration):
         self.registration=registration
-        self.smoothing.accept(registration,time.perf_counter())
+        if self.smoothing.accept(registration,time.perf_counter()):
+            self.request_frame()
 
     def schedule_frame(self):
         self.timer_fires+=1
@@ -102,6 +119,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
             self.draw_timer.stop()
             return
         if not self.pacer.due(now):
+            self.request_frame()
             return
         self.scheduled_frames+=1
         registration=self.smoothing.at(now) or self.registration
@@ -109,17 +127,24 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         # Clear and redraw only icon rectangles, including their previous positions.
         current=QRect()
         radius=self.paint_radius()
-        self._visible_markers=self.visible_markers(registration,radius)
-        for px,py,_,_ in self._visible_markers:
+        visible=self.visible_markers(registration,radius)
+        signature=(self.scale,self.ratio,self.width(),self.height(),radius,
+            tuple((round(px*4),round(py*4),color,shape) for px,py,color,shape in visible))
+        if not self.smoothing.settled(now):
+            self.request_frame()
+        if signature==self._frame_signature:
+            return
+        self._frame_signature=signature
+        self._visible_markers=visible
+        for px,py,_,_ in visible:
             rectangle=QRect(round(px)-radius,round(py)-radius,radius*2+1,radius*2+1)
             current=rectangle if current.isNull() else current.united(rectangle)
         current=QRegion(current)
         dirty=self.dirty_region.united(current)
         self.dirty_region=current
         if not dirty.isEmpty():
-            # High-rate mode paints its small dirty regions synchronously, rather
-            # than having queued QWidget.update calls coalesced into one paint.
-            self.repaint(dirty)
+            # Qt coalesces invalidations; a stationary map needs no ongoing paints.
+            self.update(dirty)
 
     def visible_markers(self,registration,radius=0):
         # Project in one array operation; do not construct thousands of NumPy
@@ -175,7 +200,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         if self.registration:
             self.timer_resolution.enable()
             self.rate_started=time.perf_counter();self.paint_count=0
-            self.draw_timer.start()
+            self.request_frame()
         super().showEvent(event)
 
     def hideEvent(self,event):
@@ -368,8 +393,6 @@ class OverlayService(QObject):
             self.set_status("Confirmando reconhecimento…")
             return
         self.window.show()
-        if not self.window.draw_timer.isActive():
-            self.window.draw_timer.start()
         radius = round((7*self.window.scale+2)*self.window.ratio)
         self.set_exclusion(registration,radius)
         if self.last_result-self.last_report>=.5:
@@ -421,7 +444,9 @@ class OverlayService(QObject):
         self.window.scale = prefs.overlay.scale
         self.window.set_render_rate(prefs.overlay.render_hz)
         self.window.setWindowOpacity(prefs.overlay.opacity)
-        self.window.update()
+        self.window.invalidate_frame()
+        if self.capture_area and self.worker:
+            self.worker.capture_hz=prefs.overlay.capture_hz
         if self.capture_area and self.worker and self.window.registration:
             radius = round((7*self.window.scale+2)*self.window.ratio)
             self.set_exclusion(self.window.registration,radius)

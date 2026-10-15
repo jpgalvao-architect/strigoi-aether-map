@@ -223,8 +223,8 @@ class OverlaySettings(Model):
     layers: Literal["atlas", "cubes", "gathering", "all"] = "atlas"
     map_view: Literal["large", "minimap"] = "large"
     minimap_area: str = ""
-    render_hz: Literal[60, 120, 240] = 240
-    capture_hz: int = Field(default=60, ge=10, le=60)
+    render_hz: int = Field(default=60, ge=15, le=360)
+    capture_hz: int = Field(default=30, ge=10, le=60)
 
 
 class CombatSettings(Model):

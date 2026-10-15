@@ -1,6 +1,8 @@
 # STRIGOI AETHER MAP
 
-**AION 2 Companion App · 0.9.0-beta.11 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.12 · Windows x64**
+
+A beta 12 deixa os controles de frequência à vista em **Overlay → Fluidez do overlay**. Escolha de 15 a 360 Hz para o desenho e de 10 a 60 fps para a leitura do minimapa (até 30 fps no mapa grande), com aplicação imediata e preferência salva. Novas instalações começam em 60 Hz/30 fps; escolhas anteriores são preservadas. Marcadores parados deixam de ser redesenhados continuamente, e o processamento visual usa um orçamento menor de threads. A melhoria de FPS no jogo ainda precisa ser conferida após atualizar.
 
 A beta 11 acrescenta a coleção de Pets, com 208 retratos originais, favoritos, metas de Insight, filtro por mapa e um painel compacto no menu rápido. A coleção inicial foi conferida em duas entradas SA. Os locais de farm são referências do cliente, sem garantia de presença atual; distância e direção de um radar ao vivo ainda não estão disponíveis. Veja [Pets](docs/PETS.md).
 
@@ -24,7 +26,7 @@ O aplicativo amplia os símbolos do minimapa em 100%, mostra setas nas posiçõe
 O aplicativo mostra o painel de combate nas dungeons e arenas 1v1/5v5 identificadas e o oculta ao sair. Foram observados os sinais de entrada e saída de um mapa de cada modalidade em SA; outros mapas da rotação ainda precisam de identificação. O dano PvP contabiliza ataques de participantes confirmados e exclui o dano recebido. O cálculo continua experimental, sem validação de precisão ao vivo; no 5v5, a lista completa do time ainda não foi confirmada. O menu rápido permite ocultar o painel sem parar a medição.
 
 [Página do aplicativo](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.11) ·
+[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.12) ·
 [English](README.en-US.md)
 
 Seu caderno de exploração: mapas, coletas, cubos e eventos em um só lugar.
@@ -76,7 +78,8 @@ nem executar como administrador. O app usa mapas e agenda locais.
   cabeçalho para mover; expansão e posição são salvas.
 - **Overlay:** escolha mapa e monitor e ative. No modo minimapa, selecione
   apenas seu terreno uma vez. Ao abrir M, o mapa grande tem prioridade;
-  ao fechar, o minimapa retorna. Ajustes avançados reúne precisão e frequência.
+  ao fechar, o minimapa retorna. Escolha a frequência em Fluidez do overlay; comece em 60 Hz/30 fps.
+  Ajustes avançados reúne precisão e referência fixa.
 - **Sonar:** abra o jogo, atualize a lista de aplicativos, selecione o AION 2
   e clique em Ativar sonar. O aviso visual indica som compatível com o cubo;
   não fornece posição nem distância. Testar aviso visual não detecta áudio.

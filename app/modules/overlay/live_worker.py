@@ -15,7 +15,7 @@ class LiveMapWorker(QThread):
     failed = Signal(str)
     progress = Signal(str)
 
-    def __init__(self, area, map_image, minimum_matches, capture_hz=60):
+    def __init__(self, area, map_image, minimum_matches, capture_hz=30):
         super().__init__()
         self.area = area.model_copy(deep=True)
         self.map_image = map_image

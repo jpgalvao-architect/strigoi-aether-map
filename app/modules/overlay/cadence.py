@@ -3,7 +3,7 @@
 
 
 class FramePacer:
-    def __init__(self,hz=240):
+    def __init__(self,hz=60):
         self.hz=hz
         self.deadline=0.
 
@@ -32,10 +32,18 @@ class SmoothRegistration:
     def clear(self):
         self.previous=self.target=None
 
+    def settled(self,now):
+        return self.target is None or now >= self.changed_at+self.duration
+
     def accept(self,registration,now):
+        import numpy as np
+        if self.target is not None and np.array_equal(self.target.matrix,registration.matrix):
+            self.target=registration
+            return False
         self.previous=self.at(now) or registration
         self.target=registration
         self.changed_at=now
+        return True
 
     def at(self,now):
         if self.target is None:

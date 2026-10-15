@@ -48,17 +48,29 @@ class LiveOverlayPage(QWidget):
         self.minimum = QSpinBox()
         self.minimum.setRange(12,80); self.minimum.setValue(context.prefs.overlay.minimum_matches)
         self.minimum.setToolTip("Mais detalhes correspondentes exigem evidência mais forte; podem dificultar o reconhecimento em áreas pequenas.")
-        self.render_rate=QComboBox()
-        for value in [60,120,240]:
-            self.render_rate.addItem(f"{value} Hz • meta de desenho",value)
-        self.render_rate.setCurrentIndex(self.render_rate.findData(context.prefs.overlay.render_hz))
+        self.render_rate=QSpinBox()
+        self.render_rate.setRange(15,360)
+        self.render_rate.setSuffix(' Hz')
+        self.render_rate.setValue(context.prefs.overlay.render_hz)
+        self.render_rate.setKeyboardTracking(False)
+        self.render_rate.setToolTip('Limite de desenho dos marcadores. Comece com 60 Hz; reduza para 30 Hz se o jogo perder fluidez. Não precisa igualar a frequência do monitor.')
         self.capture_rate=QSpinBox()
         self.capture_rate.setRange(10,60)
         self.capture_rate.setValue(context.prefs.overlay.capture_hz)
         self.capture_rate.setSuffix(" fps • limite")
+        self.capture_rate.setKeyboardTracking(False)
+        self.capture_rate.setToolTip('Frequência de análise do terreno. 30 fps é um bom ponto de partida. Valores maiores usam mais processamento. O mapa grande tem limite de 30 fps.')
         for index,(text, widget) in enumerate([("Modo",self.view_kind),("Mapa",self.maps),("Monitor",self.screens),("Mostrar",self.layers),("Opacidade",self.opacity),("Tamanho dos ícones",self.scale),]):
             (form if index<4 else tuning).addRow(text,widget)
         layout.addWidget(form_group)
+        performance=QGroupBox('Fluidez do overlay')
+        performance_layout=QVBoxLayout(performance)
+        rates_form=QFormLayout()
+        rates_form.addRow('Frequência visual',self.render_rate)
+        rates_form.addRow('Leitura do mapa',self.capture_rate)
+        performance_layout.addLayout(rates_form)
+        performance_layout.addWidget(label('Comece com 60 Hz e 30 fps. Se houver lentidão, reduza os valores. As alterações são salvas e aplicadas na hora.','subtitle',True))
+        layout.addWidget(performance)
         self.area_label = label("", "subtitle",True)
         self.status = label("Desligado", "eyebrow",True)
         layout.addWidget(self.area_label); layout.addWidget(self.status)
@@ -84,8 +96,6 @@ class LiveOverlayPage(QWidget):
         advanced_layout=QVBoxLayout(self.advanced)
         fields=QFormLayout()
         fields.addRow('Detalhes mínimos',self.minimum)
-        fields.addRow('Frequência visual',self.render_rate)
-        fields.addRow('Leitura do minimapa',self.capture_rate)
         advanced_layout.addLayout(fields)
         advanced_layout.addWidget(self.rates)
         advanced_layout.addWidget(button('Usar referência fixa de uma imagem',self.import_fixed))
@@ -99,7 +109,8 @@ class LiveOverlayPage(QWidget):
         self.refresh()
         for widget in [self.opacity,self.scale]:
             widget.valueChanged.connect(self.save_fields)
-        self.render_rate.currentIndexChanged.connect(self.save_fields)
+        self.render_rate.valueChanged.connect(self.save_fields)
+        self.capture_rate.valueChanged.connect(self.save_fields)
         self.view_kind.currentIndexChanged.connect(self.change_view)
         self.rate_timer=QTimer(self)
         self.rate_timer.setInterval(1000)
@@ -115,13 +126,20 @@ class LiveOverlayPage(QWidget):
             self.maps.setCurrentIndex(max(0,self.maps.findData(self.context.prefs.overlay.map_id)))
             self.dataset_identity = self.context.dataset
         active = self.context.prefs.overlay.enabled or self.selector is not None
-        for widget in [self.maps,self.screens,self.minimum,self.view_kind,self.capture_rate,self.start_button]:
+        for widget in [self.maps,self.screens,self.minimum,self.view_kind,self.start_button]:
             widget.setEnabled(not active)
         self.stop_button.setEnabled(self.context.prefs.overlay.enabled)
         mini=self.view_kind.currentData()=="minimap"
         self.select_button.setVisible(mini)
         self.select_button.setEnabled(not active and mini)
-        self.capture_rate.setEnabled(not active and mini)
+        self.capture_rate.blockSignals(True)
+        self.capture_rate.setMaximum(60 if mini else 30)
+        self.capture_rate.blockSignals(False)
+        for widget,value in [(self.render_rate,self.context.prefs.overlay.render_hz),
+                             (self.capture_rate,min(self.capture_rate.maximum(),self.context.prefs.overlay.capture_hz))]:
+            widget.blockSignals(True)
+            widget.setValue(value)
+            widget.blockSignals(False)
         path = self.context.prefs.overlay.minimap_area if mini else self.context.prefs.overlay.capture_area
         if path and Path(path).is_file():
             try:
@@ -151,7 +169,7 @@ class LiveOverlayPage(QWidget):
 
     def refresh_rates(self):
         prefs=self.context.prefs.overlay
-        self.rates.setText(f"Desenho: meta {prefs.render_hz} Hz • medido {self.service.window.paint_hz:.0f} Hz\nRastreamento visual: {self.service.observation_hz:.0f} atualizações/s • revalidação do mapa separada. A taxa real depende do sistema e do monitor.")
+        self.rates.setText(f"Limite visual: {prefs.render_hz} Hz • redesenho somente quando necessário\nRastreamento visual: {self.service.observation_hz:.0f} atualizações/s • a taxa real depende do computador.")
 
     def save_fields(self):
         prefs = self.context.prefs.overlay
@@ -161,7 +179,7 @@ class LiveOverlayPage(QWidget):
         prefs.scale = self.scale.value()
         prefs.minimum_matches = self.minimum.value()
         prefs.map_view=self.view_kind.currentData()
-        prefs.render_hz=self.render_rate.currentData()
+        prefs.render_hz=self.render_rate.value()
         prefs.capture_hz=self.capture_rate.value()
         self.context.save()
 

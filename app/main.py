@@ -13,12 +13,14 @@ from app.ui.localized_widgets import QMessageBox
 from app.bootstrap.logging_setup import configure_logging
 from app.infrastructure.storage import PACKAGE, user_data_dir
 from app.services.context import AppContext
-from app.ui.main_window import MainWindow
 from app.ui.theme import apply_theme
 from app.core.i18n import tr, set_language
 
 
 def main() -> int:
+    from app.bootstrap.performance import configure_runtime
+    configure_runtime()
+    from app.ui.main_window import MainWindow
     parser = argparse.ArgumentParser(description="STRIGOI AETHER MAP")
     parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument("--screenshot", type=Path, help="Save the rendered app window, without capturing the desktop")

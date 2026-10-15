@@ -351,5 +351,12 @@
   "Nenhum": "None",
   "Mapa real": "Real map",
   "O MVP reconhece uma posição e um zoom fixos do mapa grande. Mudanças de enquadramento exigem nova calibração. Não há detecção universal do AION 2 nem validação com o cliente real nesta versão.": "This manual mode recognizes a fixed full-map position and zoom. Changes in framing require recalibration. It does not provide universal AION 2 detection or verification with the game client.",
-  "A calibração salva uma cópia local da imagem escolhida. A captura ao vivo fica apenas na memória, sem gravação ou upload. Escolha referências sem marcadores, para que o próprio overlay não interfira na detecção. Use janela sem bordas; fullscreen exclusivo pode impedir a captura.": "Calibration saves a local copy of the selected image. Live capture stays in memory, without recording or uploading. Choose references free of markers so the overlay does not interfere with detection. Use borderless window mode; exclusive fullscreen may prevent capture."
+  "A calibração salva uma cópia local da imagem escolhida. A captura ao vivo fica apenas na memória, sem gravação ou upload. Escolha referências sem marcadores, para que o próprio overlay não interfira na detecção. Use janela sem bordas; fullscreen exclusivo pode impedir a captura.": "Calibration saves a local copy of the selected image. Live capture stays in memory, without recording or uploading. Choose references free of markers so the overlay does not interfere with detection. Use borderless window mode; exclusive fullscreen may prevent capture.",
+  "Fluidez do overlay": "Overlay performance",
+  "Leitura do mapa": "Map capture rate",
+  "Comece com 60 Hz e 30 fps. Se houver lentidão, reduza os valores. As alterações são salvas e aplicadas na hora.": "Start with 60 Hz and 30 fps. If the game slows down, lower these values. Changes are saved and applied immediately.",
+  "Limite de desenho dos marcadores. Comece com 60 Hz; reduza para 30 Hz se o jogo perder fluidez. Não precisa igualar a frequência do monitor.": "Marker drawing limit. Start with 60 Hz; lower it to 30 Hz if the game slows down. It does not need to match the monitor refresh rate.",
+  "Frequência de análise do terreno. 30 fps é um bom ponto de partida. Valores maiores usam mais processamento. O mapa grande tem limite de 30 fps.": "Terrain analysis rate. Start with 30 fps. Higher values use more processing. The large map is capped at 30 fps.",
+  "Limite visual: {target} Hz • redesenho somente quando necessário": "Visual limit: {target} Hz • redraw only when needed",
+  "Rastreamento visual: {rate} atualizações/s • a taxa real depende do computador.": "Visual tracking: {rate} updates/s • actual rates depend on the computer."
 }

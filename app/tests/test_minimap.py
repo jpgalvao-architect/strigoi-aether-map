@@ -127,5 +127,5 @@ def test_minimap_selection_is_separate_from_full_map(qapp,tmp_path):
     page.accept_area(QRect(100,40,332,214))
     assert window.context.prefs.overlay.minimap_area
     assert not window.context.prefs.overlay.capture_area
-    assert window.context.prefs.overlay.render_hz==240
+    assert window.context.prefs.overlay.render_hz==60
     window.close()

@@ -1,6 +1,8 @@
 # Strigoi Aether Map
 
-**AION 2 Companion App · 0.9.0-beta.11 · Windows x64**
+**AION 2 Companion App · 0.9.0-beta.12 · Windows x64**
+
+Beta 12 puts frequency controls in **Overlay → Overlay performance**. Choose 15–360 Hz for drawing and 10–60 fps for minimap capture (up to 30 fps on the full map), with immediate changes and saved preferences. New installations start at 60 Hz/30 fps; existing choices are preserved. Stationary markers no longer redraw continuously, and visual processing uses fewer threads. In-game FPS improvement still needs checking after updating.
 
 Beta 11 adds Pets with 208 original portraits, favorites, Insight goals, a map filter, and a compact quick-menu panel. The initial collection matched two SA logins. Farming sites are client references without guaranteed current presence; live radar distance and direction are not available yet. See [Pets](docs/PETS.en-US.md).
 
@@ -23,7 +25,7 @@ The app doubles minimap symbols, adds arrows to cube sites with supplied height 
 The app shows the combat panel in recognized dungeons and 1v1/5v5 arenas and hides it on exit. Entry and exit signals were observed for one map per arena mode in SA; other rotating maps still need identification. PvP totals include outgoing attacks by confirmed participants and exclude received damage. Calculation remains experimental without live accuracy validation; the complete 5v5 team roster is not confirmed yet. Quick controls can hide the panel without stopping capture.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.11) ·
+[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.9.0-beta.12) ·
 [Português](README.md)
 
 Your exploration journal: maps, gatherables, possible cube locations and
@@ -34,7 +36,7 @@ observed DPS/share, explicit summon ownership, target filtering and local
 history. SA capture still needs validation; results are marked partial.
 See [Combat](docs/COMBAT.md) for current scope and limitations.
 
-Run `StrigoiAetherMap-Setup-0.9.0-beta.11.exe`, choose English and review the terms
+Run `StrigoiAetherMap-Setup-0.9.0-beta.12.exe`, choose English and review the terms
 before accepting. Setup installs for the current user and includes an
 uninstaller and corresponding source code. Existing preferences and visits
 are preserved. English is the default for a fresh installation; an explicit
@@ -53,7 +55,7 @@ This changes the interface, not your region or event time zone.
 Choose layers in the atlas or Overlay; the same selection applies to the
 atlas, minimap and full map. Select only the minimap terrain once.
 Opening the full map with M switches the overlay automatically; closing
-it returns to the minimap. The draw rate is a target, not a guarantee.
+it returns to the minimap. Set drawing and reading rates in **Overlay performance**, starting at 60 Hz/30 fps. Rates are limits, not performance guarantees.
 
 In Events, enable the floating panel and select an event to track.
 Expand it to view that event's times today; Automatic follows the next event.
