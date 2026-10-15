@@ -255,6 +255,92 @@
       "title": "OverlaySettings",
       "type": "object"
     },
+    "PetSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "map_filter": {
+          "default": "all",
+          "enum": [
+            "all",
+            "favorites",
+            "needed"
+          ],
+          "title": "Map Filter",
+          "type": "string"
+        },
+        "focus_id": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Focus Id"
+        },
+        "layer_release": {
+          "default": "",
+          "title": "Layer Release",
+          "type": "string"
+        },
+        "panel_visible": {
+          "default": false,
+          "title": "Panel Visible",
+          "type": "boolean"
+        },
+        "panel_expanded": {
+          "default": false,
+          "title": "Panel Expanded",
+          "type": "boolean"
+        },
+        "panel_position": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Panel Position"
+        },
+        "auto_collection": {
+          "default": true,
+          "title": "Auto Collection",
+          "type": "boolean"
+        },
+        "region": {
+          "default": "sa",
+          "enum": [
+            "sa",
+            "eu",
+            "nae",
+            "naw",
+            "asia",
+            "kr",
+            "tw"
+          ],
+          "title": "Region",
+          "type": "string"
+        }
+      },
+      "title": "PetSettings",
+      "type": "object"
+    },
     "QuickMenuSettings": {
       "additionalProperties": false,
       "properties": {
@@ -389,6 +475,9 @@
     },
     "quick_menu": {
       "$ref": "#/$defs/QuickMenuSettings"
+    },
+    "pets": {
+      "$ref": "#/$defs/PetSettings"
     },
     "remote_events_url": {
       "default": "",

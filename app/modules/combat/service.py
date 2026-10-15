@@ -10,6 +10,7 @@ from app.infrastructure.storage import PACKAGE
 from app.modules.combat.engine import CombatEngine
 from app.modules.combat.arenas import arena_mode, timer_matches_map
 from app.modules.combat.history import CombatHistory
+from app.services.game_feed import GameFeedService
 
 HELPER = PACKAGE / "assets/combat/strigoi-combat.exe"
 
@@ -21,7 +22,7 @@ class CombatService(QObject):
     run_started = Signal()
     MAX_BUFFER = 2 * 1024 * 1024
 
-    def __init__(self, context):
+    def __init__(self, context, feed=None):
         super().__init__()
         self.context = context
         self.engine = CombatEngine()
@@ -30,8 +31,9 @@ class CombatService(QObject):
         except (OSError, ValueError, sqlite3.Error):
             self.history = None
             context.messages.append("Histórico de combate indisponível; arquivo preservado")
-        self.process = None
-        self.buffer = bytearray()
+        self.feed = feed or GameFeedService()
+        self.feed.message.connect(self.from_feed)
+        self.feed.ended.connect(self.finished)
         self.status = "Medição desligada"
         self.last_health = (0, 0, 0)
         self.draining = False
@@ -54,6 +56,26 @@ class CombatService(QObject):
         self.checkpoint.setInterval(10000)
         self.checkpoint.timeout.connect(self.save)
 
+    @property
+    def process(self):
+        return self.feed.process
+
+    @process.setter
+    def process(self, value):
+        self.feed.process = value
+
+    def from_feed(self, message):
+        if 'combat' not in self.feed.consumers:
+            return
+        if message.get('type') == 'feed_quality':
+            if message.get('reason') != 'pet_record_rejected':
+                self.engine.mark_partial(message.get('reason','capture_gap'))
+            return
+        try:
+            self.accept(message)
+        except (ValueError, TypeError, KeyError, OverflowError):
+            self.engine.mark_partial('invalid_event')
+
     def enable_automatic(self):
         self.runtime = True
         self.watchdog.start()
@@ -63,10 +85,10 @@ class CombatService(QObject):
         if self.closed or not self.runtime:
             return
         if not self.context.prefs.combat.auto_capture:
-            if self.process is not None:
+            if 'combat' in self.feed.consumers or (self.process is not None and not self.feed.consumers):
                 self.stop()
             self.status = "Medição automática desativada"
-        elif self.process is None:
+        elif self.process is None or (self.feed.consumers and 'combat' not in self.feed.consumers):
             if sys.platform != "win32" or not HELPER.is_file():
                 self.status = "Coletor de combate indisponível"
             elif not (Path(os.environ.get("WINDIR", "C:/Windows")) / "System32/Npcap/wpcap.dll").is_file():
@@ -76,15 +98,8 @@ class CombatService(QObject):
         self.changed.emit()
 
     def start(self, name=""):
-        if self.process is not None:
-            if self.engine.active:
-                return False
-            self.engine.start_run(name)
-            self.auto_instances = True
-            self.instance_timers.clear()
-            self.instance_floor = 0
-            self.changed.emit()
-            return True
+        if self.process is not None and self.engine.active and 'combat' in self.feed.consumers:
+            return False
         if sys.platform != "win32" or not HELPER.is_file():
             self.status = "Coletor de combate indisponível"
             self.changed.emit()
@@ -94,62 +109,23 @@ class CombatService(QObject):
         self.auto_instances = True
         self.instance_timers = {}
         self.instance_floor = 0
-        self.buffer.clear()
         self.last_health = (0, 0, 0)
-        self.protocol_ready = False
+        self.protocol_ready = self.feed.protocol_ready
         self.status = "Preparando leitura de combate"
-        process = QProcess(self)
-        self.process = process
-        process.setProgram(str(HELPER))
-        process.setArguments(["--live"])
-        process.readyReadStandardOutput.connect(self.read)
-        process.readyReadStandardError.connect(lambda: process.readAllStandardError())
-        process.finished.connect(self.finished)
-        process.errorOccurred.connect(self.process_error)
-        process.start()
+        self.feed.acquire('combat')
         self.timer.start()
         self.checkpoint.start()
         self.changed.emit()
         return True
 
     def process_error(self, _):
-        self.status = "Falha ao abrir coletor de combate"
-        self.engine.mark_partial("capture_error")
-        if self.process and self.process.state() == QProcess.ProcessState.NotRunning:
-            self.finished()
-        self.changed.emit()
+        self.feed.process_error(_)
 
     def read(self):
-        if self.process is None:
-            return
-        self.buffer.extend(bytes(self.process.readAllStandardOutput()))
-        if len(self.buffer) > self.MAX_BUFFER:
-            self.engine.mark_partial("ipc_overflow")
-            self.status = "Leitura interrompida: fila excedida"
-            self.stop()
-            return
-        if not self.draining:
-            self.drain()
+        self.feed.read()
 
     def drain(self):
-        self.draining = True
-        for _ in range(500):
-            end = self.buffer.find(b"\n")
-            if end < 0:
-                break
-            line = bytes(self.buffer[:end])
-            del self.buffer[:end + 1]
-            try:
-                message = json.loads(line)
-                if not isinstance(message, dict):
-                    raise ValueError("Invalid helper message")
-                self.accept(message)
-            except (ValueError, TypeError, KeyError, OverflowError):
-                self.engine.mark_partial("invalid_event")
-        if b"\n" in self.buffer:
-            QTimer.singleShot(0, self.drain)
-        else:
-            self.draining = False
+        self.feed.drain()
 
     def accept(self, message):
         if message.get("type") == "hello":
@@ -280,19 +256,12 @@ class CombatService(QObject):
                 self.error.emit("Não foi possível salvar o histórico de combate")
 
     def finished(self, *_):
-        process = self.process
-        if process is None:
+        if not self.engine.active and not self.auto_instances:
             return
-        self.read()
-        # Consume all already received normalized events before finalizing.
-        while b"\n" in self.buffer:
-            self.drain()
         self.engine.stop_run("interrupted")
         self.in_instance = False
         self.auto_instances = False
         self.save()
-        self.process = None
-        process.deleteLater()
         self.timer.stop()
         self.checkpoint.stop()
         self.changed.emit()
@@ -303,12 +272,7 @@ class CombatService(QObject):
         self.instance_timers.clear()
         self.engine.stop_run()
         self.save()
-        process = self.process
-        if process:
-            process.write(b"stop\n")
-            if not process.waitForFinished(3000):
-                process.kill()
-                process.waitForFinished(1000)
+        self.feed.release('combat')
         self.timer.stop()
         self.checkpoint.stop()
         self.changed.emit()

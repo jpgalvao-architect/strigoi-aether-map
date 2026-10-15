@@ -78,7 +78,7 @@ class AtlasPage(QWidget):
         self.refresh()
 
     def refresh(self):
-        dataset = self.context.dataset
+        dataset = self.context.atlas_dataset
         if self.dataset_identity is not dataset:
             self.dataset_identity = dataset
             self.maps.blockSignals(True)
@@ -161,14 +161,15 @@ class AtlasPage(QWidget):
             self.context.save()
 
     def refresh_points(self):
-        definition = next(m for m in self.context.dataset.maps if m.id == self.context.prefs.map_id)
+        dataset = self.context.atlas_dataset
+        definition = next(m for m in dataset.maps if m.id == self.context.prefs.map_id)
         self.origin.hide()
         self.origin.setToolTip(definition.source)
         try:
             if self.view.map is not definition:
                 self.view.set_map(definition)
-            points = filter_points(self.context.dataset, self.context.prefs, FilterQuery(map_id=definition.id, resource_id=self.resource.currentData() or "", search=self.search.text(), rarity=self.rarity.currentData() or "", cubes_only=self.cubes_only))
-            self.view.set_points(self.context.dataset, self.context.prefs, points)
+            points = filter_points(dataset, self.context.prefs, FilterQuery(map_id=definition.id, resource_id=self.resource.currentData() or "", search=self.search.text(), rarity=self.rarity.currentData() or "", cubes_only=self.cubes_only))
+            self.view.set_points(dataset, self.context.prefs, points)
             self.count.setText(f"{len(points)} pontos visíveis")
         except (OSError, ValueError) as exc:
             self.count.setText(f"Mapa indisponível: {exc}")
@@ -183,6 +184,8 @@ class AtlasPage(QWidget):
         elif point.resource_id=='cube-spawns':
             height=next((piece.strip()+'.' for piece in point.notes.split('.') if 'altura mediana' in piece),'')
             text+='\n\nLocal possível de aparecimento.'+('\n'+height if height else '')
+        elif point.resource_id.startswith('pet-'):
+            text+='\n\n'+point.notes
         else:
             text+='\n\nMarque sua visita para acompanhar a exploração.'
         self.detail.setText(text)

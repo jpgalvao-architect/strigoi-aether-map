@@ -31,7 +31,7 @@ class MapDefinition(Model):
 class Category(Model):
     id: str
     name: str
-    icon: Literal["diamond", "circle", "leaf", "wood", "star", "cube"] = "circle"
+    icon: Literal["diamond", "circle", "leaf", "wood", "star", "cube", "pets"] = "circle"
     color: str = Field(pattern=r"^#[0-9a-fA-F]{6}$")
 
 
@@ -249,6 +249,17 @@ class QuickMenuSettings(Model):
     position: tuple[int, int] | None = None
 
 
+class PetSettings(Model):
+    map_filter: Literal['all', 'favorites', 'needed'] = 'all'
+    focus_id: int | None = Field(default=None, gt=0)
+    layer_release: str = ''
+    panel_visible: bool = False
+    panel_expanded: bool = False
+    panel_position: tuple[int, int] | None = None
+    auto_collection: bool = True
+    region: Literal['sa', 'eu', 'nae', 'naw', 'asia', 'kr', 'tw'] = 'sa'
+
+
 class Preferences(Model):
     schema_version: Literal[1] = 1
     ui_language: Literal['pt_BR','en_US'] | None = None
@@ -267,6 +278,7 @@ class Preferences(Model):
     overlay: OverlaySettings = Field(default_factory=OverlaySettings)
     combat: CombatSettings = Field(default_factory=CombatSettings)
     quick_menu: QuickMenuSettings = Field(default_factory=QuickMenuSettings)
+    pets: PetSettings = Field(default_factory=PetSettings)
     remote_events_url: str = ""
     remote_auto_refresh: bool = False
     remote_interval_minutes: int = Field(default=30, ge=5, le=1440)

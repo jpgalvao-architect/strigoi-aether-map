@@ -19,7 +19,8 @@
             "leaf",
             "wood",
             "star",
-            "cube"
+            "cube",
+            "pets"
           ],
           "title": "Icon",
           "type": "string"

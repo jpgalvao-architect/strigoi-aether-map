@@ -110,3 +110,22 @@ Alterações nos dados: seleção de dois mapas e tipos de ponto, conversão de 
 Aether é o mascote próprio do app, criado com geração de imagens a partir de inspiração visual solicitada pelo usuário. Os ícones SVG são originais do projeto. A licença comunitária de dados não se aplica às novas ilustrações, aos ícones próprios, aos nomes do jogo ou ao código próprio. Os assets e prompts estão em BRANDING.md.
 
 O perfil SA corresponde a uma região de horários; os conjuntos geográficos do projeto consultado não têm uma edição exclusiva SA. Veja [o estudo](REFERENCE_REVIEW.md).
+
+## Pets
+
+O catálogo contém 208 identidades com retratos originais obtidos do CDN de
+dados do jogo da NC Corporation. URLs e hashes estão em
+`data-sources/pet-portraits.json`; direitos e limites em
+`third-party-notices/pet-portraits/NOTICE.txt`.
+
+Nomes, famílias, custos de Insight, monstros e locais provêm das páginas de
+dados do cliente publicadas em [AION 2 Pets](https://aion2.app/db/pets).
+Cada pet e cada local conserva sua URL de origem. O manifest
+`data-sources/pets.json` identifica o build de referência, as quantidades,
+os arquivos e a normalização dos limites originais do mapa completo.
+
+Esses locais são referências de spawn, não NPCs rastreados em tempo real.
+A presença atual e a disponibilidade em SA não foram certificadas. Um pet
+sem progresso observado ou registrado permanece desconhecido; não é contado
+automaticamente como não adquirido. Retrato, família, Pet Insight e nível da
+família são informações distintas.

@@ -54,3 +54,20 @@ K4os.Compression.LZ4 1.3.8 mantém MIT. O helper inclui runtime .NET; os
 avisos e URLs das fontes estão em `app/assets/combat/notices/`.
 Npcap é obtido diretamente do fabricante pelo usuário durante a instalação,
 com assistente e aceite próprios; o componente não é embutido na distribuição.
+
+## Coleção de pets
+
+Os retratos PNG de 208 pets são cópias intactas do CDN oficial de dados de
+AION 2 da NC Corporation. As imagens mantêm os direitos de seu titular,
+separados da GPLv3. URLs e hashes constam em `data-sources/pet-portraits.json`;
+o aviso acompanha `third-party-notices/pet-portraits/`.
+
+Nomes, famílias, custos de Insight, monstros e locais são fatos extraídos das
+páginas de dados do cliente publicadas por aion2.app, com fonte por registro.
+São referências do cliente de 18 de setembro de 2026, não uma certificação
+de disponibilidade em SA. O aplicativo não incorpora textos de guias,
+código da interface ou imagens modificadas desse site.
+
+Os leitores de coleção, ganho de almas e nível foram implementados a partir
+dos layouts GPLv3 identificados em `native/combat/vendor/PET-PROTOCOL-NOTICE.md`.
+A coleção, a interface e o armazenamento local do Strigoi são próprios.

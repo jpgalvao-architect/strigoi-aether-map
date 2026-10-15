@@ -47,6 +47,13 @@ class MainWindow(QMainWindow):
         from app.modules.combat.service import CombatService
         from app.ui.combat_page import CombatPage
         self.combat = CombatService(context)
+        from app.modules.pets.service import PetService
+        from app.ui.pets_page import PetsPage
+        self.pets = PetService(context, self.combat.feed)
+        context.pets = self.pets
+        self.pets.sync_map_preferences()
+        self.pets.changed.connect(self.pets.sync_map_preferences)
+        self.pets.changed.connect(context.changed.emit)
         root = QWidget()
         root_layout = QHBoxLayout(root)
         root_layout.setContentsMargins(0, 0, 0, 0)
@@ -57,7 +64,7 @@ class MainWindow(QMainWindow):
         sidebar.setFixedWidth(228)
         side = QVBoxLayout(sidebar)
         side.setContentsMargins(16, 22, 16, 18)
-        side.setSpacing(7)
+        side.setSpacing(5)
         brand = MascotWidget(compact=True)
         brand.setFixedSize(74, 67)
         side.addWidget(brand, 0, Qt.AlignmentFlag.AlignHCenter)
@@ -72,19 +79,23 @@ class MainWindow(QMainWindow):
         game.setAlignment(Qt.AlignmentFlag.AlignCenter)
         side.addWidget(game)
         side.addSpacing(24)
-        self.nav = []
-        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about')]
-        for index, (text, name) in enumerate(entries):
+        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about'),('Pets','pets')]
+        self.page_indices = {name:index for index, (_, name) in enumerate(entries)}
+        self.nav = [None]*len(entries)
+        # Keep existing indices compatible, with Pets visually next to exploration.
+        for index in [0,1,2,3,11,4,5,6,7,8,9,10]:
+            text, name = entries[index]
             entry = QPushButton(text)
             entry.setIcon(ui_icon(name))
             entry.setIconSize(QSize(22,22))
             entry.setAccessibleName(text)
             entry.setObjectName("nav")
+            entry.setStyleSheet('padding:9px 16px;')
             entry.setCheckable(True)
             entry.setCursor(Qt.CursorShape.PointingHandCursor)
-            entry.clicked.connect(lambda checked, number=index: self.navigate(number))
+            entry.clicked.connect(lambda checked, key=name: self.navigate(key))
             side.addWidget(entry)
-            self.nav.append(entry)
+            self.nav[index] = entry
         side.addStretch()
         side.addWidget(label("Seu caderno de exploração.", "subtitle", True))
         side.addWidget(label(f"v{__version__}", "subtitle"))
@@ -107,7 +118,8 @@ class MainWindow(QMainWindow):
         self.sonar_page = SonarPage(context, self.sonar, self.sonar_alert)
         self.donate = DonatePage()
         self.combat_page = CombatPage(context, self.combat)
-        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page()]
+        self.pets_page = PetsPage(context, self.pets, self.show_pet_farm)
+        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page(), self.pets_page]
         for page in self.pages:
             scroll = QScrollArea()
             scroll.setWidgetResizable(True)
@@ -136,6 +148,7 @@ class MainWindow(QMainWindow):
                 self.overlay_visibility.register(window, role)
             self.overlay_visibility.start()
             QTimer.singleShot(0, self.combat.enable_automatic)
+            QTimer.singleShot(0, self.pets.enable_automatic)
 
     def refresh_banner(self):
         self.banner.setVisible(self.context.dataset.demo or self.context.feed.demo)
@@ -150,9 +163,28 @@ class MainWindow(QMainWindow):
             self.banner.setText(self.context.dataset.coverage or "BASE LOCAL / Origem e compatibilidade não informadas")
 
     def navigate(self, index):
+        if isinstance(index, str):
+            index = self.page_indices[index]
         self.stack.setCurrentIndex(index)
         for number, entry in enumerate(self.nav):
             entry.setChecked(number == index)
+
+    def show_pet_farm(self, pet_id):
+        candidates = self.pets.farm.by_pet.get(pet_id, [])
+        maps = {m.id for m in self.context.atlas_dataset.maps}
+        site = next((s for s in candidates if s.map_id == self.context.prefs.map_id),
+                    next((s for s in candidates if s.map_id in maps), None))
+        if site is None:
+            return
+        self.context.prefs.map_id = site.map_id
+        self.context.prefs.overlay.map_id = site.map_id
+        self.context.prefs.pets.focus_id = pet_id
+        self.context.prefs.pets.map_filter = 'all'
+        self.context.prefs.disabled_categories.discard('pets')
+        self.pets.sync_map_preferences()
+        self.context.save()
+        self.atlas.resource.setCurrentIndex(self.atlas.resource.findData(f'pet-{pet_id}'))
+        self.navigate('atlas')
 
     def check_alerts(self):
         try:
@@ -181,7 +213,7 @@ class MainWindow(QMainWindow):
         body.addWidget(label('Como o aplicativo funciona', 'eyebrow'))
         body.addWidget(label('O Strigoi funciona ao lado do AION 2. Os marcadores, o painel de eventos e os avisos do Sonar aparecem em janelas externas de overlay sobre o jogo. Para acompanhar o mapa, o app analisa a imagem da tela; o Sonar recebe o áudio do aplicativo pelo Windows. O Atlas e a agenda consultam dados locais.', 'subtitle', True))
         body.addWidget(label('Não injetamos código nas DLLs do jogo, não alteramos seus arquivos e não lemos sua memória. Os overlays são desenhados pelo próprio Strigoi, fora do processo do AION 2.', 'subtitle', True))
-        body.addWidget(label('O módulo experimental de Combate também pode ler passivamente o tráfego recebido pela conexão do jogo, usando Npcap. Com a medição automática habilitada, a leitura começa ao abrir o Strigoi e aguarda o jogo. Você pode desativá-la nas Configurações. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.', 'subtitle', True))
+        body.addWidget(label('Combate e Pets podem ler passivamente os dados recebidos pela conexão do jogo, usando Npcap. A leitura automática aguarda o jogo e pode ser desativada nas Configurações de Combate e na aba Pets. Os dois módulos compartilham a mesma conexão. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.', 'subtitle', True))
         body.addWidget(label('Acessibilidade auditiva', 'eyebrow'))
         body.addWidget(label('O Sonar foi desenvolvido exclusivamente como recurso de acessibilidade para auxiliar pessoas surdas ou com deficiência auditiva a encontrar cubos ocultos com mais facilidade. Ele transforma uma pista sonora do jogo em um aviso visual, reduzindo a dependência da audição durante a exploração.', 'subtitle', True))
         body.addWidget(label('O aviso indica um som compatível com a referência e pode falhar. Não confirma a presença nem informa a posição exata do cubo.', 'subtitle', True))
@@ -220,6 +252,8 @@ class MainWindow(QMainWindow):
         self.quick_menu.shutdown()
         self.combat_page.shutdown()
         self.combat.shutdown()
+        self.pets.shutdown()
+        self.combat.feed.shutdown()
         self.alert_timer.stop()
         self.overlay.stop()
         self.sonar.stop()

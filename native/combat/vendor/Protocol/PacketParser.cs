@@ -28,6 +28,7 @@ public sealed class PacketParser
     public Dictionary<ushort, long> OpcodeCounts { get; } = new();
     public long DamageRecords { get; private set; }
     public long DamageRejected { get; private set; }
+    public long PetsRejected { get; private set; }
     public long Heartbeats { get; private set; }
 
     /// <summary>Optional raw packet tap for the diagnostics dump.</summary>
@@ -43,6 +44,19 @@ public sealed class PacketParser
 
         switch (opcode)
         {
+            case Opcodes.PetCollection:
+                if (!ParsePetCollection(body)) PetsRejected++;
+                break;
+            case Opcodes.PetSoulAcquired:
+                if (body.Length >= 9 && PetIdAt(body, 1) is { } soulPet && Wire.U32(body, 5) is > 0 and <= 100000)
+                    Emit(new PetSoulAcquiredEvent(TimeMs, soulPet, (int)Wire.U32(body, 5)));
+                else PetsRejected++;
+                break;
+            case Opcodes.PetLevelReached:
+                if (body.Length >= 10 && PetIdAt(body, 2) is { } levelPet && Wire.U32(body, 6) <= 10)
+                    Emit(new PetLevelReachedEvent(TimeMs, levelPet, (int)Wire.U32(body, 6)));
+                else PetsRejected++;
+                break;
             case Opcodes.Heartbeat:
                 Heartbeats++;
                 break;
@@ -108,6 +122,33 @@ public sealed class PacketParser
                 }
                 break;
         }
+    }
+
+    // Pet record layouts documented by GPLv3 A2Tools/Aether; see PET-PROTOCOL-NOTICE.md.
+    private static int? PetIdAt(ReadOnlySpan<byte> body, int offset)
+    {
+        if(offset < 0 || offset+4 > body.Length) return null;
+        var value=Wire.U32(body,offset);
+        return value is > 0 and < 1000000 ? (int)value : null;
+    }
+
+    private bool ParsePetCollection(ReadOnlySpan<byte> body)
+    {
+        int cursor=4;
+        if(!Wire.TryVarint(body,ref cursor,out var count) || count>2048 || cursor+(long)count*12>body.Length)return false;
+        var levels=new List<PetLevelInfo>();var levelIds=new HashSet<int>();
+        for(int i=0;i<count;i++,cursor+=12) {
+            if(PetIdAt(body,cursor) is not {} id || Wire.U32(body,cursor+8)>10 || !levelIds.Add(id))return false;
+            levels.Add(new PetLevelInfo(id,(int)Wire.U32(body,cursor+8)));
+        }
+        if(!Wire.TryVarint(body,ref cursor,out var soulCount) || soulCount>2048 || cursor+(long)soulCount*8>body.Length)return false;
+        var souls=new List<PetSoulInfo>();var soulIds=new HashSet<int>();
+        for(int i=0;i<soulCount;i++,cursor+=8) {
+            if(PetIdAt(body,cursor) is not {} id || Wire.U32(body,cursor+4)>100000 || !soulIds.Add(id))return false;
+            souls.Add(new PetSoulInfo(id,(int)Wire.U32(body,cursor+4)));
+        }
+        Emit(new PetCollectionEvent(TimeMs,levels,souls));
+        return true;
     }
 
     private void ScanEmbeddedBundles(ReadOnlySpan<byte> b)

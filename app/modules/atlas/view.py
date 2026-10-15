@@ -18,6 +18,10 @@ def marker_path(shape: str, radius: float = 7) -> QPainterPath:
     path = QPainterPath()
     if shape == "circle":
         path.addEllipse(QPointF(0, 0), radius, radius)
+    elif shape == 'pets':
+        path.addEllipse(QPointF(0, radius*.35), radius*.55, radius*.52)
+        for x, y in [(-.68,-.1),(-.28,-.66),(.28,-.66),(.68,-.1)]:
+            path.addEllipse(QPointF(x*radius,y*radius), radius*.23, radius*.29)
     elif shape == "wood":
         path.addRoundedRect(QRectF(-radius, -radius*.7, radius*2, radius*1.4), 2, 2)
     elif shape == "leaf":

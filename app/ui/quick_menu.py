@@ -126,7 +126,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         footer = QHBoxLayout()
         self.note = label("", "quickStatus", True); footer.addWidget(self.note, 1)
         gear = QToolButton(); gear.setIcon(icon("settings")); gear.setToolTip("Abrir Configurações")
-        gear.clicked.connect(lambda: self.open_page(5)); footer.addWidget(gear); body.addLayout(footer)
+        gear.clicked.connect(lambda: self.open_page('settings')); footer.addWidget(gear); body.addLayout(footer)
         self.feedback = label("", "quickStatus", True); self.feedback.hide(); body.addWidget(self.feedback)
         position = self.context.prefs.quick_menu.position
         if position is not None:
@@ -197,7 +197,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         if enabled:
             self.main.sonar_page.refresh_processes(); self.main.sonar_page.start()
             if not self.main.sonar.active:
-                self.open_page(7)
+                self.open_page('sonar')
         else:
             self.main.sonar.stop()
         self.refresh()

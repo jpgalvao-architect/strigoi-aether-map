@@ -110,15 +110,17 @@ def test_automatic_combat_retries_without_duplicate_collectors_and_can_be_disabl
 
 def test_main_runtime_starts_automatic_combat_but_preview_never_captures(qapp, tmp_path, monkeypatch):
     from app.modules.combat.service import CombatService
+    from app.modules.pets.service import PetService
     from app.ui.overlay_visibility import OverlayVisibility
     started = []
     monkeypatch.setattr(CombatService, "enable_automatic", lambda service: started.append(service))
+    monkeypatch.setattr(PetService, "enable_automatic", lambda service: started.append(service))
     monkeypatch.setattr(OverlayVisibility, "start", lambda gate: gate.set_context(True))
     preview = MainWindow(AppContext(tmp_path / "preview"))
     actual = MainWindow(AppContext(tmp_path / "actual"), runtime=True)
     try:
         qapp.processEvents()
-        assert started == [actual.combat]
+        assert started == [actual.combat, actual.pets]
         assert not hasattr(actual.combat_page, "name")
         assert not hasattr(actual.combat_page, "start_button")
         assert not hasattr(actual.combat_page, "stop_button")

@@ -37,6 +37,13 @@ public enum GameClass : byte
 /// <summary>Everything the combat engine consumes. Time is Unix milliseconds taken from the packet capture.</summary>
 public abstract record GameEvent(long TimeMs);
 
+public sealed record PetLevelInfo(int PetId, int Level);
+public sealed record PetSoulInfo(int PetId, int Souls);
+public sealed record PetCollectionEvent(long TimeMs, IReadOnlyList<PetLevelInfo> Levels,
+    IReadOnlyList<PetSoulInfo> Souls) : GameEvent(TimeMs);
+public sealed record PetSoulAcquiredEvent(long TimeMs, int PetId, int Amount) : GameEvent(TimeMs);
+public sealed record PetLevelReachedEvent(long TimeMs, int PetId, int Level) : GameEvent(TimeMs);
+
 /// <param name="Damage">Total damage of the record, additional hits included.</param>
 /// <param name="HitCount">1 + number of additional hits carried by the record.</param>
 /// <param name="PowerScalar">The actor's damage multiplier in 1/100 % (players 16000–22000, mobs 10000); 0 if absent.

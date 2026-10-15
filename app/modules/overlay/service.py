@@ -412,9 +412,10 @@ class OverlayService(QObject):
                 self.stop()
             return
         prefs = self.context.prefs
-        resources = {r.id: r for r in self.context.dataset.resources}
-        categories = {c.id: c for c in self.context.dataset.categories}
-        points = filter_points(self.context.dataset, prefs, FilterQuery(map_id=prefs.overlay.map_id, overlay=True))
+        dataset = self.context.atlas_dataset
+        resources = {r.id: r for r in dataset.resources}
+        categories = {c.id: c for c in dataset.categories}
+        points = filter_points(dataset, prefs, FilterQuery(map_id=prefs.overlay.map_id, overlay=True))
         self.window.markers = [(p.x, p.y, categories[resources[p.resource_id].category].color,
             point_marker_shape(p,categories[resources[p.resource_id].category].icon)) for p in points]
         self.window.scale = prefs.overlay.scale

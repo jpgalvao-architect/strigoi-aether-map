@@ -12,6 +12,7 @@ _qt_translator = None
 _catalog = json.loads((Path(__file__).resolve().parents[1]/'assets/i18n/en_US.json').read_text(encoding='utf-8'))
 _catalog.update(json.loads((Path(__file__).resolve().parents[1]/'assets/i18n/combat_en_US.json').read_text(encoding='utf-8')))
 _catalog.update(json.loads((Path(__file__).resolve().parents[1]/'assets/i18n/quick_menu_en_US.json').read_text(encoding='utf-8')))
+_catalog.update(json.loads((Path(__file__).resolve().parents[1]/'assets/i18n/pets_en_US.json').read_text(encoding='utf-8')))
 _patterns = []
 _fragments = sorted(((a,b) for a,b in _catalog.items() if a and '{' not in a), key=lambda pair:len(pair[0]),reverse=True)
 for source, target in _catalog.items():
@@ -36,6 +37,8 @@ def tr(text):
 def _translate(text):
     if text in _catalog:
         return _catalog[text]
+    if '\n' in text:
+        return '\n'.join(tr(line) for line in text.split('\n'))
     for pattern, names, target in _patterns:
         found = pattern.match(text)
         if found:

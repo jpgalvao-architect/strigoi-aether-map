@@ -22,7 +22,7 @@ strigoi = "app.main:main"
 include = ["app*"]
 
 [tool.setuptools.package-data]
-app = ["data/*.json", "data/profiles/*.json", "assets/*.svg", "assets/*.png", "assets/*.ico", "assets/*.json", "assets/icons/*.svg", "assets/icons/classes/*.svg", "assets/maps/*.svg", "assets/maps/*.webp", "assets/sonar/*.npz", "assets/sonar/*.exe", "assets/sonar/*.json", "assets/combat/*.exe", "assets/combat/*.json", "assets/combat/notices/**/*", "assets/i18n/*.json", "assets/legal/*.txt", "config/*.json"]
+app = ["data/*.json", "data/profiles/*.json", "assets/*.svg", "assets/*.png", "assets/*.ico", "assets/*.json", "assets/icons/*.svg", "assets/icons/classes/*.svg", "assets/icons/classes/*.png", "assets/pets/*.png", "assets/maps/*.svg", "assets/maps/*.webp", "assets/sonar/*.npz", "assets/sonar/*.exe", "assets/sonar/*.json", "assets/combat/*.exe", "assets/combat/*.json", "assets/combat/notices/**/*", "assets/i18n/*.json", "assets/legal/*.txt", "config/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["app/tests"]

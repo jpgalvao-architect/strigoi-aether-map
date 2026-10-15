@@ -18,6 +18,11 @@ class AppContext(QObject):
     events_changed = Signal()
     error = Signal(str)
 
+    @property
+    def atlas_dataset(self):
+        pets = getattr(self, 'pets', None)
+        return pets.farm.dataset(self.dataset, pets.store.catalogue) if pets else self.dataset
+
     def __init__(self, directory: Path):
         super().__init__()
         self.directory = directory

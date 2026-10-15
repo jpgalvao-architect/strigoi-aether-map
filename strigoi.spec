@@ -18,6 +18,7 @@ data += collect_data_files('app', includes=['assets/sonar/*.npz', 'assets/sonar/
 data += collect_data_files('app', includes=['assets/combat/*.json', 'assets/combat/notices/**/*'])
 data += collect_data_files('app', includes=['assets/overlay/*.ps1'])
 data += collect_data_files('app', includes=['assets/icons/classes/*.png'])
+data += collect_data_files('app', includes=['assets/pets/*.png'])
 a = Analysis(['launcher.py'], pathex=['.'], binaries=[('app/assets/sonar/sonar-capture.exe', 'app/assets/sonar'), ('app/assets/combat/strigoi-combat.exe', 'app/assets/combat')], datas=data,
              hiddenimports=['cv2', 'mss', 'numpy', 'PySide6.QtSvg', 'PySide6.QtSvgWidgets'],
              excludes=['PySide6.QtWebEngineCore', 'PySide6.QtWebEngineWidgets', 'PySide6.QtPdf', 'pytest'], noarchive=False)

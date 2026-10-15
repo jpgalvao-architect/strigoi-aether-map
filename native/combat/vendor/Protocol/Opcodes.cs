@@ -6,6 +6,9 @@ namespace AionMeter.Core.Protocol;
 /// </summary>
 public static class Opcodes
 {
+    public const ushort PetCollection = 0x0090;
+    public const ushort PetSoulAcquired = 0x0D90;
+    public const ushort PetLevelReached = 0x1490;
     public static ushort Of(byte first, byte second) => (ushort)(first << 8 | second);
 
     public const ushort Heartbeat = 0x0036;      // 8 data bytes, ~19/s

@@ -26,3 +26,10 @@ validated name/server/class fields. Next-slot recovery scans at most128bytes
 with name, server, class and level checks, independently of the optional CP
 offset. Vacant or unreadable earlier slots no longer hide valid later members;
 unreadable mandatory fields still mark the roster incomplete.
+
+2026-10-14 pets: add bounded readers for collection 0090, soul gain 0D90,
+and insight-level 1490, based on the separately attributed GPLv3 layouts in
+PET-PROTOCOL-NOTICE.md. Reject complete snapshots on duplicate IDs,
+truncation, oversized lists, or out-of-range fields; count rejected pet
+records separately from damage. The bridge forwards only typed pet fields
+and counters. No packet recording, injection, or network transmission is added.

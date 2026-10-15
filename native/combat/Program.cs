@@ -95,7 +95,32 @@ if (args.Contains("--self-test")) {
     if(!events.OfType<CastEvent>().Any(e=>e.ActorId==2 && e.SkillCode==16280140 && e.TargetId==50))
         throw new Exception("Raw cast variant was lost");
     if(!events.OfType<DamageEvent>().Any(e=>e.PowerScalar==16000))throw new Exception("Damage scalar was lost");
-    Console.WriteLine("SELF_TEST_OK: connected clients, TCP, damage, malformed record, serverless identity, partial/full roster, optional stats, vacant/unread slots, spirit owner, raw cast, scalar; no capture"); return;
+    var pets = new List<byte>(new byte[4]); pets.Add(1);
+    pets.AddRange(BitConverter.GetBytes((uint)1127)); pets.AddRange(new byte[4]);
+    pets.AddRange(BitConverter.GetBytes((uint)2)); pets.Add(1);
+    pets.AddRange(BitConverter.GetBytes((uint)1127)); pets.AddRange(BitConverter.GetBytes((uint)9));
+    parser.Handle(Opcodes.PetCollection,pets.ToArray());
+    if(!events.OfType<PetCollectionEvent>().Any(e=>e.Levels.Single()==new PetLevelInfo(1127,2) &&
+       e.Souls.Single()==new PetSoulInfo(1127,9))) throw new Exception("Pet collection fixture failed");
+    var petCount=events.OfType<PetCollectionEvent>().Count();
+    for(int n=0;n<pets.Count;n++) parser.Handle(Opcodes.PetCollection,pets.Take(n).ToArray());
+    var invalidPet=pets.ToArray(); invalidPet[5]=0;invalidPet[6]=0;invalidPet[7]=0;invalidPet[8]=0;
+    parser.Handle(Opcodes.PetCollection,invalidPet);
+    var duplicate=new List<byte>(new byte[4]); duplicate.Add(2);
+    duplicate.AddRange(pets.Skip(5).Take(12));duplicate.AddRange(pets.Skip(5).Take(12));duplicate.Add(0);
+    parser.Handle(Opcodes.PetCollection,duplicate.ToArray());
+    if(events.OfType<PetCollectionEvent>().Count()!=petCount || parser.PetsRejected!=pets.Count+2)
+        throw new Exception("Truncated/invalid/duplicate pets were accepted");
+    var soul=new List<byte>{0};soul.AddRange(BitConverter.GetBytes((uint)1127));soul.AddRange(BitConverter.GetBytes((uint)1));
+    parser.Handle(Opcodes.PetSoulAcquired,soul.ToArray());
+    var insight=new List<byte>{0,0};insight.AddRange(BitConverter.GetBytes((uint)1127));insight.AddRange(BitConverter.GetBytes((uint)3));
+    parser.Handle(Opcodes.PetLevelReached,insight.ToArray());
+    if(!events.OfType<PetSoulAcquiredEvent>().Any(e=>e.PetId==1127 && e.Amount==1) ||
+       !events.OfType<PetLevelReachedEvent>().Any(e=>e.PetId==1127 && e.Level==3)) throw new Exception("Pet deltas failed");
+    parser.Handle(Opcodes.PetCollection,new byte[]{0,0,0,0,0,0});
+    if(!events.OfType<PetCollectionEvent>().Any(e=>e.Levels.Count==0 && e.Souls.Count==0))
+        throw new Exception("Empty pet collection failed");
+    Console.WriteLine("SELF_TEST_OK: connected clients, TCP, damage, malformed record, serverless identity, partial/full roster, optional stats, vacant/unread slots, spirit owner, raw cast, scalar, pet snapshot/deltas, empty/truncated/invalid/duplicate pet records; no capture"); return;
 }
 var diagnostic=args.Contains("--diagnose");
 var diagnosticSeconds=10;
@@ -132,7 +157,8 @@ capture.EventDecoded += ev=> {
         return; // Diagnostics expose counters only: no player names, events or packet bytes.
     }
     if (ev is not (DamageEvent or SelfIdentifiedEvent or PlayerSeenEvent or PartyRosterEvent or NpcSeenEvent or
-        SummonSeenEvent or CastEvent or DeathEvent or ZoneChangedEvent or HitNoticeEvent or InstanceTimerEvent)) return;
+        SummonSeenEvent or CastEvent or DeathEvent or ZoneChangedEvent or HitNoticeEvent or InstanceTimerEvent or
+        PetCollectionEvent or PetSoulAcquiredEvent or PetLevelReachedEvent)) return;
     // FieldBossListEvent.Raw and all uninterpreted bytes are deliberately excluded.
     Send(new {type="event", session, sequence=Interlocked.Increment(ref sequence), time_ms=(long)clock.Elapsed.TotalMilliseconds,
         kind=ev.GetType().Name, payload=JsonSerializer.SerializeToElement(ev,ev.GetType())});
@@ -149,7 +175,7 @@ try {
     while(!cancel.IsCancellationRequested) {
         await Task.Delay(1000,cancel.Token);
         var health=capture.Health(); var pipeline=capture.Pipeline;
-        Send(new {type="health", time_ms=(long)clock.Elapsed.TotalMilliseconds, dropped=Interlocked.Read(ref lost)+(health?.Dropped ?? 0), gaps=pipeline.Gaps,
+        Send(new {type="health", time_ms=(long)clock.Elapsed.TotalMilliseconds, dropped=Interlocked.Read(ref lost)+(health?.Dropped ?? 0), gaps=pipeline.Gaps, pets_rejected=pipeline.Parser.PetsRejected,
             rejected=pipeline.Parser.DamageRejected, flows=pipeline.GameFlows, packets=capture.Status.Packets});
     }
 } catch(OperationCanceledException) { }

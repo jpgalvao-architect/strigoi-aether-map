@@ -9,9 +9,10 @@ sys.path.insert(0, str(root))
 from app.core.models import Dataset, EventFeed, Preferences
 from app.modules.overlay.detector import Calibration
 from app.modules.overlay.selection import CaptureArea
+from app.modules.pets.models import PetCatalogue, PetCollection, PetSites
 
 destination = root / "schemas"
 destination.mkdir(exist_ok=True)
-for name, model in [("dataset", Dataset), ("event-feed", EventFeed), ("preferences", Preferences), ("calibration", Calibration), ("capture-area", CaptureArea)]:
+for name, model in [("dataset", Dataset), ("event-feed", EventFeed), ("preferences", Preferences), ("calibration", Calibration), ("capture-area", CaptureArea), ("pets", PetCatalogue), ("pet-collection", PetCollection), ("pet-sites", PetSites)]:
     (destination / f"{name}.schema.json").write_text(json.dumps(model.model_json_schema(), indent=2, ensure_ascii=False), encoding="utf-8")
 print(f"Schemas exported to {destination}")
