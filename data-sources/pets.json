@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-14",
+  "source_build": "client snapshot 220 / 2026-09-18",
+  "catalogue_source": "https://aion2.app/db/pets",
+  "portrait_manifest": "data-sources/pet-portraits.json",
+  "facts": [
+    "pet ID/name/family",
+    "original portrait URL",
+    "monster template ID/name",
+    "Insight cost table",
+    "original SpawnMap world bounds/positions"
+  ],
+  "coverage": {
+    "pets": 208,
+    "pets_with_explicit_insight_costs": 200,
+    "pets_with_monster_sources": 160,
+    "npc_templates": 437,
+    "farm_sites": 11624
+  },
+  "region": "global-reference",
+  "regional_presence_confirmed": false,
+  "coordinate_mapping": {
+    "World_D_A": "altgard",
+    "World_L_A": "verteron",
+    "bounds": [
+      [
+        -408000,
+        -408000
+      ],
+      [
+        408000,
+        408000
+      ]
+    ],
+    "x": "(lng - lower_lng) / (upper_lng - lower_lng)",
+    "y": "(upper_lat - lat) / (upper_lat - lower_lat)",
+    "target": "original 8192 x 8192 full world image; no cropped-map fit"
+  },
+  "files": {
+    "app/data/pets.json": "4b107bbc1c014afc412cb80bc4ad8d1363f4a455bb0247de7f14b79d7e6e2e54",
+    "app/data/pet-sites.json": "68453ffab56369764da682f1812a0edc88d140de2f3628c82de1f938f5b56f6a"
+  },
+  "rights": "Original game artwork remains owned by NC Corporation. Facts and source URLs are separate from the GPLv3 application code. No website interface, guide prose, or code is incorporated."
+}

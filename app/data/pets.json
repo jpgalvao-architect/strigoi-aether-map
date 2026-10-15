@@ -1,0 +1,5204 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-14",
+  "source_build": "client snapshot 220 / 2026-09-18",
+  "coverage": "Reference catalogue; regional availability and farming locations require separate evidence.",
+  "pets": [
+    {
+      "id": 1001,
+      "name": "Black Dragon",
+      "family": "Special",
+      "portrait": "pets/1001.png",
+      "source": "https://aion2.app/db/pets/1001",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BlackDragon_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": []
+    },
+    {
+      "id": 1002,
+      "name": "Krall Laborer",
+      "family": "Cogni",
+      "portrait": "pets/1002.png",
+      "source": "https://aion2.app/db/pets/1002",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KrallReg_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100075,
+          "name": "Krall Armed Soldier"
+        },
+        {
+          "npc_code": 2100480,
+          "name": "Krall Sentinel"
+        },
+        {
+          "npc_code": 2100914,
+          "name": "Mutated Krall Laborer"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1003,
+      "name": "Forest Specter",
+      "family": "Natura",
+      "portrait": "pets/1003.png",
+      "source": "https://aion2.app/db/pets/1003",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ForestWisp_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100601,
+          "name": "Canyon Vine Spirit"
+        },
+        {
+          "npc_code": 2100662,
+          "name": "Tainted Vine Specter"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1004,
+      "name": "Fossa",
+      "family": "Fera",
+      "portrait": "pets/1004.png",
+      "source": "https://aion2.app/db/pets/1004",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Fossa_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100163,
+          "name": "Patrolling Fossa"
+        },
+        {
+          "npc_code": 2400254,
+          "name": "Daeva Renegade Fossa"
+        },
+        {
+          "npc_code": 2400414,
+          "name": "Tamed Beast"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1005,
+      "name": "Klaw",
+      "family": "Cogni",
+      "portrait": "pets/1005.png",
+      "source": "https://aion2.app/db/pets/1005",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Neuth_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100078,
+          "name": "Wandering Klaw"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1006,
+      "name": "Sparkie",
+      "family": "Fera",
+      "portrait": "pets/1006.png",
+      "source": "https://aion2.app/db/pets/1006",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_SparkyOd_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100273,
+          "name": "Wild Sparkie"
+        },
+        {
+          "npc_code": 2100305,
+          "name": "Meadow Sparkie"
+        },
+        {
+          "npc_code": 2100753,
+          "name": "Highland Odyle Sparkie"
+        },
+        {
+          "npc_code": 2100795,
+          "name": "Highland Odyle Sparkie"
+        },
+        {
+          "npc_code": 2100986,
+          "name": "Aullaeu Forest Sparkie"
+        },
+        {
+          "npc_code": 2100992,
+          "name": "Highland Sparkie"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1007,
+      "name": "Potcrab",
+      "family": "Fera",
+      "portrait": "pets/1007.png",
+      "source": "https://aion2.app/db/pets/1007",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Crab_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100032,
+          "name": "Marsh Moss Potcrab"
+        },
+        {
+          "npc_code": 2100610,
+          "name": "Flat Potcrab"
+        },
+        {
+          "npc_code": 2101098,
+          "name": "Eternal Moss Crab"
+        },
+        {
+          "npc_code": 2400363,
+          "name": "Moss Crab"
+        },
+        {
+          "npc_code": 2400755,
+          "name": "Coastal Moss Crab"
+        },
+        {
+          "npc_code": 2400812,
+          "name": "Coastal Moss Crab"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1008,
+      "name": "Baby Odyle Spider",
+      "family": "Fera",
+      "portrait": "pets/1008.png",
+      "source": "https://aion2.app/db/pets/1008",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_OdSpider_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100034,
+          "name": "Coastal Odyle Spider"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1009,
+      "name": "Kernon",
+      "family": "Fera",
+      "portrait": "pets/1009.png",
+      "source": "https://aion2.app/db/pets/1009",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Keneir_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1010,
+      "name": "Manduri Fighter",
+      "family": "Cogni",
+      "portrait": "pets/1010.png",
+      "source": "https://aion2.app/db/pets/1010",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ManduriWar_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2110506,
+          "name": "Crimson Manduri Fighter"
+        },
+        {
+          "npc_code": 2400617,
+          "name": "Black Claw Manduri Combatant"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1011,
+      "name": "Skyray",
+      "family": "Fera",
+      "portrait": "pets/1011.png",
+      "source": "https://aion2.app/db/pets/1011",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Skyray_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100047,
+          "name": "Small Forest Skyray"
+        },
+        {
+          "npc_code": 2100048,
+          "name": "Ellun River Falls Skyray"
+        },
+        {
+          "npc_code": 2100182,
+          "name": "Tolbas Forest Lake Skyray"
+        },
+        {
+          "npc_code": 2100556,
+          "name": "Ridge Skyray"
+        },
+        {
+          "npc_code": 2100607,
+          "name": "Canyon Skyray"
+        },
+        {
+          "npc_code": 2100613,
+          "name": "Canyon Lake Skyray"
+        },
+        {
+          "npc_code": 2100832,
+          "name": "Pond Skyray"
+        },
+        {
+          "npc_code": 2101123,
+          "name": "Ellun River Lake Skyray"
+        },
+        {
+          "npc_code": 2101124,
+          "name": "Cantas Valley Skyray"
+        },
+        {
+          "npc_code": 2101132,
+          "name": "Lake Skyray"
+        },
+        {
+          "npc_code": 2400163,
+          "name": "Tranein Skyray"
+        },
+        {
+          "npc_code": 2400945,
+          "name": "Lake Skyray"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1012,
+      "name": "Fungie",
+      "family": "Natura",
+      "portrait": "pets/1012.png",
+      "source": "https://aion2.app/db/pets/1012",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Fungy_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100041,
+          "name": "Red Cap Fungie"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1013,
+      "name": "Swarm",
+      "family": "Varian",
+      "portrait": "pets/1013.png",
+      "source": "https://aion2.app/db/pets/1013",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_AbyssSwarm_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400080,
+          "name": "Contaminated Swarm"
+        },
+        {
+          "npc_code": 2400456,
+          "name": "Giant Ore Insectoid"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1014,
+      "name": "Drakan Guard Dog",
+      "family": "Fera",
+      "portrait": "pets/1014.png",
+      "source": "https://aion2.app/db/pets/1014",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BeritraC_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101002,
+          "name": "Drakan Guard Dog"
+        },
+        {
+          "npc_code": 2101009,
+          "name": "Nahid Drakan Guard Dog"
+        },
+        {
+          "npc_code": 2400359,
+          "name": "Drakan Guard Dog"
+        },
+        {
+          "npc_code": 2400587,
+          "name": "Drakan Patrol Armed Beast"
+        },
+        {
+          "npc_code": 2400655,
+          "name": "Lagta Brigade Guard Dog"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1015,
+      "name": "Kailin",
+      "family": "Fera",
+      "portrait": "pets/1015.png",
+      "source": "https://aion2.app/db/pets/1015",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kailin_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101021,
+          "name": "Ellun River Kailin"
+        },
+        {
+          "npc_code": 2400736,
+          "name": "Unstable Kailin"
+        },
+        {
+          "npc_code": 2400905,
+          "name": "Kailin"
+        },
+        {
+          "npc_code": 2400934,
+          "name": "Kailin"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1016,
+      "name": "Slink",
+      "family": "Fera",
+      "portrait": "pets/1016.png",
+      "source": "https://aion2.app/db/pets/1016",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Lepisma_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100165,
+          "name": "Tolbas Slink"
+        },
+        {
+          "npc_code": 2100188,
+          "name": "Wetland Slink"
+        },
+        {
+          "npc_code": 2101097,
+          "name": "Eternal Slink"
+        },
+        {
+          "npc_code": 2400520,
+          "name": "Coastal Slink"
+        },
+        {
+          "npc_code": 2400819,
+          "name": "Coastal Slink"
+        },
+        {
+          "npc_code": 2400909,
+          "name": "Slink"
+        },
+        {
+          "npc_code": 2400943,
+          "name": "Slink"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1017,
+      "name": "Krall Warshaman",
+      "family": "Cogni",
+      "portrait": "pets/1017.png",
+      "source": "https://aion2.app/db/pets/1017",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KrallPrst_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100074,
+          "name": "Krall Warshaman"
+        },
+        {
+          "npc_code": 2100855,
+          "name": "Modified Krall Healer"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1018,
+      "name": "Varg Berserker",
+      "family": "Cogni",
+      "portrait": "pets/1018.png",
+      "source": "https://aion2.app/db/pets/1018",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Varg_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400385,
+          "name": "Varg Berserker"
+        },
+        {
+          "npc_code": 2400609,
+          "name": "Chief's Bodyguard"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1021,
+      "name": "Aberrant Odyle Spider",
+      "family": "Fera",
+      "portrait": "pets/1021.png",
+      "source": "https://aion2.app/db/pets/1021",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_OdSpider_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1022,
+      "name": "Crasaur",
+      "family": "Fera",
+      "portrait": "pets/1022.png",
+      "source": "https://aion2.app/db/pets/1022",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Phaini_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100215,
+          "name": "Aquascale Crasaur"
+        },
+        {
+          "npc_code": 2100608,
+          "name": "Docile Crasaur"
+        },
+        {
+          "npc_code": 2101083,
+          "name": "Eternal Crasaur"
+        },
+        {
+          "npc_code": 2400327,
+          "name": "Sensitive Crasaur"
+        },
+        {
+          "npc_code": 2400809,
+          "name": "Crasaur"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1025,
+      "name": "Mutated Aberrant Odyle Spider",
+      "family": "Fera",
+      "portrait": "pets/1025.png",
+      "source": "https://aion2.app/db/pets/1025",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_OdSpider_04_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100030,
+          "name": "Marsh Odyle Spider"
+        },
+        {
+          "npc_code": 2100663,
+          "name": "Garden Spider"
+        },
+        {
+          "npc_code": 2100745,
+          "name": "Highland Odyle Spider"
+        },
+        {
+          "npc_code": 2400744,
+          "name": "Unstable Ashen Spider"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1026,
+      "name": "Krall Warrior",
+      "family": "Cogni",
+      "portrait": "pets/1026.png",
+      "source": "https://aion2.app/db/pets/1026",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KrallWar_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100073,
+          "name": "Krall Assault Trooper"
+        },
+        {
+          "npc_code": 2100910,
+          "name": "Modified Krall Warrior"
+        },
+        {
+          "npc_code": 2101005,
+          "name": "Krall Test Subject"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1027,
+      "name": "Withered Agrint",
+      "family": "Natura",
+      "portrait": "pets/1027.png",
+      "source": "https://aion2.app/db/pets/1027",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Agrint_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100612,
+          "name": "Withered Canyon Agrint"
+        },
+        {
+          "npc_code": 2100652,
+          "name": "Thin Agrint"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1028,
+      "name": "Krao Mutant",
+      "family": "Varian",
+      "portrait": "pets/1028.png",
+      "source": "https://aion2.app/db/pets/1028",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KraoElite_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1029,
+      "name": "Klaw Scout",
+      "family": "Cogni",
+      "portrait": "pets/1029.png",
+      "source": "https://aion2.app/db/pets/1029",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Neuth_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400313,
+          "name": "Consumed Klaw"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1030,
+      "name": "Nagarant Guardian Warrior",
+      "family": "Cogni",
+      "portrait": "pets/1030.png",
+      "source": "https://aion2.app/db/pets/1030",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_NagaElite_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1031,
+      "name": "Konutin Worker",
+      "family": "Natura",
+      "portrait": "pets/1031.png",
+      "source": "https://aion2.app/db/pets/1031",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Conuti_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100157,
+          "name": "Tolbas Konutin Worker"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1032,
+      "name": "Elite Keneire",
+      "family": "Fera",
+      "portrait": "pets/1032.png",
+      "source": "https://aion2.app/db/pets/1032",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Keneir_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1033,
+      "name": "Elite Manduri Fighter",
+      "family": "Cogni",
+      "portrait": "pets/1033.png",
+      "source": "https://aion2.app/db/pets/1033",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ManduriWar_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100557,
+          "name": "Wandering Manduri Fighter"
+        },
+        {
+          "npc_code": 2100569,
+          "name": "Wandering Manduri Fighter"
+        },
+        {
+          "npc_code": 2400605,
+          "name": "Black Claw Manduri Fighter"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1034,
+      "name": "Giant Sparkie",
+      "family": "Fera",
+      "portrait": "pets/1034.png",
+      "source": "https://aion2.app/db/pets/1034",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_SparkyOd_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100015,
+          "name": "Splendent Hill Sparkie"
+        },
+        {
+          "npc_code": 2100796,
+          "name": "Highland Giant Odyle Sparkie"
+        },
+        {
+          "npc_code": 2100987,
+          "name": "Aullaeu Forest Giant Sparkie"
+        },
+        {
+          "npc_code": 2100993,
+          "name": "Highland Giant Sparkie"
+        },
+        {
+          "npc_code": 2400341,
+          "name": "Withered Branch Odyle Sparkie"
+        },
+        {
+          "npc_code": 2400466,
+          "name": "Fafnite Luminous Sparkie"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1035,
+      "name": "Skama",
+      "family": "Fera",
+      "portrait": "pets/1035.png",
+      "source": "https://aion2.app/db/pets/1035",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Fish_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100031,
+          "name": "Foul Skama"
+        },
+        {
+          "npc_code": 2100376,
+          "name": "Lake Skama"
+        },
+        {
+          "npc_code": 2100907,
+          "name": "Drana Mutated Skama"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1036,
+      "name": "Lupyllini",
+      "family": "Fera",
+      "portrait": "pets/1036.png",
+      "source": "https://aion2.app/db/pets/1036",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Lufilini_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100746,
+          "name": "Tail Feather Lupyllini"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1037,
+      "name": "Male Crestlich",
+      "family": "Fera",
+      "portrait": "pets/1037.png",
+      "source": "https://aion2.app/db/pets/1037",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Crestlich_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100151,
+          "name": "Ellun River Crestlich Male"
+        },
+        {
+          "npc_code": 2100750,
+          "name": "Highland Crestlich Male"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1038,
+      "name": "Airon",
+      "family": "Fera",
+      "portrait": "pets/1038.png",
+      "source": "https://aion2.app/db/pets/1038",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Airon_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100144,
+          "name": "Smallbeak Airon"
+        },
+        {
+          "npc_code": 2100216,
+          "name": "Pointbeak Airon"
+        },
+        {
+          "npc_code": 2100609,
+          "name": "Hardbeak Airon"
+        },
+        {
+          "npc_code": 2100741,
+          "name": "Longbeak Highland Airon"
+        },
+        {
+          "npc_code": 2400567,
+          "name": "Canyon Airon"
+        },
+        {
+          "npc_code": 2400568,
+          "name": "Baby Canyon Airon"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1039,
+      "name": "Crestlich",
+      "family": "Fera",
+      "portrait": "pets/1039.png",
+      "source": "https://aion2.app/db/pets/1039",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Crestlich_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100037,
+          "name": "Stonebeak Crestlich"
+        },
+        {
+          "npc_code": 2100150,
+          "name": "Ellun River Crestlich Female"
+        },
+        {
+          "npc_code": 2100799,
+          "name": "Highland Crestlich Female"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1040,
+      "name": "Aullaeu Shaman",
+      "family": "Cogni",
+      "portrait": "pets/1040.png",
+      "source": "https://aion2.app/db/pets/1040",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_OwlMag_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100950,
+          "name": "Aullaeu Apprentice Shaman"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1041,
+      "name": "Cave Bat",
+      "family": "Fera",
+      "portrait": "pets/1041.png",
+      "source": "https://aion2.app/db/pets/1041",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_CaveBat_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100911,
+          "name": "Drana Mutated Bat"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1042,
+      "name": "Ursus",
+      "family": "Fera",
+      "portrait": "pets/1042.png",
+      "source": "https://aion2.app/db/pets/1042",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Ursuss_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100172,
+          "name": "Hardhorn Ursus"
+        },
+        {
+          "npc_code": 2100552,
+          "name": "Ridge Ursus"
+        },
+        {
+          "npc_code": 2100560,
+          "name": "Ridge Violent Ursus"
+        },
+        {
+          "npc_code": 2100655,
+          "name": "Confused Ursus"
+        },
+        {
+          "npc_code": 2100817,
+          "name": "Hill Ursus"
+        },
+        {
+          "npc_code": 2400376,
+          "name": "Ursus"
+        },
+        {
+          "npc_code": 2400916,
+          "name": "Ursus"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1043,
+      "name": "Elite Ursus",
+      "family": "Fera",
+      "portrait": "pets/1043.png",
+      "source": "https://aion2.app/db/pets/1043",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_UrsussElite_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1044,
+      "name": "Aultross's Doppelganger",
+      "family": "Cogni",
+      "portrait": "pets/1044.png",
+      "source": "https://aion2.app/db/pets/1044",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Owltros_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1045,
+      "name": "Sylphen",
+      "family": "Fera",
+      "portrait": "pets/1045.png",
+      "source": "https://aion2.app/db/pets/1045",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Muta_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100004,
+          "name": "Highland Sylphen"
+        },
+        {
+          "npc_code": 2100023,
+          "name": "Ellun River Sylphen"
+        },
+        {
+          "npc_code": 2100219,
+          "name": "Ellun River Sylphen"
+        },
+        {
+          "npc_code": 2100472,
+          "name": "Aberrant Sylphen"
+        },
+        {
+          "npc_code": 2100565,
+          "name": "Ridge Sylphen"
+        },
+        {
+          "npc_code": 2100743,
+          "name": "Highland Sylphen"
+        },
+        {
+          "npc_code": 2400362,
+          "name": "Sylphen"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1046,
+      "name": "Armadon",
+      "family": "Fera",
+      "portrait": "pets/1046.png",
+      "source": "https://aion2.app/db/pets/1046",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Mole_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400002,
+          "name": "Red Shell Mole"
+        },
+        {
+          "npc_code": 2400249,
+          "name": "Withered Armadon"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1047,
+      "name": "Aberrant Armadon",
+      "family": "Fera",
+      "portrait": "pets/1047.png",
+      "source": "https://aion2.app/db/pets/1047",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Mole_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100453,
+          "name": "Splendent Armadon"
+        },
+        {
+          "npc_code": 2100751,
+          "name": "Highland Wild Armadon"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1048,
+      "name": "Forest Spirit",
+      "family": "Natura",
+      "portrait": "pets/1048.png",
+      "source": "https://aion2.app/db/pets/1048",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ForestEle_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100022,
+          "name": "Marsh Vine Spirit"
+        },
+        {
+          "npc_code": 2100142,
+          "name": "Contaminated Vine Spirit"
+        },
+        {
+          "npc_code": 2100555,
+          "name": "Ridge Forest Spirit"
+        },
+        {
+          "npc_code": 2100611,
+          "name": "Deep Canyon Forest Spirit"
+        },
+        {
+          "npc_code": 2400337,
+          "name": "Forest Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1049,
+      "name": "Mutated Forest Spirit",
+      "family": "Natura",
+      "portrait": "pets/1049.png",
+      "source": "https://aion2.app/db/pets/1049",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ForestEle_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100711,
+          "name": "Mutated Vine Bundle"
+        },
+        {
+          "npc_code": 2100715,
+          "name": "Contaminated Vine Bundle"
+        },
+        {
+          "npc_code": 2400061,
+          "name": "Condensed Specter"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1050,
+      "name": "Gravi",
+      "family": "Natura",
+      "portrait": "pets/1050.png",
+      "source": "https://aion2.app/db/pets/1050",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Gravi_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100650,
+          "name": "Red Stalk Gravi"
+        },
+        {
+          "npc_code": 2101125,
+          "name": "Tolbas Gravi"
+        },
+        {
+          "npc_code": 2400307,
+          "name": "Pink Gravi"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1051,
+      "name": "Magic Gravi",
+      "family": "Natura",
+      "portrait": "pets/1051.png",
+      "source": "https://aion2.app/db/pets/1051",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Gravi_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100659,
+          "name": "Illusion Magic Gravi"
+        },
+        {
+          "npc_code": 2101126,
+          "name": "Tolbas Magic Gravi"
+        },
+        {
+          "npc_code": 2400329,
+          "name": "Purifying Forest Magic Gravi"
+        },
+        {
+          "npc_code": 2400731,
+          "name": "Unstable Gravi"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1052,
+      "name": "Large Leaf Gravi",
+      "family": "Natura",
+      "portrait": "pets/1052.png",
+      "source": "https://aion2.app/db/pets/1052",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Gravi_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100285,
+          "name": "Ellun River Hill Gravi"
+        },
+        {
+          "npc_code": 2100651,
+          "name": "Large Leaf Gravi"
+        },
+        {
+          "npc_code": 2400342,
+          "name": "Large Leaf Gravi"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1053,
+      "name": "Aberrant Potcrab",
+      "family": "Fera",
+      "portrait": "pets/1053.png",
+      "source": "https://aion2.app/db/pets/1053",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Crab_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100908,
+          "name": "Drana Mutated Potcrab"
+        },
+        {
+          "npc_code": 2110512,
+          "name": "Eternal Moss Crab"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1054,
+      "name": "Mumu Warrior",
+      "family": "Cogni",
+      "portrait": "pets/1054.png",
+      "source": "https://aion2.app/db/pets/1054",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_SkurvWar_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400350,
+          "name": "Mumu Watcher"
+        },
+        {
+          "npc_code": 2400570,
+          "name": "Gribade Mumu Warrior"
+        },
+        {
+          "npc_code": 2400606,
+          "name": "Mumu Watcher"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1055,
+      "name": "Grave Rat",
+      "family": "Fera",
+      "portrait": "pets/1055.png",
+      "source": "https://aion2.app/db/pets/1055",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_GraveRat_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1056,
+      "name": "Drakan Probe",
+      "family": "Varian",
+      "portrait": "pets/1056.png",
+      "source": "https://aion2.app/db/pets/1056",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BeritraC_06.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100866,
+          "name": "Drana Processing Maintenance Machine"
+        },
+        {
+          "npc_code": 2101014,
+          "name": "Intruder Seeker"
+        },
+        {
+          "npc_code": 2400143,
+          "name": "Outpost Probe"
+        },
+        {
+          "npc_code": 2400162,
+          "name": "Drakan Probe"
+        },
+        {
+          "npc_code": 2400382,
+          "name": "Drana Processing Maintenance Machine"
+        },
+        {
+          "npc_code": 2400658,
+          "name": "Lagta Brigade Seeker"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1057,
+      "name": "Coradon",
+      "family": "Fera",
+      "portrait": "pets/1057.png",
+      "source": "https://aion2.app/db/pets/1057",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Coradon_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1058,
+      "name": "Black Smoke Murute",
+      "family": "Natura",
+      "portrait": "pets/1058.png",
+      "source": "https://aion2.app/db/pets/1058",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_AshGuard_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2300312,
+          "name": "Black Smoke Murute"
+        },
+        {
+          "npc_code": 2310312,
+          "name": "Black Smoke Murute"
+        },
+        {
+          "npc_code": 2320312,
+          "name": "Black Smoke Murute"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1059,
+      "name": "Giant Bee",
+      "family": "Fera",
+      "portrait": "pets/1059.png",
+      "source": "https://aion2.app/db/pets/1059",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Bee_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100551,
+          "name": "Giant Stripe Bee"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1060,
+      "name": "Starturtle",
+      "family": "Fera",
+      "portrait": "pets/1060.png",
+      "source": "https://aion2.app/db/pets/1060",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Starturtle_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100033,
+          "name": "Coastal Starturtle"
+        },
+        {
+          "npc_code": 2100808,
+          "name": "Pond Starturtle"
+        },
+        {
+          "npc_code": 2101082,
+          "name": "Eternal Starturtle"
+        },
+        {
+          "npc_code": 2400374,
+          "name": "Beach Starturtle"
+        },
+        {
+          "npc_code": 2400519,
+          "name": "Starturtle"
+        },
+        {
+          "npc_code": 2400808,
+          "name": "Starturtle"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1061,
+      "name": "Slime",
+      "family": "Varian",
+      "portrait": "pets/1061.png",
+      "source": "https://aion2.app/db/pets/1061",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Slime_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400320,
+          "name": "Unruly Slime"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1062,
+      "name": "Contaminated Slime",
+      "family": "Varian",
+      "portrait": "pets/1062.png",
+      "source": "https://aion2.app/db/pets/1062",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Slime_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100025,
+          "name": "Marsh Slime"
+        },
+        {
+          "npc_code": 2100717,
+          "name": "Contaminated Poison Slime"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1063,
+      "name": "Vigilant Oculazen",
+      "family": "Varian",
+      "portrait": "pets/1063.png",
+      "source": "https://aion2.app/db/pets/1063",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Oculazen_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400364,
+          "name": "Vigilant Oculazen"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1064,
+      "name": "Oculazen",
+      "family": "Varian",
+      "portrait": "pets/1064.png",
+      "source": "https://aion2.app/db/pets/1064",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Oculazen_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100854,
+          "name": "Labor Manager Oculazen"
+        },
+        {
+          "npc_code": 2400711,
+          "name": "Oculazen"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1065,
+      "name": "Biruta",
+      "family": "Cogni",
+      "portrait": "pets/1065.png",
+      "source": "https://aion2.app/db/pets/1065",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_VirotaWar_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100183,
+          "name": "Biruta Wanderer"
+        },
+        {
+          "npc_code": 2400920,
+          "name": "Biruta Wanderer"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1066,
+      "name": "Papis",
+      "family": "Fera",
+      "portrait": "pets/1066.png",
+      "source": "https://aion2.app/db/pets/1066",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Papis_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2000926,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2000927,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2000928,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2000929,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2000951,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2100220,
+          "name": "Ellun River Papis"
+        },
+        {
+          "npc_code": 2100654,
+          "name": "Garden Papis"
+        },
+        {
+          "npc_code": 2400594,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2400903,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2400938,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2400940,
+          "name": "Faded Papis"
+        },
+        {
+          "npc_code": 2400947,
+          "name": "Faded Papis"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1067,
+      "name": "Scorpion",
+      "family": "Fera",
+      "portrait": "pets/1067.png",
+      "source": "https://aion2.app/db/pets/1067",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Scorpion_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100709,
+          "name": "Contaminated Scorpion"
+        },
+        {
+          "npc_code": 2400470,
+          "name": "Ore Scorpion"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1068,
+      "name": "Krao Test Subject",
+      "family": "Varian",
+      "portrait": "pets/1068.png",
+      "source": "https://aion2.app/db/pets/1068",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KraoWar_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1069,
+      "name": "Stone Spirit",
+      "family": "Natura",
+      "portrait": "pets/1069.png",
+      "source": "https://aion2.app/db/pets/1069",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_EarthEleOd_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100812,
+          "name": "Hill Stone Spirit"
+        },
+        {
+          "npc_code": 2400301,
+          "name": "Faded Stone Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1071,
+      "name": "Cadaver Insectoid",
+      "family": "Fera",
+      "portrait": "pets/1071.png",
+      "source": "https://aion2.app/db/pets/1071",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_AltBug_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400018,
+          "name": "Drana Cadaver Insectoid"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1072,
+      "name": "Tog",
+      "family": "Fera",
+      "portrait": "pets/1072.png",
+      "source": "https://aion2.app/db/pets/1072",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Tog_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400912,
+          "name": "Tog"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1073,
+      "name": "Nepenthes",
+      "family": "Natura",
+      "portrait": "pets/1073.png",
+      "source": "https://aion2.app/db/pets/1073",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Rafflesia_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100160,
+          "name": "Tolbas Nepenthes"
+        },
+        {
+          "npc_code": 2100744,
+          "name": "Scarlet Highland Nepenthes"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1074,
+      "name": "Kuru Worker",
+      "family": "Cogni",
+      "portrait": "pets/1074.png",
+      "source": "https://aion2.app/db/pets/1074",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kuru_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100180,
+          "name": "Tolbas Kuru Worker"
+        },
+        {
+          "npc_code": 2100964,
+          "name": "Harsh Kuru Tinkerer"
+        },
+        {
+          "npc_code": 2101133,
+          "name": "Eternal Kuru Worker"
+        },
+        {
+          "npc_code": 2101136,
+          "name": "Eternal Kuru Worker"
+        },
+        {
+          "npc_code": 2400831,
+          "name": "Kuru Worker"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1075,
+      "name": "Kuru Tinkerer",
+      "family": "Cogni",
+      "portrait": "pets/1075.png",
+      "source": "https://aion2.app/db/pets/1075",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kuru_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100181,
+          "name": "Tolbas Kuru Tinkerer"
+        },
+        {
+          "npc_code": 2101134,
+          "name": "Eternal Kuru Tinkerer"
+        },
+        {
+          "npc_code": 2101137,
+          "name": "Eternal Kuru Tinkerer"
+        },
+        {
+          "npc_code": 2400832,
+          "name": "Kuru Tinkerer"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1077,
+      "name": "Harcon",
+      "family": "Varian",
+      "portrait": "pets/1077.png",
+      "source": "https://aion2.app/db/pets/1077",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KraoElite_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2300104,
+          "name": "Enhanced Harcon"
+        },
+        {
+          "npc_code": 2310104,
+          "name": "Enhanced Harcon"
+        },
+        {
+          "npc_code": 2320104,
+          "name": "Enhanced Harcon"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1078,
+      "name": "Urugugu Brawler",
+      "family": "Cogni",
+      "portrait": "pets/1078.png",
+      "source": "https://aion2.app/db/pets/1078",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_OwlSoldier_09.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1079,
+      "name": "Ultimate Wind Spirit",
+      "family": "Natura",
+      "portrait": "pets/1079.png",
+      "source": "https://aion2.app/db/pets/1079",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_WindEle_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1080,
+      "name": "Sentinel K'nash",
+      "family": "Cogni",
+      "portrait": "pets/1080.png",
+      "source": "https://aion2.app/db/pets/1080",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BeritraD_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1081,
+      "name": "Dionae",
+      "family": "Natura",
+      "portrait": "pets/1081.png",
+      "source": "https://aion2.app/db/pets/1081",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Dionaea_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1082,
+      "name": "Ultimate Fire Spirit",
+      "family": "Natura",
+      "portrait": "pets/1082.png",
+      "source": "https://aion2.app/db/pets/1082",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_FireEle_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1083,
+      "name": "Spider",
+      "family": "Fera",
+      "portrait": "pets/1083.png",
+      "source": "https://aion2.app/db/pets/1083",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Spider_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1084,
+      "name": "Kalgolem",
+      "family": "Varian",
+      "portrait": "pets/1084.png",
+      "source": "https://aion2.app/db/pets/1084",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kalgolem_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100002,
+          "name": "Hard Kalgolem"
+        },
+        {
+          "npc_code": 2100700,
+          "name": "Ashen Kalgolem"
+        },
+        {
+          "npc_code": 2400328,
+          "name": "Angry Kalgolem"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1086,
+      "name": "Fungen",
+      "family": "Natura",
+      "portrait": "pets/1086.png",
+      "source": "https://aion2.app/db/pets/1086",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Fungus_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100456,
+          "name": "Red Cap Fungen"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1087,
+      "name": "Pino",
+      "family": "Varian",
+      "portrait": "pets/1087.png",
+      "source": "https://aion2.app/db/pets/1087",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Pino_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100953,
+          "name": "Pino Worker"
+        },
+        {
+          "npc_code": 2100954,
+          "name": "Pino Laborer"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1088,
+      "name": "Pino Worker",
+      "family": "Varian",
+      "portrait": "pets/1088.png",
+      "source": "https://aion2.app/db/pets/1088",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Pino_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100955,
+          "name": "Harsh Pino Worker"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1089,
+      "name": "Aberrant Skama",
+      "family": "Fera",
+      "portrait": "pets/1089.png",
+      "source": "https://aion2.app/db/pets/1089",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Fish_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100710,
+          "name": "Yellow-Tailed Skama"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1090,
+      "name": "Ultimate Water Spirit",
+      "family": "Natura",
+      "portrait": "pets/1090.png",
+      "source": "https://aion2.app/db/pets/1090",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_WaterEle_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1091,
+      "name": "Red Spark Ignus",
+      "family": "Natura",
+      "portrait": "pets/1091.png",
+      "source": "https://aion2.app/db/pets/1091",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_FireGuard_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2300311,
+          "name": "Red Spark Ignus"
+        },
+        {
+          "npc_code": 2310311,
+          "name": "Red Spark Ignus"
+        },
+        {
+          "npc_code": 2320311,
+          "name": "Red Spark Ignus"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1092,
+      "name": "Lesser Wind Spirit",
+      "family": "Natura",
+      "portrait": "pets/1092.png",
+      "source": "https://aion2.app/db/pets/1092",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_WindEle_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100605,
+          "name": "Air Spirit"
+        },
+        {
+          "npc_code": 2101096,
+          "name": "Eternal Wind Spirit"
+        },
+        {
+          "npc_code": 2400324,
+          "name": "Soft Breeze Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1093,
+      "name": "Phantasmal Lakshmi",
+      "family": "Cogni",
+      "portrait": "pets/1093.png",
+      "source": "https://aion2.app/db/pets/1093",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_NagaElite_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2300401,
+          "name": "Phantasmal Lakshmi"
+        },
+        {
+          "npc_code": 2310401,
+          "name": "Phantasmal Lakshmi"
+        },
+        {
+          "npc_code": 2320401,
+          "name": "Phantasmal Lakshmi"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1094,
+      "name": "Intermediate Wind Spirit",
+      "family": "Natura",
+      "portrait": "pets/1094.png",
+      "source": "https://aion2.app/db/pets/1094",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_WindEle_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100658,
+          "name": "Wandering Wind Spirit"
+        },
+        {
+          "npc_code": 2101103,
+          "name": "Violent Wind Spirit"
+        },
+        {
+          "npc_code": 2400824,
+          "name": "Immortal Wind Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1095,
+      "name": "Superior Wind Spirit",
+      "family": "Natura",
+      "portrait": "pets/1095.png",
+      "source": "https://aion2.app/db/pets/1095",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_WindEle_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100666,
+          "name": "Brisk Spirit"
+        },
+        {
+          "npc_code": 2400302,
+          "name": "Whirlwind Spirit"
+        },
+        {
+          "npc_code": 2400818,
+          "name": "Immortal Wind Spirit Guardian"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1096,
+      "name": "Superior Fire Spirit",
+      "family": "Natura",
+      "portrait": "pets/1096.png",
+      "source": "https://aion2.app/db/pets/1096",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_FireEle_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100664,
+          "name": "Hellfire Spirit"
+        },
+        {
+          "npc_code": 2400303,
+          "name": "Flame Spirit"
+        },
+        {
+          "npc_code": 2400749,
+          "name": "Unstable Superior Fire Spirit"
+        },
+        {
+          "npc_code": 2400815,
+          "name": "Immortal Fire Spirit Guardian"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1097,
+      "name": "Karnif",
+      "family": "Fera",
+      "portrait": "pets/1097.png",
+      "source": "https://aion2.app/db/pets/1097",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kalnif_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100174,
+          "name": "Ferocious Karnif"
+        },
+        {
+          "npc_code": 2100348,
+          "name": "Tolbas Karnif"
+        },
+        {
+          "npc_code": 2100349,
+          "name": "Ferocious Tolbas Karnif"
+        },
+        {
+          "npc_code": 2100742,
+          "name": "Toughmane Highland Karnif"
+        },
+        {
+          "npc_code": 2100752,
+          "name": "Highland Karnif"
+        },
+        {
+          "npc_code": 2100802,
+          "name": "Tamed Karnif"
+        },
+        {
+          "npc_code": 2100805,
+          "name": "Tamed Karnif"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1098,
+      "name": "Modified Karnif",
+      "family": "Fera",
+      "portrait": "pets/1098.png",
+      "source": "https://aion2.app/db/pets/1098",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kalnif_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100070,
+          "name": "Scouting Karnif"
+        },
+        {
+          "npc_code": 2100096,
+          "name": "Unruly Karnif"
+        },
+        {
+          "npc_code": 2100130,
+          "name": "Trained Karnif"
+        },
+        {
+          "npc_code": 2100481,
+          "name": "Sensitive Karnif"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1099,
+      "name": "Elite Karnif",
+      "family": "Fera",
+      "portrait": "pets/1099.png",
+      "source": "https://aion2.app/db/pets/1099",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KalnifElite_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1100,
+      "name": "Ultimate Earth Spirit",
+      "family": "Natura",
+      "portrait": "pets/1100.png",
+      "source": "https://aion2.app/db/pets/1100",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_EarthEle_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1101,
+      "name": "Forest Guardian",
+      "family": "Natura",
+      "portrait": "pets/1101.png",
+      "source": "https://aion2.app/db/pets/1101",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ForestArc_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100660,
+          "name": "Garden Guardian"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1102,
+      "name": "Dried Up Forest Guardian",
+      "family": "Natura",
+      "portrait": "pets/1102.png",
+      "source": "https://aion2.app/db/pets/1102",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ForestArc_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1103,
+      "name": "Pretor Veil Administrator",
+      "family": "Cogni",
+      "portrait": "pets/1103.png",
+      "source": "https://aion2.app/db/pets/1103",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_PretorBoss_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1104,
+      "name": "Manduri Trebuchet Worker",
+      "family": "Cogni",
+      "portrait": "pets/1104.png",
+      "source": "https://aion2.app/db/pets/1104",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ManduriRng_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100816,
+          "name": "Hill Manduri"
+        },
+        {
+          "npc_code": 2110507,
+          "name": "Crimson Manduri Slinger"
+        },
+        {
+          "npc_code": 2400615,
+          "name": "Black Claw Manduri Scout"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1105,
+      "name": "Biruta Herbalist",
+      "family": "Cogni",
+      "portrait": "pets/1105.png",
+      "source": "https://aion2.app/db/pets/1105",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_VirotaRag_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400919,
+          "name": "Biruta Herbalist"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1106,
+      "name": "Tayga",
+      "family": "Fera",
+      "portrait": "pets/1106.png",
+      "source": "https://aion2.app/db/pets/1106",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Tayga_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400564,
+          "name": "Search Party Tayga"
+        },
+        {
+          "npc_code": 2400583,
+          "name": "Guard Troopers Tayga"
+        },
+        {
+          "npc_code": 2400611,
+          "name": "Tamed Tayga"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1107,
+      "name": "Krao Seal Guardian",
+      "family": "Varian",
+      "portrait": "pets/1107.png",
+      "source": "https://aion2.app/db/pets/1107",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KraoElite_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1108,
+      "name": "Enhanced Krall Combatant",
+      "family": "Cogni",
+      "portrait": "pets/1108.png",
+      "source": "https://aion2.app/db/pets/1108",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KrallWar_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100097,
+          "name": "Enhanced Krall Combatant"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1109,
+      "name": "Enhanced Krall Sentry",
+      "family": "Cogni",
+      "portrait": "pets/1109.png",
+      "source": "https://aion2.app/db/pets/1109",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_KrallWar_01_V02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100072,
+          "name": "Enhanced Krall Sentry"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1110,
+      "name": "Blue Kalgolem",
+      "family": "Varian",
+      "portrait": "pets/1110.png",
+      "source": "https://aion2.app/db/pets/1110",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kalgolem_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100454,
+          "name": "Splendent Kalgolem"
+        },
+        {
+          "npc_code": 2400471,
+          "name": "Blue Kalgolem"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1111,
+      "name": "Swift Lugi",
+      "family": "Special",
+      "portrait": "pets/1111.png",
+      "source": "https://aion2.app/db/pets/1111",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ShugoBeast_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": []
+    },
+    {
+      "id": 1112,
+      "name": "Wandering Merchant Lugi",
+      "family": "Special",
+      "portrait": "pets/1112.png",
+      "source": "https://aion2.app/db/pets/1112",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ShugoBeast_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": []
+    },
+    {
+      "id": 1113,
+      "name": "White Dragon",
+      "family": "Special",
+      "portrait": "pets/1113.png",
+      "source": "https://aion2.app/db/pets/1113",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BlackDragon_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": []
+    },
+    {
+      "id": 1114,
+      "name": "Ashen Spider",
+      "family": "Fera",
+      "portrait": "pets/1114.png",
+      "source": "https://aion2.app/db/pets/1114",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_OdSpider_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100283,
+          "name": "White Shell Octaside"
+        },
+        {
+          "npc_code": 2400230,
+          "name": "Ashen Spider"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1115,
+      "name": "Kuru Overseer",
+      "family": "Cogni",
+      "portrait": "pets/1115.png",
+      "source": "https://aion2.app/db/pets/1115",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kuru_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101139,
+          "name": "Eternal Kuru Overseer"
+        },
+        {
+          "npc_code": 2400833,
+          "name": "Kuru Overseer"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1116,
+      "name": "Withered Branch Spider",
+      "family": "Fera",
+      "portrait": "pets/1116.png",
+      "source": "https://aion2.app/db/pets/1116",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_OdSpider_03_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2000956,
+          "name": "Withered Branch Spider"
+        },
+        {
+          "npc_code": 2000957,
+          "name": "Withered Branch Spider"
+        },
+        {
+          "npc_code": 2400902,
+          "name": "Withered Branch Spider"
+        },
+        {
+          "npc_code": 2400933,
+          "name": "Withered Branch Spider"
+        },
+        {
+          "npc_code": 2400939,
+          "name": "Withered Branch Spider"
+        },
+        {
+          "npc_code": 2400946,
+          "name": "Withered Branch Spider"
+        },
+        {
+          "npc_code": 2400948,
+          "name": "Withered Branch Spider"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1117,
+      "name": "Unstable Spider",
+      "family": "Fera",
+      "portrait": "pets/1117.png",
+      "source": "https://aion2.app/db/pets/1117",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Spider_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101023,
+          "name": "Aullaeu Forest Odyle Spider"
+        },
+        {
+          "npc_code": 2110509,
+          "name": "Crimson Spider"
+        },
+        {
+          "npc_code": 2400319,
+          "name": "Flame Rock Spider"
+        },
+        {
+          "npc_code": 2400745,
+          "name": "Unstable Poison Blood Spider"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1118,
+      "name": "Aberrant Bee",
+      "family": "Fera",
+      "portrait": "pets/1118.png",
+      "source": "https://aion2.app/db/pets/1118",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Bee_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2000955,
+          "name": "Black Armor Bee"
+        },
+        {
+          "npc_code": 2100286,
+          "name": "Black Pattern Bee"
+        },
+        {
+          "npc_code": 2100550,
+          "name": "Stripe Bee"
+        },
+        {
+          "npc_code": 2400900,
+          "name": "Black Armor Bee"
+        },
+        {
+          "npc_code": 2400930,
+          "name": "Black Armor Bee"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1119,
+      "name": "Aberrant Coradon",
+      "family": "Fera",
+      "portrait": "pets/1119.png",
+      "source": "https://aion2.app/db/pets/1119",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Coradon_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2000952,
+          "name": "Aberrant Coradon"
+        },
+        {
+          "npc_code": 2100699,
+          "name": "Garden Coradon"
+        },
+        {
+          "npc_code": 2100821,
+          "name": "Hill Coradon"
+        },
+        {
+          "npc_code": 2100828,
+          "name": "Hill Coradon"
+        },
+        {
+          "npc_code": 2400907,
+          "name": "Aberrant Coradon"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1120,
+      "name": "Young Kailin",
+      "family": "Fera",
+      "portrait": "pets/1120.png",
+      "source": "https://aion2.app/db/pets/1120",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kailin_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101022,
+          "name": "Ellun River Young Kailin"
+        },
+        {
+          "npc_code": 2400737,
+          "name": "Unstable Young Kailin"
+        },
+        {
+          "npc_code": 2400906,
+          "name": "Young Kailin"
+        },
+        {
+          "npc_code": 2400935,
+          "name": "Young Kailin"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1121,
+      "name": "Young Slink",
+      "family": "Fera",
+      "portrait": "pets/1121.png",
+      "source": "https://aion2.app/db/pets/1121",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Lepisma_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100189,
+          "name": "Young Wetland Slink"
+        },
+        {
+          "npc_code": 2100473,
+          "name": "Tolbas Young Slink"
+        },
+        {
+          "npc_code": 2400910,
+          "name": "Young Slink"
+        },
+        {
+          "npc_code": 2400950,
+          "name": "Young Slink"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1122,
+      "name": "Young Tog",
+      "family": "Fera",
+      "portrait": "pets/1122.png",
+      "source": "https://aion2.app/db/pets/1122",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Tog_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1123,
+      "name": "Young Ursus",
+      "family": "Fera",
+      "portrait": "pets/1123.png",
+      "source": "https://aion2.app/db/pets/1123",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Ursuss_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100173,
+          "name": "Baby Horn Ursus"
+        },
+        {
+          "npc_code": 2100818,
+          "name": "Hill Young Ursus"
+        },
+        {
+          "npc_code": 2400377,
+          "name": "Young Ursus"
+        },
+        {
+          "npc_code": 2400917,
+          "name": "Young Ursus"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1124,
+      "name": "Zaif",
+      "family": "Fera",
+      "portrait": "pets/1124.png",
+      "source": "https://aion2.app/db/pets/1124",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Zaif_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100573,
+          "name": "Rock Hill Zaif"
+        },
+        {
+          "npc_code": 2100748,
+          "name": "Highland Forest Zaif"
+        },
+        {
+          "npc_code": 2100797,
+          "name": "Highland Zaif"
+        },
+        {
+          "npc_code": 2100813,
+          "name": "Hill Zaif"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1125,
+      "name": "Aberrant Zaif",
+      "family": "Fera",
+      "portrait": "pets/1125.png",
+      "source": "https://aion2.app/db/pets/1125",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Zaif_01_CV02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100558,
+          "name": "Yellow-Maned Zaif"
+        },
+        {
+          "npc_code": 2400578,
+          "name": "Golden Zaif"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1126,
+      "name": "Aberrant Tog",
+      "family": "Fera",
+      "portrait": "pets/1126.png",
+      "source": "https://aion2.app/db/pets/1126",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Tog_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100006,
+          "name": "Cairn Tog"
+        },
+        {
+          "npc_code": 2100145,
+          "name": "Hungry Tog"
+        },
+        {
+          "npc_code": 2100288,
+          "name": "Field Tog"
+        },
+        {
+          "npc_code": 2100793,
+          "name": "Wild Stripe Tog"
+        },
+        {
+          "npc_code": 2100819,
+          "name": "Hill Tog"
+        },
+        {
+          "npc_code": 2400936,
+          "name": "Aberrant Tog"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1127,
+      "name": "Odyle Stone Spirit",
+      "family": "Natura",
+      "portrait": "pets/1127.png",
+      "source": "https://aion2.app/db/pets/1127",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_EarthEleOd_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400734,
+          "name": "Faded Odyle Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1128,
+      "name": "Drana Slime",
+      "family": "Varian",
+      "portrait": "pets/1128.png",
+      "source": "https://aion2.app/db/pets/1128",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Slime_02_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400015,
+          "name": "Drana Slime"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1129,
+      "name": "Drana Swarm",
+      "family": "Varian",
+      "portrait": "pets/1129.png",
+      "source": "https://aion2.app/db/pets/1129",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_AbyssSwarm_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2110501,
+          "name": "Crimson Drana Swarm"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1130,
+      "name": "Mutated Cadaver Insectoid",
+      "family": "Fera",
+      "portrait": "pets/1130.png",
+      "source": "https://aion2.app/db/pets/1130",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_AltBug_01_CV02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100554,
+          "name": "Ridge Spider"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1131,
+      "name": "Drana Spore",
+      "family": "Natura",
+      "portrait": "pets/1131.png",
+      "source": "https://aion2.app/db/pets/1131",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ForestEle_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2110502,
+          "name": "Crimson Mutated Spore"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1132,
+      "name": "Ashen Lupyllini",
+      "family": "Fera",
+      "portrait": "pets/1132.png",
+      "source": "https://aion2.app/db/pets/1132",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Lufilini_02_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1133,
+      "name": "Forest Dionae",
+      "family": "Natura",
+      "portrait": "pets/1133.png",
+      "source": "https://aion2.app/db/pets/1133",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Dionaea_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1134,
+      "name": "Eternal Coradon",
+      "family": "Fera",
+      "portrait": "pets/1134.png",
+      "source": "https://aion2.app/db/pets/1134",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Coradon_01_V04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400941,
+          "name": "Eternal Coradon"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1135,
+      "name": "Ashen Dionae",
+      "family": "Natura",
+      "portrait": "pets/1135.png",
+      "source": "https://aion2.app/db/pets/1135",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Dionaea_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400248,
+          "name": "Ashen Dionae"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1136,
+      "name": "Rafflesia",
+      "family": "Natura",
+      "portrait": "pets/1136.png",
+      "source": "https://aion2.app/db/pets/1136",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Rafflesia_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2000925,
+          "name": "Rafflesia"
+        },
+        {
+          "npc_code": 2110513,
+          "name": "Crimson Rafflesia"
+        },
+        {
+          "npc_code": 2400056,
+          "name": "Rafflesia"
+        },
+        {
+          "npc_code": 2400735,
+          "name": "Unstable Rafflesia"
+        },
+        {
+          "npc_code": 2400813,
+          "name": "Rafflesia"
+        },
+        {
+          "npc_code": 2400949,
+          "name": "Rafflesia"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1137,
+      "name": "Mumu Worker",
+      "family": "Cogni",
+      "portrait": "pets/1137.png",
+      "source": "https://aion2.app/db/pets/1137",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_SkurvWar_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400351,
+          "name": "Mumu Worker"
+        },
+        {
+          "npc_code": 2400390,
+          "name": "Escaped Mumu Worker"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1138,
+      "name": "Mumu Overseer",
+      "family": "Cogni",
+      "portrait": "pets/1138.png",
+      "source": "https://aion2.app/db/pets/1138",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_SkurvWar_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1139,
+      "name": "Swamp Monster",
+      "family": "Varian",
+      "portrait": "pets/1139.png",
+      "source": "https://aion2.app/db/pets/1139",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BigMan_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1140,
+      "name": "Forest Monster",
+      "family": "Varian",
+      "portrait": "pets/1140.png",
+      "source": "https://aion2.app/db/pets/1140",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BigMan_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100350,
+          "name": "Tolbas Forest Targon"
+        },
+        {
+          "npc_code": 2400225,
+          "name": "Burned Forester"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1141,
+      "name": "Marsh Targon",
+      "family": "Varian",
+      "portrait": "pets/1141.png",
+      "source": "https://aion2.app/db/pets/1141",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BigMan_01_V02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100021,
+          "name": "Marsh Targon"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1142,
+      "name": "Distorted Mutant",
+      "family": "Varian",
+      "portrait": "pets/1142.png",
+      "source": "https://aion2.app/db/pets/1142",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_BigMan_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400312,
+          "name": "Consumed Spirit Guardian"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1143,
+      "name": "Mutated Ursus",
+      "family": "Fera",
+      "portrait": "pets/1143.png",
+      "source": "https://aion2.app/db/pets/1143",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Ursuss_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400217,
+          "name": "Ashen Ursus"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1144,
+      "name": "Mutated Forest Guardian",
+      "family": "Natura",
+      "portrait": "pets/1144.png",
+      "source": "https://aion2.app/db/pets/1144",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ForestArc_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400214,
+          "name": "Mutated Forest Guardian"
+        },
+        {
+          "npc_code": 2400751,
+          "name": "Unstable Forest Guardian"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1145,
+      "name": "Mutated Insectoid Valka",
+      "family": "Fera",
+      "portrait": "pets/1145.png",
+      "source": "https://aion2.app/db/pets/1145",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Bug_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1146,
+      "name": "Gatekeeper Pinopi",
+      "family": "Varian",
+      "portrait": "pets/1146.png",
+      "source": "https://aion2.app/db/pets/1146",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_PinoBoss_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1147,
+      "name": "Dratona",
+      "family": "Cogni",
+      "portrait": "pets/1147.png",
+      "source": "https://aion2.app/db/pets/1147",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Dratona_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100901,
+          "name": "Scarlet Forest Dratona"
+        },
+        {
+          "npc_code": 2400116,
+          "name": "Dratona Tinkerer"
+        },
+        {
+          "npc_code": 2400161,
+          "name": "Dratona Supporter"
+        },
+        {
+          "npc_code": 2400380,
+          "name": "Dratona"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1148,
+      "name": "Drakana Kalgolem",
+      "family": "Varian",
+      "portrait": "pets/1148.png",
+      "source": "https://aion2.app/db/pets/1148",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kalgolem_01_V02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400014,
+          "name": "Crash Site Kalgolem"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1153,
+      "name": "Drana Mutant Brute",
+      "family": "Varian",
+      "portrait": "pets/1153.png",
+      "source": "https://aion2.app/db/pets/1153",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101135,
+          "name": "Eternal Drana Mutant"
+        },
+        {
+          "npc_code": 2110503,
+          "name": "Crimson Drana Mutant"
+        },
+        {
+          "npc_code": 2400834,
+          "name": "Drana Mutant"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1154,
+      "name": "Faded Mutant Brute",
+      "family": "Varian",
+      "portrait": "pets/1154.png",
+      "source": "https://aion2.app/db/pets/1154",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_02_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400476,
+          "name": "Faded Mutant Brute"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1155,
+      "name": "Superior Water Spirit",
+      "family": "Natura",
+      "portrait": "pets/1155.png",
+      "source": "https://aion2.app/db/pets/1155",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_WaterEle_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100665,
+          "name": "Torrent Spirit"
+        },
+        {
+          "npc_code": 2400306,
+          "name": "Water Mist Spirit"
+        },
+        {
+          "npc_code": 2400739,
+          "name": "Unstable Superior Water Spirit"
+        },
+        {
+          "npc_code": 2400816,
+          "name": "Immortal Water Spirit Guardian"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1156,
+      "name": "Elite Klaw",
+      "family": "Cogni",
+      "portrait": "pets/1156.png",
+      "source": "https://aion2.app/db/pets/1156",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Neuth_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100079,
+          "name": "Bodyguard Teegant"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1157,
+      "name": "Cadaver Cleaner",
+      "family": "Varian",
+      "portrait": "pets/1157.png",
+      "source": "https://aion2.app/db/pets/1157",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Imp_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400275,
+          "name": "Ruins Corpse Cleaner"
+        },
+        {
+          "npc_code": 2400412,
+          "name": "Ferocious Cadaver Cleaner"
+        },
+        {
+          "npc_code": 2400418,
+          "name": "Ferocious Cadaver Cleaner"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1158,
+      "name": "Venomous Insect Sram",
+      "family": "Fera",
+      "portrait": "pets/1158.png",
+      "source": "https://aion2.app/db/pets/1158",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Bug_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1159,
+      "name": "Parasite Swarm",
+      "family": "Varian",
+      "portrait": "pets/1159.png",
+      "source": "https://aion2.app/db/pets/1159",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_AbyssSwarm_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400473,
+          "name": "Giant Ore Insectoid Adult"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1160,
+      "name": "Drana Contaminant",
+      "family": "Varian",
+      "portrait": "pets/1160.png",
+      "source": "https://aion2.app/db/pets/1160",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_04.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1161,
+      "name": "Faded Floater",
+      "family": "Varian",
+      "portrait": "pets/1161.png",
+      "source": "https://aion2.app/db/pets/1161",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_04_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400479,
+          "name": "Faded Floater"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1162,
+      "name": "Kerubar",
+      "family": "Cogni",
+      "portrait": "pets/1162.png",
+      "source": "https://aion2.app/db/pets/1162",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Cherubim_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101075,
+          "name": "Eternal Kerubar"
+        },
+        {
+          "npc_code": 2101079,
+          "name": "Eternal Kerubar"
+        },
+        {
+          "npc_code": 2400801,
+          "name": "Kerubar"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1163,
+      "name": "Basilisk",
+      "family": "Fera",
+      "portrait": "pets/1163.png",
+      "source": "https://aion2.app/db/pets/1163",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Basilisk_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400240,
+          "name": "Black Ash Basilisk"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1164,
+      "name": "Lesser Earth Spirit",
+      "family": "Natura",
+      "portrait": "pets/1164.png",
+      "source": "https://aion2.app/db/pets/1164",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_EarthEle_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101089,
+          "name": "Eternal Earth Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1165,
+      "name": "Intermediate Earth Spirit",
+      "family": "Natura",
+      "portrait": "pets/1165.png",
+      "source": "https://aion2.app/db/pets/1165",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_EarthEle_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100653,
+          "name": "Wandering Earth Spirit"
+        },
+        {
+          "npc_code": 2101102,
+          "name": "Violent Earth Spirit"
+        },
+        {
+          "npc_code": 2400823,
+          "name": "Immortal Earth Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1166,
+      "name": "Superior Earth Spirit",
+      "family": "Natura",
+      "portrait": "pets/1166.png",
+      "source": "https://aion2.app/db/pets/1166",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_EarthEle_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100667,
+          "name": "Peculiar Rock Spirit"
+        },
+        {
+          "npc_code": 2400310,
+          "name": "Corroded Soil Spirit"
+        },
+        {
+          "npc_code": 2400817,
+          "name": "Immortal Earth Spirit Guardian"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1167,
+      "name": "Flame Stone Guardian Statue",
+      "family": "Varian",
+      "portrait": "pets/1167.png",
+      "source": "https://aion2.app/db/pets/1167",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Gargoyle_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1168,
+      "name": "Lesser Water Spirit",
+      "family": "Natura",
+      "portrait": "pets/1168.png",
+      "source": "https://aion2.app/db/pets/1168",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_WaterEle_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100231,
+          "name": "Water Spirit"
+        },
+        {
+          "npc_code": 2101088,
+          "name": "Eternal Water Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1169,
+      "name": "Intermediate Water Spirit",
+      "family": "Natura",
+      "portrait": "pets/1169.png",
+      "source": "https://aion2.app/db/pets/1169",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_WaterEle_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100657,
+          "name": "Wandering Water Spirit"
+        },
+        {
+          "npc_code": 2101101,
+          "name": "Violent Water Spirit"
+        },
+        {
+          "npc_code": 2400738,
+          "name": "Unstable Intermediate Water Spirit"
+        },
+        {
+          "npc_code": 2400822,
+          "name": "Immortal Water Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1170,
+      "name": "Kerubian",
+      "family": "Cogni",
+      "portrait": "pets/1170.png",
+      "source": "https://aion2.app/db/pets/1170",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Cherubim_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101076,
+          "name": "Eternal Kerubian"
+        },
+        {
+          "npc_code": 2101080,
+          "name": "Eternal Kerubian"
+        },
+        {
+          "npc_code": 2400802,
+          "name": "Kerubian"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1171,
+      "name": "Kerubiel",
+      "family": "Cogni",
+      "portrait": "pets/1171.png",
+      "source": "https://aion2.app/db/pets/1171",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Cherubim_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101077,
+          "name": "Eternal Kerubiel"
+        },
+        {
+          "npc_code": 2400803,
+          "name": "Kerubiel"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1172,
+      "name": "Duduka Worker",
+      "family": "Varian",
+      "portrait": "pets/1172.png",
+      "source": "https://aion2.app/db/pets/1172",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Duduka_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400612,
+          "name": "Duduka Worker"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1173,
+      "name": "Duduka Trebuchet Worker",
+      "family": "Varian",
+      "portrait": "pets/1173.png",
+      "source": "https://aion2.app/db/pets/1173",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Duduka_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400613,
+          "name": "Duduka Slinger"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1174,
+      "name": "Drana Predator",
+      "family": "Varian",
+      "portrait": "pets/1174.png",
+      "source": "https://aion2.app/db/pets/1174",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2110505,
+          "name": "Crimson Drana Predator"
+        },
+        {
+          "npc_code": 2400010,
+          "name": "Drana Predator"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1175,
+      "name": "Faded Predator",
+      "family": "Varian",
+      "portrait": "pets/1175.png",
+      "source": "https://aion2.app/db/pets/1175",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_03_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400480,
+          "name": "Faded Predator"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1176,
+      "name": "Mudthorn",
+      "family": "Varian",
+      "portrait": "pets/1176.png",
+      "source": "https://aion2.app/db/pets/1176",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_FafBlood_02_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400481,
+          "name": "Addicted Mudthorn"
+        },
+        {
+          "npc_code": 2400707,
+          "name": "Remnant of Subspace"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1177,
+      "name": "Ancient Spirit",
+      "family": "Natura",
+      "portrait": "pets/1177.png",
+      "source": "https://aion2.app/db/pets/1177",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Gartua_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1178,
+      "name": "Spirit King's Bodyguard Warrior",
+      "family": "Natura",
+      "portrait": "pets/1178.png",
+      "source": "https://aion2.app/db/pets/1178",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_EleGuard_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1179,
+      "name": "Drana Mutant",
+      "family": "Varian",
+      "portrait": "pets/1179.png",
+      "source": "https://aion2.app/db/pets/1179",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400001,
+          "name": "Twisted Mutant"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1180,
+      "name": "Faded Mutant",
+      "family": "Varian",
+      "portrait": "pets/1180.png",
+      "source": "https://aion2.app/db/pets/1180",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400477,
+          "name": "Faded Mutant"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1181,
+      "name": "Brax",
+      "family": "Fera",
+      "portrait": "pets/1181.png",
+      "source": "https://aion2.app/db/pets/1181",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Brax_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2000954,
+          "name": "Brax"
+        },
+        {
+          "npc_code": 2100217,
+          "name": "Field Brax"
+        },
+        {
+          "npc_code": 2100303,
+          "name": "Hungry Brax"
+        },
+        {
+          "npc_code": 2100740,
+          "name": "Docile Highland Brax"
+        },
+        {
+          "npc_code": 2400375,
+          "name": "Brax"
+        },
+        {
+          "npc_code": 2400914,
+          "name": "Brax"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1182,
+      "name": "Elite Soulless Corpse Gnat",
+      "family": "Varian",
+      "portrait": "pets/1182.png",
+      "source": "https://aion2.app/db/pets/1182",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_CorpeSpider_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1183,
+      "name": "Soulless Corpse Gnat",
+      "family": "Varian",
+      "portrait": "pets/1183.png",
+      "source": "https://aion2.app/db/pets/1183",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_CorpeSpider_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400413,
+          "name": "Soulless Corpse Gnat"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1184,
+      "name": "Drakan Watcher",
+      "family": "Cogni",
+      "portrait": "pets/1184.png",
+      "source": "https://aion2.app/db/pets/1184",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Drakan_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100872,
+          "name": "Processing Facility Drakan Scout"
+        },
+        {
+          "npc_code": 2400384,
+          "name": "Drakan Manager"
+        },
+        {
+          "npc_code": 2400591,
+          "name": "Drakan Patrol Watcher"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1185,
+      "name": "Dratona Tinkerer",
+      "family": "Cogni",
+      "portrait": "pets/1185.png",
+      "source": "https://aion2.app/db/pets/1185",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Dratona_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1186,
+      "name": "Poison Blood",
+      "family": "Varian",
+      "portrait": "pets/1186.png",
+      "source": "https://aion2.app/db/pets/1186",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_FafBlood_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400311,
+          "name": "Cursed Poison Blood"
+        },
+        {
+          "npc_code": 2400743,
+          "name": "Unstable Poison Blood"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1187,
+      "name": "Intermediate Fire Spirit",
+      "family": "Natura",
+      "portrait": "pets/1187.png",
+      "source": "https://aion2.app/db/pets/1187",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_FireEle_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101100,
+          "name": "Violent Fire Spirit"
+        },
+        {
+          "npc_code": 2400748,
+          "name": "Unstable Intermediate Fire Spirit"
+        },
+        {
+          "npc_code": 2400821,
+          "name": "Immortal Fire Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1188,
+      "name": "Vivel",
+      "family": "Fera",
+      "portrait": "pets/1188.png",
+      "source": "https://aion2.app/db/pets/1188",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_GraveBat_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100583,
+          "name": "Highland Vivel"
+        },
+        {
+          "npc_code": 2400057,
+          "name": "Vampire Vivel"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1189,
+      "name": "Tamed Zaif",
+      "family": "Fera",
+      "portrait": "pets/1189.png",
+      "source": "https://aion2.app/db/pets/1189",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Zaif_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100566,
+          "name": "Marauders Zaif"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1190,
+      "name": "Elite Poisonous Spore Fungen",
+      "family": "Natura",
+      "portrait": "pets/1190.png",
+      "source": "https://aion2.app/db/pets/1190",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_ToxFungus_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2670009,
+          "name": "Distorted Zarama"
+        },
+        {
+          "npc_code": 2670016,
+          "name": "Hallucinogenic Barama"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1191,
+      "name": "Furious Feruk",
+      "family": "Cogni",
+      "portrait": "pets/1191.png",
+      "source": "https://aion2.app/db/pets/1191",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Ferk_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1192,
+      "name": "Silver Blade Rotan",
+      "family": "Varian",
+      "portrait": "pets/1192.png",
+      "source": "https://aion2.app/db/pets/1192",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Rotan_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2300310,
+          "name": "Silver Blade Rotan"
+        },
+        {
+          "npc_code": 2310310,
+          "name": "Silver Blade Rotan"
+        },
+        {
+          "npc_code": 2320310,
+          "name": "Silver Blade Rotan"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1193,
+      "name": "Addicted Shulak Cart Worker",
+      "family": "Cogni",
+      "portrait": "pets/1193.png",
+      "source": "https://aion2.app/db/pets/1193",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_AddShulack_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400455,
+          "name": "Rampaging Shulak Cart Worker"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1194,
+      "name": "Guardite",
+      "family": "Varian",
+      "portrait": "pets/1194.png",
+      "source": "https://aion2.app/db/pets/1194",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Guardit_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100712,
+          "name": "Uncontrollable Guardite"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1195,
+      "name": "Dracuni Herbalist",
+      "family": "Cogni",
+      "portrait": "pets/1195.png",
+      "source": "https://aion2.app/db/pets/1195",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Dracuni_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100867,
+          "name": "Dracuni Processing Laborer"
+        },
+        {
+          "npc_code": 2400746,
+          "name": "Poison Blood Gatherer"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1196,
+      "name": "Elite Dratona",
+      "family": "Cogni",
+      "portrait": "pets/1196.png",
+      "source": "https://aion2.app/db/pets/1196",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Dratona_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2670018,
+          "name": "32nd Division Twisted Kutira"
+        },
+        {
+          "npc_code": 2670073,
+          "name": "32nd Division Assault Trooper Putika"
+        },
+        {
+          "npc_code": 2670080,
+          "name": "32nd Division Vanguard Brasha"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1197,
+      "name": "Watcher Guardite",
+      "family": "Varian",
+      "portrait": "pets/1197.png",
+      "source": "https://aion2.app/db/pets/1197",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Guardit_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100716,
+          "name": "Contaminated Guardite"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1198,
+      "name": "Ashen Basilisk",
+      "family": "Fera",
+      "portrait": "pets/1198.png",
+      "source": "https://aion2.app/db/pets/1198",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Basilisk_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1199,
+      "name": "Flame Barghest",
+      "family": "Fera",
+      "portrait": "pets/1199.png",
+      "source": "https://aion2.app/db/pets/1199",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Balgest_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1200,
+      "name": "Naga Elite Priest",
+      "family": "Cogni",
+      "portrait": "pets/1200.png",
+      "source": "https://aion2.app/db/pets/1200",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_NagaElite_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1201,
+      "name": "Modified Lupyllini",
+      "family": "Cogni",
+      "portrait": "pets/1201.png",
+      "source": "https://aion2.app/db/pets/1201",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Lufilini_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100815,
+          "name": "Lupyllini Test Subject"
+        },
+        {
+          "npc_code": 2101086,
+          "name": "Eternal Lupyllini"
+        },
+        {
+          "npc_code": 2400814,
+          "name": "Modified Lupyllini"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1202,
+      "name": "Decomposed Lupyllini",
+      "family": "Cogni",
+      "portrait": "pets/1202.png",
+      "source": "https://aion2.app/db/pets/1202",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Lufilini_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100747,
+          "name": "Contaminated Highland Lupyllini"
+        },
+        {
+          "npc_code": 2400004,
+          "name": "Decomposed Lupyllini"
+        },
+        {
+          "npc_code": 2400378,
+          "name": "Decomposed Lupyllini"
+        },
+        {
+          "npc_code": 2400391,
+          "name": "Ferocious Lupyllini"
+        },
+        {
+          "npc_code": 2400911,
+          "name": "Decomposed Lupyllini"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1203,
+      "name": "Tamed Karnif",
+      "family": "Fera",
+      "portrait": "pets/1203.png",
+      "source": "https://aion2.app/db/pets/1203",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Kalnif_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400257,
+          "name": "Blades Karnif"
+        },
+        {
+          "npc_code": 2400503,
+          "name": "Tamed Blades Beast"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1204,
+      "name": "Pagati",
+      "family": "Special",
+      "portrait": "pets/1204.png",
+      "source": "https://aion2.app/db/pets/1204",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Pagati_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": []
+    },
+    {
+      "id": 1206,
+      "name": "Elite Guardite",
+      "family": "Varian",
+      "portrait": "pets/1206.png",
+      "source": "https://aion2.app/db/pets/1206",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Guardit_03.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100718,
+          "name": "Divine Ansas"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1207,
+      "name": "Agrint",
+      "family": "Natura",
+      "portrait": "pets/1207.png",
+      "source": "https://aion2.app/db/pets/1207",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Agrint_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100143,
+          "name": "Decaying Agrint"
+        },
+        {
+          "npc_code": 2100698,
+          "name": "Old Agrint"
+        },
+        {
+          "npc_code": 2100714,
+          "name": "Contaminated Agrint"
+        },
+        {
+          "npc_code": 2101099,
+          "name": "Eternal Agrint"
+        },
+        {
+          "npc_code": 2400221,
+          "name": "Mutated Elim"
+        },
+        {
+          "npc_code": 2400415,
+          "name": "Ruin Agrint"
+        },
+        {
+          "npc_code": 2400825,
+          "name": "Island Agrint"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1208,
+      "name": "Ashen Agrint",
+      "family": "Natura",
+      "portrait": "pets/1208.png",
+      "source": "https://aion2.app/db/pets/1208",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Agrint_01_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400750,
+          "name": "Unstable Agrint"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1209,
+      "name": "Thin Agrint",
+      "family": "Natura",
+      "portrait": "pets/1209.png",
+      "source": "https://aion2.app/db/pets/1209",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Agrint_01_V01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2110508,
+          "name": "Crimson Agrint"
+        },
+        {
+          "npc_code": 2400054,
+          "name": "Red Eye Agrint"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1210,
+      "name": "Dry Leaf Agrint",
+      "family": "Natura",
+      "portrait": "pets/1210.png",
+      "source": "https://aion2.app/db/pets/1210",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Agrint_01_V02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100179,
+          "name": "Forest Agrint"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1211,
+      "name": "Sky Whale",
+      "family": "Special",
+      "portrait": "pets/1211.png",
+      "source": "https://aion2.app/db/pets/1211",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_SkyWhale_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": []
+    },
+    {
+      "id": 1213,
+      "name": "Lesser Fire Spirit",
+      "family": "Natura",
+      "portrait": "pets/1213.png",
+      "source": "https://aion2.app/db/pets/1213",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_FireEle_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2101087,
+          "name": "Eternal Fire Spirit"
+        },
+        {
+          "npc_code": 2400325,
+          "name": "Burning Ember Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1214,
+      "name": "Black Spirit",
+      "family": "Natura",
+      "portrait": "pets/1214.png",
+      "source": "https://aion2.app/db/pets/1214",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DarkEle_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100460,
+          "name": "Contaminated Spirit"
+        },
+        {
+          "npc_code": 2100807,
+          "name": "Distorted Spirit"
+        },
+        {
+          "npc_code": 2400708,
+          "name": "Black Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1215,
+      "name": "Predator Saraswati",
+      "family": "Cogni",
+      "portrait": "pets/1215.png",
+      "source": "https://aion2.app/db/pets/1215",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_NagaElite_02.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2300403,
+          "name": "Predator Saraswati"
+        },
+        {
+          "npc_code": 2310403,
+          "name": "Predator Saraswati"
+        },
+        {
+          "npc_code": 2320403,
+          "name": "Predator Saraswati"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1216,
+      "name": "Dark Spirit",
+      "family": "Varian",
+      "portrait": "pets/1216.png",
+      "source": "https://aion2.app/db/pets/1216",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Specter_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100600,
+          "name": "Corrupted Spirit"
+        },
+        {
+          "npc_code": 2100656,
+          "name": "Wandering Dark Spirit"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1217,
+      "name": "Congealed Drana",
+      "family": "Varian",
+      "portrait": "pets/1217.png",
+      "source": "https://aion2.app/db/pets/1217",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_06.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400009,
+          "name": "Congealed Drana"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1218,
+      "name": "Faded Drana",
+      "family": "Varian",
+      "portrait": "pets/1218.png",
+      "source": "https://aion2.app/db/pets/1218",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_DranaVar_06_CV01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2400478,
+          "name": "Faded Chunk"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1219,
+      "name": "Zelophi",
+      "family": "Natura",
+      "portrait": "pets/1219.png",
+      "source": "https://aion2.app/db/pets/1219",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Jellofi_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": [
+        {
+          "npc_code": 2100458,
+          "name": "Coastal Zelophi"
+        },
+        {
+          "npc_code": 2101085,
+          "name": "Eternal Zelophi"
+        },
+        {
+          "npc_code": 2400811,
+          "name": "Zelophi"
+        }
+      ],
+      "insight_costs": [
+        5,
+        25,
+        75
+      ]
+    },
+    {
+      "id": 1240,
+      "name": "White Bunny",
+      "family": "Special",
+      "portrait": "pets/1240.png",
+      "source": "https://aion2.app/db/pets/1240",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Rabbit_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": []
+    },
+    {
+      "id": 1245,
+      "name": "Azure Flame Kumiho",
+      "family": "Special",
+      "portrait": "pets/1245.png",
+      "source": "https://aion2.app/db/pets/1245",
+      "portrait_source": "https://assets.playnccdn.com/static-aion2-gamedata/resources/UT_Vehicle_Portrait_Gumiho_01.png",
+      "region": "global-reference",
+      "checked_on": "2026-10-14",
+      "monsters": []
+    }
+  ]
+}

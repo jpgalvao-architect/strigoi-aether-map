@@ -1,0 +1,112 @@
+{
+  "$defs": {
+    "FarmSite": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "npc_code": {
+          "exclusiveMinimum": 0,
+          "title": "Npc Code",
+          "type": "integer"
+        },
+        "map_id": {
+          "enum": [
+            "altgard",
+            "verteron"
+          ],
+          "title": "Map Id",
+          "type": "string"
+        },
+        "x": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y",
+          "type": "number"
+        },
+        "world_lat": {
+          "title": "World Lat",
+          "type": "number"
+        },
+        "world_lng": {
+          "title": "World Lng",
+          "type": "number"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "region": {
+          "enum": [
+            "global-reference",
+            "sa-confirmed"
+          ],
+          "title": "Region",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "npc_code",
+        "map_id",
+        "x",
+        "y",
+        "world_lat",
+        "world_lng",
+        "source",
+        "region"
+      ],
+      "title": "FarmSite",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "checked_on": {
+      "title": "Checked On",
+      "type": "string"
+    },
+    "region": {
+      "enum": [
+        "global-reference",
+        "sa-confirmed"
+      ],
+      "title": "Region",
+      "type": "string"
+    },
+    "coordinate_system": {
+      "title": "Coordinate System",
+      "type": "string"
+    },
+    "sites": {
+      "items": {
+        "$ref": "#/$defs/FarmSite"
+      },
+      "maxItems": 50000,
+      "title": "Sites",
+      "type": "array"
+    }
+  },
+  "required": [
+    "checked_on",
+    "region",
+    "coordinate_system",
+    "sites"
+  ],
+  "title": "PetSites",
+  "type": "object"
+}

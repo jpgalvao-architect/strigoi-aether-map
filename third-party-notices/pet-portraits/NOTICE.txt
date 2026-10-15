@@ -1,0 +1,18 @@
+Pet portraits
+
+Original, unchanged PNG game portraits from NC Corporation's public CDN:
+https://assets.playnccdn.com/static-aion2-gamedata/resources/
+Copyright NC Corporation. All rights reserved.
+
+These game images are separate from the GPLv3 licence of Strigoi's own code.
+No ownership, open-source licence for the images, or NC endorsement is claimed.
+
+Factual pet IDs, English names, families and monster-source links are referenced
+to the client snapshot indexed by https://aion2.app/db/pets (2026-09-18, build 220).
+Only factual identities/links are used; site code, guides and descriptions are
+not copied. Per-image original URLs and SHA-256 hashes are recorded in
+data-sources/pet-portraits.json.
+
+This catalogue does not certify South America availability, live presence,
+regional costs, drop probability or world/map coordinates. Such evidence is
+tracked separately. Unknown information must not be presented as zero.

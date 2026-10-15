@@ -1,0 +1,151 @@
+{
+  "$defs": {
+    "MonsterSource": {
+      "additionalProperties": false,
+      "properties": {
+        "npc_code": {
+          "exclusiveMinimum": 0,
+          "title": "Npc Code",
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 150,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "npc_code",
+        "name"
+      ],
+      "title": "MonsterSource",
+      "type": "object"
+    },
+    "PetDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "exclusiveMinimum": 0,
+          "title": "Id",
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 150,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "family": {
+          "enum": [
+            "Cogni",
+            "Fera",
+            "Natura",
+            "Varian",
+            "Special"
+          ],
+          "title": "Family",
+          "type": "string"
+        },
+        "portrait": {
+          "pattern": "^pets/\\d+\\.png$",
+          "title": "Portrait",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "portrait_source": {
+          "title": "Portrait Source",
+          "type": "string"
+        },
+        "region": {
+          "enum": [
+            "global-reference",
+            "sa-confirmed"
+          ],
+          "title": "Region",
+          "type": "string"
+        },
+        "checked_on": {
+          "title": "Checked On",
+          "type": "string"
+        },
+        "monsters": {
+          "items": {
+            "$ref": "#/$defs/MonsterSource"
+          },
+          "maxItems": 300,
+          "title": "Monsters",
+          "type": "array"
+        },
+        "insight_costs": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 10,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Insight Costs"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "family",
+        "portrait",
+        "source",
+        "portrait_source",
+        "region",
+        "checked_on"
+      ],
+      "title": "PetDefinition",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "checked_on": {
+      "title": "Checked On",
+      "type": "string"
+    },
+    "source_build": {
+      "title": "Source Build",
+      "type": "string"
+    },
+    "coverage": {
+      "title": "Coverage",
+      "type": "string"
+    },
+    "pets": {
+      "items": {
+        "$ref": "#/$defs/PetDefinition"
+      },
+      "maxItems": 2000,
+      "title": "Pets",
+      "type": "array"
+    }
+  },
+  "required": [
+    "checked_on",
+    "source_build",
+    "coverage",
+    "pets"
+  ],
+  "title": "PetCatalogue",
+  "type": "object"
+}

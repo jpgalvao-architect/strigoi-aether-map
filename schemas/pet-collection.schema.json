@@ -1,0 +1,181 @@
+{
+  "$defs": {
+    "PetEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "manual": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PetProgress"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "observed": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PetProgress"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "use_manual": {
+          "default": false,
+          "title": "Use Manual",
+          "type": "boolean"
+        },
+        "favorite": {
+          "default": false,
+          "title": "Favorite",
+          "type": "boolean"
+        },
+        "goal": {
+          "default": 1,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Goal",
+          "type": "integer"
+        }
+      },
+      "title": "PetEntry",
+      "type": "object"
+    },
+    "PetProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "region": {
+          "default": "local",
+          "title": "Region",
+          "type": "string"
+        },
+        "server": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Server"
+        },
+        "character": {
+          "default": "",
+          "maxLength": 100,
+          "title": "Character",
+          "type": "string"
+        },
+        "entries": {
+          "additionalProperties": {
+            "$ref": "#/$defs/PetEntry"
+          },
+          "maxProperties": 2000,
+          "title": "Entries",
+          "type": "object"
+        },
+        "synced_at": {
+          "default": "",
+          "title": "Synced At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "PetProfile",
+      "type": "object"
+    },
+    "PetProgress": {
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Level"
+        },
+        "souls": {
+          "anyOf": [
+            {
+              "maximum": 10000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Souls"
+        },
+        "pending": {
+          "default": false,
+          "title": "Pending",
+          "type": "boolean"
+        },
+        "origin": {
+          "default": "manual",
+          "enum": [
+            "manual",
+            "observed"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "updated_at": {
+          "default": "",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "title": "PetProgress",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "active_profile": {
+      "default": "local",
+      "title": "Active Profile",
+      "type": "string"
+    },
+    "profiles": {
+      "additionalProperties": {
+        "$ref": "#/$defs/PetProfile"
+      },
+      "maxProperties": 100,
+      "title": "Profiles",
+      "type": "object"
+    }
+  },
+  "title": "PetCollection",
+  "type": "object"
+}
