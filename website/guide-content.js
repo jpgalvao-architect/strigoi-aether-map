@@ -78,12 +78,12 @@ window.StrigoiGuide = {
             "en_US": "Open and keep it running"
           },
           "where": {
-            "pt_BR": "Strigoi → Configurações",
-            "en_US": "Strigoi → Settings"
+            "pt_BR": "Azphelumbra → Configurações",
+            "en_US": "Azphelumbra → Settings"
           },
           "body": {
-            "pt_BR": "Abra o Strigoi antes de entrar na instância, principalmente ao testar Combate. Em Configurações, confira o idioma e o fuso dos eventos. Pode minimizar a janela para jogar; fechar o aplicativo encerra seus recursos.",
-            "en_US": "Open Strigoi before entering the instance, especially when testing Combat. In Settings, check language and event time zone. Minimize the window to play; closing the app stops its features."
+            "pt_BR": "Abra o Azphelumbra antes de entrar na instância, principalmente ao testar Combate. Em Configurações, confira o idioma e o fuso dos eventos. Pode minimizar a janela para jogar; fechar o aplicativo encerra seus recursos.",
+            "en_US": "Open Azphelumbra before entering the instance, especially when testing Combat. In Settings, check language and event time zone. Minimize the window to play; closing the app stops its features."
           },
           "tip": {
             "pt_BR": "Trocar para inglês não muda a região da agenda ou o fuso.",
@@ -98,8 +98,8 @@ window.StrigoiGuide = {
             "en_US": "How do I update?"
           },
           "answer": {
-            "pt_BR": "Feche o Strigoi antes de executar o novo instalador. No portátil, extraia a nova versão em outra pasta. Preferências e visitas ficam na pasta de dados do app.",
-            "en_US": "Close Strigoi before running the new installer. For portable updates, extract into another folder. Preferences and visits stay in the app data folder."
+            "pt_BR": "Feche o Azphelumbra antes de executar o novo instalador. No portátil, extraia a nova versão em outra pasta. Preferências e visitas ficam na pasta de dados do app.",
+            "en_US": "Close Azphelumbra before running the new installer. For portable updates, extract into another folder. Preferences and visits stay in the app data folder."
           }
         }
       ]
@@ -119,16 +119,16 @@ window.StrigoiGuide = {
       "steps": [
         {
           "title": {
-            "pt_BR": "Abra o menu do mascote",
-            "en_US": "Open the mascot menu"
+            "pt_BR": "Abra o menu do emblema",
+            "en_US": "Open the emblem menu"
           },
           "where": {
             "pt_BR": "Mascote flutuante",
-            "en_US": "Floating mascot"
+            "en_US": "Floating emblem"
           },
           "body": {
-            "pt_BR": "Clique no mascote para expandir. Use a seta do painel ou clique no mascote novamente para recolher. Arraste o mascote para mover; sua posição fica salva.",
-            "en_US": "Click the mascot to expand. Use the panel arrow or click the mascot again to collapse. Drag the mascot to move it; its position is saved."
+            "pt_BR": "Clique no emblema para expandir. Use a seta do painel ou clique no emblema novamente para recolher. Arraste o emblema para mover; sua posição fica salva.",
+            "en_US": "Click the emblem to expand. Use the panel arrow or click the emblem again to collapse. Drag the emblem to move it; its position is saved."
           },
           "tip": {
             "pt_BR": "Posicione o menu onde não atrapalhe sua HUD.",
@@ -175,8 +175,8 @@ window.StrigoiGuide = {
       "help": [
         {
           "question": {
-            "pt_BR": "O mascote não aparece.",
-            "en_US": "The mascot is missing."
+            "pt_BR": "O emblema não aparece.",
+            "en_US": "The emblem is missing."
           },
           "answer": {
             "pt_BR": "Na janela principal, abra Configurações e habilite Mostrar menu rápido de overlay.",
@@ -208,8 +208,8 @@ window.StrigoiGuide = {
             "en_US": "Pets → Sync with game"
           },
           "body": {
-            "pt_BR": "Abra o Strigoi antes de entrar no personagem e confira a região. A coleção é recebida na entrada; não precisa deixar o menu do jogo aberto. A leitura automática usa Npcap.",
-            "en_US": "Open Strigoi before logging into your character and check the region. The collection arrives during login; you do not need to leave the game menu open. Automatic reading uses Npcap."
+            "pt_BR": "Abra o Azphelumbra antes de entrar no personagem e confira a região. A coleção é recebida na entrada; não precisa deixar o menu do jogo aberto. A leitura automática usa Npcap.",
+            "en_US": "Open Azphelumbra before logging into your character and check the region. The collection arrives during login; you do not need to leave the game menu open. Automatic reading uses Npcap."
           },
           "tip": {
             "pt_BR": "Abriu o app depois de entrar? Volte à seleção de personagem e entre novamente quando puder. A coleção manual funciona sem Npcap.",
@@ -278,8 +278,8 @@ window.StrigoiGuide = {
             "en_US": "Why is my collection empty?"
           },
           "answer": {
-            "pt_BR": "A coleção é recebida na entrada do personagem. Abra o Strigoi antes de entrar, confirme a região e a opção de sincronização e verifique se Npcap está instalado. Informações ainda não recebidas ficam desconhecidas.",
-            "en_US": "The collection arrives when logging into a character. Open Strigoi before login, check the region and sync option, and verify Npcap is installed. Unread progress stays unknown."
+            "pt_BR": "A coleção é recebida na entrada do personagem. Abra o Azphelumbra antes de entrar, confirme a região e a opção de sincronização e verifique se Npcap está instalado. Informações ainda não recebidas ficam desconhecidas.",
+            "en_US": "The collection arrives when logging into a character. Open Azphelumbra before login, check the region and sync option, and verify Npcap is installed. Unread progress stays unknown."
           }
         },
         {
@@ -416,8 +416,8 @@ window.StrigoiGuide = {
             "en_US": "Overlay → Select minimap"
           },
           "body": {
-            "pt_BR": "Clique em Selecionar minimapa. A janela do Strigoi desaparece temporariamente. Arraste um retângulo sobre o terreno do minimapa, sem incluir a barra com o nome da região nem as missões abaixo. Solte para salvar; Esc cancela.",
-            "en_US": "Click Select minimap. Strigoi temporarily hides its window. Drag a rectangle over minimap terrain, excluding the region title bar and quests below. Release to save; Esc cancels."
+            "pt_BR": "Clique em Selecionar minimapa. A janela do Azphelumbra desaparece temporariamente. Arraste um retângulo sobre o terreno do minimapa, sem incluir a barra com o nome da região nem as missões abaixo. Solte para salvar; Esc cancela.",
+            "en_US": "Click Select minimap. Azphelumbra temporarily hides its window. Drag a rectangle over minimap terrain, excluding the region title bar and quests below. Release to save; Esc cancels."
           },
           "tip": {
             "pt_BR": "Não precisa tirar screenshot nem mover arquivos. O app salva os limites da área.",
@@ -434,8 +434,8 @@ window.StrigoiGuide = {
             "en_US": "Overlay → Show / Enable overlay"
           },
           "body": {
-            "pt_BR": "Escolha as categorias em Camadas do Atlas e clique em Ativar overlay. O Strigoi minimiza e procura detalhes do terreno para posicionar os pontos. Depois, use o menu rápido para controlar os mapas.",
-            "en_US": "Choose categories in Atlas layers and click Enable overlay. Strigoi minimizes and looks for terrain details to place markers. Then use the quick menu to control maps."
+            "pt_BR": "Escolha as categorias em Camadas do Atlas e clique em Ativar overlay. O Azphelumbra minimiza e procura detalhes do terreno para posicionar os pontos. Depois, use o menu rápido para controlar os mapas.",
+            "en_US": "Choose categories in Atlas layers and click Enable overlay. Azphelumbra minimizes and looks for terrain details to place markers. Then use the quick menu to control maps."
           },
           "tip": {
             "pt_BR": "Os símbolos do minimapa têm tamanho 2× maior. Nos cubos, ↑ e ↓ indicam altura acima ou abaixo da mediana do grupo na fonte; não comparam com o personagem. Sem reconhecer o terreno, o app oculta os pontos. Alt+Tab oculta todos os overlays. Menus reconhecidos também ocultam os painéis; o mapa grande mantém seus marcadores. A medição continua.",
@@ -452,8 +452,8 @@ window.StrigoiGuide = {
             "en_US": "Game → M"
           },
           "body": {
-            "pt_BR": "Abra o mapa grande com M. Quando reconhecido, ele tem prioridade sobre o minimapa. Feche para voltar ao minimapa sem trocar o modo no Strigoi.",
-            "en_US": "Press M to open the full map. When recognized, it takes priority over the minimap. Close it to return to the minimap without changing Strigoi mode."
+            "pt_BR": "Abra o mapa grande com M. Quando reconhecido, ele tem prioridade sobre o minimapa. Feche para voltar ao minimapa sem trocar o modo no Azphelumbra.",
+            "en_US": "Press M to open the full map. When recognized, it takes priority over the minimap. Close it to return to the minimap without changing Azphelumbra mode."
           },
           "tip": {
             "pt_BR": "O app reconhece a imagem do mapa na tela. O mapa grande não exige recorte manual.",
@@ -630,12 +630,12 @@ window.StrigoiGuide = {
             "en_US": "Let capture wait for the game"
           },
           "where": {
-            "pt_BR": "Combate → estado da leitura",
-            "en_US": "Combat → capture status"
+            "pt_BR": "Combate → Ajustes de combate → estado da leitura",
+            "en_US": "Combat → Combat settings → capture status"
           },
           "body": {
-            "pt_BR": "Com Npcap instalado, abra o Strigoi antes de entrar na instância. A medição começa automaticamente e aguarda a conexão. Confira se o estado muda para Recebendo eventos. Não há botão para iniciar instância.",
-            "en_US": "With Npcap installed, open Strigoi before entering the instance. Measurement starts automatically and waits for the connection. Check that status changes to Receiving events. There is no start-instance button."
+            "pt_BR": "Com Npcap instalado, abra o Azphelumbra antes de entrar na instância. A medição começa automaticamente e aguarda a conexão. Confira se o estado muda para Recebendo eventos. Não há botão para iniciar instância.",
+            "en_US": "With Npcap installed, open Azphelumbra before entering the instance. Measurement starts automatically and waits for the connection. Check that status changes to Receiving events. There is no start-instance button."
           },
           "tip": {
             "pt_BR": "Se pedir Npcap, complete a instalação oficial. Confira também Medir combate automaticamente em Configurações.",
@@ -652,12 +652,12 @@ window.StrigoiGuide = {
             "en_US": "Quick menu → Combat panel"
           },
           "body": {
-            "pt_BR": "O painel fica habilitado por padrão, aparece numa instância reconhecida e se oculta ao sair. O menu rápido permite desativar ou rearmar essa exibição. Para mover ou redimensionar, desmarque Travar painel · clique através na aba Combate; marque novamente para os cliques passarem ao jogo.",
-            "en_US": "The panel is enabled by default, appears in a recognized instance, and hides on exit. Quick controls can disable or rearm display. To move or resize it, uncheck Lock panel · click through in Combat; check again to let clicks pass to the game."
+            "pt_BR": "O painel aparece nas instâncias reconhecidas e se oculta ao sair. As barras acompanham o DPS e usam a cor da classe. Clique em um jogador para ver dano e participação, ou em Detalhes + para expandir todos. Use a seta para recolher ao seu DPS. Destrave o pino e arraste o título para mover.",
+            "en_US": "The panel appears in recognized instances and hides on exit. Class-colored bars follow DPS. Click a player for damage and participation, or Details + to expand all rows. Use the arrow to collapse to your DPS. Unlock the pin and drag the title to move."
           },
           "tip": {
-            "pt_BR": "Restaurar painel recupera posição e tamanho. Ocultar o placar mantém a medição.",
-            "en_US": "Restore panel recovers position and size. Hiding the meter keeps measurement running."
+            "pt_BR": "Opacidade e Restaurar painel ficam em Ajustes de combate. Ocultar o placar mantém a medição.",
+            "en_US": "Opacity and Restore panel are in Combat settings. Hiding the meter keeps measurement running."
           }
         },
         {
@@ -688,8 +688,8 @@ window.StrigoiGuide = {
             "en_US": "Combat → History / Settings"
           },
           "body": {
-            "pt_BR": "Uma nova entrada reconhecida salva o resultado anterior e abre um placar zerado. Consulte resultados no Histórico. Para parar a captura, desative Medir combate automaticamente em Configurações ou feche o Strigoi.",
-            "en_US": "A recognized new entry saves the previous result and starts a fresh meter. View results in History. Stop capture by disabling Measure combat automatically in Settings or closing Strigoi."
+            "pt_BR": "Uma nova entrada reconhecida salva o resultado anterior e abre um placar zerado. Consulte resultados no Histórico. Para parar a captura, desative Medir combate automaticamente em Configurações ou feche o Azphelumbra.",
+            "en_US": "A recognized new entry saves the previous result and starts a fresh meter. View results in History. Stop capture by disabling Measure combat automatically in Settings or closing Azphelumbra."
           },
           "tip": {
             "pt_BR": "A troca depende do contexto recebido do jogo. Confira se o placar zera entre instâncias. Um mapa de 1v1 e um de 5v5 foram identificados em SA; outros mapas da rotação continuam pendentes. O dano PvP é experimental. No 5v5, sem a lista do time, o painel mostra apenas o dano dos participantes confirmados.",
@@ -783,8 +783,8 @@ window.StrigoiGuide = {
             "en_US": "The calendar changes the event. The arrow switches between compact view and today’s times for the current selection. Drag the header to move. Use the quick menu to show or hide."
           },
           "tip": {
-            "pt_BR": "Volte a Automático para acompanhar eventos diferentes. Mantenha o Strigoi aberto para atualizar a contagem.",
-            "en_US": "Return to Automatic to follow different events. Keep Strigoi open to update the countdown."
+            "pt_BR": "Volte a Automático para acompanhar eventos diferentes. Mantenha o Azphelumbra aberto para atualizar a contagem.",
+            "en_US": "Return to Automatic to follow different events. Keep Azphelumbra open to update the countdown."
           }
         }
       ],
@@ -804,7 +804,7 @@ window.StrigoiGuide = {
   ],
   "ui": {
     "pt_BR": {
-      "guide.page.title": "Guia interativo — Strigoi Aether Map",
+      "guide.page.title": "Guia interativo — Azphelumbra",
       "guide.title": "Vamos configurar<br><em>sua aventura.</em>",
       "guide.intro": "Escolha um módulo e siga uma etapa por vez. Marque o que já fez; seu progresso fica neste navegador.",
       "guide.eyebrow": "SEU GUIA DE EXPLORAÇÃO",
@@ -827,7 +827,7 @@ window.StrigoiGuide = {
       "guide.portable": "Portátil",
       "guide.step": "Etapa {current} de {total}",
       "guide.completed": "{done} de {total} etapas concluídas",
-      "guide.imageAlt": "Tela de {topic} no Strigoi",
+      "guide.imageAlt": "Tela de {topic} no Azphelumbra",
       "guide.local": "Marcar uma etapa acompanha apenas sua leitura; não configura o aplicativo.",
       "guide.feedback": "Encontrou um problema? Envie versão, módulo, o que estava fazendo e uma print.",
       "guide.feedbackLink": "Reportar um problema",
@@ -837,7 +837,7 @@ window.StrigoiGuide = {
       "start.guide": "Abrir guia interativo"
     },
     "en_US": {
-      "guide.page.title": "Interactive guide — Strigoi Aether Map",
+      "guide.page.title": "Interactive guide — Azphelumbra",
       "guide.title": "Let’s set up<br><em>your adventure.</em>",
       "guide.intro": "Choose a module and follow one step at a time. Mark what you have done; progress stays in this browser.",
       "guide.eyebrow": "YOUR EXPLORATION GUIDE",
@@ -860,7 +860,7 @@ window.StrigoiGuide = {
       "guide.portable": "Portable",
       "guide.step": "Step {current} of {total}",
       "guide.completed": "{done} of {total} steps completed",
-      "guide.imageAlt": "Strigoi {topic} screen",
+      "guide.imageAlt": "Azphelumbra {topic} screen",
       "guide.local": "Marking a step tracks your reading only; it does not configure the app.",
       "guide.feedback": "Found a problem? Include version, module, what you were doing, and a screenshot.",
       "guide.feedbackLink": "Report a problem",
