@@ -1,23 +1,23 @@
 {
-  "version": "0.9.0-beta.11",
-  "tag": "v0.9.0-beta.11",
+  "version": "0.9.0-beta.12",
+  "tag": "v0.9.0-beta.12",
   "prerelease": true,
   "repository": "jpgalvao-architect/strigoi-aether-map",
   "files": [
     {
-      "file": "StrigoiAetherMap-Setup-0.9.0-beta.11.exe",
-      "bytes": 230310109,
-      "sha256": "c47e7d15cbb758953f9d540635678c27bba1d0f5f8925fa654e13c69d67d5381"
+      "file": "StrigoiAetherMap-Setup-0.9.0-beta.12.exe",
+      "bytes": 230302991,
+      "sha256": "f104e2efcb1d2225a42478a19a121e7da17ad025023d66052e758be894a991d4"
     },
     {
-      "file": "StrigoiAetherMap-0.9.0-beta.11-windows-x64.zip",
-      "bytes": 270671265,
-      "sha256": "398c0757832da7e70fe36bbf3f7252976951f3ce11d21aa113d425057ac0a8fe"
+      "file": "StrigoiAetherMap-0.9.0-beta.12-windows-x64.zip",
+      "bytes": 270678466,
+      "sha256": "c1c47f984aa3c4fa3f61634553d2b722fc6af683ca5faef9d2292bba7a7a1040"
     },
     {
       "file": "strigoi-aether-map-source.zip",
-      "bytes": 82628182,
-      "sha256": "5bfc5c9ed892672a87307b6e0ac55d631133ba40dec458e4c41106a9720398cf"
+      "bytes": 82631954,
+      "sha256": "8731973b71467ef1230586cd877f349654970e16b332ca8532dd5cce3ee9a550"
     }
   ]
 }

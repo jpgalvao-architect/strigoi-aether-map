@@ -23,7 +23,7 @@
     'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
     'showcase.combat.title': 'Seu grupo. Seu dano observado.',
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
-    'download.beta': 'Beta 11: coleção de Pets com retratos originais, favoritos, locais de referência e painel compacto. A coleção inicial foi conferida em SA; ganho de almas ainda aguarda conferência real. O radar com distância e direção ainda não está disponível. Combate e PvP continuam experimentais.',
+    'download.beta': 'Beta 12: controles de frequência visíveis e ajustáveis durante o uso, com menos redesenhos e menor paralelismo no processamento do mapa. Comece com 60 Hz/30 fps e ajuste ao seu computador. Pets mantém coleção e locais de referência; radar ao vivo indisponível. Combate e PvP experimentais.',
     'showcase.sonar.title': 'O som vira uma pista na tela.',
     'showcase.sonar.description': 'Ative o Sonar e acompanhe a intensidade estimada do som reconhecido na barra e no histórico do aviso.',
   });
@@ -62,7 +62,7 @@
     'screen.combat': 'Combat module with observed damage, DPS and group share',
     'showcase.combat.title': 'Your group. Your observed damage.',
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
-    'download.beta': 'Beta 11 adds Pets with original portraits, favorites, reference locations and a compact panel. The initial collection matched SA gameplay; soul gains still await a live check. Live radar distance and direction are not available yet. Combat and PvP remain experimental.',
+    'download.beta': 'Beta 12 adds visible frequency controls adjustable during use, fewer redraws, and lower map-processing parallelism. Start at 60 Hz/30 fps and adjust for your computer. Pets retains collection and reference sites; live radar unavailable. Combat and PvP remain experimental.',
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
     'showcase.sonar.description': 'Enable Sonar and follow the estimated recognized sound intensity in the alert\'s bar and recent history.',
     'explore.source': 'Real map images and community locations with documented sources. Markers indicate possible locations, not guaranteed spawns.',

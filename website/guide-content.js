@@ -466,16 +466,16 @@ window.StrigoiGuide = {
             "en_US": "Adjust after display changes"
           },
           "where": {
-            "pt_BR": "Overlay → seleção / Ajustes avançados",
-            "en_US": "Overlay → selection / Advanced settings"
+            "pt_BR": "Overlay → seleção / Fluidez do overlay",
+            "en_US": "Overlay → selection / Overlay performance"
           },
           "body": {
-            "pt_BR": "Refaça a seleção após mudar tamanho ou posição do minimapa, monitor, resolução ou escala do Windows. Ajuste Opacidade e Tamanho dos ícones. Se houver custo elevado, reduza a frequência visual nos ajustes avançados.",
-            "en_US": "Repeat selection after changing minimap size or position, monitor, resolution, or Windows scaling. Adjust Opacity and Icon size. If performance is affected, lower the visual rate in advanced settings."
+            "pt_BR": "Refaça a seleção após mudar tamanho ou posição do minimapa, monitor, resolução ou escala do Windows. Ajuste Opacidade e Tamanho dos ícones. Em Fluidez do overlay, escolha a frequência visual (15–360 Hz) e a leitura do mapa (10–60 fps no minimapa; até 30 fps no mapa grande). Os controles ficam visíveis e funcionam com o overlay ligado.",
+            "en_US": "Repeat selection after changing minimap size or position, monitor, resolution, or Windows scaling. Adjust Opacity and Icon size. In Overlay performance, choose the draw limit (15–360 Hz) and map reading rate (10–60 fps on the minimap; up to 30 fps on the full map). The controls are visible and work while the overlay is enabled."
           },
           "tip": {
-            "pt_BR": "240 Hz é uma meta de desenho. A leitura do mapa tem frequência separada; a taxa real depende do computador e monitor.",
-            "en_US": "240 Hz is a drawing target. Map reading has a separate rate; actual performance depends on computer and monitor."
+            "pt_BR": "Comece com 60 Hz e 30 fps; reduza para 30 Hz/15 fps se houver lentidão. A preferência é salva. Desenho e leitura têm limites separados; marcadores parados só são redesenhados quando necessário.",
+            "en_US": "Start at 60 Hz and 30 fps; lower to 30 Hz/15 fps if the game slows down. Your preference is saved. Drawing and reading have separate limits; stationary markers redraw only when needed."
           }
         }
       ],
