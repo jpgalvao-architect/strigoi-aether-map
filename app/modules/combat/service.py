@@ -68,7 +68,7 @@ class CombatService(QObject):
         if 'combat' not in self.feed.consumers:
             return
         if message.get('type') == 'feed_quality':
-            if message.get('reason') != 'pet_record_rejected':
+            if message.get('reason') not in ('pet_record_rejected','routine_record_rejected'):
                 self.engine.mark_partial(message.get('reason','capture_gap'))
             return
         try:

@@ -37,6 +37,10 @@ public enum GameClass : byte
 /// <summary>Everything the combat engine consumes. Time is Unix milliseconds taken from the packet capture.</summary>
 public abstract record GameEvent(long TimeMs);
 
+public sealed record OdyleListStartedEvent(long TimeMs) : GameEvent(TimeMs);
+public sealed record OdyleEnergyEvent(long TimeMs, uint Basic, uint Charged, uint EntryKey,
+    bool FullSnapshot) : GameEvent(TimeMs);
+
 public sealed record PetLevelInfo(int PetId, int Level);
 public sealed record PetSoulInfo(int PetId, int Souls);
 public sealed record PetCollectionEvent(long TimeMs, IReadOnlyList<PetLevelInfo> Levels,

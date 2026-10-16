@@ -265,6 +265,23 @@ class PetSettings(Model):
     panel_opacity: float = Field(default=.9,ge=.3,le=1)
 
 
+class RoutineSettings(Model):
+    auto_capture: bool = True
+    region: Literal['sa','eu','nae','naw','asia','kr','tw'] = 'sa'
+    panel_visible: bool = False
+    panel_style: Literal['pulse','strip'] = 'pulse'
+    panel_expanded: bool = True
+    panel_locked: bool = False
+    panel_position: tuple[int,int] | None = None
+    panel_opacity: float = Field(default=.94,ge=.3,le=1)
+    pinned: list[Literal['odyle','odyle_charged']] = Field(default_factory=lambda:['odyle','odyle_charged'],max_length=2)
+
+    @field_validator('pinned')
+    @classmethod
+    def unique_pins(cls,value):
+        return list(dict.fromkeys(value))
+
+
 class Preferences(Model):
     schema_version: Literal[1] = 1
     ui_language: Literal['pt_BR','en_US'] | None = None
@@ -284,6 +301,7 @@ class Preferences(Model):
     combat: CombatSettings = Field(default_factory=CombatSettings)
     quick_menu: QuickMenuSettings = Field(default_factory=QuickMenuSettings)
     pets: PetSettings = Field(default_factory=PetSettings)
+    routine: RoutineSettings = Field(default_factory=RoutineSettings)
     remote_events_url: str = ""
     remote_auto_refresh: bool = False
     remote_interval_minutes: int = Field(default=30, ge=5, le=1440)

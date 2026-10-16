@@ -10,6 +10,14 @@ A distribuição usa DLLs Qt externas na pasta `_internal`, sem integração est
 
 Nenhum nome, marca ou associação oficial com os titulares de AION 2 é reivindicado. Os nomes do jogo citados identificam apenas o propósito do companion.
 
+## Leitura de Odyle • 0.10.0-beta.2
+
+O leitor C# de Odyle segue os layouts GPLv3 de taengu/A2Tools-DPS-Meter,
+commit `db1cea2d7ec75dbc78c2f31171115cbb733a3886`. Origem, funções de referência
+e adaptações estão em `native/combat/vendor/ODyle-PROTOCOL-NOTICE.md`.
+O vínculo por personagem, armazenamento, Panorama e overlays são próprios.
+O aviso e a GPLv3 acompanham o código-fonte correspondente.
+
 ## Ícones de classes • beta 9
 
 Os ícones das oito classes do catálogo Global vêm da página oficial de

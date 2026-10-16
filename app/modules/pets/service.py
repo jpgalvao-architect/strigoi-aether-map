@@ -91,6 +91,8 @@ class PetService(QObject):
                 self.disconnected()
             return
         if kind == 'feed_quality':
+            if message.get('reason') == 'routine_record_rejected':
+                return
             self.collection_ready = False
             self.pending.clear()
             self.bind_timer.stop()

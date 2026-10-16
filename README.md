@@ -1,6 +1,11 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.1 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.2 · Windows x64**
+
+A Rotina acrescenta o Panorama de personagens e acompanha Odyle básica e
+recarregada por leitura passiva. O overlay alterna entre Pulso compacto e
+Faixa, com estilo, posição e recursos salvos. A leitura inicial foi conferida
+em SA; limites e reposições não são presumidos. Veja [Rotina](docs/ROUTINE.md).
 
 A interface Vigília reúne os módulos ao lado da sessão. O overlay de combate Impacto mostra barras proporcionais ao DPS, com ícones e cores por classe. A faixa Fita acompanha eventos em formato compacto e expande os horários do dia. Use o emblema flutuante para abrir o menu rápido. Preferências, visitas e coleções anteriores são preservadas.
 

@@ -25,6 +25,7 @@ class GameFeedService(QObject):
         self.session = None
         self.sequence = 0
         self.health = (0, 0, 0)
+        self.routine_rejected = 0
         self.stopping = False
         self.draining = False
         self.closed = False
@@ -33,7 +34,7 @@ class GameFeedService(QObject):
         self.retry.timeout.connect(self.ensure_running)
 
     def acquire(self, consumer):
-        if self.closed or consumer not in ('combat','pets'):
+        if self.closed or consumer not in ('combat','pets','routine'):
             return False
         self.consumers.add(consumer)
         self.retry.start()
@@ -59,6 +60,7 @@ class GameFeedService(QObject):
         self.protocol_ready = False
         self.session, self.sequence = None, 0
         self.health = (0, 0, 0)
+        self.routine_rejected = 0
         self.stopping = False
         process = QProcess(self)
         self.process = process
@@ -105,6 +107,12 @@ class GameFeedService(QObject):
             if values[2] > self.health[2]:
                 self.message.emit({'type':'feed_quality','reason':'pet_record_rejected'})
             self.health = values
+            routine_rejected=message.get('routine_rejected',0)
+            if type(routine_rejected) is not int or routine_rejected<0:
+                raise ValueError('Invalid routine health')
+            if routine_rejected>self.routine_rejected:
+                self.message.emit({'type':'feed_quality','reason':'routine_record_rejected'})
+            self.routine_rejected=routine_rejected
         elif kind != 'status':
             raise ValueError('Unknown helper message')
         self.message.emit(message)

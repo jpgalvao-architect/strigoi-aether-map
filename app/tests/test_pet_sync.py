@@ -157,9 +157,10 @@ def test_shared_helper_reference_count_and_envelope_quality(qapp,monkeypatch):
     monkeypatch.setattr(feed,'stop',lambda:stops.append(True))
     feed.message.connect(messages.append)
     try:
-        feed.acquire('combat');feed.acquire('pets');feed.acquire('pets')
+        feed.acquire('combat');feed.acquire('pets');feed.acquire('pets');feed.acquire('routine')
         assert len(starts)==1
-        feed.release('combat');assert not stops and feed.consumers=={'pets'}
+        feed.release('combat');assert not stops and feed.consumers=={'pets','routine'}
+        feed.release('routine');assert not stops and feed.consumers=={'pets'}
         feed.accept({'type':'hello','protocol':1,'saValidated':False})
         assert feed.accept(identity()) and not feed.accept(identity())
         feed.accept(event(3,'PetSoulAcquiredEvent',{'PetId':1127,'Amount':1}))
@@ -170,6 +171,10 @@ def test_shared_helper_reference_count_and_envelope_quality(qapp,monkeypatch):
         before=len(messages)
         feed.accept({'type':'health','dropped':1,'gaps':0,'pets_rejected':0})
         assert len(messages)==before+1
+        before=len(messages)
+        feed.accept({'type':'health','dropped':1,'gaps':0,'pets_rejected':0,'routine_rejected':1})
+        assert messages[before]=={'type':'feed_quality','reason':'routine_record_rejected'}
+        assert not any(m.get('reason')=='pet_record_rejected' for m in messages[before:])
         with pytest.raises(ValueError):feed.accept(event(4,'PetCollectionEvent',{},session='other'))
         feed.release('pets');assert stops==[True]
     finally:

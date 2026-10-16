@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "strigoi-aether-map"
-version = "0.10.0b1"
+version = "0.10.0b2"
 description = "Atlas desktop independente e companion experimental para AION 2"
 requires-python = ">=3.12"
 license = "GPL-3.0-only"

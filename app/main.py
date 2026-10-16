@@ -90,6 +90,9 @@ def main() -> int:
                     assert window.combat.process is None
                     assert not window.combat_page.panel.isVisible()
                     assert window.pets.feed is window.combat.feed and window.pets.feed.process is None
+                    assert window.routine.feed is window.combat.feed and not window.routine.runtime
+                    assert not window.routine_panel.isVisible()
+                    logging.info('SMOKE_ROUTINE_OK: Panorama and shared feed rendered; no live capture')
                     from PySide6.QtGui import QImageReader
                     assert window.pets.store.catalogue.pets
                     assert all(QImageReader(str(PACKAGE/'assets'/pet.portrait)).canRead()

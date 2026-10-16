@@ -1,0 +1,121 @@
+{
+  "$defs": {
+    "CounterReading": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "maximum": 100000,
+          "minimum": 0,
+          "title": "Value",
+          "type": "integer"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "source": {
+          "const": "game-entry-counts-v1",
+          "default": "game-entry-counts-v1",
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "observed_at"
+      ],
+      "title": "CounterReading",
+      "type": "object"
+    },
+    "RoutineProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "character": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Character",
+          "type": "string"
+        },
+        "server": {
+          "exclusiveMinimum": 0,
+          "maximum": 65535,
+          "title": "Server",
+          "type": "integer"
+        },
+        "region": {
+          "enum": [
+            "sa",
+            "eu",
+            "nae",
+            "naw",
+            "asia",
+            "kr",
+            "tw"
+          ],
+          "title": "Region",
+          "type": "string"
+        },
+        "job": {
+          "default": 0,
+          "maximum": 9,
+          "minimum": 0,
+          "title": "Job",
+          "type": "integer"
+        },
+        "counters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/CounterReading"
+          },
+          "maxProperties": 2,
+          "propertyNames": {
+            "enum": [
+              "odyle",
+              "odyle_charged"
+            ]
+          },
+          "title": "Counters",
+          "type": "object"
+        }
+      },
+      "required": [
+        "character",
+        "server",
+        "region"
+      ],
+      "title": "RoutineProfile",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "last_profile": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Profile"
+    },
+    "profiles": {
+      "additionalProperties": {
+        "$ref": "#/$defs/RoutineProfile"
+      },
+      "maxProperties": 256,
+      "title": "Profiles",
+      "type": "object"
+    }
+  },
+  "title": "RoutineCollection",
+  "type": "object"
+}

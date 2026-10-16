@@ -15,6 +15,7 @@ public sealed class PacketParser
     private readonly GameData _data;
     private readonly Action<GameEvent> _sink;
     private int _lastMapId = -1;
+    private uint _odyleKey;
 
     public PacketParser(GameData data, Action<GameEvent> sink)
     {
@@ -29,6 +30,7 @@ public sealed class PacketParser
     public long DamageRecords { get; private set; }
     public long DamageRejected { get; private set; }
     public long PetsRejected { get; private set; }
+    public long RoutineRejected { get; private set; }
     public long Heartbeats { get; private set; }
 
     /// <summary>Optional raw packet tap for the diagnostics dump.</summary>
@@ -44,6 +46,18 @@ public sealed class PacketParser
 
         switch (opcode)
         {
+            case Opcodes.EntryCounts:
+                _odyleKey=0;
+                Emit(new OdyleListStartedEvent(TimeMs));
+                if(OdyleReader.Snapshot(body,out var energy)) {
+                    _odyleKey=energy.Key;
+                    Emit(new OdyleEnergyEvent(TimeMs,energy.Basic,energy.Charged,energy.Key,true));
+                } else RoutineRejected++;
+                break;
+            case Opcodes.EntryCountUpdate:
+                if(OdyleReader.Update(body,_odyleKey,out var changedEnergy))
+                    Emit(new OdyleEnergyEvent(TimeMs,changedEnergy.Basic,changedEnergy.Charged,changedEnergy.Key,false));
+                break;
             case Opcodes.PetCollection:
                 if (!ParsePetCollection(body)) PetsRejected++;
                 break;

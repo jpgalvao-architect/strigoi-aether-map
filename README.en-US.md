@@ -1,6 +1,11 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.1 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.2 · Windows x64**
+
+Routine adds a character Overview and passively reads basic and charged
+Odyle Energy. Its overlay switches between Compact Pulse and Strip, saving
+style, position, and tracked resources. The initial reading matched an SA
+login; caps and recharge rules are not assumed. See [Routine](docs/ROUTINE.en-US.md).
 
 The Vigília interface keeps module controls beside your session. The Impacto combat overlay shows DPS bars with class icons and colors. The compact Fita event strip expands to show the day’s schedule. Use the floating emblem to open quick controls. Existing preferences, visits and collections are preserved.
 

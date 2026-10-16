@@ -24,7 +24,7 @@ class SessionInspector(QFrame):
         box.addWidget(label('O que aparece no jogo','sectionTitle',True))
         self.switches = {}
         self.states = {}
-        for key, title in [('maps','Mapa + minimapa'),('sonar','Sonar'),('combat','Combate'),('events','Eventos'),('pets','Pets')]:
+        for key, title in [('maps','Mapa + minimapa'),('sonar','Sonar'),('combat','Combate'),('events','Eventos'),('pets','Pets'),('routine','Rotina')]:
             line = QHBoxLayout(); line.setSpacing(4)
             copy = QVBoxLayout(); copy.setSpacing(3); copy.addWidget(label(title))
             state = label('', 'sessionState'); copy.addWidget(state); self.states[key] = state
@@ -52,7 +52,7 @@ class SessionInspector(QFrame):
     def toggle(self, name, enabled):
         menu = self.main.quick_menu
         getattr(menu,{'maps':'toggle_maps','sonar':'toggle_sonar','combat':'toggle_combat',
-                      'events':'toggle_events','pets':'toggle_pets'}[name])(enabled)
+                      'events':'toggle_events','pets':'toggle_pets','routine':'toggle_routine'}[name])(enabled)
 
     def refresh(self, *_):
         main = self.main

@@ -51,6 +51,9 @@ class MainWindow(QMainWindow):
         from app.modules.pets.service import PetService
         from app.ui.pets_page import PetsPage
         self.pets = PetService(context, self.combat.feed)
+        from app.modules.routine.service import RoutineService
+        from app.ui.routine_page import RoutinePage
+        self.routine = RoutineService(context,self.combat.feed)
         context.pets = self.pets
         self.pets.sync_map_preferences()
         self.pets.changed.connect(self.pets.sync_map_preferences)
@@ -69,11 +72,11 @@ class MainWindow(QMainWindow):
         brand = label(''); brand.setPixmap(emblem_icon().pixmap(38,38)); brand.setToolTip('Azphelumbra')
         side.addWidget(brand,0,Qt.AlignmentFlag.AlignHCenter)
         side.addSpacing(14)
-        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about'),('Pets','pets')]
+        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about'),('Pets','pets'),('Rotina','routine')]
         self.page_indices = {name:index for index, (_, name) in enumerate(entries)}
         self.nav = [None]*len(entries)
         # Stable page identities preserve shortcuts and existing integrations.
-        for index in [0,1,11,7,8,4,5,9,10,2,3,6]:
+        for index in [0,1,11,12,7,8,4,5,9,10,2,3,6]:
             text, name = entries[index]
             entry = QToolButton(); entry.setText(text)
             entry.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
@@ -114,7 +117,8 @@ class MainWindow(QMainWindow):
         self.donate = DonatePage()
         self.combat_page = CombatPage(context, self.combat)
         self.pets_page = PetsPage(context, self.pets, self.show_pet_farm)
-        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page(), self.pets_page]
+        self.routine_page = RoutinePage(context,self.routine)
+        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page(), self.pets_page,self.routine_page]
         for page in self.pages:
             scroll = QScrollArea()
             scroll.setWidgetResizable(True)
@@ -151,6 +155,8 @@ class MainWindow(QMainWindow):
         self.pet_panel = PetPanel(context,self.pets,lambda: self.quick_menu.open_page('pets'))
         from app.ui.map_controls import MapControls
         self.map_controls=MapControls(self)
+        from app.ui.routine_panel import RoutinePanel
+        self.routine_panel=RoutinePanel(context,self.routine,lambda:self.quick_menu.open_page('routine'))
         self.overlay_visibility = None
         if runtime:
             from app.ui.overlay_visibility import OverlayVisibility
@@ -158,12 +164,14 @@ class MainWindow(QMainWindow):
             for window, role in [(self.overlay.window, 'map'), (self.event_panel, 'hud'),
                                  (self.combat_page.panel, 'hud'), (self.sonar_alert, 'alert'),
                                  (self.pet_panel, 'hud'),
+                                 (self.routine_panel, 'hud'),
                                  (self.map_controls, 'map'),
                                  (self.quick_menu, 'hud'), (self.quick_menu.panel, 'hud')]:
                 self.overlay_visibility.register(window, role)
             self.overlay_visibility.start()
             QTimer.singleShot(0, self.combat.enable_automatic)
             QTimer.singleShot(0, self.pets.enable_automatic)
+            QTimer.singleShot(0, self.routine.enable_automatic)
 
     def refresh_banner(self):
         self.banner.setVisible(self.context.dataset.demo or self.context.feed.demo)
@@ -228,7 +236,7 @@ class MainWindow(QMainWindow):
         body.addWidget(label('Como o aplicativo funciona', 'eyebrow'))
         body.addWidget(label('O Azphelumbra funciona ao lado do AION 2. Os marcadores, o painel de eventos e os avisos do Sonar aparecem em janelas externas de overlay sobre o jogo. Para acompanhar o mapa, o app analisa a imagem da tela; o Sonar recebe o áudio do aplicativo pelo Windows. O Atlas e a agenda consultam dados locais.', 'subtitle', True))
         body.addWidget(label('Não injetamos código nas DLLs do jogo, não alteramos seus arquivos e não lemos sua memória. Os overlays são desenhados pelo próprio Azphelumbra, fora do processo do AION 2.', 'subtitle', True))
-        body.addWidget(label('Combate e Pets podem ler passivamente os dados recebidos pela conexão do jogo, usando Npcap. A leitura automática aguarda o jogo e pode ser desativada nas Configurações de Combate e na aba Pets. Os dois módulos compartilham a mesma conexão. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais.', 'subtitle', True))
+        body.addWidget(label('Combate, Pets e Rotina podem ler passivamente os dados recebidos pela conexão do jogo, usando Npcap. Cada módulo permite desativar sua leitura automática e todos compartilham a mesma captura. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais. A Rotina guarda os saldos de Odyle recebidos do jogo por personagem.', 'subtitle', True))
         body.addWidget(label('Acessibilidade auditiva', 'eyebrow'))
         body.addWidget(label('O Sonar foi desenvolvido exclusivamente como recurso de acessibilidade para auxiliar pessoas surdas ou com deficiência auditiva a encontrar cubos ocultos com mais facilidade. Ele transforma uma pista sonora do jogo em um aviso visual, reduzindo a dependência da audição durante a exploração.', 'subtitle', True))
         body.addWidget(label('O aviso indica um som compatível com a referência e pode falhar. Não confirma a presença nem informa a posição exata do cubo.', 'subtitle', True))
@@ -266,10 +274,12 @@ class MainWindow(QMainWindow):
         if self.overlay_visibility: self.overlay_visibility.shutdown()
         self.quick_menu.shutdown()
         self.pet_panel.shutdown()
+        self.routine_panel.shutdown()
         self.map_controls.shutdown()
         self.combat_page.shutdown()
         self.combat.shutdown()
         self.pets.shutdown()
+        self.routine.shutdown()
         self.combat.feed.shutdown()
         self.alert_timer.stop()
         self.overlay.stop()

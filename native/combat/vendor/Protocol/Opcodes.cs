@@ -6,6 +6,8 @@ namespace AionMeter.Core.Protocol;
 /// </summary>
 public static class Opcodes
 {
+    public const ushort EntryCounts = 0x0B61;
+    public const ushort EntryCountUpdate = 0x0C61;
     public const ushort PetCollection = 0x0090;
     public const ushort PetSoulAcquired = 0x0D90;
     public const ushort PetLevelReached = 0x1490;

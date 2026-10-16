@@ -415,6 +415,97 @@
       },
       "title": "QuickMenuSettings",
       "type": "object"
+    },
+    "RoutineSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "auto_capture": {
+          "default": true,
+          "title": "Auto Capture",
+          "type": "boolean"
+        },
+        "region": {
+          "default": "sa",
+          "enum": [
+            "sa",
+            "eu",
+            "nae",
+            "naw",
+            "asia",
+            "kr",
+            "tw"
+          ],
+          "title": "Region",
+          "type": "string"
+        },
+        "panel_visible": {
+          "default": false,
+          "title": "Panel Visible",
+          "type": "boolean"
+        },
+        "panel_style": {
+          "default": "pulse",
+          "enum": [
+            "pulse",
+            "strip"
+          ],
+          "title": "Panel Style",
+          "type": "string"
+        },
+        "panel_expanded": {
+          "default": true,
+          "title": "Panel Expanded",
+          "type": "boolean"
+        },
+        "panel_locked": {
+          "default": false,
+          "title": "Panel Locked",
+          "type": "boolean"
+        },
+        "panel_position": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Panel Position"
+        },
+        "panel_opacity": {
+          "default": 0.94,
+          "maximum": 1,
+          "minimum": 0.3,
+          "title": "Panel Opacity",
+          "type": "number"
+        },
+        "pinned": {
+          "items": {
+            "enum": [
+              "odyle",
+              "odyle_charged"
+            ],
+            "type": "string"
+          },
+          "maxItems": 2,
+          "title": "Pinned",
+          "type": "array"
+        }
+      },
+      "title": "RoutineSettings",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -519,6 +610,9 @@
     },
     "pets": {
       "$ref": "#/$defs/PetSettings"
+    },
+    "routine": {
+      "$ref": "#/$defs/RoutineSettings"
     },
     "remote_events_url": {
       "default": "",

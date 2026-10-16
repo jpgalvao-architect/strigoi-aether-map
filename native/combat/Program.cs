@@ -9,12 +9,25 @@ using AionMeter.Core.Events;
 using AionMeter.Core.Game;
 using AionMeter.Core.Protocol;
 
-if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.9.0-beta.11"); return; }
+if (args.Contains("--version")) { Console.WriteLine("Strigoi Combat Capture 1 / global-experimental / 0.10.0-beta.2"); return; }
 if (args.Contains("--probe")) {
     Console.WriteLine(JsonSerializer.Serialize(new { protocol=1, npcap=OperatingSystem.IsWindows() && LiveCapture.IsNpcapInstalled(), saValidated=false }));
     return;
 }
 if (args.Contains("--self-test")) {
+    var odyleList=new byte[]{0x49,4,1,42,0xc8,6,4,2,42,14};
+    if(!OdyleReader.Snapshot(odyleList,out var odyle) || odyle.Basic!=840 || odyle.Charged!=0 || odyle.Key!=42)
+        throw new Exception("Odyle basic-only absolute reading failed");
+    if(!OdyleReader.Update(new byte[]{0,8,1,42,0xab,14},42,out odyle) || odyle.Basic!=0 || odyle.Charged!=1835)
+        throw new Exception("Odyle charged-only update failed");
+    if(!OdyleReader.Update(new byte[]{1,12,1,42,30,0xf0,6},42,out odyle) || odyle.Basic!=30 || odyle.Charged!=880)
+        throw new Exception("Odyle paired update failed");
+    if(OdyleReader.Update(new byte[]{1,4,1,43,40},42,out _) ||
+       OdyleReader.Snapshot(new byte[]{0x49,4,1,42,100,4,2,43,14},out _) ||
+       OdyleReader.Update(new byte[]{1,4,1,42,0xff,0xff,0xff,0xff,0x1f},42,out _))
+        throw new Exception("Unbound/mismatched/overflowing Odyle entry accepted");
+    for(int size=0;size<odyleList.Length-1;size++)
+        if(OdyleReader.Snapshot(odyleList.AsSpan(0,size),out _))throw new Exception("Truncated Odyle list accepted");
     var local=IPAddress.Loopback;
     var single=new[]{new GameConnection(local,123,local,456,10),new GameConnection(local,124,local,456,10)};
     if(GameProcessLocator.HasMultipleConnectedClients(single) || GameProcessLocator.HasMultipleConnectedClients([]) ||
@@ -120,7 +133,7 @@ if (args.Contains("--self-test")) {
     parser.Handle(Opcodes.PetCollection,new byte[]{0,0,0,0,0,0});
     if(!events.OfType<PetCollectionEvent>().Any(e=>e.Levels.Count==0 && e.Souls.Count==0))
         throw new Exception("Empty pet collection failed");
-    Console.WriteLine("SELF_TEST_OK: connected clients, TCP, damage, malformed record, serverless identity, partial/full roster, optional stats, vacant/unread slots, spirit owner, raw cast, scalar, pet snapshot/deltas, empty/truncated/invalid/duplicate pet records; no capture"); return;
+    Console.WriteLine("SELF_TEST_OK: Odyle masked snapshot/updates, malformed/overflowing entries, connected clients, TCP, damage, malformed record, serverless identity, partial/full roster, optional stats, vacant/unread slots, spirit owner, raw cast, scalar, pet snapshot/deltas, empty/truncated/invalid/duplicate pet records; no capture"); return;
 }
 var diagnostic=args.Contains("--diagnose");
 var diagnosticSeconds=10;
@@ -158,7 +171,7 @@ capture.EventDecoded += ev=> {
     }
     if (ev is not (DamageEvent or SelfIdentifiedEvent or PlayerSeenEvent or PartyRosterEvent or NpcSeenEvent or
         SummonSeenEvent or CastEvent or DeathEvent or ZoneChangedEvent or HitNoticeEvent or InstanceTimerEvent or
-        PetCollectionEvent or PetSoulAcquiredEvent or PetLevelReachedEvent)) return;
+        PetCollectionEvent or PetSoulAcquiredEvent or PetLevelReachedEvent or OdyleListStartedEvent or OdyleEnergyEvent)) return;
     // FieldBossListEvent.Raw and all uninterpreted bytes are deliberately excluded.
     Send(new {type="event", session, sequence=Interlocked.Increment(ref sequence), time_ms=(long)clock.Elapsed.TotalMilliseconds,
         kind=ev.GetType().Name, payload=JsonSerializer.SerializeToElement(ev,ev.GetType())});
@@ -175,7 +188,7 @@ try {
     while(!cancel.IsCancellationRequested) {
         await Task.Delay(1000,cancel.Token);
         var health=capture.Health(); var pipeline=capture.Pipeline;
-        Send(new {type="health", time_ms=(long)clock.Elapsed.TotalMilliseconds, dropped=Interlocked.Read(ref lost)+(health?.Dropped ?? 0), gaps=pipeline.Gaps, pets_rejected=pipeline.Parser.PetsRejected,
+        Send(new {type="health", time_ms=(long)clock.Elapsed.TotalMilliseconds, dropped=Interlocked.Read(ref lost)+(health?.Dropped ?? 0), gaps=pipeline.Gaps, pets_rejected=pipeline.Parser.PetsRejected, routine_rejected=pipeline.Parser.RoutineRejected,
             rejected=pipeline.Parser.DamageRejected, flows=pipeline.GameFlows, packets=capture.Status.Packets});
     }
 } catch(OperationCanceledException) { }
