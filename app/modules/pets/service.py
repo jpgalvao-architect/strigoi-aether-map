@@ -86,6 +86,8 @@ class PetService(QObject):
         except (OSError, ValueError, TypeError, KeyError):
             self.collection_ready = False
             self.fresh_pets.clear();self.screen_revision+=1
+            if message.get('kind')=='SelfIdentifiedEvent':
+                self.profile_key=None;self.identity_ms=None;self.pending.clear();self.bind_timer.stop()
             self.status = 'Aguardando atualização da coleção.'
             self.changed.emit()
 
@@ -199,7 +201,8 @@ class PetService(QObject):
                 souls=reading.souls,required=reading.required,pending=False)},
                 synced_at=datetime.now(UTC).isoformat(),prefer_observed=True)
         except (OSError,ValueError):
-            self.status='Não foi possível salvar a leitura do pet.';return False
+            self.collection_ready=False;self.fresh_pets.clear();self.screen_revision+=1
+            self.status='Não foi possível salvar a leitura do pet.';self.changed.emit();return False
         self.fresh_pets.add(reading.pet_id);self.screen_revision+=1
         self.status='Insight e almas atualizados pela tela do jogo.'
         self.changed.emit();return True

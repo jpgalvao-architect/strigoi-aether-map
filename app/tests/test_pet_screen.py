@@ -122,3 +122,20 @@ def test_screen_reply_after_alt_tab_generation_is_not_applied(qapp,tmp_path):
         gate.on_pet(('fixture',2),scope,read)
         assert main.pets.store.entry(1217).progress.souls==63
     finally:gate.shutdown();main.close()
+
+
+def test_failed_identity_or_screen_save_cannot_reuse_an_old_baseline(service,monkeypatch):
+    read=PetScreenReading(1217,2,63,75)
+    assert service.from_screen(service.screen_scope(),read)
+    before=service.store.path.read_bytes()
+    def cannot_save(*args,**kwargs):raise OSError('Synthetic failure')
+    with monkeypatch.context() as patch:
+        patch.setattr(service.store,'accept_snapshot',cannot_save)
+        assert not service.from_screen(service.screen_scope(),PetScreenReading(1217,2,64,75))
+    assert not service.fresh_pets and not service.collection_ready
+    assert service.store.path.read_bytes()==before
+    with monkeypatch.context() as patch:
+        patch.setattr(service.store,'observed_profile',cannot_save)
+        service.from_feed(identity(2,name='Next character'))
+    assert service.screen_scope() is None and service.profile_key is None
+    assert service.store.path.read_bytes()==before
