@@ -77,6 +77,7 @@ class OverlayVisibility(QObject):
         self.worker = MenuMonitor(self.probe)
         self.worker.observed.connect(self.on_menu)
         self.worker.pet_observed.connect(self.on_pet)
+        self.worker.boss_observed.connect(self.on_boss)
         self.worker.start()
         self.timer.start(); self.poll()
 
@@ -95,13 +96,19 @@ class OverlayVisibility(QObject):
         changed = self.game != game
         if changed: self.generation += 1
         self.game = game
+        self.main.context.boss_timer.set_game((game.handle,game.pid))
         if self.worker: self.worker.set_game((game, self.generation))
         if self.worker:self.worker.set_pet_scope(self.main.pets.screen_scope())
+        if self.worker:self.worker.set_boss_scope(self.main.context.boss_timer.screen_scope())
         self.set_context(True, 'play' if changed else self.mode)
 
     def on_pet(self,job,scope,reading):
         if self.closed or not self.active or job!=(self.game,self.generation):return
         self.main.pets.from_screen(scope,reading)
+
+    def on_boss(self,job,scope,reading,captured):
+        if self.closed or not self.active or job!=(self.game,self.generation):return
+        self.main.context.boss_timer.accept(scope,reading,captured)
 
     def on_menu(self, job, mode):
         if self.closed or job != (self.game, self.generation) or not self.active:

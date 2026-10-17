@@ -109,7 +109,7 @@ class Dashboard(QWidget):
         now = datetime.now(UTC)
         items = []
         seen = set()
-        for occurrence in occurrences(self.context.feed.events, now):
+        for occurrence in occurrences(self.context.calendar_events, now):
             if occurrence.event.id not in seen:
                 items.append(occurrence)
                 seen.add(occurrence.event.id)

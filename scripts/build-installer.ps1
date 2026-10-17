@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 param(
   [Parameter(Mandatory=$true)][string]$Payload,
-  [string]$Output = "$PSScriptRoot\..\dist\StrigoiAetherMap-Setup-0.10.0-beta.4.exe",
+  [string]$Output = "$PSScriptRoot\..\dist\StrigoiAetherMap-Setup-0.10.0-beta.5.exe",
   [string]$Python = "$PSScriptRoot\..\.venv\Scripts\python.exe",
   [string]$Compiler = "${env:ProgramFiles(x86)}\NSIS\makensis.exe"
 )

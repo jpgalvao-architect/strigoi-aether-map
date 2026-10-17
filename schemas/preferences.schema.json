@@ -516,6 +516,11 @@
       "title": "Schema Version",
       "type": "integer"
     },
+    "boss_timers_enabled": {
+      "default": true,
+      "title": "Boss Timers Enabled",
+      "type": "boolean"
+    },
     "ui_language": {
       "anyOf": [
         {

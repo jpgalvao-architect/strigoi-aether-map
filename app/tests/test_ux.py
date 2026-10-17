@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QLabel
 from app.core.models import EventFeed,EventSchedule,GameEvent
 from app.infrastructure.storage import PACKAGE
 from app.modules.events.day import day_events
-from app.modules.events.service import occurrences
+from app.modules.events.service import occurrences, calendar_occurrences
 from app.services.context import AppContext
 from app.ui.event_panel import EventPanel
 from app.ui.main_window import MainWindow
@@ -47,7 +47,7 @@ def test_panel_switches_between_next_event_and_all_today_and_persists(qapp,tmp_p
     panel=EventPanel(context);panel.timer.stop()
     try:
         panel.refresh(now)
-        assert len(panel.items)==1 and panel.items[0]==occurrences(context.feed.events,now)[0]
+        assert len(panel.items)==1 and panel.items[0]==calendar_occurrences(context.feed.events,now)[0]
         context.prefs.overlay.events_panel_expanded=True
         panel.refresh(now)
         assert panel.items==day_events(context.feed.events,now,context.prefs.timezone)

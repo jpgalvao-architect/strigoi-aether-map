@@ -14,7 +14,7 @@ def icon(name):
 
 def event_icon(event):
     text=(event.kind+' '+event.id+' '+event.name).casefold()
-    for keys,name in [(['reset'],'reset'),(['shugo'],'shugo'),(['fenda','rift'],'rift'),
+    for keys,name in [(['battlefield','campo de batalha'],'combat'),(['reset'],'reset'),(['shugo'],'shugo'),(['fenda','rift'],'rift'),
                       (['executor','nahma','guardian','chefe','boss'],'boss'),
                       (['cerco','siege'],'siege'),(['invas','invasion'],'invasion')]:
         if any(key in text for key in keys):return name

@@ -20,7 +20,7 @@ class EventSelector(QComboBox):
         self.blockSignals(True)
         self.clear()
         self.addItem('Automático · próximo evento', '')
-        for event in self.context.feed.events:
+        for event in self.context.calendar_events:
             if event.enabled:
                 self.addItem(icon(event_icon(event)), event.name, event.id)
         index = self.findData(selected)
@@ -60,7 +60,7 @@ class EventPicker(QToolButton):
         self.actions_by_event={}
         selected=self.currentData()
         choices=[('', 'Automático · próximo evento', 'events')]
-        choices.extend((e.id,e.name,event_icon(e)) for e in self.context.feed.events if e.enabled)
+        choices.extend((e.id,e.name,event_icon(e)) for e in self.context.calendar_events if e.enabled)
         for key,title,picture in choices:
             action=self.menu_widget.addAction(icon(picture),title)
             action.setCheckable(True);action.setChecked(key==selected)

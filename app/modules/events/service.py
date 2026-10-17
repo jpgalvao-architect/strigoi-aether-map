@@ -57,6 +57,25 @@ def display_time(instant: datetime, timezone: str) -> str:
     return calendar_date(converted)+" • "+clock(converted)+" "+compact_zone
 
 
+def calendar_occurrences(events,now,days=8):
+    """Keep an open Battlefield window visible until matchmaking closes."""
+    result=occurrences(events,now,days)
+    windows=[e for e in events if e.kind=='Battlefield' and e.duration_minutes]
+    active=[item for item in occurrences(windows,now-timedelta(days=1),days=2)
+        if item.starts_at<=now<item.starts_at+timedelta(minutes=item.event.duration_minutes)]
+    return sorted({item.key:item for item in result+active}.values(),key=lambda item:(item.starts_at,item.event.id))
+
+
+def display_occurrence(item,timezone):
+    result=display_time(item.starts_at,timezone)
+    if item.event.kind=='Battlefield' and item.event.duration_minutes:
+        from app.core.i18n import clock
+        end=item.starts_at+timedelta(minutes=item.event.duration_minutes)
+        local=end.astimezone() if timezone=='local' else end.astimezone(ZoneInfo(timezone))
+        result+=' → '+clock(local)
+    return result
+
+
 def countdown(instant: datetime, now: datetime) -> str:
     seconds = max(0, int((instant - now).total_seconds()))
     days, seconds = divmod(seconds, 86400)

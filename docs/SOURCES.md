@@ -16,7 +16,27 @@ Raridade permanece **Não informada**. As outras três camadas do catálogo são
 
 O botão de consulta abre a fonte no navegador para localizar recursos na base atual do publicador. Não existe download ou atualização automática dessas coordenadas no app.
 
-## Perfil SA do projeto consultado
+## Atualização da agenda em 17/10/2026
+
+O perfil atual `reference-sa-v032` incorpora as janelas diárias da Battlefield
+conferidas na tela SA fornecida pelo usuário: 11h–14h e 19h–21h, no relógio
+regional. Watcher Kaira (a cada três horas desde 01h), Executors Tamasa/Argo/Kaira
+(seg/qui/sáb, 21h30) e Guardian Lord Nahma (sex/dom, 21h) usam os dados do
+[cliente Global publicados por AION 2 Gaming Tools](https://aion2.gaming.tools/maps/20).
+Essas linhas estão identificadas como referência Global, com interpretação do
+relógio regional, sem confirmação individual dos spawns em SA.
+
+Gartua é uma previsão única, calculada de duas leituras compatíveis de
+**Time Left** na tela do jogo. Não recebe regra diária fixa. As referências
+[Grimvane](https://aion2.grimvane.app/companion/bosses/immortal-gartua/) e
+[Aion2Atlas](https://aion2atlas.app/boss-timer/) descrevem 12 horas após a morte
+no Global, mas isso não foi certificado oficialmente para SA nem codificado
+como recorrência. Veja [Eventos e contadores](EVENTS.md) para o fluxo e os limites.
+
+As tabelas abaixo registram as agendas históricas e suas fontes; não substituem
+a atualização acima. A correção anterior de cerco às 21h de Brasília continua.
+
+## Perfil SA original do projeto consultado (histórico)
 
 O perfil inicial **SA • agenda do projeto de referência** corresponde a
 `global-sa` no arquivo `assets/timers/schedule.json`, atualizado pelo autor
@@ -57,7 +77,7 @@ Os perfis ficam separados. Nenhum campo é apresentado como horário oficial.
 
 Os sete primeiros seguem `America/Sao_Paulo`. Os resets usam `UTC`. Fuso de exibição pode ser alterado nas configurações sem mudar o instante de origem. A distinção entre relógio regional e reset fixo foi corroborada pela [referência LATAM](https://aion2db.lat/wiki/eventos-y-horarios) e pela [lista de regiões do Global](https://aion2maps.com/guides/launch-info/). Existem contadores comunitários com suposições diferentes de fuso; o relógio do jogo prevalece em caso de divergência. Durações desconhecidas permanecem nulas. O app notifica o início da preparação do cerco, não inventa um segundo alerta de combate.
 
-Cada evento conserva URL, data da consulta, nota e fuso de origem. Não há promessa de atualização após a data acima. Alterações de patch exigem nova revisão ou importação de agenda. Horários de Arena/Battlefield sem confirmação suficiente foram omitidos.
+Cada evento conserva URL, data da consulta, nota e fuso de origem. Alterações de patch exigem nova revisão ou importação de agenda. Arena/Battlefield foram omitidas na base histórica; a atualização de 17/10/2026 acima acrescenta a janela conferida no cliente.
 
 ## Atlas comunitário: referência KR/TW
 

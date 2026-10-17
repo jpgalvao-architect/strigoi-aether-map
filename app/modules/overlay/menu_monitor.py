@@ -14,7 +14,8 @@ from app.infrastructure.storage import PACKAGE
 MENU_TITLES = {'settings', 'inventory', 'skills', 'character', 'quest', 'quests',
     'abyss', 'legion', 'crafting', 'ranking', 'rankings', 'shop', 'mail', 'storage',
     'configuracoes', 'inventario', 'habilidades', 'personagem', 'missoes',
-    'abismo', 'legiao', 'fabricacao', 'classificacao', 'loja', 'correio', 'armazem'}
+    'abismo', 'legiao', 'fabricacao', 'classificacao', 'loja', 'correio', 'armazem',
+    'battlefield', 'campo de batalha'}
 
 
 def normalized(text):
@@ -158,6 +159,7 @@ class WindowsOCR:
 class MenuMonitor(QThread):
     observed = Signal(object,str)
     pet_observed = Signal(object,object,object)
+    boss_observed = Signal(object,object,object,object)
 
     def __init__(self, probe):
         super().__init__()
@@ -165,6 +167,10 @@ class MenuMonitor(QThread):
         self.lock=threading.Lock();self.stopped=threading.Event()
         self.ocr=WindowsOCR()
         self.pet_scope=None
+        self.boss_scope=None
+
+    def set_boss_scope(self,scope):
+        with self.lock:self.boss_scope=scope
 
     def set_pet_scope(self,scope):
         with self.lock:self.pet_scope=scope
@@ -180,19 +186,22 @@ class MenuMonitor(QThread):
         import mss
         import numpy as np
         from app.modules.pets.screen import PetScreenReader,ReadingConsensus
+        from app.modules.events.boss_timer import read_gartua,BossConsensus
+        from datetime import UTC,datetime
         from app.modules.pets.models import PetCatalogue
         from app.infrastructure.storage import load_model
         reader=PetScreenReader(self.ocr,load_model(PACKAGE/'data/pets.json',PetCatalogue).pets)
-        readings=ReadingConsensus();consensus=MenuConsensus();previous=None
+        readings=ReadingConsensus();bosses=BossConsensus();consensus=MenuConsensus();previous=None
         try:
             with mss.MSS() as capture:
                 while not self.stopped.is_set():
-                    with self.lock: job=self.job;scope=self.pet_scope
+                    with self.lock: job=self.job;scope=self.pet_scope;boss_scope=self.boss_scope
                     if job!=previous:
-                        consensus=MenuConsensus();readings=ReadingConsensus();previous=job
+                        consensus=MenuConsensus();readings=ReadingConsensus();bosses=BossConsensus();previous=job
                     if job is not None:
                         game,_=job
                         if self.probe.game_foreground() == game:
+                            captured=datetime.now(UTC)
                             frame=np.asarray(capture.grab(dict(left=game.left,top=game.top,width=game.width,height=round(game.height*.45))))[:,:,:3].copy()
                             # No image/text is saved or logged. Capture only the active game.
                             if self.probe.game_foreground() == game:
@@ -206,6 +215,10 @@ class MenuMonitor(QThread):
                                 mode=classify_lines(lines,width,height,close,rule) if lines else (
                                     'play' if self.ocr.closed else None)
                                 self.observed.emit(job,consensus.observe(mode))
+                                boss=read_gartua(lines) if boss_scope is not None else None
+                                confirmed_boss=bosses.observe(boss_scope,boss,captured)
+                                if confirmed_boss is not None and self.probe.game_foreground()==game:
+                                    self.boss_observed.emit(job,boss_scope,confirmed_boss,captured)
                                 reading=None
                                 if scope is not None and pet_menu(lines,width,height):
                                     # Native pixels keep small Insight text legible on 4K/150%.

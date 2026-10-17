@@ -1,6 +1,8 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.4 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.5 · Windows x64**
+
+Beta 5 adds daily Battlefield windows and counts down to matchmaking closing. Immortal Gartua gets a one-time prediction read from the in-game countdown, without assuming daily spawns. Abyss bosses use a labeled Global reference, not individually confirmed on SA. See [Events and timers](docs/EVENTS.en-US.md).
 
 Beta 4 tracks soul gains even when the app starts with the character already logged in. Without an initial total, it shows capture gains; opening pet details confirms the total without double-counting earlier pickups. Unidentified readings stay in memory without modifying saved profiles. Menus such as Enhancement require title, tabs, separator and close-button evidence to hide overlays. See [Pets](docs/PETS.en-US.md).
 

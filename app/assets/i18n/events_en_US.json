@@ -1,0 +1,17 @@
+{
+  "Ler contador de Immortal Gartua no jogo": "Read the in-game Immortal Gartua timer",
+  "Para sincronizar Gartua, abra os detalhes dele no mapa do jogo e deixe o tempo restante visível por alguns instantes. A previsão vale para esta sessão.": "To sync Gartua, open its details on the game map and keep the remaining time visible for a few moments. The prediction applies to this session.",
+  "Immortal Gartua · spawn previsto": "Immortal Gartua · predicted spawn",
+  "Contador lido na tela do jogo nesta sessão": "Countdown read from the game screen this session",
+  "Leitura em {date} UTC. Previsão calculada do tempo restante exibido pelo jogo; sem repetir um horário diário presumido.": "Read at {date} UTC. Prediction calculated from the remaining time displayed in game; no assumed daily schedule is repeated.",
+  "Leitura do jogo": "In-game reading",
+  "Jogo": "Game",
+  "Global · referência SA": "Global · SA reference",
+  "Previsão atingida": "Prediction reached",
+  "Fecha em": "Closes in",
+  "Battlefield · Arena of Tactics (dia)": "Battlefield · Arena of Tactics (day)",
+  "Battlefield · Arena of Tactics (noite)": "Battlefield · Arena of Tactics (evening)",
+  "Executors Tamasa, Argo e Kaira": "Executors Tamasa, Argo and Kaira",
+  "Disponível · fecha em {remaining}": "Available · closes in {remaining}",
+  "Fecha em {remaining}": "Closes in {remaining}"
+}

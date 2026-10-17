@@ -54,6 +54,7 @@ class MainWindow(QMainWindow):
         from app.modules.routine.service import RoutineService
         from app.ui.routine_page import RoutinePage
         self.routine = RoutineService(context,self.combat.feed)
+        context.boss_timer.bind(self.combat.feed)
         context.pets = self.pets
         self.pets.sync_map_preferences()
         self.pets.changed.connect(self.pets.sync_map_preferences)
@@ -212,7 +213,7 @@ class MainWindow(QMainWindow):
     def check_alerts(self):
         try:
             now = datetime.now(UTC)
-            items = occurrences(self.context.feed.events, now, days=1)
+            items = occurrences(self.context.calendar_events, now, days=1)
             for item, lead in self.context.alerts.due(items, self.context.prefs.notifications, now):
                 prefix = "[DEMO] " if self.context.feed.demo else ""
                 self.notifications.notify(prefix + item.event.name, f"Começa em {lead} min • {item.event.region}")

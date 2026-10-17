@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "demo": false,
-  "release": "reference-sa-v031",
-  "coverage": "SA · cerco às 21h no fuso regional confirmado no cliente em 12/10/2026; demais horários mantidos de suas fontes",
+  "release": "reference-sa-v032",
+  "coverage": "SA · Battlefield conferida no cliente em 17/10/2026; bosses do Abyss da referência Global com fuso regional",
   "events": [
     {
       "id": "reference-sa-rift",
@@ -113,16 +113,16 @@
     },
     {
       "id": "reference-sa-siege-bosses",
-      "name": "Chefes do cerco",
+      "name": "Executors Tamasa, Argo e Kaira",
       "kind": "Chefe",
-      "region": "SA",
-      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
-      "verified_on": "2026-10-11",
-      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
-      "notes": "Perfil do projeto consultado. Relógio da regra: UTC. Horários podem divergir da agenda anterior.",
-      "duration_minutes": 30,
+      "region": "Global · referência SA",
+      "source": "https://aion2.gaming.tools/maps/20",
+      "verified_on": "2026-10-17",
+      "verification": "Agenda extraída da versão Global; interpretação em horário regional SA",
+      "notes": "Relógio regional da regra, sem subtrair UTC−3 novamente. Referência do cliente Global; estes spawns ainda não foram confirmados individualmente no servidor SA.",
+      "duration_minutes": null,
       "schedule": {
-        "timezone": "UTC",
+        "timezone": "America/Sao_Paulo",
         "recurrence": "weekly",
         "times": [
           "21:30"
@@ -136,16 +136,16 @@
     },
     {
       "id": "reference-sa-guardian-nahma",
-      "name": "Guardian Nahma",
+      "name": "Guardian Lord Nahma",
       "kind": "Chefe",
-      "region": "SA",
-      "source": "https://github.com/problem-xyz/aion2-map-overlay/blob/a23dc90849fd18b1ef4fba01d2f1bb0f851bdcbd/assets/timers/schedule.json",
-      "verified_on": "2026-10-11",
-      "verification": "Reprodução factual da agenda publicada, sem confirmação no servidor",
-      "notes": "Perfil do projeto consultado. Relógio da regra: UTC. Horários podem divergir da agenda anterior.",
-      "duration_minutes": 30,
+      "region": "Global · referência SA",
+      "source": "https://aion2.gaming.tools/maps/20",
+      "verified_on": "2026-10-17",
+      "verification": "Agenda extraída da versão Global; interpretação em horário regional SA",
+      "notes": "Relógio regional da regra, sem subtrair UTC−3 novamente. Referência do cliente Global; estes spawns ainda não foram confirmados individualmente no servidor SA.",
+      "duration_minutes": null,
       "schedule": {
-        "timezone": "UTC",
+        "timezone": "America/Sao_Paulo",
         "recurrence": "weekly",
         "times": [
           "21:00"
@@ -201,6 +201,94 @@
         ],
         "weekdays": [
           2
+        ]
+      }
+    },
+    {
+      "id": "reference-sa-watcher-kaira",
+      "name": "Watcher Kaira",
+      "kind": "Chefe",
+      "region": "Global · referência SA",
+      "source": "https://aion2.gaming.tools/maps/20",
+      "verified_on": "2026-10-17",
+      "verification": "Agenda extraída da versão Global; interpretação em horário regional SA",
+      "notes": "Ciclo de 180 minutos a partir de 01h no relógio regional do cliente Global; sem duração ou confirmação individual em SA presumida.",
+      "duration_minutes": null,
+      "schedule": {
+        "timezone": "America/Sao_Paulo",
+        "recurrence": "daily",
+        "times": [
+          "01:00",
+          "04:00",
+          "07:00",
+          "10:00",
+          "13:00",
+          "16:00",
+          "19:00",
+          "22:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-sa-battlefield-day",
+      "name": "Battlefield · Arena of Tactics (dia)",
+      "kind": "Battlefield",
+      "region": "SA",
+      "source": "game-screen://battlefield/schedule",
+      "verified_on": "2026-10-17",
+      "verification": "Janelas e dias conferidos na tela do cliente SA fornecida pelo usuário em 17/10/2026",
+      "notes": "Disponível diariamente de 11h a 14h no relógio exibido pelo jogo. Horário interpretado como regional SA.",
+      "duration_minutes": 180,
+      "schedule": {
+        "timezone": "America/Sao_Paulo",
+        "recurrence": "daily",
+        "times": [
+          "11:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "reference-sa-battlefield-evening",
+      "name": "Battlefield · Arena of Tactics (noite)",
+      "kind": "Battlefield",
+      "region": "SA",
+      "source": "game-screen://battlefield/schedule",
+      "verified_on": "2026-10-17",
+      "verification": "Janelas e dias conferidos na tela do cliente SA fornecida pelo usuário em 17/10/2026",
+      "notes": "Disponível diariamente de 19h a 21h no relógio exibido pelo jogo. Horário interpretado como regional SA.",
+      "duration_minutes": 120,
+      "schedule": {
+        "timezone": "America/Sao_Paulo",
+        "recurrence": "daily",
+        "times": [
+          "19:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
         ]
       }
     }

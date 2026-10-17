@@ -94,7 +94,7 @@ class SettingsPage(QWidget):
         while self.kind_layout.count():
             self.kind_layout.takeAt(0).widget().deleteLater()
         self.kinds = {}
-        for kind in sorted({event.kind for event in self.context.feed.events}):
+        for kind in sorted({event.kind for event in self.context.calendar_events}):
             checkbox = QCheckBox(kind)
             checkbox.setChecked(kind not in self.context.prefs.notifications.disabled_kinds)
             self.kinds[kind] = checkbox

@@ -94,8 +94,8 @@ def test_dynamic_overlay_requires_explicit_screen_selection(qapp,tmp_path):
 def test_agenda_displays_each_schedule_and_switches_source(qapp,tmp_path):
     from app.ui.events_page import EventsPage
     page=EventsPage(AppContext(tmp_path))
-    assert len(page.items)==7
-    assert len({i.event.id for i in page.items})==7
+    assert len(page.items)==10
+    assert len({i.event.id for i in page.items})==10
     page.profile.setCurrentIndex(page.profile.findData('curated-sa'))
     assert len(page.items)==9
     page.unique.setChecked(False)

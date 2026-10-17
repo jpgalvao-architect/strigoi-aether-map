@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Vigília's session sidebar shares the existing module controls and preferences."""
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout
 from app.core.i18n import tr
-from app.modules.events.service import occurrences, display_time, countdown
+from app.modules.events.service import calendar_occurrences as occurrences, display_occurrence, countdown
 from app.ui.localized_widgets import QFrame, QCheckBox, QPushButton
 from app.ui.widgets import label
 from app.ui.mascot import MascotWidget
@@ -67,7 +67,12 @@ class SessionInspector(QFrame):
             switch.blockSignals(True); switch.setChecked(source.isChecked()); switch.blockSignals(False)
             self.states[key].setText(main.quick_menu.states[key].text())
         now = datetime.now(UTC); selected = main.context.prefs.overlay.events_panel_event
-        events = [e for e in main.context.feed.events if not selected or e.id==selected]
+        events = [e for e in main.context.calendar_events if not selected or e.id==selected]
         upcoming = occurrences(events,now)[:1]
         self.event.setText(upcoming[0].event.name if upcoming else 'Nenhum evento agendado')
-        self.when.setText(display_time(upcoming[0].starts_at,main.context.prefs.timezone)+'\n'+countdown(upcoming[0].starts_at,now) if upcoming else '')
+        if upcoming:
+            item=upcoming[0];remaining=countdown(item.starts_at,now)
+            if item.event.kind=='Battlefield' and item.event.duration_minutes and item.starts_at<=now:
+                remaining='Fecha em '+countdown(item.starts_at+timedelta(minutes=item.event.duration_minutes),now)
+            self.when.setText(display_occurrence(item,main.context.prefs.timezone)+'\n'+remaining)
+        else:self.when.setText('')

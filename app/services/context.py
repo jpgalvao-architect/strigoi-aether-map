@@ -19,6 +19,10 @@ class AppContext(QObject):
     error = Signal(str)
 
     @property
+    def calendar_events(self):
+        return self.feed.events+self.boss_timer.events()
+
+    @property
     def atlas_dataset(self):
         pets = getattr(self, 'pets', None)
         return pets.farm.dataset(self.dataset, pets.store.catalogue) if pets else self.dataset
@@ -58,8 +62,11 @@ class AppContext(QObject):
         self.provider_status = "Cache local" if cache.exists() else "JSON local • offline"
         self.upgrade_bundled_content()
         self.upgrade_bundled_event_schedules()
+        self.upgrade_bundled_event_additions()
         self.upgrade_bundled_cube_sites()
         self.alerts = AlertEngine(directory / "alerts.json")
+        from app.modules.events.boss_timer import BossTimer
+        self.boss_timer=BossTimer(self)
         self.normalize_map()
         if self.prefs.map_defaults_release != "altgard-v021":
             if any(m.id == "altgard" for m in self.dataset.maps):
@@ -117,6 +124,20 @@ class AppContext(QObject):
             self.prefs.catalog_map_id = default
         if self.prefs.overlay.map_id not in ids:
             self.prefs.overlay.map_id = self.prefs.map_id
+
+    def upgrade_bundled_event_additions(self):
+        manifest=json.loads((PACKAGE/'data/event-additions.json').read_text(encoding='utf-8'))
+        rows=[e.model_dump(mode='json',exclude={'enabled'}) for e in self.feed.events]
+        fingerprint=hashlib.sha256(json.dumps(rows,sort_keys=True,ensure_ascii=True).encode()).hexdigest()
+        if fingerprint not in manifest['previous_events_sha256']:return
+        bundled=load_model(PACKAGE/'data/events.json',EventFeed)
+        enabled={e.id:e.enabled for e in self.feed.events}
+        for event in bundled.events:event.enabled=enabled.get(event.id,event.enabled)
+        path=self.directory/'events-cache.json'
+        if path.exists():
+            backup=self.directory/'events-cache.pre-calendar-20261017.json'
+            if not backup.exists():shutil.copy2(path,backup)
+        atomic_json(path,bundled);self.feed=bundled
 
     def upgrade_bundled_cube_sites(self):
         from app.core.corrections import upgrade_cube_sites

@@ -1,6 +1,8 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.4 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.5 · Windows x64**
+
+A beta 5 acrescenta as janelas diárias da Battlefield e mantém o contador até o fechamento. Immortal Gartua recebe uma previsão única pela leitura do contador na tela do jogo, sem presumir um spawn diário. Bosses do Abyss usam referência Global identificada na agenda, ainda sem confirmação individual em SA. Veja [Eventos e contadores](docs/EVENTS.md).
 
 A beta 4 acompanha ganhos de almas mesmo quando o app é aberto com o personagem já logado. Sem total inicial, mostra os ganhos desta captura; abrir os detalhes do pet confirma o total sem somar coletas duas vezes. Leituras sem identificação ficam na memória, sem alterar perfis salvos. Menus como Enhancement passam a exigir título, abas, separador e botão de fechar para ocultar os overlays. Veja [Pets](docs/PETS.md).
 

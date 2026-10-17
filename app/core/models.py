@@ -284,6 +284,7 @@ class RoutineSettings(Model):
 
 class Preferences(Model):
     schema_version: Literal[1] = 1
+    boss_timers_enabled: bool = True
     ui_language: Literal['pt_BR','en_US'] | None = None
     timezone: str = "local"
     content_release: str = ""

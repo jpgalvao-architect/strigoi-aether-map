@@ -3,10 +3,10 @@
 from datetime import UTC,datetime,timedelta
 from PySide6.QtCore import QEvent,QPoint,Qt,QTimer
 from PySide6.QtGui import QGuiApplication
-from PySide6.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout
+from PySide6.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout, QSizePolicy
 from app.ui.localized_widgets import QFrame, QLabel, QToolButton, QWidget
 from app.modules.events.day import day_events,local_time
-from app.modules.events.service import countdown,occurrences
+from app.modules.events.service import countdown,calendar_occurrences as occurrences
 from app.ui.icons import icon,event_icon
 from app.ui.widgets import label
 from app.core.i18n import tr, clock, calendar_date
@@ -27,7 +27,12 @@ class EventCard(QFrame):
         self.name.setMinimumWidth(0)
         self.name.setAccessibleName(item.event.name)
         self.clock=label('','eventTime')
+        # Long ranges in English must not increase the fixed-width HUD's minimum size.
+        for text in (self.name,self.clock):
+            text.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
+        self._clock_text=''
         self.remaining=label('','eventCountdown')
+        if item.event.kind=='Battlefield':self.remaining.setStyleSheet('font-size:12px;')
         self.remaining.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignVCenter)
         copy.addWidget(self.name);copy.addWidget(self.clock)
         box.addLayout(copy,1)
@@ -36,16 +41,24 @@ class EventCard(QFrame):
         self.setToolTip(item.event.name)
 
     def resizeEvent(self,event):
-        self.name.setText(self.name.fontMetrics().elidedText(tr(self.item.event.name),Qt.TextElideMode.ElideRight,max(0,self.name.width())))
+        self.fit_labels()
         super().resizeEvent(event)
+
+    def fit_labels(self):
+        for widget,text in ((self.name,tr(self.item.event.name)),(self.clock,tr(self._clock_text))):
+            fitted=widget.fontMetrics().elidedText(text,Qt.TextElideMode.ElideRight,max(0,widget.width()))
+            if widget.text()!=fitted:widget.setText(fitted)
 
     def refresh(self,now,timezone):
         start=self.item.starts_at
         when=local_time(start,timezone)
         today=local_time(now,timezone).date()
         prefix='Hoje · ' if when.date()==today else ('Amanhã · ' if when.date()==today+timedelta(days=1) else calendar_date(when)+' · ')
-        self.clock.setText(prefix+clock(when))
-        self.name.setText(self.name.fontMetrics().elidedText(tr(self.item.event.name),Qt.TextElideMode.ElideRight,max(0,self.name.width())))
+        self._clock_text=prefix+clock(when)
+        if self.item.event.kind=='Battlefield' and self.item.event.duration_minutes:
+            self._clock_text=prefix+clock(when)+'–'+clock(local_time(start+timedelta(minutes=self.item.event.duration_minutes),timezone))
+        self.clock.setToolTip(self._clock_text)
+        self.fit_labels()
         active=start<=now and self.item.event.duration_minutes is not None and now<start+timedelta(minutes=self.item.event.duration_minutes)
         passed=start<=now and not active
         state='past' if passed else ('active' if active else 'upcoming')
@@ -54,6 +67,10 @@ class EventCard(QFrame):
             for child in self.findChildren(QLabel):
                 child.style().unpolish(child);child.style().polish(child)
         self.remaining.setText('Já começou' if passed else ('Em andamento' if active else countdown(start,now)))
+        if passed and self.item.event.source.startswith('game-screen://boss/'):
+            self.remaining.setText('Previsão atingida')
+        if active and self.item.event.kind=='Battlefield':
+            self.remaining.setText('Fecha em\n'+countdown(start+timedelta(minutes=self.item.event.duration_minutes),now))
         self.remaining.setToolTip('Horário de início' if passed else ('Evento em andamento' if active else 'Tempo até o início'))
 
 
@@ -127,7 +144,7 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
         self.header.setVisible(expanded)
         timezone=self.context.prefs.timezone
         selected=self.context.prefs.overlay.events_panel_event
-        events=[e for e in self.context.feed.events if not selected or e.id==selected]
+        events=[e for e in self.context.calendar_events if not selected or e.id==selected]
         daily=day_events(events,now,timezone)
         self.items=daily if expanded else occurrences(events,now)[:1]
         key=(id(self.context.feed),tuple(i.key for i in self.items),expanded,timezone,selected)

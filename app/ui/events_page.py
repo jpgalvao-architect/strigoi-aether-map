@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-only
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 import json
 
@@ -9,7 +9,7 @@ from app.ui.localized_widgets import QCheckBox, QComboBox, QFileDialog, QGroupBo
 
 from app.modules.events.providers import RemoteJsonProvider
 from app.infrastructure.storage import PACKAGE
-from app.modules.events.service import countdown, display_time, occurrences
+from app.modules.events.service import countdown, display_occurrence, calendar_occurrences as occurrences
 from app.ui.icons import icon,event_icon
 from app.ui.widgets import button, label, page_header, row
 
@@ -48,6 +48,10 @@ class EventsPage(QWidget):
             self.profile.setItemData(self.profile.count()-1,profile["name"],Qt.ItemDataRole.ToolTipRole)
         layout.addWidget(self.profile)
         self.profile.currentIndexChanged.connect(self.change_profile)
+        self.boss_sync=QCheckBox('Ler contador de Immortal Gartua no jogo')
+        self.boss_sync.setChecked(context.prefs.boss_timers_enabled)
+        self.boss_sync.toggled.connect(self.toggle_boss_sync);layout.addWidget(self.boss_sync)
+        layout.addWidget(label('Para sincronizar Gartua, abra os detalhes dele no mapa do jogo e deixe o tempo restante visível por alguns instantes. A previsão vale para esta sessão.', 'subtitle', True))
         self.unique = QCheckBox("Mostrar o próximo horário de cada evento")
         self.unique.setChecked(True)
         self.unique.toggled.connect(self.rebuild)
@@ -88,7 +92,7 @@ class EventsPage(QWidget):
 
     def rebuild(self):
         now = datetime.now(UTC)
-        upcoming = occurrences(self.context.feed.events, now)
+        upcoming = occurrences(self.context.calendar_events, now)
         if self.unique.isChecked():
             self.items = list({item.event.id: item for item in reversed(upcoming)}.values())
             self.items.sort(key=lambda item: item.starts_at)
@@ -96,7 +100,7 @@ class EventsPage(QWidget):
             self.items = upcoming[:24]
         self.table.setRowCount(len(self.items))
         for index, item in enumerate(self.items):
-            values = [item.event.name, item.event.region, display_time(item.starts_at, self.context.prefs.timezone), countdown(item.starts_at, now)]
+            values = [item.event.name, item.event.region, display_occurrence(item, self.context.prefs.timezone), countdown(item.starts_at, now)]
             for column, value in enumerate(values):
                 cell = QTableWidgetItem(value)
                 if column==0:cell.setIcon(icon(event_icon(item.event)))
@@ -112,13 +116,21 @@ class EventsPage(QWidget):
         self.profile.blockSignals(True)
         known = self.context.prefs.agenda_profile
         expected = "reference-"+known.removeprefix("reference-")+"-v030" if known.startswith("reference-") else "latam-2026-10-11"
-        matches = self.context.feed.release == expected or (known == "reference-sa" and self.context.feed.release == "reference-sa-v031")
+        matches = self.context.feed.release == expected or (known == "reference-sa" and self.context.feed.release in ("reference-sa-v031","reference-sa-v032"))
         selected = known if matches else "custom"
         self.profile.setCurrentIndex(max(0,self.profile.findData(selected)))
         self.profile.blockSignals(False)
+        self.boss_sync.blockSignals(True)
+        self.boss_sync.setChecked(self.context.prefs.boss_timers_enabled)
+        self.boss_sync.blockSignals(False)
 
     def toggle_panel(self,enabled):
         self.context.prefs.overlay.events_panel=enabled
+        self.context.save()
+
+    def toggle_boss_sync(self,enabled):
+        self.context.prefs.boss_timers_enabled=enabled
+        self.context.boss_timer.revision+=1
         self.context.save()
 
     def change_profile(self):
@@ -135,15 +147,24 @@ class EventsPage(QWidget):
             from PySide6.QtCore import QUrl
             from PySide6.QtGui import QDesktopServices
             url = QUrl(self.items[index].event.source)
+            if url.scheme()=='game-screen':
+                event=self.items[index].event
+                QMessageBox.information(self,'Leitura do jogo',event.name+'\n'+event.verification+'\n'+event.notes)
+                return
             if url.scheme() == "https" and url.host():
                 QDesktopServices.openUrl(url)
 
     def tick(self):
         now = datetime.now(UTC)
-        if self.items and self.items[0].starts_at < now:
+        if any(item.starts_at<now and not (item.event.kind=='Battlefield' and item.event.duration_minutes
+                and now<item.starts_at+timedelta(minutes=item.event.duration_minutes)) for item in self.items):
             self.rebuild()
         for index, item in enumerate(self.items):
-            self.table.item(index, 3).setText(countdown(item.starts_at, now))
+            active=(item.event.kind=='Battlefield' and item.event.duration_minutes and
+                item.starts_at<=now<item.starts_at+timedelta(minutes=item.event.duration_minutes))
+            remaining=('Disponível · fecha em '+countdown(item.starts_at+timedelta(minutes=item.event.duration_minutes),now)
+                if active else countdown(item.starts_at,now))
+            self.table.item(index, 3).setText(remaining)
         prefs = self.context.prefs
         if prefs.remote_auto_refresh and prefs.remote_events_url and (now-self.last_auto_refresh).total_seconds() >= prefs.remote_interval_minutes*60:
             self.refresh_remote(automatic=True)
