@@ -1,6 +1,8 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.2 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.3 · Windows x64**
+
+Beta 3 reads Insight and souls from the pet details panel in game, replaces the manual panel count with a confirmed reading, and tracks pickups from that baseline. Pets is now recognized as a menu, with consecutive-reading confirmation to prevent overlay flicker. See [Pets](docs/PETS.en-US.md).
 
 Routine adds a character Overview and passively reads basic and charged
 Odyle Energy. Its overlay switches between Compact Pulse and Strip, saving

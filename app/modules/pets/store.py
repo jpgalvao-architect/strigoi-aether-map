@@ -90,7 +90,7 @@ class PetStore:
     def export_collection(self, path):
         atomic_json(path, self.collection)
 
-    def accept_snapshot(self, profile_key, records, *, synced_at, complete=False):
+    def accept_snapshot(self, profile_key, records, *, synced_at, complete=False,prefer_observed=False):
         """Absolute observed quantities; partial replies never erase absent pets."""
         if profile_key not in self.collection.profiles:
             raise ValueError('Unidentified collection scope')
@@ -99,6 +99,8 @@ class PetStore:
             self._valid_pet(pet_id)
             existing = self.collection.profiles[profile_key].entries.get(str(pet_id), PetEntry()).observed
             baseline = existing.model_dump() if existing else {}
+            if existing and 'level' in values and values['level']!=existing.level:
+                baseline['required']=None
             incoming[str(pet_id)] = PetProgress.model_validate({**baseline, **values,
                 'origin':'observed', 'updated_at':synced_at})
         candidate = self.collection.model_copy(deep=True)
@@ -106,6 +108,7 @@ class PetStore:
         for key, progress in incoming.items():
             entry = profile.entries.setdefault(key, PetEntry())
             entry.observed = progress
+            if prefer_observed:entry.use_manual=False
         if complete:
             for key, entry in profile.entries.items():
                 if key not in incoming and entry.observed is not None:

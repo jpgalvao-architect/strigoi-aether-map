@@ -75,6 +75,7 @@ class PetSites(Model):
 class PetProgress(Model):
     level: int | None = Field(default=None, strict=True, ge=0, le=100)
     souls: int | None = Field(default=None, strict=True, ge=0, le=10_000_000)
+    required: int | None = Field(default=None, strict=True, gt=0, le=100000)
     pending: bool = False
     origin: Literal['manual', 'observed'] = 'manual'
     updated_at: str = ''

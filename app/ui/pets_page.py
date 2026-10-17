@@ -111,7 +111,7 @@ class PetsPage(QWidget):
         layout.addLayout(top)
         sync = QHBoxLayout()
         self.automatic = QCheckBox('Sincronizar com o jogo')
-        self.automatic.setToolTip('A coleção é recebida ao entrar no personagem. O Npcap é necessário para a leitura automática.')
+        self.automatic.setToolTip('Abra os detalhes do pet no jogo para ler Insight e almas automaticamente. A conexão do jogo identifica o personagem e recebe as coletas.')
         self.automatic.toggled.connect(self.automatic_changed)
         sync.addWidget(self.automatic)
         self.connection = label(service.status, 'subtitle', True)
@@ -200,7 +200,8 @@ class PetsPage(QWidget):
         self.goal.setAccessibleName('Meta do pet')
         self.goal.currentIndexChanged.connect(self.goal_changed)
         detail.addWidget(self.goal)
-        self.record_button = button('Registrar progresso', self.record, True)
+        detail.addWidget(label('Abra os detalhes deste pet no jogo. Insight e almas são lidos automaticamente.', 'subtitle', True))
+        self.record_button = button('Ajustar manualmente', self.record)
         detail.addWidget(self.record_button)
         self.restore_button = button('Usar informação do jogo', self.restore_observed)
         self.restore_button.hide()
@@ -377,9 +378,11 @@ class PetsPage(QWidget):
         progress = entry.progress
         caption = progress_caption(entry)
         if progress and progress.souls is not None:
-            caption += f'\n{progress.souls} almas registradas'
+            caption += '\n'+(tr('{almas}/{total} almas').format(almas=progress.souls,total=progress.required)
+                if progress.required else tr(f'{progress.souls} almas registradas'))
         if progress:
             caption += '\n' + ('Registrado por você' if progress.origin == 'manual' else 'Atualizado pelo jogo')
+            caption += '\n'+tr(self.service.progress_status(pet.id))
         self.progress.setText(caption)
         self.favorite.setChecked(entry.favorite)
         index = self.goal.findData(entry.goal)

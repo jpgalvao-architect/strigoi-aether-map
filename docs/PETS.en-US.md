@@ -1,31 +1,39 @@
 # Pets
 
 The **Pets** tab combines the catalogue, favorites, and your collection.
-Version 0.9.0-beta.11 includes original portraits for 208 pets. The reference
+Version 0.10.0-beta.3 includes original portraits for 208 pets. The reference
 catalogue does not guarantee availability in every region.
 
 ## Sync your collection
 
-1. Open Strigoi before logging into your character.
+1. Open Azphelumbra before logging into your character.
 2. In **Pets**, check your region and leave **Sync with game** enabled.
-3. Log into your character. The game sends the collection during login;
-   you don't need to keep its pet menu open.
-4. Check the sync status. If you opened Strigoi after logging in, return to
+3. Log into your character. The connection identifies the character and can receive the collection.
+4. Open a pet's details in game. Two matching readings confirm **Pet Insight**,
+   souls and the displayed target, without filling fields or importing files.
+   `Lv. 2 (63/75)` means **Insight 2, 63/75 souls**, not the separate genus level.
+5. Check the sync status. If you opened Azphelumbra after logging in, return to
    character selection and log in again when convenient.
 
-Passive reading uses Npcap, shared with Combat. Turning sync off does not
+Connection reading uses Npcap, shared with Combat and Routine. Visual reading
+reuses menu capture and only analyzes pet details when the Pets menu is recognized
+and the character is identified. Images and screen text stay in memory.
+Turning sync off does not
 delete your collection. Manual records work without Npcap. Profiles are
 separate by region, server, and character. Collection data stays on this PC.
 
 **Pet Insight** differs from the genus level shown in the game. Unread
-progress stays unknown instead of becoming zero. Manual records remain
-separate from observations; **Use game information** restores the observed
-value. Importing preserves a previous copy, and exporting creates a backup.
+progress stays unknown instead of becoming zero. **Adjust manually** is a fallback:
+manual values remain saved, but a confirmed screen reading displays the current
+game value. The panel distinguishes manual and saved records from synced values.
+Importing preserves a previous copy, and exporting creates a backup.
 
 The initial snapshot matched the game in two SA logins. Soul gain and
 level-up events passed controlled tests but still await a live SA check.
-After a data gap or an unresolved level-up, the app asks for a fresh login
-instead of inventing a total.
+After a data gap or an unresolved level-up, reopen this pet's details to sync
+its total. User-provided SA screenshots were read as 62/75 and 63/75; the
+screen-to-pickup sequence passed controlled tests. Live capture after installing
+this correction still needs verification.
 
 ## Choose what to track
 

@@ -74,12 +74,14 @@ class PetPanel(HudSurface):
         pets = self.service.store.select(favorites=True)
         key = (self.service.store.collection.active_profile,
                tuple((p.id,self.service.store.entry(p.id).model_dump_json()) for p in pets),
+               tuple(self.service.progress_status(p.id) for p in pets),
                prefs.panel_expanded,language())
         if key != self.structure:
             self.structure = key
             while self.rows.count():
                 item = self.rows.takeAt(0)
-                if item.widget(): item.widget().deleteLater()
+                widget=item.widget()
+                if widget:widget.hide();widget.setParent(None);widget.deleteLater()
             for pet in pets:
                 entry = self.service.store.entry(pet.id)
                 row = QFrame(); row.setObjectName('petRow'); row.setFixedHeight(55)
@@ -95,8 +97,12 @@ class PetPanel(HudSurface):
                 caption = tr(progress_caption(entry))
                 progress = entry.progress
                 if progress and progress.souls is not None:
-                    caption += ' · '+tr(f'{progress.souls} almas')
-                detail = label(caption,'petProgress'); copy.addWidget(detail); box.addLayout(copy,1)
+                    caption += ' · '+(tr('{almas}/{total} almas').format(almas=progress.souls,total=progress.required)
+                        if progress.required else tr(f'{progress.souls} almas'))
+                state=self.service.progress_status(pet.id)
+                if state!='Sincronizado':caption+=' · '+tr('Manual' if state=='Registro manual' else 'Salvo')
+                detail = label(caption,'petProgress');detail.setToolTip(tr(state))
+                copy.addWidget(detail); box.addLayout(copy,1)
                 self.rows.addWidget(row)
             self.rows.addStretch()
         self.scroller.setVisible(bool(pets)); self.empty.setVisible(not pets)

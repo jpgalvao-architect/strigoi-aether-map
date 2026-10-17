@@ -130,6 +130,20 @@
           "default": null,
           "title": "Souls"
         },
+        "required": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 100000,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Required"
+        },
         "pending": {
           "default": false,
           "title": "Pending",

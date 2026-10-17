@@ -1,6 +1,8 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.2 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.3 · Windows x64**
+
+A beta 3 lê Insight e almas no quadro de detalhes do pet aberto no jogo, substitui o contador manual no painel pela leitura confirmada e permite acompanhar as coletas a partir desse saldo. Pets passa a ser reconhecido como menu, com confirmação entre leituras para evitar oscilações do overlay. Veja [Pets](docs/PETS.md).
 
 A Rotina acrescenta o Panorama de personagens e acompanha Odyle básica e
 recarregada por leitura passiva. O overlay alterna entre Pulso compacto e

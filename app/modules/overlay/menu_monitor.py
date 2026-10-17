@@ -22,17 +22,40 @@ def normalized(text):
 
 
 def classify_lines(lines, width, height, full_close=False):
+    if pet_menu(lines,width,height):return 'menu'
     for line in lines:
         text = normalized(line.get('text',''))
         x,y,h = line.get('x',0),line.get('y',0),line.get('height',0)
         if h < 12: continue
         if x < width*.35 and y < height*.12 and (text.startswith('map:') or text.startswith('mapa:')):
             return 'map'
-        if text in MENU_TITLES and y < height*.45 and not (x > width*.8 and y < height*.3):
+        if text in MENU_TITLES and h>=18 and x<width*.35 and y<height*.12:
             return 'menu'
     # Gameplay HUD and scenery can contain the same crossing diagonals as a
     # close button. Geometry alone is not evidence that a menu is open.
     return 'play'
+
+
+def pet_menu(lines,width,height):
+    title=any(normalized(line.get('text',''))=='pets' and line.get('height',0)>=18
+              and line.get('x',width)<width*.18 and line.get('y',height)<height*.12 for line in lines)
+    tabs=any(normalized(line.get('text','')) in ('genus insight','pet info','pet insight')
+             and line.get('x',0)>width*.4 and line.get('y',height)<height*.45 for line in lines)
+    return title and tabs
+
+
+class MenuConsensus:
+    """Changing scene text or one missed title cannot toggle the HUD."""
+    def __init__(self):self.mode='play';self.candidate=None;self.count=0
+
+    def observe(self,mode):
+        if mode is None:self.candidate=None;self.count=0;return self.mode
+        if mode==self.mode:self.candidate=None;self.count=0;return self.mode
+        self.count=self.count+1 if self.candidate==mode else 1
+        self.candidate=mode
+        if self.count>=(3 if mode=='play' else 2):
+            self.mode=mode;self.candidate=None;self.count=0
+        return self.mode
 
 
 def fullscreen_close(frame, full_height=None):
@@ -109,12 +132,17 @@ class WindowsOCR:
 
 class MenuMonitor(QThread):
     observed = Signal(object,str)
+    pet_observed = Signal(object,object,object)
 
     def __init__(self, probe):
         super().__init__()
         self.probe=probe;self.job=None
         self.lock=threading.Lock();self.stopped=threading.Event()
         self.ocr=WindowsOCR()
+        self.pet_scope=None
+
+    def set_pet_scope(self,scope):
+        with self.lock:self.pet_scope=scope
 
     def set_game(self, job):
         with self.lock: self.job=job
@@ -126,10 +154,17 @@ class MenuMonitor(QThread):
         import cv2
         import mss
         import numpy as np
+        from app.modules.pets.screen import PetScreenReader,ReadingConsensus
+        from app.modules.pets.models import PetCatalogue
+        from app.infrastructure.storage import load_model
+        reader=PetScreenReader(self.ocr,load_model(PACKAGE/'data/pets.json',PetCatalogue).pets)
+        readings=ReadingConsensus();consensus=MenuConsensus();previous=None
         try:
             with mss.MSS() as capture:
                 while not self.stopped.is_set():
-                    with self.lock: job=self.job
+                    with self.lock: job=self.job;scope=self.pet_scope
+                    if job!=previous:
+                        consensus=MenuConsensus();readings=ReadingConsensus();previous=job
                     if job is not None:
                         game,_=job
                         if self.probe.game_foreground() == game:
@@ -142,7 +177,17 @@ class MenuMonitor(QThread):
                                 width=min(1920,game.width);height=round(game.height*width/game.width)
                                 image=cv2.resize(frame,(width,round(height*.45)))
                                 lines=self.ocr.recognize(image)
-                                self.observed.emit(job,classify_lines(lines,width,height,close))
+                                mode=classify_lines(lines,width,height,close) if lines else (
+                                    'play' if self.ocr.closed else None)
+                                self.observed.emit(job,consensus.observe(mode))
+                                reading=None
+                                if scope is not None and pet_menu(lines,width,height):
+                                    # Native pixels keep small Insight text legible on 4K/150%.
+                                    reading=reader.recognize(frame[round(game.height*.12):,round(game.width*.74):])
+                                confirmed=readings.observe(scope,reading)
+                                if confirmed is not None and self.probe.game_foreground()==game:
+                                    self.pet_observed.emit(job,scope,confirmed)
+                                elif reading is None:readings.observe(None,None)
                     self.stopped.wait(.65)
         except (OSError,ValueError,mss.ScreenShotError):
             pass  # Foreground gating remains active if visual recognition is unavailable.
