@@ -73,8 +73,9 @@ class PetPanel(HudSurface):
         prefs = self.context.prefs.pets
         pets = self.service.store.select(favorites=True)
         key = (self.service.store.collection.active_profile,
-               tuple((p.id,self.service.store.entry(p.id).model_dump_json()) for p in pets),
+               tuple((p.id,self.service.entry(p.id).model_dump_json()) for p in pets),
                tuple(self.service.progress_status(p.id) for p in pets),
+               tuple(self.service.gain_count(p.id) for p in pets),
                prefs.panel_expanded,language())
         if key != self.structure:
             self.structure = key
@@ -83,7 +84,7 @@ class PetPanel(HudSurface):
                 widget=item.widget()
                 if widget:widget.hide();widget.setParent(None);widget.deleteLater()
             for pet in pets:
-                entry = self.service.store.entry(pet.id)
+                entry = self.service.entry(pet.id)
                 row = QFrame(); row.setObjectName('petRow'); row.setFixedHeight(55)
                 box = QHBoxLayout(row); box.setContentsMargins(3,4,3,4); box.setSpacing(7)
                 portrait = label(''); portrait.setFixedSize(43,43)
@@ -94,14 +95,23 @@ class PetPanel(HudSurface):
                 name = label(pet.name); name.setToolTip(pet.name)
                 name.setText(name.fontMetrics().elidedText(pet.name,Qt.TextElideMode.ElideRight,175))
                 copy.addWidget(name)
-                caption = tr(progress_caption(entry))
                 progress = entry.progress
+                caption = tr(progress_caption(entry)) if progress and progress.level is not None else ''
                 if progress and progress.souls is not None:
-                    caption += ' · '+(tr('{almas}/{total} almas').format(almas=progress.souls,total=progress.required)
+                    caption += (' · ' if caption else '')+(tr('{almas}/{total} almas').format(almas=progress.souls,total=progress.required)
                         if progress.required else tr(f'{progress.souls} almas'))
                 state=self.service.progress_status(pet.id)
-                if state!='Sincronizado':caption+=' · '+tr('Manual' if state=='Registro manual' else 'Salvo')
-                detail = label(caption,'petProgress');detail.setToolTip(tr(state))
+                gains=self.service.gain_count(pet.id)
+                if gains and state not in ('Sincronizado','Leitura desta captura'):
+                    caption=tr('+{count} almas nesta captura').format(count=gains)
+                elif caption and state not in ('Sincronizado','Leitura desta captura'):
+                    caption+=' · '+tr({'Registro manual':'Manual','Registro salvo':'Salvo'}.get(state,'Aguardando leitura'))
+                if not caption:caption=tr('Abra os detalhes no jogo')
+                detail = label(caption,'petProgress')
+                total=tr(progress_caption(entry))
+                if progress and progress.souls is not None:total+=' · '+tr('{count} almas').format(count=progress.souls)
+                detail.setToolTip(total+'\n'+tr(state)+'\n'+tr('Os ganhos desta captura não são o total da coleção.'))
+                if gains:detail.setToolTip(detail.toolTip()+'\n'+tr('+{count} almas nesta captura').format(count=gains))
                 copy.addWidget(detail); box.addLayout(copy,1)
                 self.rows.addWidget(row)
             self.rows.addStretch()

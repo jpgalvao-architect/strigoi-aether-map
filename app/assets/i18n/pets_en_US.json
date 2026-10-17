@@ -104,5 +104,9 @@
   "Painel de pets": "Pets panel",
   "Mostrar painel de pets": "Show pets panel",
   "Opacidade do painel de pets": "Pets panel opacity",
-  "Mapa dos locais de farm": "Farming locations map"
+  "Mapa dos locais de farm": "Farming locations map",
+  "+{count} almas nesta captura": "+{count} souls this capture",
+  "Os ganhos desta captura não são o total da coleção.": "Gains in this capture are not the collection total.",
+  "Leitura desta captura": "Current capture reading",
+  "Abra os detalhes no jogo": "Open in-game pet details"
 }

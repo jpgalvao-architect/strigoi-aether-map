@@ -21,7 +21,7 @@ def normalized(text):
     return ''.join(c for c in unicodedata.normalize('NFKD',text.lower()) if not unicodedata.combining(c)).strip(' :·.-')
 
 
-def classify_lines(lines, width, height, full_close=False):
+def classify_lines(lines, width, height, full_close=False, header_rule=False):
     if pet_menu(lines,width,height):return 'menu'
     for line in lines:
         text = normalized(line.get('text',''))
@@ -31,9 +31,34 @@ def classify_lines(lines, width, height, full_close=False):
             return 'map'
         if text in MENU_TITLES and h>=18 and x<width*.35 and y<height*.12:
             return 'menu'
+    if full_close and header_rule and tabbed_menu(lines,width,height):return 'menu'
     # Gameplay HUD and scenery can contain the same crossing diagonals as a
     # close button. Geometry alone is not evidence that a menu is open.
     return 'play'
+
+
+def tabbed_menu(lines,width,height):
+    """Menu chrome needs a large title and two aligned, separated text tabs."""
+    def letters(line):return sum(c.isalpha() for c in line.get('text',''))>=3
+    titles=[line for line in lines if letters(line) and line.get('height',0)>=max(12,height*.018)
+        and 0<=line.get('x',width)<width*.32 and 0<=line.get('y',height)<height*.06]
+    if not titles:return False
+    tabs=[line for line in lines if letters(line) and line.get('height',0)>=max(7,height*.009)
+        and width*.19<line.get('x',0)<width*.85 and height*.055<line.get('y',0)<height*.095]
+    return any(abs(a['y']-b['y'])<height*.012 and abs(a['x']-b['x'])>width*.08
+        for a in tabs for b in tabs)
+
+
+def fullscreen_header_rule(frame,full_height):
+    """Long menu header separator; city scenery alone must not hide the HUD."""
+    import cv2
+    import numpy as np
+    h,w=frame.shape[:2]
+    small=cv2.resize(frame,(1024,max(1,round(h*1024/w))))
+    height=round(full_height*1024/w)
+    gray=cv2.cvtColor(small,cv2.COLOR_BGR2GRAY).astype('int16')
+    band=np.abs(np.diff(gray,axis=0))[round(height*.075):round(height*.12),51:973]
+    return bool(band.size and np.any(np.mean(band>=3,axis=1)>=.75))
 
 
 def pet_menu(lines,width,height):
@@ -177,7 +202,8 @@ class MenuMonitor(QThread):
                                 width=min(1920,game.width);height=round(game.height*width/game.width)
                                 image=cv2.resize(frame,(width,round(height*.45)))
                                 lines=self.ocr.recognize(image)
-                                mode=classify_lines(lines,width,height,close) if lines else (
+                                rule=fullscreen_header_rule(frame,game.height) if close else False
+                                mode=classify_lines(lines,width,height,close,rule) if lines else (
                                     'play' if self.ocr.closed else None)
                                 self.observed.emit(job,consensus.observe(mode))
                                 reading=None

@@ -6,7 +6,7 @@ from app.services.context import AppContext
 from app.ui.main_window import MainWindow
 from app.ui.overlay_visibility import OverlayVisibility
 from app.modules.overlay.foreground import GameWindow, GAME_NAMES
-from app.modules.overlay.menu_monitor import classify_lines, fullscreen_close
+from app.modules.overlay.menu_monitor import classify_lines, fullscreen_close, fullscreen_header_rule
 
 
 class Probe:
@@ -171,6 +171,33 @@ def test_close_geometry_works_with_full_frame_and_upper_crop(width):
 def test_supported_game_names_do_not_include_launchers_or_browsers():
     assert 'aion2.exe' in GAME_NAMES and 'aion2-win64-shipping.exe' in GAME_NAMES
     assert 'aion2-launcher.exe' not in GAME_NAMES and 'chrome.exe' not in GAME_NAMES
+
+
+def test_generic_full_menu_requires_title_tabs_close_and_long_separator():
+    lines=[dict(text='Enhancement',x=67,y=29,height=24),
+        dict(text='Growth',x=548,y=72,height=14),dict(text='Manastone',x=726,y=73,height=13)]
+    assert classify_lines(lines,1920,1080,True,True)=='menu'
+    assert classify_lines(lines,1920,1080,False,True)=='play'
+    assert classify_lines(lines,1920,1080,True,False)=='play'
+    assert classify_lines(lines[1:],1920,1080,True,True)=='play'
+    assert classify_lines(lines[:2],1920,1080,True,True)=='play'
+    for scale in (.667,2):
+        scaled=[dict(text=r['text'],**{k:r[k]*scale for k in ('x','y','height')}) for r in lines]
+        assert classify_lines(scaled,1920*scale,1080*scale,True,True)=='menu'
+    lines[2]['y']=250
+    assert classify_lines(lines,1920,1080,True,True)=='play'
+    assert classify_lines([dict(text='2,333',x=30,y=25,height=26),*lines[1:]],1920,1080,True,True)=='play'
+
+
+def test_header_rule_requires_wide_horizontal_menu_separator():
+    import cv2
+    frame=np.zeros((486,1920,3),np.uint8)
+    assert not fullscreen_header_rule(frame,1080)
+    cv2.line(frame,(100,104),(1800,104),(130,130,130),2)
+    assert fullscreen_header_rule(frame,1080)
+    frame[:]=0
+    cv2.line(frame,(900,104),(1100,104),(130,130,130),2)
+    assert not fullscreen_header_rule(frame,1080)
 
 
 def test_sonar_visual_preview_stays_in_app_when_game_hud_is_blocked(gated,qapp,monkeypatch):

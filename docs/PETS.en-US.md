@@ -1,26 +1,34 @@
 # Pets
 
 The **Pets** tab combines the catalogue, favorites, and your collection.
-Version 0.10.0-beta.3 includes original portraits for 208 pets. The reference
+Version 0.10.0-beta.4 includes original portraits for 208 pets. The reference
 catalogue does not guarantee availability in every region.
 
 ## Sync your collection
 
-1. Open Azphelumbra before logging into your character.
+1. Open Azphelumbra. The counter also works if your character is already logged in.
 2. In **Pets**, check your region and leave **Sync with game** enabled.
-3. Log into your character. The connection identifies the character and can receive the collection.
+3. Favorite the pets to track. Received gains show **+N souls this capture**
+   even before the collection total is known.
 4. Open a pet's details in game. Two matching readings confirm **Pet Insight**,
    souls and the displayed target, without filling fields or importing files.
    `Lv. 2 (63/75)` means **Insight 2, 63/75 souls**, not the separate genus level.
-5. Check the sync status. If you opened Azphelumbra after logging in, return to
-   character selection and log in again when convenient.
+5. After this reading, the counter tracks the total and subsequent gains.
+   The screen total already includes earlier pickups; they are not added twice.
 
 Connection reading uses Npcap, shared with Combat and Routine. Visual reading
-reuses menu capture and only analyzes pet details when the Pets menu is recognized
-and the character is identified. Images and screen text stay in memory.
+reuses menu capture and only analyzes pet details when the Pets menu is recognized.
+Images and screen text stay in memory.
 Turning sync off does not
 delete your collection. Manual records work without Npcap. Profiles are
 separate by region, server, and character. Collection data stays on this PC.
+
+If capture started after login and character identity has not arrived, gains
+and screen readings stay in the current capture without modifying a saved
+profile. Open the app before character login to save character-bound sync.
+Reconnecting or switching characters resets capture gains. Received gains do
+not establish a collection total without an initial reading; capture gaps can
+make the gain counter partial.
 
 **Pet Insight** differs from the genus level shown in the game. Unread
 progress stays unknown instead of becoming zero. **Adjust manually** is a fallback:
@@ -28,8 +36,8 @@ manual values remain saved, but a confirmed screen reading displays the current
 game value. The panel distinguishes manual and saved records from synced values.
 Importing preserves a previous copy, and exporting creates a backup.
 
-The initial snapshot matched the game in two SA logins. Soul gain and
-level-up events passed controlled tests but still await a live SA check.
+The initial snapshot matched the game in two SA logins. Kailin and Duduka
+soul gains were received live in SA. Level-up events still need a live check.
 After a data gap or an unresolved level-up, reopen this pet's details to sync
 its total. User-provided SA screenshots were read as 62/75 and 63/75; the
 screen-to-pickup sequence passed controlled tests. Live capture after installing

@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from time import monotonic
 from PySide6.QtCore import QObject, QTimer, Signal
 from app.modules.pets.store import PetStore
+from app.modules.pets.models import PetProgress
 from app.modules.pets.farm import PetFarm
 
 
@@ -22,6 +23,10 @@ class PetService(QObject):
         self.sequence = 0
         self.collection_ready = False
         self.fresh_pets = set()
+        # Verified pickups in this capture are useful even without an absolute
+        # baseline. Never turn them into a guessed collection total.
+        self.session_gains = {}
+        self.capture_progress = {}
         self.screen_revision = 0
         self.identity_ms = None
         self.bind_timer = QTimer(self)
@@ -67,10 +72,12 @@ class PetService(QObject):
             self.status = 'Sincronização automática desativada.'
 
     def disconnected(self):
-        changed=bool(self.profile_key is not None or self.collection_ready or self.fresh_pets or self.pending or self.session)
+        changed=bool(self.profile_key is not None or self.collection_ready or self.fresh_pets or self.pending or self.session or self.session_gains)
         self.profile_key = None
         self.collection_ready = False
         self.fresh_pets.clear();self.screen_revision+=1
+        self.session_gains.clear()
+        self.capture_progress.clear()
         self.identity_ms = None
         self.bind_timer.stop()
         self.pending.clear()
@@ -87,7 +94,7 @@ class PetService(QObject):
             self.collection_ready = False
             self.fresh_pets.clear();self.screen_revision+=1
             if message.get('kind')=='SelfIdentifiedEvent':
-                self.profile_key=None;self.identity_ms=None;self.pending.clear();self.bind_timer.stop()
+                self.disconnected()
             self.status = 'Aguardando atualização da coleção.'
             self.changed.emit()
 
@@ -128,6 +135,8 @@ class PetService(QObject):
             import hashlib
             key = f'{expected_region}:{server}:{hashlib.sha256(name.encode()).hexdigest()[:20]}'
             if key != previous:
+                self.session_gains.clear()
+                self.capture_progress.clear()
                 self.profile_key = self.store.observed_profile(expected_region,server,name)
                 self.collection_ready = False
                 self.fresh_pets.clear();self.screen_revision+=1
@@ -143,7 +152,15 @@ class PetService(QObject):
             return
         if not self.context.prefs.pets.auto_collection:
             return
-        if event == 'PetCollectionEvent' or self.pending or self.profile_key is None:
+        if event == 'PetSoulAcquiredEvent':
+            pet_id, amount = payload.get('PetId'), payload.get('Amount')
+            if type(pet_id) is not int or pet_id not in self.store.by_id:
+                return
+            if type(amount) is not int or not 0 < amount <= 100000:
+                raise ValueError('Invalid soul gain')
+            self.session_gains[pet_id] = self.session_gains.get(pet_id,0)+amount
+            self.screen_revision+=1
+        if event == 'PetCollectionEvent' or self.pending:
             if len(self.pending) >= 32:
                 self.pending.clear()
                 self.collection_ready = False
@@ -156,8 +173,10 @@ class PetService(QObject):
             if not self.bind_timer.isActive():
                 self.bind_timer.start()
             self.status = 'Identificando sua coleção no jogo.'
+            if event=='PetSoulAcquiredEvent':self.changed.emit()
             return
-        self.collection_event(event,payload)
+        updated=self.collection_event(event,payload)
+        if event=='PetSoulAcquiredEvent' and not updated:self.changed.emit()
 
     def flush_pending(self):
         pending, self.pending = self.pending, []
@@ -183,23 +202,45 @@ class PetService(QObject):
         if self.pending:self.bind_timer.start()
 
     def screen_scope(self):
-        if not self.context.prefs.pets.auto_collection or self.profile_key is None or self.pending:return None
+        if not self.context.prefs.pets.auto_collection or not self.session or self.pending:return None
         return (self.profile_key,self.session,self.identity_ms,self.screen_revision)
+
+    def entry(self,pet_id):
+        entry=self.store.entry(pet_id)
+        if self.profile_key is None and pet_id in self.capture_progress:
+            entry=entry.model_copy(deep=True)
+            entry.observed=self.capture_progress[pet_id];entry.use_manual=False
+        return entry
+
+    def save_observation(self,records,stamp,**options):
+        if self.profile_key is not None:
+            self.store.accept_snapshot(self.profile_key,records,synced_at=stamp,**options)
+            return
+        # A visible pet proves its progress, not the player's identity. Keep
+        # unbound observations in memory; never attach them to a saved profile.
+        incoming={}
+        for pet_id,values in records.items():
+            old=self.capture_progress.get(pet_id)
+            baseline=old.model_dump() if old else {}
+            if old and 'level' in values and values['level']!=old.level:baseline['required']=None
+            incoming[pet_id]=PetProgress.model_validate({**baseline,**values,'origin':'observed','updated_at':stamp})
+        self.capture_progress.update(incoming)
 
     def from_screen(self,scope,reading):
         from app.modules.pets.screen import PetScreenReading
         if scope is None or scope!=self.screen_scope() or not isinstance(reading,PetScreenReading):return False
         if reading.pet_id not in self.store.by_id or not (0<=reading.level<=10 and
                 0<=reading.souls<=reading.required<=100000 and reading.required>0):return False
-        entry=self.store.collection.profiles[self.profile_key].entries.get(str(reading.pet_id))
+        entry=(self.store.collection.profiles[self.profile_key].entries.get(str(reading.pet_id))
+            if self.profile_key is not None else self.entry(reading.pet_id))
         old=entry.observed if entry else None
         if (old and (old.level,old.souls,old.required,old.pending)==
                 (reading.level,reading.souls,reading.required,False) and not entry.use_manual
                 and reading.pet_id in self.fresh_pets):return True
         try:
-            self.store.accept_snapshot(self.profile_key,{reading.pet_id:dict(level=reading.level,
+            self.save_observation({reading.pet_id:dict(level=reading.level,
                 souls=reading.souls,required=reading.required,pending=False)},
-                synced_at=datetime.now(UTC).isoformat(),prefer_observed=True)
+                datetime.now(UTC).isoformat(),prefer_observed=True)
         except (OSError,ValueError):
             self.collection_ready=False;self.fresh_pets.clear();self.screen_revision+=1
             self.status='Não foi possível salvar a leitura do pet.';self.changed.emit();return False
@@ -208,11 +249,18 @@ class PetService(QObject):
         self.changed.emit();return True
 
     def progress_status(self,pet_id):
-        entry=self.store.entry(pet_id)
+        entry=self.entry(pet_id)
         if entry.progress and entry.progress.pending:return 'Aguardando leitura'
+        if self.profile_key is None and pet_id in self.capture_progress:
+            return 'Leitura desta captura' if pet_id in self.fresh_pets else 'Aguardando leitura'
         if entry.use_manual or entry.observed is None:return 'Registro manual' if entry.manual else 'Aguardando leitura'
         return 'Sincronizado' if (self.store.collection.active_profile==self.profile_key and
             (self.collection_ready or pet_id in self.fresh_pets)) else 'Registro salvo'
+
+    def gain_count(self,pet_id):
+        # Unbound capture gains are never saved to a guessed character profile.
+        if self.profile_key is not None and self.store.collection.active_profile!=self.profile_key:return 0
+        return self.session_gains.get(pet_id,0)
 
     def collection_event(self, event, payload):
         stamp = datetime.now(UTC).isoformat()
@@ -244,7 +292,8 @@ class PetService(QObject):
             pet_id = payload.get('PetId')
             if pet_id not in self.store.by_id:
                 return
-            entry = self.store.collection.profiles[self.profile_key].entries.get(str(pet_id))
+            entry = (self.store.collection.profiles[self.profile_key].entries.get(str(pet_id))
+                if self.profile_key is not None else self.entry(pet_id))
             old = entry.observed if entry else None
             if event == 'PetSoulAcquiredEvent':
                 amount = payload.get('Amount')
@@ -272,7 +321,7 @@ class PetService(QObject):
                     records[pet_id]['souls'] = 0
                     records[pet_id]['required'] = None
         if records or event == 'PetCollectionEvent':
-            self.store.accept_snapshot(self.profile_key,records,synced_at=stamp,complete=event=='PetCollectionEvent')
+            self.save_observation(records,stamp,complete=event=='PetCollectionEvent')
             if event == 'PetCollectionEvent':
                 self.collection_ready = True
                 self.fresh_pets=set(records)
@@ -280,6 +329,7 @@ class PetService(QObject):
             self.status = ('Abra os detalhes do pet no jogo para confirmar a evolução e as almas.'
                 if any(row.get('pending') for row in records.values()) else 'Coleção atualizada pelo jogo.')
             self.changed.emit()
+            return True
 
     def shutdown(self):
         self.runtime = False
@@ -320,5 +370,7 @@ class PetService(QObject):
         except (OSError, ValueError):
             self.error.emit('Não foi possível salvar sua coleção. Tente novamente.')
             return False
+        self.capture_progress.pop(pet_id,None)
+        self.fresh_pets.discard(pet_id);self.screen_revision+=1
         self.changed.emit()
         return True

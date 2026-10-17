@@ -1,28 +1,36 @@
 # Pets
 
 A aba **Pets** reúne o catálogo, os favoritos e seu progresso. A versão
-0.10.0-beta.3 inclui retratos originais de 208 pets. O catálogo de referência
+0.10.0-beta.4 inclui retratos originais de 208 pets. O catálogo de referência
 não garante que todos estejam disponíveis na sua região.
 
 ## Sincronizar a coleção
 
-1. Abra o Azphelumbra antes de entrar no personagem.
+1. Abra o Azphelumbra. O contador também funciona com o personagem já logado.
 2. Na aba **Pets**, confirme a região e deixe **Sincronizar com o jogo** ativo.
-3. Entre no personagem. A conexão identifica o personagem e pode receber a coleção.
+3. Favorite os pets que deseja acompanhar. Os ganhos recebidos aparecem como
+   **+N almas nesta captura**, mesmo antes de conhecer o total da coleção.
 4. Abra os detalhes de um pet no jogo: o app lê **Pet Insight**, as almas e
    o total exibido, sem preencher campos ou importar arquivos. Duas leituras
    iguais confirmam o valor. Na tela em inglês, lê `Lv. 2 (63/75)` como
    **Insight 2, 63/75 almas**, sem confundir com o nível de família.
-5. Confira o status da sincronização. Se o Azphelumbra foi aberto depois da
-   entrada, volte à seleção de personagem e entre novamente quando puder.
+5. Depois dessa leitura, o contador acompanha o total e os próximos ganhos.
+   O total lido já inclui as coletas anteriores; elas não são somadas novamente.
 
 A leitura da conexão usa Npcap, compartilhado com Combate e Rotina. O leitor
 visual reutiliza a captura dos menus e só analisa os detalhes quando o menu
-Pets é reconhecido e o personagem já foi identificado. Imagens e texto da
+Pets é reconhecido. Imagens e texto da
 tela ficam na memória, sem gravação. Desativar a
 sincronização não apaga sua coleção. A coleção manual funciona sem Npcap.
 Os perfis ficam separados por região, servidor e personagem. Os dados
 permanecem neste computador e não são enviados a um serviço de coleção.
+
+Se a captura começou depois do login e a identidade do personagem não chegou,
+os ganhos e a leitura da tela ficam apenas na captura atual, sem alterar um
+perfil salvo. Para salvar a sincronização por personagem, abra o app antes
+de entrar nele. Uma reconexão ou troca de personagem reinicia os ganhos dessa
+captura. Ganhos recebidos não comprovam o total quando a leitura inicial falta;
+após uma interrupção, o contador de ganhos pode ser parcial.
 
 **Pet Insight** é diferente do nível da família mostrado no jogo. Uma
 informação ainda não recebida aparece como desconhecida, sem presumir zero.
@@ -32,9 +40,9 @@ O painel distingue registros manuais ou salvos dos sincronizados.
 **Importar coleção** preserva uma cópia anterior;
 **Exportar coleção** permite fazer seu próprio backup.
 
-O snapshot inicial foi conferido em SA em duas entradas. Os eventos de ganho
-de almas e evolução passaram em testes controlados e ainda aguardam uma
-conferência real em SA. Se houver perda de dados ou uma evolução que não
+O snapshot inicial foi conferido em SA em duas entradas. Ganhos de almas de
+Kailin e Duduka foram recebidos ao vivo em SA. Evoluções ainda precisam de
+conferência ao vivo. Se houver perda de dados ou uma evolução que não
 possa ser conciliada, reabra os detalhes desse pet para sincronizar o total.
 As prints SA fornecidas pelo usuário foram lidas como 62/75 e 63/75; a
 sequência tela → coleta também passou em testes controlados. A captura ao

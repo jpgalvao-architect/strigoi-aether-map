@@ -56,3 +56,29 @@ def test_map_filter_language_and_panel_offline_mode(qapp,tmp_path):
         assert any('9 souls' in w.text() for w in main.pet_panel.findChildren(QLabel))
     finally:
         set_language('pt_BR');main.close()
+
+
+def test_unknown_duduka_shows_verified_gains_instead_of_misleading_saved_label(qapp,tmp_path):
+    from app.tests.test_pet_sync import event
+    from app.ui.localized_widgets import QLabel
+    main=MainWindow(AppContext(tmp_path))
+    try:
+        main.context.prefs.pets.panel_visible=True
+        main.pets.edit(1172,favorite=True)
+        main.pets.accept(event(1,'PetSoulAcquiredEvent',dict(PetId=1172,Amount=1)))
+        main.pets.accept(event(2,'PetSoulAcquiredEvent',dict(PetId=1172,Amount=2)))
+        main.pet_panel.refresh()
+        labels=main.pet_panel.findChildren(QLabel)
+        assert any(w.text()=='+3 almas nesta captura' for w in labels)
+        assert not any('Salvo' in w.text() for w in labels)
+        from app.modules.pets.screen import PetScreenReading
+        main.pets.from_screen(main.pets.screen_scope(),PetScreenReading(1172,2,62,75))
+        main.pets.accept(event(3,'PetSoulAcquiredEvent',dict(PetId=1172,Amount=1)))
+        main.pet_panel.refresh()
+        assert any('63/75 almas' in w.text() for w in main.pet_panel.findChildren(QLabel))
+        main.pets.disconnected()
+        main.pets.accept(event(1,'PetSoulAcquiredEvent',dict(PetId=1172,Amount=3)))
+        set_language('en_US');main.pet_panel.refresh()
+        assert any(w.text()=='+3 souls this capture' for w in main.pet_panel.findChildren(QLabel))
+    finally:
+        set_language('pt_BR');main.close()

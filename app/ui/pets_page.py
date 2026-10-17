@@ -334,7 +334,7 @@ class PetsPage(QWidget):
         self.grid.clear()
         target = None
         for pet in pets:
-            entry = store.entry(pet.id)
+            entry = self.service.entry(pet.id)
             title = ('★ ' if entry.favorite else '') + pet.name
             item = QListWidgetItem(portrait_icon(pet.portrait), f'{title}\n{tr(progress_caption(entry))}')
             item.setData(Qt.ItemDataRole.UserRole, pet.id)
@@ -370,7 +370,7 @@ class PetsPage(QWidget):
             self.source_button.hide(); self.origin.hide(); self.restore_button.hide()
             self._refreshing = False
             return
-        entry = store.entry(pet.id)
+        entry = self.service.entry(pet.id)
         self.picture.setPixmap(QPixmap(str(PACKAGE/'assets'/pet.portrait)).scaled(
             120, 120, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         self.name.setText(pet.name)
@@ -383,6 +383,8 @@ class PetsPage(QWidget):
         if progress:
             caption += '\n' + ('Registrado por você' if progress.origin == 'manual' else 'Atualizado pelo jogo')
             caption += '\n'+tr(self.service.progress_status(pet.id))
+        gains=self.service.gain_count(pet.id)
+        if gains:caption+='\n'+tr('+{count} almas nesta captura').format(count=gains)
         self.progress.setText(caption)
         self.favorite.setChecked(entry.favorite)
         index = self.goal.findData(entry.goal)
