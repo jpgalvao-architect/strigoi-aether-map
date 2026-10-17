@@ -123,7 +123,7 @@ window.StrigoiGuide = {
             "en_US": "Open the emblem menu"
           },
           "where": {
-            "pt_BR": "Mascote flutuante",
+            "pt_BR": "Emblema flutuante",
             "en_US": "Floating emblem"
           },
           "body": {
@@ -141,12 +141,12 @@ window.StrigoiGuide = {
             "en_US": "Choose what appears"
           },
           "where": {
-            "pt_BR": "Menu → quatro controles",
-            "en_US": "Menu → four controls"
+            "pt_BR": "Menu rápido → módulos",
+            "en_US": "Quick menu → modules"
           },
           "body": {
-            "pt_BR": "Sonar liga ou desliga a análise do áudio. Mapa + minimapa controla os dois mapas juntos. Painel de combate habilita a exibição automática em instâncias; fora delas, mostra Aguardando instância. Painel de eventos mostra ou oculta a agenda. Configure primeiro o minimapa e o Sonar nas respectivas abas.",
-            "en_US": "Sonar turns audio analysis on or off. Map + minimap controls both maps. Combat panel arms automatic display in instances; outside them, it shows Waiting for instance. Events panel shows or hides the schedule. Set up the minimap and Sonar in their tabs first."
+            "pt_BR": "Ative Sonar e Mapa + minimapa, mostre ou oculte os painéis de Combate, Eventos, Pets e Rotina. O placar aparece nas instâncias reconhecidas. Configure primeiro o minimapa e o Sonar nas respectivas abas.",
+            "en_US": "Enable Sonar and Map + minimap, and show or hide Combat, Events, Pets and Routine panels. The meter appears in recognized instances. Set up the minimap and Sonar in their tabs first."
           },
           "tip": {
             "pt_BR": "Ocultar o placar mantém a medição de combate ativa.",
@@ -200,20 +200,20 @@ window.StrigoiGuide = {
       "steps": [
         {
           "title": {
-            "pt_BR": "Sincronize ao entrar",
-            "en_US": "Sync at login"
+            "pt_BR": "Ative o contador",
+            "en_US": "Enable the counter"
           },
           "where": {
             "pt_BR": "Pets → Sincronizar com o jogo",
             "en_US": "Pets → Sync with game"
           },
           "body": {
-            "pt_BR": "Abra o Azphelumbra antes de entrar no personagem e confira a região. A coleção é recebida na entrada; não precisa deixar o menu do jogo aberto. A leitura automática usa Npcap.",
-            "en_US": "Open Azphelumbra before logging into your character and check the region. The collection arrives during login; you do not need to leave the game menu open. Automatic reading uses Npcap."
+            "pt_BR": "Deixe Sincronizar com o jogo ativo e favorite os pets que quer acompanhar. Mesmo com o personagem já logado, o painel mostra os ganhos recebidos nesta captura. A leitura automática usa Npcap.",
+            "en_US": "Leave Sync with game enabled and favorite the pets to track. Even when already logged in, the panel shows gains received in this capture. Automatic reading uses Npcap."
           },
           "tip": {
-            "pt_BR": "Abriu o app depois de entrar? Volte à seleção de personagem e entre novamente quando puder. A coleção manual funciona sem Npcap.",
-            "en_US": "Opened the app after login? Return to character selection and log in again when convenient. Manual records work without Npcap."
+            "pt_BR": "Sem uma leitura inicial, ganhos recebidos não são o total da coleção. Abra os detalhes do pet no jogo para confirmar o saldo.",
+            "en_US": "Without an initial reading, received gains are not the collection total. Open the pet details in game to confirm its balance."
           }
         },
         {
@@ -230,8 +230,8 @@ window.StrigoiGuide = {
             "en_US": "Search by pet or monster, filter by map and choose an Insight goal. Mark Favorite to track it in the panel. Pet Insight differs from the genus level."
           },
           "tip": {
-            "pt_BR": "Informações não recebidas ficam desconhecidas. Registros manuais são separados e podem ser desfeitos com Usar informação do jogo.",
-            "en_US": "Unread information stays unknown. Manual records remain separate and can be undone with Use game information."
+            "pt_BR": "Abra os detalhes do pet no jogo por alguns instantes. O app lê Pet Insight e almas; não confunde esse valor com o nível da família. Ajustar manualmente continua disponível.",
+            "en_US": "Open the pet details in game for a few moments. The app reads Pet Insight and souls without confusing it with the genus level. Adjust manually remains available."
           }
         },
         {
@@ -266,8 +266,8 @@ window.StrigoiGuide = {
             "en_US": "The Pets layer can appear alongside cubes and gatherables on maps. Choose All, Favorites or Pending goals. Locations are documented client references; current SA presence is unconfirmed."
           },
           "tip": {
-            "pt_BR": "A coleção inicial foi conferida em SA. Ganho de almas ainda aguarda conferência real. Distância e direção de radar ao vivo não estão disponíveis nesta versão.",
-            "en_US": "The initial collection matched SA gameplay. Soul gains still await a live check. Live radar distance and direction are not available in this version."
+            "pt_BR": "Ganhos de almas foram conferidos em SA. Os mapas indicam posições possíveis; distância e direção de um radar ao vivo não estão disponíveis.",
+            "en_US": "Soul gains were checked in SA. Maps indicate possible sites; live radar distance and direction are not available."
           }
         }
       ],
@@ -278,8 +278,8 @@ window.StrigoiGuide = {
             "en_US": "Why is my collection empty?"
           },
           "answer": {
-            "pt_BR": "A coleção é recebida na entrada do personagem. Abra o Azphelumbra antes de entrar, confirme a região e a opção de sincronização e verifique se Npcap está instalado. Informações ainda não recebidas ficam desconhecidas.",
-            "en_US": "The collection arrives when logging into a character. Open Azphelumbra before login, check the region and sync option, and verify Npcap is installed. Unread progress stays unknown."
+            "pt_BR": "Confira a região, a sincronização e o Npcap. Abra os detalhes do pet no jogo para ler o total. Se a identidade do personagem não chegou, os ganhos e a leitura ficam na captura atual, sem alterar um perfil salvo. Para salvar por personagem, abra o app antes de entrar nele.",
+            "en_US": "Check region, sync and Npcap. Open the pet details in game to read its total. If character identity has not arrived, gains and readings remain in the current capture without changing a saved profile. To save character-bound progress, open the app before login."
           }
         },
         {
@@ -797,6 +797,87 @@ window.StrigoiGuide = {
           "answer": {
             "pt_BR": "Confira agenda e fuso. Ao reportar, envie evento, região do servidor, horário do jogo e print com a contagem do painel.",
             "en_US": "Check schedule and time zone. Report event, server region, game time, and a screenshot showing the countdown."
+          }
+        }
+      ]
+    },
+    {
+      "id": "routine",
+      "icon": "routine",
+      "title": {
+        "pt_BR": "Rotina e Odyle",
+        "en_US": "Routine and Odyle"
+      },
+      "description": {
+        "pt_BR": "Seus personagens e recursos em um Panorama.",
+        "en_US": "Your characters and resources in an Overview."
+      },
+      "image": "routine",
+      "steps": [
+        {
+          "title": {
+            "pt_BR": "Sincronize o personagem",
+            "en_US": "Sync your character"
+          },
+          "where": {
+            "pt_BR": "Rotina → Panorama",
+            "en_US": "Routine → Overview"
+          },
+          "body": {
+            "pt_BR": "Abra o app antes de entrar no personagem, com Npcap instalado. A Rotina recebe a identificação e os saldos de Odyle básica e recarregada. Os registros ficam separados por personagem, servidor e região.",
+            "en_US": "Open the app before character login with Npcap installed. Routine receives identity and basic and charged Odyle balances. Records stay separate by character, server and region."
+          },
+          "tip": {
+            "pt_BR": "Aguardando leitura significa que o valor não chegou. Registro salvo mostra uma leitura anterior, com horário; não há reposição estimada enquanto estiver desconectado.",
+            "en_US": "Waiting for reading means the value has not arrived. Saved record shows a previous reading with its time; no offline recharge is estimated."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Escolha Pulso ou Faixa",
+            "en_US": "Choose Pulse or Strip"
+          },
+          "where": {
+            "pt_BR": "Personalizar Rotina → Mostrar overlay da Rotina",
+            "en_US": "Customize Routine → Show Routine overlay"
+          },
+          "body": {
+            "pt_BR": "Escolha Pulso compacto ou Faixa e os recursos que quer acompanhar. No jogo, use o ícone de layout para alternar os estilos e a seta para recolher ou expandir. Arraste o título e use o cadeado para travar a posição.",
+            "en_US": "Choose Compact Pulse or Strip and the resources to track. In game, use the layout icon to switch styles and the arrow to collapse or expand. Drag the title and use the lock to keep its position."
+          },
+          "tip": {
+            "pt_BR": "Também pode ativar Rotina no menu rápido. Estilo, recursos e posição ficam salvos. Ocultar o painel mantém a sincronização.",
+            "en_US": "You can also enable Routine in quick controls. Style, resources and position are saved. Hiding the panel keeps sync active."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Consulte outros personagens",
+            "en_US": "View other characters"
+          },
+          "where": {
+            "pt_BR": "Rotina → registros do Panorama",
+            "en_US": "Routine → Overview records"
+          },
+          "body": {
+            "pt_BR": "O Panorama guarda as leituras dos personagens identificados. Consultar um registro antigo não troca o personagem acompanhado pelo overlay. Confira o horário e o status de cada saldo.",
+            "en_US": "The Overview keeps readings for identified characters. Viewing an older record does not switch the character followed by the overlay. Check each balance timestamp and status."
+          },
+          "tip": {
+            "pt_BR": "A leitura inicial foi conferida em SA. Limites, previsões de recarga e contadores de dungeon ou arena não são presumidos.",
+            "en_US": "Initial readings were checked in SA. Caps, recharge forecasts and dungeon or arena counters are not assumed."
+          }
+        }
+      ],
+      "help": [
+        {
+          "question": {
+            "pt_BR": "O saldo ainda não apareceu.",
+            "en_US": "My balance has not appeared."
+          },
+          "answer": {
+            "pt_BR": "Confira Npcap e a sincronização em Personalizar Rotina. Se abriu o app com o personagem já logado, volte à seleção e entre novamente quando for conveniente. O app espera a identificação antes de associar um saldo.",
+            "en_US": "Check Npcap and sync in Customize Routine. If you opened the app while already logged in, return to character selection and log in again when convenient. The app waits for identity before assigning a balance."
           }
         }
       ]
