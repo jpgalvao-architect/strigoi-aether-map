@@ -113,6 +113,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         for key, title, symbol, callback in [
             ("sonar", "Sonar", "sonar", self.toggle_sonar),
             ("maps", "Mapa + minimapa", "atlas", self.toggle_maps),
+            ("routes", "Guia de rotas", "routes", self.toggle_routes),
             ("combat", "Painel de combate", "combat", self.toggle_combat),
             ("events", "Painel de eventos", "events", self.toggle_events),
             ("pets", "Painel de pets", "pets", self.toggle_pets),
@@ -145,6 +146,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         main.overlay.status_changed.connect(self.refresh)
         main.combat.changed.connect(self.refresh)
         main.routine.changed.connect(self.refresh)
+        main.routes.changed.connect(self.refresh)
         self.refresh()
 
     def refresh(self, *_):
@@ -159,10 +161,14 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
                   "combat": self.context.prefs.combat.panel_visible,
                   "pets": self.context.prefs.pets.panel_visible,
                   "routine": self.context.prefs.routine.panel_visible,
+                  "routes": self.main.routes.active and self.context.prefs.routes.panel_visible,
                   "events": self.context.prefs.overlay.events_panel}
         for key, checked in values.items():
             switch = self.switches[key]; switch.blockSignals(True)
             switch.setChecked(bool(checked)); switch.blockSignals(False)
+            if key=='routes':
+                self.states[key].setText('Rota pausada' if self.main.routes.paused and checked else ('Visível' if checked else 'Escolha uma rota'))
+                continue
             if key == "combat" and checked and not self.main.combat.in_instance:
                 self.states[key].setText("Aguardando instância")
                 continue
@@ -239,6 +245,10 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         self.context.prefs.pets.panel_visible = visible
         self.context.save()
         self.refresh()
+
+    def toggle_routes(self,visible):
+        if visible and not self.main.routes.active:self.open_page('routes');return
+        self.context.prefs.routes.panel_visible=visible;self.context.save();self.refresh()
 
     def toggle_routine(self,visible):
         self.context.prefs.routine.panel_visible=visible

@@ -235,6 +235,9 @@ class LiveOverlayPage(QWidget):
             self.status.setText(str(exc))
         finally:
             self.finish_selection()
+        routes=getattr(self.context,'routes',None)
+        if routes and routes.active and routes.route.map_id==self.maps.currentData() and self.view_kind.currentData()=='minimap':
+            self.start()
 
     def cancel_area(self):
         self.status.setText("Seleção cancelada; área anterior preservada.")

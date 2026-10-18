@@ -78,6 +78,8 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         self._coordinates=None
         self._marker_identity=None
         self._frame_signature=None
+        self.route_lines=()
+        self.route_target=None
 
     def set_render_rate(self,hz):
         if self.pacer.hz!=hz:
@@ -128,8 +130,13 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         current=QRect()
         radius=self.paint_radius()
         visible=self.visible_markers(registration,radius)
+        from app.modules.routes.drawing import project_lines,bounds
+        routes=project_lines(self.route_lines,registration,self.ratio)
+        target=registration.project(*self.route_target[:2]) if self.route_target else None
         signature=(self.scale,self.ratio,self.width(),self.height(),radius,
-            tuple((round(px*4),round(py*4),color,shape) for px,py,color,shape in visible))
+            tuple((round(px*4),round(py*4),color,shape) for px,py,color,shape in visible),
+            tuple((tuple((round(x*4),round(y*4)) for x,y in vertices),reviewed,active) for vertices,reviewed,active in routes),
+            (round(target[0]/self.ratio*4),round(target[1]/self.ratio*4),self.route_target[2]) if target else None)
         if not self.smoothing.settled(now):
             self.request_frame()
         if signature==self._frame_signature:
@@ -139,6 +146,11 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         for px,py,_,_ in visible:
             rectangle=QRect(round(px)-radius,round(py)-radius,radius*2+1,radius*2+1)
             current=rectangle if current.isNull() else current.united(rectangle)
+        route_bounds=bounds(routes).intersected(self.rect())
+        if target:
+            circle=QRect(round(target[0]/self.ratio)-12,round(target[1]/self.ratio)-12,25,25).intersected(self.rect())
+            route_bounds=circle if route_bounds.isNull() else route_bounds.united(circle)
+        if not route_bounds.isNull():current=route_bounds if current.isNull() else current.united(route_bounds)
         current=QRegion(current)
         dirty=self.dirty_region.united(current)
         self.dirty_region=current
@@ -220,10 +232,17 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         if self.registration:
             registration=getattr(self,'_drawing_registration',None) or self.registration
+            from app.modules.routes.drawing import paint_lines,project_lines
+            paint_lines(painter,project_lines(self.route_lines,registration,self.ratio))
             visible=self._visible_markers if getattr(self,'_drawing_registration',None) else self.visible_markers(registration)
             for px,py,color,shape in visible:
                 pixmap=self.symbol(color,shape)
                 painter.drawPixmap(QPointF(px-pixmap.deviceIndependentSize().width()/2,py-pixmap.deviceIndependentSize().height()/2),pixmap)
+            if self.route_target:
+                x,y=registration.project(*self.route_target[:2]);x/=self.ratio;y/=self.ratio
+                painter.setOpacity(1);painter.setBrush(QColor('#171721'));painter.setPen(QPen(QColor('#a7e4cb'),1.5))
+                painter.drawEllipse(QPointF(x,y),10,10)
+                painter.drawText(QRect(round(x)-10,round(y)-10,21,21),Qt.AlignCenter,str(self.route_target[2]))
             return
         for x, y, color, shape in self.markers:
             if self.registration:
@@ -244,6 +263,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
 
 class OverlayService(QObject):
     status_changed = Signal(str)
+    minimap_preview = Signal(object,object)
 
     def __init__(self, context):
         super().__init__()
@@ -265,6 +285,31 @@ class OverlayService(QObject):
         self.watchdog.timeout.connect(self.check_stale)
         self.watchdog.start()
         context.changed.connect(self.sync)
+
+    def attach_routes(self,routes):
+        self.routes=routes;routes.changed.connect(self.sync_routes)
+        self.status_changed.connect(lambda *_:routes.lose_position() if not self.window.registration else None)
+
+    def sync_routes(self):
+        routes=getattr(self,'routes',None)
+        lines=routes.drawing(self.context.prefs.overlay.map_id) if routes else ()
+        point=routes.target if routes and routes.active and routes.route.map_id==self.context.prefs.overlay.map_id else None
+        target=(point.x,point.y,routes.current%len(routes.route.stops)+1) if point else None
+        if target!=self.window.route_target:
+            self.window.route_target=target;self.window.invalidate_frame()
+        if lines!=self.window.route_lines:
+            self.window.route_lines=lines;self.window.invalidate_frame()
+        if self.worker and hasattr(self.worker,'set_route_tracking'):
+            key=(id(self.worker),bool(routes and routes.active),self.context.prefs.routes.model_dump_json())
+            if key!=getattr(self,'_route_profile_key',None):
+                self.worker.set_route_tracking(bool(routes and routes.active),self.context.prefs.routes);self._route_profile_key=key
+            if self.window.registration and self.capture_area:
+                self.worker.set_route_exclusion(self.window.registration,lines,self.capture_area.view_kind,6*self.window.ratio,target)
+            else:self.worker.set_route_exclusion(None,(),self.context.prefs.overlay.map_view)
+
+    def request_route_preview(self):
+        if self.worker and hasattr(self.worker,'request_preview'):self.worker.request_preview();return True
+        return False
 
     def set_status(self, status):
         if status != self.status:
@@ -331,6 +376,7 @@ class OverlayService(QObject):
         self.window.setGeometry(area.screen_x+area.x, area.screen_y+area.y, area.width, area.height)
         self.worker = LiveMapWorker(area, image, settings.minimum_matches,settings.capture_hz)
         self.worker.observed.connect(self.on_registration)
+        self.worker.minimap_preview.connect(self.minimap_preview.emit)
         self.worker.failed.connect(self.on_error)
         self.worker.progress.connect(lambda message: self.set_status(message) if settings.enabled else None)
         self.last_result = time.perf_counter()
@@ -358,6 +404,11 @@ class OverlayService(QObject):
             self.window.setGeometry(observed_area.screen_x+observed_area.x,observed_area.screen_y+observed_area.y,observed_area.width,observed_area.height)
             self.observation_count=0;self.observation_hz=0.;self.observation_since=time.perf_counter()
         self.last_result = time.perf_counter()
+        routes=getattr(self,'routes',None)
+        if routes and metadata.get('player_read'):
+            reading=metadata.get('player')
+            routes.observe(reading[0] if reading else None,map_id=self.context.prefs.overlay.map_id,
+                game=metadata.get('game_key'),observed_at=metadata.get('player_observed_at',metadata['observed_at']),radius=reading[1] if reading else .001)
         self.observation_count+=1
         elapsed=self.last_result-self.observation_since
         if elapsed>=1:
@@ -395,6 +446,7 @@ class OverlayService(QObject):
         self.window.show()
         radius = round((7*self.window.scale+2)*self.window.ratio)
         self.set_exclusion(registration,radius)
+        self.sync_routes()
         if self.last_result-self.last_report>=.5:
             self.last_report=self.last_result
             name="Minimapa" if self.capture_area and self.capture_area.view_kind=="minimap" else "Mapa"
@@ -430,6 +482,7 @@ class OverlayService(QObject):
             self.worker.set_exclusion(registration,points)
 
     def sync(self):
+        self.sync_routes()
         if not self.context.prefs.overlay.enabled:
             if self.worker:
                 self.stop()

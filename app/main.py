@@ -93,6 +93,11 @@ def main() -> int:
                     assert window.routine.feed is window.combat.feed and not window.routine.runtime
                     assert not window.routine_panel.isVisible()
                     logging.info('SMOKE_ROUTINE_OK: Panorama and shared feed rendered; no live capture')
+                    from app.modules.routes.models import FarmRoute
+                    assert not window.routes.active and window.overlay.worker is None
+                    assert FarmRoute.model_validate(window.routes.draft.model_dump())
+                    assert not window.route_panel.isVisible()
+                    logging.info('SMOKE_ROUTES_OK: real atlas route generated; no live capture')
                     from PySide6.QtGui import QImageReader
                     assert window.pets.store.catalogue.pets
                     assert all(QImageReader(str(PACKAGE/'assets'/pet.portrait)).canRead()

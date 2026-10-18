@@ -3,6 +3,21 @@
 import math
 
 
+def apply_route_stencil(frame,feature_mask,registration,lines,width,target=None):
+    import cv2
+    import numpy as np
+    for vertices,_,_ in lines:
+        points=np.rint([registration.project(x,y) for x,y in vertices]).astype(np.int32).reshape(-1,1,2)
+        if len(points)<2:continue
+        # Mask only the narrow strokes, not the path's bounding rectangle.
+        cv2.polylines(frame,[points],False,(128,128,128),max(3,round(width)))
+        cv2.polylines(feature_mask,[points],False,0,max(3,round(width)))
+    if target:
+        x,y=registration.project(*target[:2]);radius=round(13*width/6)
+        cv2.circle(frame,(round(x),round(y)),radius,(128,128,128),-1)
+        cv2.circle(feature_mask,(round(x),round(y)),radius,0,-1)
+
+
 def apply_stencil(frame, feature_mask, registration, points):
     import cv2
     import numpy as np

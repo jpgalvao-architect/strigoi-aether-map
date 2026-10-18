@@ -416,6 +416,106 @@
       "title": "QuickMenuSettings",
       "type": "object"
     },
+    "RouteSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "panel_visible": {
+          "default": true,
+          "title": "Panel Visible",
+          "type": "boolean"
+        },
+        "panel_style": {
+          "default": "strip",
+          "enum": [
+            "strip",
+            "guide"
+          ],
+          "title": "Panel Style",
+          "type": "string"
+        },
+        "panel_position": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Panel Position"
+        },
+        "auto_advance": {
+          "default": true,
+          "title": "Auto Advance",
+          "type": "boolean"
+        },
+        "anchor": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Anchor"
+        },
+        "anchor_area": {
+          "default": "",
+          "title": "Anchor Area",
+          "type": "string"
+        },
+        "arrow_shape": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "maxItems": 96,
+          "title": "Arrow Shape",
+          "type": "array"
+        },
+        "arrow_area": {
+          "default": 0,
+          "maximum": 0.1,
+          "minimum": 0,
+          "title": "Arrow Area",
+          "type": "number"
+        }
+      },
+      "title": "RouteSettings",
+      "type": "object"
+    },
     "RoutineSettings": {
       "additionalProperties": false,
       "properties": {
@@ -618,6 +718,9 @@
     },
     "routine": {
       "$ref": "#/$defs/RoutineSettings"
+    },
+    "routes": {
+      "$ref": "#/$defs/RouteSettings"
     },
     "remote_events_url": {
       "default": "",

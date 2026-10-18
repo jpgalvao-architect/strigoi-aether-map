@@ -54,6 +54,10 @@ class OverlayVisibility(QObject):
 
     def set_context(self, active, mode='play'):
         self.active, self.mode = bool(active), mode
+        routes=getattr(self.main,'routes',None)
+        if routes:
+            game=(self.game.handle,self.game.pid) if hasattr(self.game,'handle') and hasattr(self.game,'pid') else None
+            routes.set_context(self.active and mode=='play' and game is not None,game)
         if not self.active or mode != 'play':
             for popup in self.associated_popups(): popup.hide()
         for window in self.windows:

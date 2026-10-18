@@ -282,6 +282,28 @@ class RoutineSettings(Model):
         return list(dict.fromkeys(value))
 
 
+class RouteSettings(Model):
+    panel_visible: bool = True
+    panel_style: Literal['strip','guide'] = 'strip'
+    panel_position: tuple[int,int] | None = None
+    auto_advance: bool = True
+    anchor: tuple[float,float] | None = None
+    anchor_area: str = ''
+    arrow_shape: list[tuple[float,float]] = Field(default_factory=list,max_length=96)
+    arrow_area: float = Field(default=0,ge=0,le=.1,allow_inf_nan=False)
+
+    @field_validator('anchor','arrow_shape')
+    @classmethod
+    def valid_geometry(cls,value,info):
+        import math
+        if value is None:return value
+        pairs=[value] if isinstance(value,tuple) else value
+        minimum,maximum=(0,1) if info.field_name=='anchor' else (-2,2)
+        if any(not math.isfinite(v) or not minimum<=v<=maximum for p in pairs for v in p):
+            raise ValueError('Geometria do personagem inválida')
+        return value
+
+
 class Preferences(Model):
     schema_version: Literal[1] = 1
     boss_timers_enabled: bool = True
@@ -303,6 +325,7 @@ class Preferences(Model):
     quick_menu: QuickMenuSettings = Field(default_factory=QuickMenuSettings)
     pets: PetSettings = Field(default_factory=PetSettings)
     routine: RoutineSettings = Field(default_factory=RoutineSettings)
+    routes: RouteSettings = Field(default_factory=RouteSettings)
     remote_events_url: str = ""
     remote_auto_refresh: bool = False
     remote_interval_minutes: int = Field(default=30, ge=5, le=1440)

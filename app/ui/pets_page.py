@@ -2,7 +2,7 @@
 """A portrait-first collection with a small, progressive-disclosure detail pane."""
 from functools import lru_cache
 
-from PySide6.QtCore import QRect, QSize, Qt, QUrl
+from PySide6.QtCore import QRect, QSize, Qt, QUrl, Signal
 from PySide6.QtGui import QColor, QDesktopServices, QIcon, QPixmap
 from PySide6.QtWidgets import (QDialogButtonBox, QFileDialog, QFormLayout,
     QHBoxLayout, QInputDialog, QListWidget, QListWidgetItem, QStyledItemDelegate,
@@ -89,6 +89,7 @@ class ProgressDialog(QDialog):
 
 
 class PetsPage(QWidget):
+    route_requested = Signal(int)
     def __init__(self, context, service, show_farm=None):
         super().__init__()
         self.context, self.service = context, service
@@ -212,6 +213,8 @@ class PetsPage(QWidget):
         detail.addWidget(self.sources)
         self.farm_button = button('Ver locais no Atlas', self.open_farm)
         detail.addWidget(self.farm_button)
+        self.route_button = button('Criar rota deste pet', lambda: self.route_requested.emit(self.selected_id) if self.selected_id is not None else None)
+        detail.addWidget(self.route_button)
         detail.addStretch()
         self.provenance = QCheckBox('Ver origem dos dados')
         self.provenance.toggled.connect(self.refresh_detail)
@@ -366,7 +369,7 @@ class PetsPage(QWidget):
             widget.setEnabled(pet is not None)
         if pet is None:
             self.picture.clear(); self.name.setText('Escolha um pet'); self.progress.clear()
-            self.family_caption.clear(); self.sources.clear(); self.farm_button.setEnabled(False)
+            self.family_caption.clear(); self.sources.clear(); self.farm_button.setEnabled(False); self.route_button.setEnabled(False)
             self.source_button.hide(); self.origin.hide(); self.restore_button.hide()
             self._refreshing = False
             return
@@ -395,6 +398,7 @@ class PetsPage(QWidget):
         self.sources.setText('\n'.join(names[:5]) + (f'\n+{len(names)-5} outros monstros' if len(names)>5 else '')
             if names else 'Consulte a fonte de obtenção deste pet.')
         self.farm_button.setEnabled(self.show_farm is not None and self.has_farm(pet.id))
+        self.route_button.setEnabled(self.has_farm(pet.id))
         self.farm_button.setToolTip('Locais documentados na referência do jogo.' if self.farm_button.isEnabled()
             else 'Ainda não há locais mapeados para este pet nesta base.')
         self.restore_button.setVisible(entry.observed is not None and entry.use_manual)

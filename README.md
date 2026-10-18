@@ -1,6 +1,13 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.5 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.6 · Windows x64**
+
+A beta 6 acrescenta **Rotas**: escolha alvos do Atlas, organize paradas,
+ajuste passagens e acompanhe o trajeto no minimapa e no mapa grande. O guia
+alterna entre Fio e Guia pelo próprio painel. O avanço automático exige indicar
+a seta do personagem uma vez e ainda precisa de validação ao vivo em SA.
+Visitas não confirmam coleta; linhas sugeridas não garantem passagem.
+Veja [Rotas de farm](docs/ROUTES.md).
 
 A beta 5 acrescenta as janelas diárias da Battlefield e mantém o contador até o fechamento. Immortal Gartua recebe uma previsão única pela leitura do contador na tela do jogo, sem presumir um spawn diário. Bosses do Abyss usam referência Global identificada na agenda, ainda sem confirmação individual em SA. Veja [Eventos e contadores](docs/EVENTS.md).
 

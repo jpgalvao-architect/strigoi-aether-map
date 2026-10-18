@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-only
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt,Signal
 from PySide6.QtWidgets import QHeaderView, QVBoxLayout
 from app.ui.localized_widgets import QCheckBox, QComboBox, QLineEdit, QTableWidget, QTableWidgetItem, QWidget
 
@@ -9,6 +9,7 @@ from app.core.i18n import tr
 
 
 class CatalogPage(QWidget):
+    route_requested=Signal(str,str)
     def __init__(self, context):
         super().__init__()
         self.context = context
@@ -34,6 +35,9 @@ class CatalogPage(QWidget):
         self.table.verticalHeader().hide()
         layout.addWidget(self.table, 1)
         layout.addLayout(row(button("Habilitar todos", lambda: self.toggle_all(True)), button("Desabilitar todos", lambda: self.toggle_all(False))))
+        self.route_button=button('Criar rota do recurso selecionado',self.create_route)
+        self.route_button.setEnabled(False);layout.addWidget(self.route_button)
+        self.table.itemSelectionChanged.connect(lambda:self.route_button.setEnabled(self.table.currentRow()>=0))
         layout.addWidget(button("Consultar catálogo e posições na fonte Global", self.open_global_catalog))
         layout.addWidget(label("Passe o mouse sobre um recurso para ver fonte e escopo. Zero pontos significa que não há coordenadas incorporadas; não significa ausência do recurso no jogo.", "subtitle", True))
         for combo in [self.category, self.subcategory, self.rarity]:
@@ -80,6 +84,7 @@ class CatalogPage(QWidget):
             values = [resource.name, categories[resource.category], subs[resource.subcategory], {"common":"Comum","uncommon":"Incomum","rare":"Raro","epic":"Épico","unknown":"Não informada"}[resource.rarity], str(sum(p.resource_id == resource.id and (not map_id or p.map_id == map_id) for p in dataset.all_points))]
             for column, value in enumerate(values, 1):
                 cell = QTableWidgetItem(value)
+                if column==1:cell.setData(Qt.UserRole,resource.id)
                 if column==1:cell.setIcon(icon("cube" if resource.category=="cubes" else "gatherables"))
                 cell.setToolTip(f"{resource.verification}\n{resource.notes}\n{resource.source}")
                 self.table.setItem(index, column, cell)
@@ -89,6 +94,14 @@ class CatalogPage(QWidget):
         values = self.context.prefs.disabled_resources
         values.discard(key) if enabled else values.add(key)
         self.context.save()
+
+    def create_route(self):
+        index=self.table.currentRow()
+        if index<0:return
+        resource=self.table.item(index,1).data(Qt.UserRole)
+        maps=[p.map_id for p in self.context.dataset.all_points if p.resource_id==resource]
+        preferred=self.map_combo.currentData() or self.context.prefs.map_id
+        if maps:self.route_requested.emit(preferred if preferred in maps else maps[0],resource)
 
     def open_global_catalog(self):
         from PySide6.QtCore import QUrl

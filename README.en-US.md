@@ -1,6 +1,13 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.5 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.6 · Windows x64**
+
+Beta 6 adds **Routes**: choose Atlas targets, organize stops, edit passages,
+and follow the path on the minimap and full map. The guide switches between
+Strip and Guide through its menu. Automatic progression requires identifying
+your character's arrow once and still needs live validation on SA. Visits
+do not confirm collection; suggested lines do not guarantee walkable passages.
+See [Farming routes](docs/ROUTES.en-US.md).
 
 Beta 5 adds daily Battlefield windows and counts down to matchmaking closing. Immortal Gartua gets a one-time prediction read from the in-game countdown, without assuming daily spawns. Abyss bosses use a labeled Global reference, not individually confirmed on SA. See [Events and timers](docs/EVENTS.en-US.md).
 

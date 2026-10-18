@@ -1,0 +1,202 @@
+{
+  "$defs": {
+    "FarmRoute": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 180,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "map_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Map Id",
+          "type": "string"
+        },
+        "resources": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Resources",
+          "type": "array"
+        },
+        "mode": {
+          "default": "loop",
+          "enum": [
+            "loop",
+            "open"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "stops": {
+          "items": {
+            "$ref": "#/$defs/Stop"
+          },
+          "maxItems": 100,
+          "minItems": 2,
+          "title": "Stops",
+          "type": "array"
+        },
+        "legs": {
+          "items": {
+            "$ref": "#/$defs/Leg"
+          },
+          "maxItems": 100,
+          "title": "Legs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "map_id",
+        "stops"
+      ],
+      "title": "FarmRoute",
+      "type": "object"
+    },
+    "Leg": {
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "title": "End",
+          "type": "string"
+        },
+        "vertices": {
+          "items": {
+            "$ref": "#/$defs/Vertex"
+          },
+          "maxItems": 2000,
+          "minItems": 2,
+          "title": "Vertices",
+          "type": "array"
+        },
+        "origin": {
+          "default": "suggested",
+          "enum": [
+            "suggested",
+            "edited",
+            "recorded"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "reviewed": {
+          "default": false,
+          "title": "Reviewed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "vertices"
+      ],
+      "title": "Leg",
+      "type": "object"
+    },
+    "Stop": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y",
+          "type": "number"
+        },
+        "id": {
+          "maxLength": 250,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 180,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "resource_id": {
+          "default": "",
+          "maxLength": 150,
+          "title": "Resource Id",
+          "type": "string"
+        },
+        "custom": {
+          "default": false,
+          "title": "Custom",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "id",
+        "name"
+      ],
+      "title": "Stop",
+      "type": "object"
+    },
+    "Vertex": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "title": "Vertex",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "routes": {
+      "items": {
+        "$ref": "#/$defs/FarmRoute"
+      },
+      "maxItems": 100,
+      "title": "Routes",
+      "type": "array"
+    }
+  },
+  "title": "RouteLibrary",
+  "type": "object"
+}

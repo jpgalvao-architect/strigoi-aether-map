@@ -48,6 +48,10 @@ class MainWindow(QMainWindow):
         from app.modules.combat.service import CombatService
         from app.ui.combat_page import CombatPage
         self.combat = CombatService(context)
+        from app.modules.routes.service import RouteService
+        self.routes=RouteService(context,self.combat.feed)
+        context.routes=self.routes
+        self.overlay.attach_routes(self.routes)
         from app.modules.pets.service import PetService
         from app.ui.pets_page import PetsPage
         self.pets = PetService(context, self.combat.feed)
@@ -73,11 +77,11 @@ class MainWindow(QMainWindow):
         brand = label(''); brand.setPixmap(emblem_icon().pixmap(38,38)); brand.setToolTip('Azphelumbra')
         side.addWidget(brand,0,Qt.AlignmentFlag.AlignHCenter)
         side.addSpacing(14)
-        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about'),('Pets','pets'),('Rotina','routine')]
+        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about'),('Pets','pets'),('Rotina','routine'),('Rotas','routes')]
         self.page_indices = {name:index for index, (_, name) in enumerate(entries)}
         self.nav = [None]*len(entries)
         # Stable page identities preserve shortcuts and existing integrations.
-        for index in [0,1,11,12,7,8,4,5,9,10,2,3,6]:
+        for index in [0,1,13,11,12,7,8,4,5,9,10,2,3,6]:
             text, name = entries[index]
             entry = QToolButton(); entry.setText(text)
             entry.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
@@ -119,7 +123,13 @@ class MainWindow(QMainWindow):
         self.combat_page = CombatPage(context, self.combat)
         self.pets_page = PetsPage(context, self.pets, self.show_pet_farm)
         self.routine_page = RoutinePage(context,self.routine)
-        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page(), self.pets_page,self.routine_page]
+        from app.ui.routes_page import RoutesPage
+        self.routes_page=RoutesPage(context,self.routes,self.start_route_overlay,self.overlay)
+        self.atlas.route_requested.connect(self.show_route_target)
+        self.cubes.route_requested.connect(self.show_route_target)
+        self.catalog.route_requested.connect(self.show_route_target)
+        self.pets_page.route_requested.connect(lambda pet_id:self.show_pet_route(pet_id))
+        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page(), self.pets_page,self.routine_page,self.routes_page]
         for page in self.pages:
             scroll = QScrollArea()
             scroll.setWidgetResizable(True)
@@ -150,6 +160,7 @@ class MainWindow(QMainWindow):
         self.combat.changed.connect(self.inspector.refresh)
         self.sonar.active_changed.connect(self.inspector.refresh)
         self.overlay.status_changed.connect(self.inspector.refresh)
+        self.routes.changed.connect(self.inspector.refresh)
         self.alert_timer.timeout.connect(self.inspector.refresh)
         self.inspector.refresh()
         from app.ui.pet_panel import PetPanel
@@ -158,6 +169,8 @@ class MainWindow(QMainWindow):
         self.map_controls=MapControls(self)
         from app.ui.routine_panel import RoutinePanel
         self.routine_panel=RoutinePanel(context,self.routine,lambda:self.quick_menu.open_page('routine'))
+        from app.ui.route_panel import RoutePanel
+        self.route_panel=RoutePanel(self)
         self.overlay_visibility = None
         if runtime:
             from app.ui.overlay_visibility import OverlayVisibility
@@ -166,6 +179,7 @@ class MainWindow(QMainWindow):
                                  (self.combat_page.panel, 'hud'), (self.sonar_alert, 'alert'),
                                  (self.pet_panel, 'hud'),
                                  (self.routine_panel, 'hud'),
+                                 (self.route_panel, 'hud'),
                                  (self.map_controls, 'map'),
                                  (self.quick_menu, 'hud'), (self.quick_menu.panel, 'hud')]:
                 self.overlay_visibility.register(window, role)
@@ -190,8 +204,31 @@ class MainWindow(QMainWindow):
         if isinstance(index, str):
             index = self.page_indices[index]
         self.stack.setCurrentIndex(index)
+        if hasattr(self,'inspector'):self.inspector.setVisible(index!=self.page_indices['routes'])
         for number, entry in enumerate(self.nav):
             entry.setChecked(number == index)
+
+    def start_route_overlay(self):
+        map_id=self.routes.route.map_id
+        page=self.overlay_page
+        if self.context.prefs.overlay.enabled and (self.context.prefs.overlay.map_id!=map_id or self.context.prefs.overlay.tracking_mode!='dynamic' or self.context.prefs.overlay.map_view!='minimap'):self.overlay.stop()
+        self.context.prefs.overlay.tracking_mode='dynamic'
+        self.context.prefs.overlay.map_id=map_id
+        page.maps.setCurrentIndex(page.maps.findData(map_id))
+        if self.context.prefs.overlay.enabled:return
+        page.view_kind.setCurrentIndex(page.view_kind.findData('minimap'))
+        if not self.context.prefs.overlay.minimap_area:
+            self.navigate('overlay');page.select_area();return
+        page.start()
+        if not self.context.prefs.overlay.enabled:self.navigate('overlay')
+
+    def show_route_target(self,map_id,resource_id):
+        self.routes_page.choose_resource(map_id,resource_id);self.navigate('routes')
+
+    def show_pet_route(self,pet_id):
+        resource=f'pet-{pet_id}'
+        maps=[p.map_id for p in self.context.atlas_dataset.all_points if p.resource_id==resource]
+        if maps:self.show_route_target(self.context.prefs.map_id if self.context.prefs.map_id in maps else maps[0],resource)
 
     def show_pet_farm(self, pet_id):
         candidates = self.pets.farm.by_pet.get(pet_id, [])
@@ -277,6 +314,7 @@ class MainWindow(QMainWindow):
         self.quick_menu.shutdown()
         self.pet_panel.shutdown()
         self.routine_panel.shutdown()
+        self.route_panel.shutdown();self.routes_page.shutdown();self.routes.shutdown()
         self.map_controls.shutdown()
         self.combat_page.shutdown()
         self.combat.shutdown()

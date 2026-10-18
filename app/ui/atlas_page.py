@@ -1,14 +1,15 @@
 # SPDX-License-Identifier: GPL-3.0-only
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt,Signal
 from PySide6.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout
 from app.ui.localized_widgets import QCheckBox, QComboBox, QLineEdit, QWidget
 
-from app.modules.atlas.view import AtlasView
+from app.ui.route_view import RouteView
 from app.modules.gatherables.service import FilterQuery, filter_points
 from app.ui.widgets import button, card, label, page_header, row
 
 
 class AtlasPage(QWidget):
+    route_requested=Signal(str,str)
     def __init__(self, context, cubes_only=False):
         super().__init__()
         self.context = context
@@ -31,7 +32,7 @@ class AtlasPage(QWidget):
         layout.addLayout(row(self.maps, self.resource, self.search, self.rarity))
         body = QHBoxLayout()
         layout.addLayout(body, 1)
-        self.view = AtlasView()
+        self.view = RouteView()
         body.addWidget(self.view, 1)
         side, side_layout = card()
         side.setFixedWidth(240)
@@ -65,6 +66,7 @@ class AtlasPage(QWidget):
         self.visit = button("Marcar como visitado", self.toggle_visit)
         self.visit.setEnabled(False)
         side_layout.addWidget(self.visit)
+        self.route_button=button('Criar rota deste recurso',self.create_route);side_layout.addWidget(self.route_button)
         side_layout.addStretch()
         side_layout.addWidget(label("Role para aproximar\nArraste para explorar", "subtitle", True))
         layout.addLayout(row(button("−", lambda: self.view.zoom(-1)), button("+", lambda: self.view.zoom(1)), button("Enquadrar mapa", self.view.fit_map)))
@@ -75,7 +77,12 @@ class AtlasPage(QWidget):
         self.rarity.currentIndexChanged.connect(self.refresh_points)
         self.resource.currentIndexChanged.connect(self.refresh_points)
         context.changed.connect(self.refresh)
+        if getattr(context,'routes',None):context.routes.changed.connect(self.refresh_route)
         self.refresh()
+
+    def refresh_route(self):
+        route=getattr(getattr(self.context,'routes',None),'route',None)
+        self.view.show_route(route if route and route.map_id==self.maps.currentData() else None)
 
     def refresh(self):
         dataset = self.context.atlas_dataset
@@ -170,6 +177,7 @@ class AtlasPage(QWidget):
                 self.view.set_map(definition)
             points = filter_points(dataset, self.context.prefs, FilterQuery(map_id=definition.id, resource_id=self.resource.currentData() or "", search=self.search.text(), rarity=self.rarity.currentData() or "", cubes_only=self.cubes_only))
             self.view.set_points(dataset, self.context.prefs, points)
+            self.refresh_route()
             self.count.setText(f"{len(points)} pontos visíveis")
         except (OSError, ValueError) as exc:
             self.count.setText(f"Mapa indisponível: {exc}")
@@ -194,6 +202,12 @@ class AtlasPage(QWidget):
 
     def refresh_detail(self):
         if self.selected:self.select_point(self.selected)
+
+    def create_route(self):
+        resource=self.selected.resource_id if self.selected else self.resource.currentData()
+        if not resource and self.cubes_only:resource='cube-spawns'
+        if resource:self.route_requested.emit(self.maps.currentData(),resource)
+        else:self.detail.setText('Selecione um recurso ou marcador para criar sua rota.')
 
     def toggle_visit(self):
         if self.selected:
