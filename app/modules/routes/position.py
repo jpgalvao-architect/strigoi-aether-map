@@ -54,7 +54,10 @@ def locate(frame,settings,registration,area):
         if abs(x/w-u)>.035 or abs(y/h-v)>.035:continue
         ratio=size/(w*h)
         if not settings.arrow_area*.6<=ratio<=settings.arrow_area*1.6:continue
-        score=cv2.matchShapes(template,contour,cv2.CONTOURS_MATCH_I1,0)
+        # Compare the same prepared outlines. Raw thin/ragged contours have very
+        # different Hu moments from their approximation, even in the same frame.
+        prepared=cv2.approxPolyDP(contour,.6,True)
+        score=cv2.matchShapes(template,prepared,cv2.CONTOURS_MATCH_I1,0)
         if score<.10:matches.append((score,x,y,max(cw,ch)))
     matches.sort()
     if not matches or len(matches)>1 and matches[1][0]-matches[0][0]<.025:return None

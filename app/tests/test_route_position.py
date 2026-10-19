@@ -56,3 +56,17 @@ def test_path_stencil_masks_strokes_without_erasing_the_bounding_rectangle():
     apply_route_stencil(image,mask,reg,lines,6,(.9,.9,2))
     assert mask[22,150]==0 and mask[110,297]==0
     assert mask[110,150]==255 and np.array_equal(image[110,150],[240]*3)
+
+
+@pytest.mark.parametrize('scale',[1,2])
+def test_confirmed_thin_jagged_arrow_is_recognized_in_the_same_frame(scale):
+    # Minimal contour fixture; no gameplay screenshot or terrain stored.
+    vertices=np.array([[17,10],[17,17],[15,19],[12,19],[11,18],[10,18],[12,20],[17,20],
+        [19,22],[19,23],[20,24],[20,27],[21,27],[22,28],[22,29],[23,29],[24,30],
+        [25,30],[26,31],[25,30],[25,29],[23,27],[23,26],[22,25],[22,24],[21,23],
+        [21,22],[20,21],[20,20],[19,19],[19,18],[18,17],[18,14],[17,13]],np.int32)
+    image=np.full((220*scale,330*scale,3),35,np.uint8)
+    cv2.fillPoly(image,[(vertices+[148,90])*scale],(240,240,240))
+    a=area(scale);profile=RouteSettings(**calibrate(image,167/330,105/220),anchor_area=area_key(a))
+    reg=Registration(np.array([[1000*scale,0,-333*scale],[0,1000*scale,-395*scale]],float),25,.95)
+    assert locate(image,profile,reg,a) is not None
