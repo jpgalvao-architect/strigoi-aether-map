@@ -1,6 +1,11 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.7 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.8 · Windows x64**
+
+Beta 8 fixes intermittent position loss while moving. Revalidation follows
+current terrain motion and still requires fresh map evidence. The fix passed
+a live reading check and a stop-one-to-two test using moving terrain.
+A complete journey in the installed app still needs confirmation.
 
 Beta 7 automatically tracks the fixed minimap center and removes manual arrow
 setup. Stop numbers and other icons no longer interrupt positioning; advancing

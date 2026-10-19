@@ -1,6 +1,12 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.7 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.8 · Windows x64**
+
+A beta 8 corrige a perda intermitente de posição durante o deslocamento.
+A revalidação considera o movimento atual do terreno e continua exigindo
+correspondências novas com o mapa. A correção foi conferida em leitura
+ao vivo e em um teste de avanço do ponto 1 ao 2 com terreno em movimento.
+A confirmação do percurso completo no app instalado continua pendente.
 
 A beta 7 acompanha automaticamente o centro fixo do minimapa e remove a
 indicação manual da seta. O número da parada e outros ícones deixam de
