@@ -138,12 +138,12 @@ class RouteService(QObject):
         draft=self.draft.model_copy(deep=True);draft.stops.append(stop)
         self.draft=rebuild(draft);self.changed.emit()
 
-    def custom_pair(self,map_id,point):
+    def custom_pair(self,map_id,point,mode='loop'):
         first=getattr(self,'_custom_first',None)
         if self.draft or first is None or first[0]!=map_id:return self.add_custom(map_id,point)
         first=first[1]
         second=Stop(id='custom-'+uuid4().hex,name='Ponto próprio',x=point.x,y=point.y,custom=True)
-        draft=FarmRoute.model_construct(id=uuid4().hex,name='Meus locais · circuito',map_id=map_id,resources=[],mode='loop',stops=[first,second],legs=[])
+        draft=FarmRoute.model_construct(id=uuid4().hex,name='Meus locais · '+('circuito' if mode=='loop' else 'só ida'),map_id=map_id,resources=[],mode=mode,stops=[first,second],legs=[])
         self.draft=rebuild(draft);self._custom_first=None;self.changed.emit()
 
     def set_context(self,allowed,game):

@@ -189,7 +189,7 @@ class RoutesPage(QWidget):
         point=Vertex(x=x,y=y);draft=self.service.draft
         if self.edit_mode=='custom':
             self.remember()
-            try:self.service.custom_pair(self.maps.currentData(),point)
+            try:self.service.custom_pair(self.maps.currentData(),point,self.mode)
             except ValueError as exc:self.status.setText(str(exc))
         elif self.edit_mode=='origin' and draft:
             self.remember();index=min(range(len(draft.stops)),key=lambda i:distance(draft.stops[i],point))
@@ -249,11 +249,7 @@ class RoutesPage(QWidget):
             item=listing.currentItem()
             if not item:return
             try:
-                self.service.load(item.data(Qt.UserRole));route=self.service.draft
-                self.maps.blockSignals(True);self.maps.setCurrentIndex(self.maps.findData(route.map_id));self.maps.blockSignals(False)
-                definition=next(m for m in self.service.dataset.maps if m.id==route.map_id);self.view.set_map(definition)
-                self.resources=route.resources[:];self.mode=route.mode;self.limit.blockSignals(True);self.limit.setValue(len(route.stops));self.limit.blockSignals(False)
-                self.refresh();self.view.fit_route(route);dialog.accept()
+                self.service.load(item.data(Qt.UserRole));self.display_draft();dialog.accept()
             except (ValueError,OSError) as exc:QMessageBox.warning(dialog,'Rota indisponível',str(exc))
         def delete():
             item=listing.currentItem()
@@ -271,8 +267,17 @@ class RoutesPage(QWidget):
         except (OSError,ValueError) as exc:QMessageBox.warning(self,'Rotas',str(exc))
 
     def review_recorded(self):
-        try:self.service.use_recorded();self.refresh();self.view.fit_route(self.service.draft)
+        try:self.service.use_recorded();self.display_draft()
         except ValueError as exc:self.status.setText(str(exc))
+
+    def display_draft(self):
+        route=self.service.draft;self.debounce.stop();self.history=[];self.edit_mode='';self.view.editing=False
+        self.maps.blockSignals(True);self.maps.setCurrentIndex(self.maps.findData(route.map_id));self.maps.blockSignals(False)
+        definition=next(m for m in self.service.dataset.maps if m.id==route.map_id);self.view.set_map(definition)
+        self.resources=route.resources[:];self.mode=route.mode
+        self.limit.blockSignals(True);self.limit.setMinimum(max(2,len(self.resources)));self.limit.setValue(len(route.stops));self.limit.blockSignals(False)
+        self.map_hint.setText('Tracejado: ligação sugerida · contínuo: passagem conferida por você.')
+        self.refresh();self.view.fit_route(route)
 
     def calibrate_player(self):
         if not self.overlay or not self.overlay.worker or not self.overlay.request_route_preview():

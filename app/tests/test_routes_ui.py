@@ -38,9 +38,9 @@ def test_route_ui_edits_saves_and_syncs_atlas_and_quick_menu(qapp,tmp_path):
         assert window.nav[13].text()=='Routes' and page.start_button.text()=='Start on minimap'
         assert window.route_panel.detail.text()=='Identify your character'
         window.route_panel.hide_guide();assert not window.context.prefs.routes.panel_visible
-        page.set_edit('custom');assert service.draft is None and not page.resources
+        page.change_mode('open');page.set_edit('custom');assert service.draft is None and not page.resources
         page.map_clicked(.4,.4);page.map_clicked(.5,.5)
-        assert len(service.draft.stops)==2 and all(p.custom for p in service.draft.stops)
+        assert len(service.draft.stops)==2 and all(p.custom for p in service.draft.stops) and service.draft.mode=='open'
         page.change_mode('open');assert len(service.draft.legs)==1
     finally:window.close();set_language('pt_BR')
 
@@ -78,4 +78,11 @@ def test_route_page_fits_small_window_and_projection_uses_same_transform(qapp,tm
         first=window.routes.route.legs[0].vertices[0]
         assert projected[0][0][0]==((1200*first.x-200)/1.5,(900*first.y-100)/1.5)
         window.routes.skip();assert window.overlay.window.route_target[2]==2
+        # A recorded journey must restore its own map/targets, even after previewing another map.
+        leg=window.routes.route.legs[0]
+        window.routes.recordings={0:[v.model_copy() for v in leg.vertices]}
+        other=next(i for i in range(page.maps.count()) if page.maps.itemData(i)!=window.routes.route.map_id)
+        page.maps.setCurrentIndex(other);qapp.processEvents();page.review_recorded()
+        assert page.maps.currentData()==window.routes.route.map_id==page.view.map.id
+        assert page.resources==window.routes.route.resources and page.mode==window.routes.route.mode
     finally:window.close()
