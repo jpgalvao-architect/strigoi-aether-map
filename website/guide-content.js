@@ -376,6 +376,123 @@ window.StrigoiGuide = {
       ]
     },
     {
+      "id": "routes",
+      "icon": "routes",
+      "title": {
+        "pt_BR": "Rotas de farm",
+        "en_US": "Farming routes"
+      },
+      "description": {
+        "pt_BR": "Escolha o que procurar e acompanhe suas próximas paradas.",
+        "en_US": "Choose what to find and follow your next stops."
+      },
+      "image": "routes",
+      "steps": [
+        {
+          "title": {
+            "pt_BR": "Escolha os alvos",
+            "en_US": "Choose your targets"
+          },
+          "where": {
+            "pt_BR": "Rotas → mapa e alvos",
+            "en_US": "Routes → map and targets"
+          },
+          "body": {
+            "pt_BR": "Abra Rotas ou use Criar rota no Atlas, nas Coletas ou em um pet. Escolha o mapa e os alvos, como Azpha, cubos ou almas de pets. Ajuste as paradas e escolha Circuito ou Só ida.",
+            "en_US": "Open Routes or choose Create route in the Atlas, Gatherables or a pet. Select the map and targets, such as Azpha, cubes or pet souls. Set the stops and choose Loop or One way."
+          },
+          "tip": {
+            "pt_BR": "Os locais vêm do Atlas; uma referência não garante que o recurso esteja disponível agora.",
+            "en_US": "Locations come from the Atlas; a reference does not guarantee current availability."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Confira o percurso",
+            "en_US": "Check the journey"
+          },
+          "where": {
+            "pt_BR": "Rotas → prévia do mapa",
+            "en_US": "Routes → map preview"
+          },
+          "body": {
+            "pt_BR": "Use Marcar início para escolher a primeira parada. Confira a ordem e use Ajustar trajeto para inserir passagens. Linhas tracejadas são sugestões geométricas; confira muros, penhascos e desníveis no jogo.",
+            "en_US": "Use Choose starting stop to choose the first stop. Review the order and use Edit passages to add passages. Dashed lines are geometric suggestions; check walls, cliffs and elevation changes in game."
+          },
+          "tip": {
+            "pt_BR": "O módulo não conhece uma rede completa de estradas transitáveis e não move o personagem.",
+            "en_US": "The module has no complete walkable road network and never moves your character."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Inicie pelo minimapa",
+            "en_US": "Start on the minimap"
+          },
+          "where": {
+            "pt_BR": "Rotas → Iniciar no minimapa",
+            "en_US": "Routes → Start on minimap"
+          },
+          "body": {
+            "pt_BR": "Inicie a rota e, se solicitado, selecione somente o terreno do minimapa, sem o título nem os controles. O app usa o centro fixo do minimapa para acompanhar o personagem; não precisa marcar a seta.",
+            "en_US": "Start the route and, if prompted, select only the minimap terrain, excluding its title and controls. The app follows the character from the fixed minimap center; no arrow setup is needed."
+          },
+          "tip": {
+            "pt_BR": "Use minimapa retangular com norte fixo. Se mudar resolução, escala ou monitor, selecione a área novamente.",
+            "en_US": "Use a rectangular north-fixed minimap. Reselect its area after changing resolution, scaling or monitor."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Escolha Fio ou Guia",
+            "en_US": "Choose Strip or Guide"
+          },
+          "where": {
+            "pt_BR": "Guia da rota → opções ···",
+            "en_US": "Route panel → options ···"
+          },
+          "body": {
+            "pt_BR": "Pelo menu do painel, alterne entre Fio compacto e Guia com estado. Arraste para reposicionar e use Pausar, Pular parada ou Encerrar quando precisar. O menu rápido mostra ou oculta o painel.",
+            "en_US": "Use the panel menu to switch between compact Strip and Guide with status. Drag to reposition, and use Pause, Skip stop or End when needed. Quick controls show or hide the panel."
+          },
+          "tip": {
+            "pt_BR": "Chegar a uma parada exige leituras atuais por cerca de 0,35 segundo; visitar não confirma coleta.",
+            "en_US": "Reaching a stop needs fresh readings for about 0.35 seconds; visiting does not confirm collection."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Salve e retome com segurança",
+            "en_US": "Save and resume"
+          },
+          "where": {
+            "pt_BR": "Rotas → Salvar / Minhas rotas",
+            "en_US": "Routes → Save / My routes"
+          },
+          "body": {
+            "pt_BR": "Salve os percursos que quiser reutilizar. Minhas rotas permite carregar, importar e exportar. Menus, Alt+Tab ou perda do mapa interrompem a posição; o mapa grande exibe o trajeto, mas suspende o acompanhamento do personagem.",
+            "en_US": "Save journeys to reuse them. My routes lets you load, import and export. Menus, Alt+Tab or map loss interrupt positioning; the full map displays the path but suspends character tracking."
+          },
+          "tip": {
+            "pt_BR": "Ao reabrir o app, carregue e inicie a rota: o percurso ativo não é retomado automaticamente.",
+            "en_US": "After reopening the app, load and start your route: active journeys do not resume automatically."
+          }
+        }
+      ],
+      "help": [
+        {
+          "question": {
+            "pt_BR": "O guia fica em Aguardando minimapa. E agora?",
+            "en_US": "The guide says Waiting for minimap. What now?"
+          },
+          "answer": {
+            "pt_BR": "Use a beta.8 ou posterior, confira a seleção do terreno e volte ao jogo em primeiro plano, sem menus. A beta.8 corrige a revalidação durante movimento. Se persistir, informe versão e estado do overlay com uma print.",
+            "en_US": "Use beta.8 or later, check the terrain selection and return to the foreground game without menus. Beta.8 fixes revalidation during movement. If it persists, report version and overlay status with a screenshot."
+          }
+        }
+      ]
+    },
+    {
       "id": "maps",
       "icon": "overlay",
       "title": {
@@ -785,6 +902,24 @@ window.StrigoiGuide = {
           "tip": {
             "pt_BR": "Volte a Automático para acompanhar eventos diferentes. Mantenha o Azphelumbra aberto para atualizar a contagem.",
             "en_US": "Return to Automatic to follow different events. Keep Azphelumbra open to update the countdown."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Acompanhe Battlefield e bosses",
+            "en_US": "Track Battlefield and bosses"
+          },
+          "where": {
+            "pt_BR": "Eventos → agenda e contador do Gartua",
+            "en_US": "Events → schedule and Gartua countdown"
+          },
+          "body": {
+            "pt_BR": "Battlefield abre diariamente das 11h às 14h e das 19h às 21h no relógio SA. Para Gartua, habilite a leitura e deixe nome e Time Left visíveis no alto da tela; duas leituras compatíveis criam uma previsão para esta sessão.",
+            "en_US": "Battlefield opens daily from 11:00 to 14:00 and 19:00 to 21:00 on the SA clock. For Gartua, enable reading and keep its name and Time Left visible near the top of the screen; two matching readings create a prediction for this session."
+          },
+          "tip": {
+            "pt_BR": "Gartua não recebe horário diário presumido. Bosses do Abyss estão identificados como referência Global, ainda sem confirmação individual em SA.",
+            "en_US": "No daily Gartua schedule is assumed. Abyss bosses are labeled Global references, not individually confirmed on SA."
           }
         }
       ],
