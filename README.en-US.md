@@ -1,11 +1,15 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.6 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.7 · Windows x64**
+
+Beta 7 automatically tracks the fixed minimap center and removes manual arrow
+setup. Stop numbers and other icons no longer interrupt positioning; advancing
+uses a brief confirmation near a stop. Alt+Tab, menus, and the full map continue
+to suspend tracking.
 
 Beta 6 adds **Routes**: choose Atlas targets, organize stops, edit passages,
 and follow the path on the minimap and full map. The guide switches between
-Strip and Guide through its menu. Automatic progression requires identifying
-your character's arrow once and still needs live validation on SA. Visits
+Strip and Guide through its menu. Automatic progression still needs live movement validation on SA. Visits
 do not confirm collection; suggested lines do not guarantee walkable passages.
 See [Farming routes](docs/ROUTES.en-US.md).
 

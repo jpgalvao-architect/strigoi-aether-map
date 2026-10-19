@@ -287,6 +287,8 @@ class RouteSettings(Model):
     panel_style: Literal['strip','guide'] = 'strip'
     panel_position: tuple[int,int] | None = None
     auto_advance: bool = True
+    # Beta.6 calibration fields remain readable to preserve existing preferences.
+    # Fixed-center tracking no longer uses them.
     anchor: tuple[float,float] | None = None
     anchor_area: str = ''
     arrow_shape: list[tuple[float,float]] = Field(default_factory=list,max_length=96)

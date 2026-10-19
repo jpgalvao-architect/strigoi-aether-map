@@ -25,11 +25,15 @@ O trajeto aparece no minimapa e no mapa grande pelo mesmo reconhecimento do
 overlay. O número destacado indica a próxima parada. Se ainda não selecionou
 a área do minimapa, o app abre a seleção ao iniciar a rota.
 
-Para o avanço automático, abra **Acompanhamento e percurso → Indicar meu
-personagem**. Com o minimapa reconhecido e o jogo em primeiro plano, o app
-mostra uma prévia: clique no centro da seta branca do seu personagem. Só o
-contorno da seta e sua posição são salvos; a imagem permanece na memória.
-Repita a indicação se mudar a seleção, resolução, escala ou monitor.
+O personagem ocupa o centro do terreno do minimapa; apenas o compasso gira.
+Com o jogo em primeiro plano e o terreno reconhecido, o app projeta esse centro
+no Atlas e acompanha as paradas automaticamente. Não é necessário indicar
+ou calibrar a seta. Ícones e o número da parada podem cobri-la sem interromper
+a posição. No mapa grande, o acompanhamento fica suspenso: seu centro pode
+ser deslocado e não representa a posição do personagem.
+
+Selecione somente o terreno do minimapa, sem o título e os controles abaixo.
+Se mudar a resolução, a escala ou o monitor, selecione essa área novamente.
 
 O guia **Fio** mostra o alvo e a parada em uma faixa de 303 × 38 pixels.
 Nas opções **···**, alterne para **Guia**, com uma segunda linha de estado.
@@ -37,7 +41,7 @@ Você pode pausar, retomar, pular uma parada, repetir ou encerrar a rota.
 Arraste o guia para reposicioná-lo. O menu rápido permite ocultá-lo sem
 encerrar o percurso.
 
-O avanço exige leituras atuais e uma breve permanência na parada. Menus,
+O avanço exige leituras atuais e cerca de 0,35 segundo próximo à parada. Menus,
 Alt+Tab ou perda do reconhecimento interrompem o acompanhamento e preservam
 o progresso. Trocar de área ou personagem pausa a rota até você retomá-la.
 Sem leitura confiável, use **Pular parada** para avançar manualmente.
@@ -66,8 +70,8 @@ ver os trechos completos e salvar uma nova rota após conferi-los.
   individual em SA.
 - Não há estimativa de distância em metros, rendimento, respawn ou tempo de
   chegada. O módulo não move o personagem nem envia comandos ao jogo.
-- A projeção, a gravação e o avanço passaram em testes controlados. O avanço
-  automático ainda precisa ser validado em uma rodada real em SA.
+- A projeção, a gravação e o avanço passaram em testes controlados. A posição central e a passagem do ponto 1 ao 2 foram conferidas
+  em testes controlados; uma rodada de movimento em SA ainda está pendente.
 
 Rotas salvas ficam em `routes.json` na pasta de dados do app. O percurso ativo
 não é retomado automaticamente ao reabrir o programa. A frequência escolhida

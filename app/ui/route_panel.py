@@ -48,7 +48,7 @@ class RoutePanel(HudSurface):
         self.name.setToolTip(name)
         if service.complete:status='Volta concluída'
         elif service.paused:status='Rota pausada'
-        elif not service.position:status='Aguardando minimapa' if prefs.anchor else 'Indique seu personagem'
+        elif not service.position:status='Aguardando minimapa'
         elif service.current==len(service.route.stops):status='Voltando ao início'
         else:status='Próxima parada'
         self.detail.setText(status);self.setToolTip(tr(status)+'\n'+tr(service.status))

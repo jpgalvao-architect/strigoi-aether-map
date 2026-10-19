@@ -178,7 +178,7 @@ class RouteService(QObject):
         left_previous=self.last_arrival is None or distance(point,self.last_arrival)>radius*1.6
         if self.context.prefs.routes.auto_advance and near and (self.inside_since is not None or left_previous):
             if self.inside_since is None:self.inside_since=now
-            if now-self.inside_since>=1.2:self.advance()
+            if now-self.inside_since>=.35:self.advance()
         elif not near:self.inside_since=None
         if self.status.startswith(('Aguardando','Indique')):self.notify('Rota em andamento.')
 

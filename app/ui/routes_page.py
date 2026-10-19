@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
-"""Map-first route planning, editing and reuse with an optional arrow setup."""
+"""Map-first route planning, editing and reuse with automatic minimap-center tracking."""
 from pathlib import Path
-from PySide6.QtCore import Qt,QTimer,Signal
-from PySide6.QtGui import QImage,QPixmap,QPainter
+from PySide6.QtCore import Qt,QTimer
 from PySide6.QtWidgets import (QVBoxLayout,QHBoxLayout,QListWidget,QListWidgetItem,QSlider,QInputDialog,QScrollArea,QSizePolicy)
 from app.ui.localized_widgets import QWidget,QFrame,QDialog,QLineEdit,QComboBox,QCheckBox,QPushButton,QFileDialog,QMessageBox,QToolButton
 from app.ui.widgets import label,button,row
@@ -10,18 +9,7 @@ from app.ui.icons import icon
 from app.core.i18n import tr
 from app.modules.routes.models import Vertex
 from app.modules.routes.planner import candidates,rebuild,distance
-from app.modules.routes.position import calibrate,area_key
 from app.ui.route_view import RouteView
-
-
-class ArrowPreview(QWidget):
-    selected=Signal(float,float)
-    def __init__(self,image):
-        super().__init__();self.image=image;self.setFixedSize(image.size())
-    def paintEvent(self,event):
-        painter=QPainter(self);painter.drawPixmap(0,0,self.image)
-    def mousePressEvent(self,event):
-        if event.button()==Qt.LeftButton:self.selected.emit(event.position().x()/self.width(),event.position().y()/self.height())
 
 
 class RoutesPage(QWidget):
@@ -33,7 +21,7 @@ class RoutesPage(QWidget):
         super().__init__();self.context=context;self.service=service;self.start_overlay=start_overlay;self.overlay=overlay
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Ignored)
         self.resources=[];self.mode='loop';self.edit_mode='';self.history=[];self._refreshing=False
-        self._preview_waiting=False;self._shown_draft=None
+        self._shown_draft=None
         layout=QVBoxLayout(self);layout.setContentsMargins(26,20,26,20);layout.setSpacing(15)
         head=QVBoxLayout();head.setSpacing(4);head.addWidget(label('EXPLORE COM UM PLANO','eyebrow'))
         head.addWidget(label('Rotas de farm','title'));head.addWidget(label('Escolha o que procurar. O próximo trecho vai com você.','subtitle'))
@@ -82,7 +70,6 @@ class RoutesPage(QWidget):
         self.auto=QCheckBox('Avançar ao visitar a parada');self.auto.setChecked(context.prefs.routes.auto_advance)
         self.auto.toggled.connect(self.auto_changed);advanced.addWidget(self.auto)
         advanced.addWidget(button('Inverter sentido',service.reverse))
-        self.calibration_button=button('Indicar meu personagem',self.calibrate_player);advanced.addWidget(self.calibration_button)
         self.record=QCheckBox('Gravar meu percurso');self.record.toggled.connect(service.set_recording);advanced.addWidget(self.record)
         self.use_recorded=button('Revisar percurso registrado',self.review_recorded);advanced.addWidget(self.use_recorded)
         self.advanced.hide();self.advanced_toggle.toggled.connect(self.advanced.setVisible);form.addWidget(self.advanced)
@@ -95,9 +82,6 @@ class RoutesPage(QWidget):
         self.maps.currentIndexChanged.connect(self.map_changed)
         self.view.map_clicked.connect(self.map_clicked)
         service.changed.connect(self.refresh)
-        if overlay:overlay.minimap_preview.connect(self.accept_preview)
-        self.preview_timer=QTimer(self);self.preview_timer.setSingleShot(True);self.preview_timer.setInterval(8000)
-        self.preview_timer.timeout.connect(self.preview_timeout)
         self.map_changed()
 
     def map_changed(self):
@@ -225,8 +209,6 @@ class RoutesPage(QWidget):
             self.debounce.stop();self.service.start()
             self.context.prefs.routes.panel_visible=True;self.context.save()
             if self.start_overlay:self.start_overlay()
-            if not self.context.prefs.routes.anchor:
-                self.advanced_toggle.setChecked(True);self.status.setText('Indique seu personagem uma vez para acompanhar as paradas automaticamente.')
         except (ValueError,OSError) as exc:self.status.setText(str(exc))
 
     def save(self):
@@ -279,35 +261,8 @@ class RoutesPage(QWidget):
         self.map_hint.setText('Tracejado: ligação sugerida · contínuo: passagem conferida por você.')
         self.refresh();self.view.fit_route(route)
 
-    def calibrate_player(self):
-        if not self.overlay or not self.overlay.worker or not self.overlay.request_route_preview():
-            self.status.setText('Inicie o minimapa e volte ao jogo para indicar seu personagem.');return
-        self._preview_waiting=True;self.window().hide();self.preview_timer.start()
-
-    def preview_timeout(self):
-        if self._preview_waiting:
-            self._preview_waiting=False;self.window().show();self.status.setText('Não foi possível ler o minimapa. Volte ao jogo com o mapa grande fechado e tente novamente.')
-
-    def accept_preview(self,frame,area):
-        if not self._preview_waiting:return
-        self.preview_timer.stop();self._preview_waiting=False;self.window().show()
-        dialog=QDialog(self);dialog.setWindowTitle('Indicar meu personagem');box=QVBoxLayout(dialog)
-        box.addWidget(label('Clique no centro da seta branca do seu personagem.','subtitle',True))
-        # Raw pixels remain in this local dialog only; only contour geometry is saved.
-        rgb=frame[:,:,::-1].copy();h,w=rgb.shape[:2];image=QImage(rgb.data,w,h,rgb.strides[0],QImage.Format_RGB888).copy()
-        preview=ArrowPreview(QPixmap.fromImage(image).scaled(min(660,w*2),min(460,h*2),Qt.KeepAspectRatio,Qt.SmoothTransformation));box.addWidget(preview)
-        feedback=label('','subtitle',True);box.addWidget(feedback)
-        def select(u,v):
-            try:
-                profile=calibrate(frame,u,v);prefs=self.context.prefs.routes
-                for key,value in profile.items():setattr(prefs,key,value)
-                prefs.anchor_area=area_key(area);self.context.save();dialog.accept()
-                self.status.setText('Personagem indicado. Volte ao jogo para acompanhar a rota.')
-            except ValueError as exc:feedback.setText(str(exc))
-        preview.selected.connect(select);box.addWidget(button('Cancelar',dialog.reject));dialog.exec()
-
     def choose_resource(self,map_id,resource_id):
         self.maps.blockSignals(True);self.maps.setCurrentIndex(self.maps.findData(map_id));self.maps.blockSignals(False)
         self.resources=[resource_id];self.map_changed()
 
-    def shutdown(self):self.debounce.stop();self.preview_timer.stop();self._preview_waiting=False
+    def shutdown(self):self.debounce.stop()

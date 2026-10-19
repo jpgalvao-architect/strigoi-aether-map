@@ -263,7 +263,6 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
 
 class OverlayService(QObject):
     status_changed = Signal(str)
-    minimap_preview = Signal(object,object)
 
     def __init__(self, context):
         super().__init__()
@@ -300,16 +299,12 @@ class OverlayService(QObject):
         if lines!=self.window.route_lines:
             self.window.route_lines=lines;self.window.invalidate_frame()
         if self.worker and hasattr(self.worker,'set_route_tracking'):
-            key=(id(self.worker),bool(routes and routes.active),self.context.prefs.routes.model_dump_json())
+            key=(id(self.worker),bool(routes and routes.active))
             if key!=getattr(self,'_route_profile_key',None):
-                self.worker.set_route_tracking(bool(routes and routes.active),self.context.prefs.routes);self._route_profile_key=key
+                self.worker.set_route_tracking(bool(routes and routes.active));self._route_profile_key=key
             if self.window.registration and self.capture_area:
                 self.worker.set_route_exclusion(self.window.registration,lines,self.capture_area.view_kind,6*self.window.ratio,target)
             else:self.worker.set_route_exclusion(None,(),self.context.prefs.overlay.map_view)
-
-    def request_route_preview(self):
-        if self.worker and hasattr(self.worker,'request_preview'):self.worker.request_preview();return True
-        return False
 
     def set_status(self, status):
         if status != self.status:
@@ -376,7 +371,6 @@ class OverlayService(QObject):
         self.window.setGeometry(area.screen_x+area.x, area.screen_y+area.y, area.width, area.height)
         self.worker = LiveMapWorker(area, image, settings.minimum_matches,settings.capture_hz)
         self.worker.observed.connect(self.on_registration)
-        self.worker.minimap_preview.connect(self.minimap_preview.emit)
         self.worker.failed.connect(self.on_error)
         self.worker.progress.connect(lambda message: self.set_status(message) if settings.enabled else None)
         self.last_result = time.perf_counter()

@@ -36,7 +36,7 @@ def test_route_ui_edits_saves_and_syncs_atlas_and_quick_menu(qapp,tmp_path):
         service.stop();assert not window.atlas.view.route_items and not window.route_panel.isVisible()
         set_language('en_US');service.start();window.route_panel.refresh()
         assert window.nav[13].text()=='Routes' and page.start_button.text()=='Start on minimap'
-        assert window.route_panel.detail.text()=='Identify your character'
+        assert window.route_panel.detail.text()=='Waiting for minimap'
         window.route_panel.hide_guide();assert not window.context.prefs.routes.panel_visible
         page.change_mode('open');page.set_edit('custom');assert service.draft is None and not page.resources
         page.map_clicked(.4,.4);page.map_clicked(.5,.5)
@@ -70,6 +70,7 @@ def test_route_page_fits_small_window_and_projection_uses_same_transform(qapp,tm
         page.advanced_toggle.setChecked(True);qapp.processEvents()
         assert page.height()<=scroll.viewport().height()
         assert page.start_button.isVisible() and page.status.isVisible()
+        assert not hasattr(page,'calibration_button')
         window.routes.start();target=window.routes.target
         assert window.overlay.window.route_target[:2]==(target.x,target.y)
         lines=window.overlay.window.route_lines

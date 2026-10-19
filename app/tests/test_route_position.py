@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import pytest
 from app.core.models import RouteSettings
-from app.modules.routes.position import calibrate,locate,area_key
+from app.modules.routes.position import locate
 from app.modules.overlay.selection import CaptureArea
 from app.modules.overlay.tracking import Registration
 from app.modules.overlay.stencil import apply_route_stencil
@@ -14,39 +14,22 @@ def area(ratio=1):
         screen_height=1440,pixel_ratio=ratio,x=2000,y=60,width=330,height=220,view_kind='minimap')
 
 
-def frame(scale=1,rotation=0):
-    image=np.full((220*scale,330*scale,3),35,np.uint8)
-    shape=np.array([[0,-10],[7,9],[0,4],[-7,9]],np.float32)
-    theta=np.deg2rad(rotation);matrix=np.array([[np.cos(theta),-np.sin(theta)],[np.sin(theta),np.cos(theta)]])
-    vertices=np.rint((shape@matrix.T+[165,110])*scale).astype(np.int32)
-    cv2.fillPoly(image,[vertices],(240,240,240))
-    return image
-
-
-@pytest.mark.parametrize('scale',[1,2])
-def test_arrow_position_projects_physical_pixels_back_to_normalized_map(scale):
-    image=frame(scale);a=area(scale)
-    profile=RouteSettings(**calibrate(image,.5,.5),anchor_area=area_key(a))
+@pytest.mark.parametrize('scale',[1,1.5,2])
+def test_fixed_center_projects_to_map_without_manual_profile_or_arrow(scale):
+    a=area(scale);shape=(round(220*scale),round(330*scale),3)
     reg=Registration(np.array([[1000*scale,0,-335*scale],[0,1000*scale,-390*scale]],float),25,.95)
-    result=locate(image,profile,reg,a)
-    assert result and result[0].x==pytest.approx(.5,abs=.001) and result[0].y==pytest.approx(.5,abs=.003)
-    assert 0<result[1]<=.006
-    rotated=locate(frame(scale,90),profile,reg,a)
-    assert rotated and rotated[0].x==pytest.approx(.5,abs=.004)
-    assert locate(image,profile,reg,a.model_copy(update={'x':1999})) is None
-    assert locate(np.full_like(image,35),profile,reg,a) is None
-    assert locate(image,profile,Registration(np.zeros((2,3)),25,.95),a) is None
-
-
-def test_non_arrow_cannot_be_calibrated_and_marker_ambiguity_fails_closed():
-    image=frame();a=area();profile=RouteSettings(**calibrate(image,.5,.5),anchor_area=area_key(a))
-    with pytest.raises(ValueError):calibrate(image,.1,.1)
-    reg=Registration(np.array([[1000,0,-335],[0,1000,-390]],float),25,.95)
-    # Identical second arrow close to the anchor must not be picked as the player.
-    second=np.roll(image,19,axis=1)
-    both=np.maximum(image,second)
-    profile.anchor=(profile.anchor[0]+9.5/330,profile.anchor[1])
-    assert locate(both,profile,reg,a) is None
+    point,radius=locate(shape,reg,a)
+    assert point.x==pytest.approx(.5) and point.y==pytest.approx(.5)
+    assert 0<radius<=.006
+    # The frame may contain a compass, quest icons or our own stop number.
+    # Pixels and legacy arrow calibration are deliberately not inputs.
+    assert locate(shape,reg,a)==(point,radius)
+    assert locate(shape,None,a) is None
+    assert locate(shape,reg,a.model_copy(update={'view_kind':'large'})) is None
+    assert locate((40,40,3),reg,a) is None
+    assert locate(shape,Registration(np.zeros((2,3)),25,.95),a) is None
+    assert locate(shape,Registration(np.full((2,3),np.nan),25,.95),a) is None
+    assert locate(shape,Registration(np.array([[1,0,10000],[0,1,10000]],float),25,.95),a) is None
 
 
 def test_path_stencil_masks_strokes_without_erasing_the_bounding_rectangle():
@@ -56,17 +39,3 @@ def test_path_stencil_masks_strokes_without_erasing_the_bounding_rectangle():
     apply_route_stencil(image,mask,reg,lines,6,(.9,.9,2))
     assert mask[22,150]==0 and mask[110,297]==0
     assert mask[110,150]==255 and np.array_equal(image[110,150],[240]*3)
-
-
-@pytest.mark.parametrize('scale',[1,2])
-def test_confirmed_thin_jagged_arrow_is_recognized_in_the_same_frame(scale):
-    # Minimal contour fixture; no gameplay screenshot or terrain stored.
-    vertices=np.array([[17,10],[17,17],[15,19],[12,19],[11,18],[10,18],[12,20],[17,20],
-        [19,22],[19,23],[20,24],[20,27],[21,27],[22,28],[22,29],[23,29],[24,30],
-        [25,30],[26,31],[25,30],[25,29],[23,27],[23,26],[22,25],[22,24],[21,23],
-        [21,22],[20,21],[20,20],[19,19],[19,18],[18,17],[18,14],[17,13]],np.int32)
-    image=np.full((220*scale,330*scale,3),35,np.uint8)
-    cv2.fillPoly(image,[(vertices+[148,90])*scale],(240,240,240))
-    a=area(scale);profile=RouteSettings(**calibrate(image,167/330,105/220),anchor_area=area_key(a))
-    reg=Registration(np.array([[1000*scale,0,-333*scale],[0,1000*scale,-395*scale]],float),25,.95)
-    assert locate(image,profile,reg,a) is not None

@@ -24,18 +24,22 @@ The path appears on the minimap and full map using the existing overlay
 recognition. The highlighted number marks the next stop. If no minimap area
 is configured, starting a route opens area selection.
 
-For automatic progression, open **Tracking and recording → Identify my
-character**. With the minimap recognized and the game in the foreground,
-the app shows a preview. Click the center of your character's white arrow.
-Only its outline and position are saved; the image stays in memory.
-Repeat this setup after changing the selection, resolution, scaling, or monitor.
+Your character stays at the center of the minimap terrain; only the compass
+rotates. With the game in the foreground and the terrain recognized, the app
+projects that center into the Atlas and tracks stops automatically. You do not
+need to identify or calibrate the arrow. Icons and stop numbers can cover it
+without interrupting positioning. Tracking is suspended on the full map:
+its center can be panned and does not represent your character.
+
+Select only the minimap terrain, excluding the title and controls below it.
+Select the area again after changing resolution, scaling, or monitor.
 
 The **Strip** guide shows the target and stop in 303 × 38 pixels. Use **···**
 to switch to **Guide**, which adds a second status line. You can pause,
 resume, skip a stop, repeat, or end the route. Drag to reposition it. The quick
 menu can hide the guide without ending the journey.
 
-Advancing requires fresh readings and a brief stay at the stop. Menus,
+Advancing requires fresh readings and about 0.35 seconds near the stop. Menus,
 Alt+Tab, or lost recognition suspend tracking while preserving progress.
 Changing area or character pauses the route until you resume it.
 Without a reliable reading, use **Skip stop** to advance manually.

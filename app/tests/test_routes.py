@@ -170,3 +170,24 @@ def test_zone_and_identity_changes_pause_but_invalid_identity_is_ignored(service
 @pytest.mark.parametrize('profile',[dict(anchor=(-.1,.5)),dict(anchor=(.5,float('nan'))),dict(arrow_shape=[(float('inf'),0)]),dict(arrow_area=float('nan'))])
 def test_invalid_arrow_profiles_are_rejected(profile):
     with pytest.raises(ValidationError):RouteSettings(**profile)
+
+
+def test_fixed_minimap_center_advances_from_stop_one_to_two_without_arrow_setup(service):
+    import numpy as np
+    from app.modules.overlay.selection import CaptureArea
+    from app.modules.overlay.tracking import Registration
+    from app.modules.routes.position import locate
+    setup(service)
+    assert service.context.prefs.routes.anchor is None
+    a=CaptureArea(map_id='altgard',screen_name='test',screen_x=0,screen_y=0,screen_width=2560,
+        screen_height=1440,pixel_ratio=1.5,x=2000,y=60,width=330,height=220,view_kind='minimap')
+    reg=Registration(np.array([[1500,0,97.5],[0,1500,-585]],float),25,.95)
+    point,radius=locate((330,495,3),reg,a)
+    assert point==Vertex(x=.1,y=.5)
+    for t in [100,100.2,100.41]:
+        service.observe(point,map_id='altgard',game=(10,20),observed_at=t,now=t,radius=radius)
+    assert service.current==1 and service.target.id=='1' and service.visited==['0']
+    # A stationary player cannot consume stop two after completing stop one.
+    for t in [100.6,100.8,101.01]:
+        service.observe(point,map_id='altgard',game=(10,20),observed_at=t,now=t,radius=radius)
+    assert service.current==1

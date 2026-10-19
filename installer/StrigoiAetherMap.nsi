@@ -9,7 +9,7 @@ Unicode true
   !error "Define PAYLOAD as the complete prepared portable folder."
 !endif
 !ifndef OUTPUT
-  !define OUTPUT "StrigoiAetherMap-Setup-0.10.0-beta.6.exe"
+  !define OUTPUT "StrigoiAetherMap-Setup-0.10.0-beta.7.exe"
 !endif
 !ifndef UNINSTALL_MANIFEST
   !error "Generate the exact installed-file removal manifest first."
@@ -33,11 +33,11 @@ RequestExecutionLevel user
 ManifestDPIAware true
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
-BrandingText "Azphelumbra · 0.10.0-beta.6"
-VIProductVersion "0.10.0.6"
+BrandingText "Azphelumbra · 0.10.0-beta.7"
+VIProductVersion "0.10.0.7"
 VIAddVersionKey /LANG=1033 "ProductName" "Azphelumbra"
 VIAddVersionKey /LANG=1033 "FileDescription" "Azphelumbra installer"
-VIAddVersionKey /LANG=1033 "FileVersion" "0.10.0-beta.6"
+VIAddVersionKey /LANG=1033 "FileVersion" "0.10.0-beta.7"
 VIAddVersionKey /LANG=1033 "LegalCopyright" "2026 Strigoi Aether Map contributors"
 !define MUI_ICON "..\app\assets\azphelumbra.ico"
 !define MUI_UNICON "..\app\assets\azphelumbra.ico"
@@ -139,7 +139,7 @@ Section "$(AppSection)" Core
     Abort
   ${EndIf}
   FileOpen $0 "$INSTDIR\.strigoi-install-owned" w
-  FileWrite $0 "StrigoiAetherMap-0.10.0-beta.6"
+  FileWrite $0 "StrigoiAetherMap-0.10.0-beta.7"
   FileClose $0
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "${REGKEY}" "InstallDir" "$INSTDIR"
@@ -147,7 +147,7 @@ Section "$(AppSection)" Core
   WriteRegStr HKCU "${REGKEY}" "TermsSHA256" "${TERMS_HASH}"
   WriteRegStr HKCU "${REGKEY}" "InstallerLanguage" "$DefaultLanguage"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayName" "Azphelumbra"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.10.0-beta.6"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.10.0-beta.7"
   WriteRegStr HKCU "${UNINSTALLKEY}" "Publisher" "Thoth Worlds"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayIcon" "$INSTDIR\StrigoiAetherMap.exe"
   WriteRegStr HKCU "${UNINSTALLKEY}" "InstallLocation" "$INSTDIR"

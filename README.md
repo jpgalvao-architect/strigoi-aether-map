@@ -1,11 +1,15 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.6 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.7 · Windows x64**
+
+A beta 7 acompanha automaticamente o centro fixo do minimapa e remove a
+indicação manual da seta. O número da parada e outros ícones deixam de
+interromper a posição; o avanço usa uma confirmação curta ao chegar ao local.
+Alt+Tab, menus e o mapa grande continuam suspendendo o acompanhamento.
 
 A beta 6 acrescenta **Rotas**: escolha alvos do Atlas, organize paradas,
 ajuste passagens e acompanhe o trajeto no minimapa e no mapa grande. O guia
-alterna entre Fio e Guia pelo próprio painel. O avanço automático exige indicar
-a seta do personagem uma vez e ainda precisa de validação ao vivo em SA.
+alterna entre Fio e Guia pelo próprio painel. O avanço automático ainda precisa de validação de movimento ao vivo em SA.
 Visitas não confirmam coleta; linhas sugeridas não garantem passagem.
 Veja [Rotas de farm](docs/ROUTES.md).
 
