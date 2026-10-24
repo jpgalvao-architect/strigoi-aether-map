@@ -918,8 +918,8 @@ window.StrigoiGuide = {
             "en_US": "Battlefield opens daily from 11:00 to 14:00 and 19:00 to 21:00 on the SA clock. For Gartua, enable reading and keep its name and Time Left visible near the top of the screen; two matching readings create a prediction for this session."
           },
           "tip": {
-            "pt_BR": "Gartua não recebe horário diário presumido. Bosses do Abyss estão identificados como referência Global, ainda sem confirmação individual em SA.",
-            "en_US": "No daily Gartua schedule is assumed. Abyss bosses are labeled Global references, not individually confirmed on SA."
+            "pt_BR": "A Battlefield aparece apenas na agenda do app, sem ocupar o painel flutuante. Gartua não recebe horário diário presumido. Bosses do Abyss são referências Global ainda sem confirmação individual em SA.",
+            "en_US": "Battlefield appears only in the app agenda and does not occupy the floating panel. No daily Gartua schedule is assumed. Abyss bosses are Global references not individually confirmed on SA."
           }
         }
       ],

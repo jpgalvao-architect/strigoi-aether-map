@@ -31,7 +31,7 @@
     'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
     'showcase.combat.title': 'Seu grupo. Seu dano observado.',
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
-    'download.beta': "Novo na beta.8: crie rotas de farm e acompanhe as paradas pelo centro do minimapa, sem calibrar a seta. A revalidação acompanha o terreno em movimento. A agenda inclui Battlefield, previsão do Gartua pelo contador e referências Global dos bosses do Abyss. Combate e PvP continuam experimentais.",
+    'download.beta': "Novo na beta.9: a Battlefield · Arena of Tactics permanece na agenda do app e sai do painel flutuante, deixando espaço para os demais eventos. Uma seleção antiga da Battlefield passa automaticamente ao próximo evento permitido. Rotas, configurações e demais recursos são preservados; Combate e PvP continuam experimentais.",
     'showcase.sonar.title': 'O som vira uma pista na tela.',
     'showcase.sonar.description': 'Ative o Sonar e acompanhe a intensidade estimada do som reconhecido no medidor do aviso.',
   });
@@ -78,7 +78,7 @@
     'screen.combat': 'Combat module with observed damage, DPS and group share',
     'showcase.combat.title': 'Your group. Your observed damage.',
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
-    'download.beta': "New in beta.8: build farming routes and follow stops from the minimap center, without arrow setup. Revalidation follows moving terrain. The schedule adds Battlefield, Gartua predictions from its countdown, and Global reference times for Abyss bosses. Combat and PvP remain experimental.",
+    'download.beta': "New in beta.9: Battlefield · Arena of Tactics stays in the app agenda and leaves the floating panel, making room for other events. Previously saved Battlefield choices automatically fall back to the next eligible event. Routes, settings and other features are preserved; Combat and PvP remain experimental.",
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
     'showcase.sonar.description': 'Enable Sonar and follow recognized sound intensity in the alert meter. The Sonar page also shows recent history.',
     'explore.source': 'Real map images and community locations with documented sources. Markers indicate possible locations, not guaranteed spawns.',
