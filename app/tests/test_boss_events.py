@@ -178,22 +178,31 @@ def test_sidebar_uses_the_same_open_battlefield_window(qapp,tmp_path,monkeypatch
     finally:main.close()
 
 
-def test_active_window_and_gartua_are_selectable_in_floating_panel(qapp,tmp_path,monkeypatch):
+@pytest.mark.parametrize('event_index',[0,1])
+def test_battlefield_stays_in_app_and_saved_hud_choice_falls_back(qapp,tmp_path,monkeypatch,event_index):
     import app.ui.events_page as page_module
     from app.ui.event_panel import EventPanel
     context=AppContext(tmp_path);context.prefs.overlay.events_panel=True
-    context.prefs.overlay.events_panel_event=battlefield()[0].id
+    context.prefs.overlay.events_panel_event=battlefield()[event_index].id
+    context.save();context=AppContext(tmp_path)
     panel=EventPanel(context);panel.timer.stop()
     try:
         panel.refresh(NOW)
-        assert len(panel.cards)==1 and panel.cards[0].remaining.text()=='Fecha em\n02:00:00'
-        assert '11:00–14:00' in panel.cards[0].clock.text()
+        assert panel.items==calendar_occurrences(context.panel_events,NOW)[:1]
+        assert panel.items and panel.items[0].event.kind!='Battlefield'
+        assert panel.event_selector.currentData()==''
+        assert panel.event_selector.actions_by_event[''].isChecked()
+        context.prefs.overlay.events_panel_expanded=True;panel.refresh(NOW)
+        assert panel.items and all(item.event.kind!='Battlefield' for item in panel.items)
+        assert all(event.id not in panel.event_selector.actions_by_event for event in battlefield())
         context.boss_timer.set_game((123,456))
         assert context.boss_timer.accept(context.boss_timer.screen_scope(),BossReading(8618),NOW,NOW)
         context.prefs.overlay.events_panel_event='observed-immortal-gartua';panel.refresh(NOW)
         assert panel.items[0].event.id=='observed-immortal-gartua'
         assert panel.event_selector.menu_widget is not None
         page=page_module.EventsPage(context);page.timer.stop()
+        assert page.panel_event.currentData()=='observed-immortal-gartua'
+        assert all(page.panel_event.findData(event.id)<0 for event in battlefield())
         opened=[]
         monkeypatch.setattr(page_module.QMessageBox,'information',lambda *args:opened.append(args))
         # A screen-based source shows its provenance instead of opening an invented URL.
@@ -202,3 +211,21 @@ def test_active_window_and_gartua_are_selectable_in_floating_panel(qapp,tmp_path
         assert opened and opened[0][1]=='Leitura do jogo'
         page.close()
     finally:panel.shutdown();set_language('pt_BR')
+
+
+def test_battlefield_only_agenda_has_no_floating_events(qapp,tmp_path):
+    from app.ui.event_panel import EventPanel
+    from app.ui.event_selector import EventSelector
+    context=AppContext(tmp_path);context.prefs.overlay.events_panel=True
+    context.feed=EventFeed(events=battlefield());context.save()
+    panel=EventPanel(context);panel.timer.stop();selector=EventSelector(context)
+    try:
+        for selected in ['',*(event.id for event in battlefield())]:
+            context.prefs.overlay.events_panel_event=selected;selector.refresh()
+            for expanded in [False,True]:
+                context.prefs.overlay.events_panel_expanded=expanded;panel.refresh(NOW)
+                assert panel.items==[] and panel.empty.isVisible()
+            assert selector.currentData()=='' and selector.count()==1
+            assert len(context.calendar_events)==2  # Source schedule is never deleted/disabled.
+            assert calendar_occurrences(context.calendar_events,NOW)[0].event.kind=='Battlefield'
+    finally:panel.shutdown();selector.close()

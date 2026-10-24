@@ -143,8 +143,8 @@ class EventPanel(OverlayVisibilityMixin, QFrame):
         expanded=self.context.prefs.overlay.events_panel_expanded
         self.header.setVisible(expanded)
         timezone=self.context.prefs.timezone
-        selected=self.context.prefs.overlay.events_panel_event
-        events=[e for e in self.context.calendar_events if not selected or e.id==selected]
+        selected=self.context.panel_event_id
+        events=[e for e in self.context.panel_events if not selected or e.id==selected]
         daily=day_events(events,now,timezone)
         self.items=daily if expanded else occurrences(events,now)[:1]
         key=(id(self.context.feed),tuple(i.key for i in self.items),expanded,timezone,selected)

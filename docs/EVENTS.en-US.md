@@ -8,8 +8,12 @@ tooltip and source button explain its origin.
 
 The supplied SA Arena of Tactics screen lists daily windows from 11 AM–2 PM
 and 7 PM–9 PM. The SA profile uses `America/Sao_Paulo`. While a window is open,
-the calendar and floating panel count down to matchmaking closing. Afterward,
-they move to the next opening. These are matchmaking windows, not match lengths.
+the calendar counts down to matchmaking closing. Afterward,
+it moves to the next opening. These are matchmaking windows, not match lengths.
+
+Battlefield stays in the app agenda and does not appear in the floating
+event panel or its picker. Previously saved Battlefield panel choices
+fall back to the next eligible event.
 
 ## Immortal Gartua
 

@@ -23,6 +23,18 @@ class AppContext(QObject):
         return self.feed.events+self.boss_timer.events()
 
     @property
+    def panel_events(self):
+        # Matchmaking windows stay in the app agenda without occupying the HUD.
+        return [event for event in self.calendar_events if event.kind!='Battlefield']
+
+    @property
+    def panel_event_id(self):
+        selected=self.prefs.overlay.events_panel_event
+        if any(event.id==selected and event.kind=='Battlefield' for event in self.calendar_events):
+            return ''  # Old saved selections fall back to the next eligible event.
+        return selected
+
+    @property
     def atlas_dataset(self):
         pets = getattr(self, 'pets', None)
         return pets.farm.dataset(self.dataset, pets.store.catalogue) if pets else self.dataset

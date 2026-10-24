@@ -8,8 +8,12 @@ do evento. O botão de fonte e as dicas de cada linha informam a origem.
 
 A tela de Arena of Tactics fornecida pelo usuário mostra janelas diárias de
 11h–14h e 19h–21h. O perfil SA usa `America/Sao_Paulo`. Durante uma janela,
-a agenda e o painel mostram quanto falta para fechar o matchmaking; depois,
-passam à próxima abertura. A duração da janela não é a duração da partida.
+a agenda mostra quanto falta para fechar o matchmaking; depois,
+passa à próxima abertura. A duração da janela não é a duração da partida.
+
+A Battlefield permanece na agenda do aplicativo. Ela não aparece no painel
+flutuante nem no seletor desse painel. Uma seleção antiga da Battlefield
+passa a acompanhar o próximo evento permitido.
 
 ## Immortal Gartua
 

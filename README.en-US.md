@@ -1,6 +1,11 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.8 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.9 · Windows x64**
+
+Beta 9 keeps Battlefield · Arena of Tactics in the app agenda only.
+Its windows no longer appear in the floating panel or its event picker.
+Previously saved Battlefield choices fall back to the next eligible event
+without deleting the schedule.
 
 Beta 8 fixes intermittent position loss while moving. Revalidation follows
 current terrain motion and still requires fresh map evidence. The fix passed

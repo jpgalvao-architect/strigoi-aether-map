@@ -47,10 +47,10 @@ def test_panel_switches_between_next_event_and_all_today_and_persists(qapp,tmp_p
     panel=EventPanel(context);panel.timer.stop()
     try:
         panel.refresh(now)
-        assert len(panel.items)==1 and panel.items[0]==calendar_occurrences(context.feed.events,now)[0]
+        assert len(panel.items)==1 and panel.items[0]==calendar_occurrences(context.panel_events,now)[0]
         context.prefs.overlay.events_panel_expanded=True
         panel.refresh(now)
-        assert panel.items==day_events(context.feed.events,now,context.prefs.timezone)
+        assert panel.items==day_events(context.panel_events,now,context.prefs.timezone)
         assert len(panel.items)>3 and any(i.starts_at<now for i in panel.items)
         old_card=panel.cards[0]
         panel.refresh(now)

@@ -16,11 +16,11 @@ class EventSelector(QComboBox):
         self.refresh()
 
     def refresh(self):
-        selected = self.context.prefs.overlay.events_panel_event
+        selected = self.context.panel_event_id
         self.blockSignals(True)
         self.clear()
         self.addItem('Automático · próximo evento', '')
-        for event in self.context.calendar_events:
+        for event in self.context.panel_events:
             if event.enabled:
                 self.addItem(icon(event_icon(event)), event.name, event.id)
         index = self.findData(selected)
@@ -53,14 +53,14 @@ class EventPicker(QToolButton):
         self.refresh()
 
     def currentData(self):
-        return self.context.prefs.overlay.events_panel_event
+        return self.context.panel_event_id
 
     def refresh(self):
         self.menu_widget.clear()
         self.actions_by_event={}
         selected=self.currentData()
         choices=[('', 'Automático · próximo evento', 'events')]
-        choices.extend((e.id,e.name,event_icon(e)) for e in self.context.calendar_events if e.enabled)
+        choices.extend((e.id,e.name,event_icon(e)) for e in self.context.panel_events if e.enabled)
         for key,title,picture in choices:
             action=self.menu_widget.addAction(icon(picture),title)
             action.setCheckable(True);action.setChecked(key==selected)
