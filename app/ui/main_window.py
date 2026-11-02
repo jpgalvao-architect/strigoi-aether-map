@@ -172,6 +172,7 @@ class MainWindow(QMainWindow):
         from app.ui.route_panel import RoutePanel
         self.route_panel=RoutePanel(self)
         self.overlay_visibility = None
+        self.module_resume = None
         if runtime:
             from app.ui.overlay_visibility import OverlayVisibility
             self.overlay_visibility = OverlayVisibility(self)
@@ -180,13 +181,15 @@ class MainWindow(QMainWindow):
                                  (self.pet_panel, 'hud'),
                                  (self.routine_panel, 'hud'),
                                  (self.route_panel, 'hud'),
-                                 (self.map_controls, 'map'),
+                                 (self.map_controls, 'hud'),
                                  (self.quick_menu, 'hud'), (self.quick_menu.panel, 'hud')]:
                 self.overlay_visibility.register(window, role)
             self.overlay_visibility.start()
             QTimer.singleShot(0, self.combat.enable_automatic)
             QTimer.singleShot(0, self.pets.enable_automatic)
             QTimer.singleShot(0, self.routine.enable_automatic)
+            from app.ui.module_resume import ModuleResume
+            self.module_resume=ModuleResume(self)
 
     def refresh_banner(self):
         self.banner.setVisible(self.context.dataset.demo or self.context.feed.demo)
@@ -272,7 +275,7 @@ class MainWindow(QMainWindow):
         body.addWidget(label("Suas visitas e preferências ficam neste computador. Mapas e agenda funcionam offline.", "subtitle", True))
         body.addWidget(label("Os mapas indicam locais possíveis; confirme a presença dos objetos no jogo. A agenda usa o perfil selecionado em Eventos.", "subtitle", True))
         body.addWidget(label('Como o aplicativo funciona', 'eyebrow'))
-        body.addWidget(label('Pets lê Insight e almas no quadro de detalhes aberto no jogo. A leitura acontece localmente, sem salvar imagens nem o texto da tela. Favoritar escolhe o que aparece no painel; não fixa o contador.', 'subtitle', True))
+        body.addWidget(label('Pets lê Insight e almas no quadro de detalhes aberto no jogo. A leitura acontece localmente, sem salvar imagens nem o texto da tela. Marcar um pet para acompanhar escolhe o que aparece no painel; não fixa o contador.', 'subtitle', True))
         body.addWidget(label('O Azphelumbra funciona ao lado do AION 2. Os marcadores, o painel de eventos e os avisos do Sonar aparecem em janelas externas de overlay sobre o jogo. Para acompanhar o mapa, o app analisa a imagem da tela; o Sonar recebe o áudio do aplicativo pelo Windows. O Atlas e a agenda consultam dados locais.', 'subtitle', True))
         body.addWidget(label('Não injetamos código nas DLLs do jogo, não alteramos seus arquivos e não lemos sua memória. Os overlays são desenhados pelo próprio Azphelumbra, fora do processo do AION 2.', 'subtitle', True))
         body.addWidget(label('Combate, Pets e Rotina podem ler passivamente os dados recebidos pela conexão do jogo, usando Npcap. Cada módulo permite desativar sua leitura automática e todos compartilham a mesma captura. Pacotes brutos não são gravados nem enviados. O placar apresenta dano observado e identifica dados parciais. A Rotina guarda os saldos de Odyle recebidos do jogo por personagem.', 'subtitle', True))
@@ -310,6 +313,7 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
     def closeEvent(self, event):
+        if self.module_resume:self.module_resume.shutdown()
         if self.overlay_visibility: self.overlay_visibility.shutdown()
         self.quick_menu.shutdown()
         self.pet_panel.shutdown()
@@ -323,7 +327,7 @@ class MainWindow(QMainWindow):
         self.combat.feed.shutdown()
         self.alert_timer.stop()
         self.overlay.stop()
-        self.sonar.stop()
+        self.sonar.shutdown()
         self.sonar_alert.timer.stop()
         self.sonar_alert.close()
         self.overlay_page.shutdown()

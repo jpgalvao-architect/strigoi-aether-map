@@ -358,5 +358,10 @@
   "Limite de desenho dos marcadores. Comece com 60 Hz; reduza para 30 Hz se o jogo perder fluidez. Não precisa igualar a frequência do monitor.": "Marker drawing limit. Start with 60 Hz; lower it to 30 Hz if the game slows down. It does not need to match the monitor refresh rate.",
   "Frequência de análise do terreno. 30 fps é um bom ponto de partida. Valores maiores usam mais processamento. O mapa grande tem limite de 30 fps.": "Terrain analysis rate. Start with 30 fps. Higher values use more processing. The large map is capped at 30 fps.",
   "Limite visual: {target} Hz • redesenho somente quando necessário": "Visual limit: {target} Hz • redraw only when needed",
-  "Rastreamento visual: {rate} atualizações/s • a taxa real depende do computador.": "Visual tracking: {rate} updates/s • actual rates depend on the computer."
+  "Rastreamento visual: {rate} atualizações/s • a taxa real depende do computador.": "Visual tracking: {rate} updates/s • actual rates depend on the computer.",
+  "Aguardando jogo ou configuração": "Waiting for game or setup",
+  "Aguardando o jogo para retomar o overlay": "Waiting for the game to resume the overlay",
+  "Aguardando o jogo para retomar o sonar": "Waiting for the game to resume Sonar",
+  "Selecione o minimapa para retomar o overlay": "Select the minimap to resume the overlay",
+  "O áudio é analisado neste computador e não é gravado. Sua escolha de ativação fica salva; o sonar aguarda o jogo para retomar.": "Audio is analyzed on this PC and is not recorded. Your activation choice is saved; Sonar waits for the game before resuming."
 }

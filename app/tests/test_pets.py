@@ -143,7 +143,7 @@ def test_pets_page_keyboard_filters_languages_and_stable_navigation(qapp, tmp_pa
                    + ' '.join(m.name.lower() for m in window.pets.store.by_id[page.grid.item(i).data(Qt.ItemDataRole.UserRole)].monsters))
                    for i in range(page.grid.count()))
         set_language('en_US');page.refresh()
-        assert page.favorite.text() == 'Favorite'
+        assert page.favorite.text() == 'Track this pet'
         assert page.search.placeholderText() == 'Search pets or monsters…'
         window.navigate('sonar')
         assert window.pages[window.stack.currentIndex()] is window.sonar_page

@@ -208,6 +208,7 @@ class NotificationSettings(Model):
 class OverlaySettings(Model):
     controls_position: tuple[int,int] | None = None
     enabled: bool = False
+    resume_enabled: bool = False
     opacity: float = Field(default=0.8, ge=0.1, le=1)
     scale: float = Field(default=1.0, ge=0.5, le=3)
     threshold: float = Field(default=0.96, ge=0.8, le=1)
@@ -222,7 +223,7 @@ class OverlaySettings(Model):
     events_panel_position: tuple[int, int] | None = None
     events_panel_event: str = ""
     layers: Literal["atlas", "cubes", "gathering", "all"] = "atlas"
-    map_view: Literal["large", "minimap"] = "large"
+    map_view: Literal["large", "minimap"] = "minimap"
     minimap_area: str = ""
     render_hz: int = Field(default=60, ge=15, le=360)
     capture_hz: int = Field(default=30, ge=10, le=60)
@@ -332,6 +333,7 @@ class Preferences(Model):
     remote_auto_refresh: bool = False
     remote_interval_minutes: int = Field(default=30, ge=5, le=1440)
     sonar_enabled: bool = False
+    sonar_resume: bool = False
     sonar_process_name: str = ""
     sonar_sensitivity: Literal["balanced", "sensitive"] = "balanced"
     sonar_alert_position: tuple[int, int] | None = None

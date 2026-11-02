@@ -100,13 +100,14 @@ class SonarPage(QWidget):
         self.stop_button=button('Parar sonar',service.stop)
         body.addLayout(row(self.start_button,self.stop_button,button('Testar aviso visual',self.test_notice)))
         body.addWidget(label('O aviso indica um som compatível, sem revelar posição ou distância. A detecção pode falhar em meio a outros efeitos.','subtitle',True))
-        body.addWidget(label('O áudio é analisado neste computador e não é gravado. O sonar começa desligado a cada abertura.','subtitle',True))
+        body.addWidget(label('O áudio é analisado neste computador e não é gravado. Sua escolha de ativação fica salva; o sonar aguarda o jogo para retomar.','subtitle',True))
         layout.addWidget(frame)
         self.last_detection=label('Nenhum aviso nesta sessão.','subtitle',True)
         layout.addWidget(self.last_detection)
         layout.addStretch()
         service.status_changed.connect(self.status.setText)
         service.active_changed.connect(self.refresh_active)
+        context.changed.connect(lambda:self.stop_button.setEnabled(service.active or context.prefs.sonar_resume))
         service.detected.connect(self.show_detection)
         service.level_updated.connect(self.show_level)
         self.refresh_processes();self.refresh_active(False)
@@ -151,7 +152,7 @@ class SonarPage(QWidget):
         if not active:
             self.alert.hide()
         for widget in [self.process,self.refresh_button,self.sensitivity,self.start_button]:widget.setEnabled(not active)
-        self.stop_button.setEnabled(active)
+        self.stop_button.setEnabled(active or self.context.prefs.sonar_resume)
 
     def start(self):
         try:

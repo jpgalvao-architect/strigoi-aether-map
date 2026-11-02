@@ -67,6 +67,7 @@ def test_quick_map_uses_calibration_or_opens_configuration(qapp, tmp_path, monke
     try:
         window.quick_menu.toggle_maps(True)
         assert window.stack.currentIndex() == 6 and window.overlay.worker is None
+        window.overlay_page.cancel_area()
         area = tmp_path / "saved-area.json"; area.write_text("{}")
         window.context.prefs.overlay.minimap_area = str(area)
         calls = []

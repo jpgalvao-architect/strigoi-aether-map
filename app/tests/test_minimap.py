@@ -165,6 +165,7 @@ def test_full_map_start_uses_whole_screen_without_manual_selection(qapp,tmp_path
     window=MainWindow(AppContext(tmp_path))
     called=[]
     monkeypatch.setattr(window.overlay,'start',lambda:called.append(True))
+    window.overlay_page.view_kind.setCurrentIndex(window.overlay_page.view_kind.findData('large'))
     window.overlay_page.start()
     assert called
     area=load_model(__import__('pathlib').Path(window.context.prefs.overlay.capture_area),CaptureArea)

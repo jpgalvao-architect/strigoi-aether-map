@@ -1,6 +1,16 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.9 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.10 · Windows x64**
+
+Beta 10 defaults new installations to minimap + automatic full map. The
+toggle opens area selection when needed; later activations keep the app open.
+Maps and Sonar remember activation choices and resume when the game appears.
+Pets now uses “Tracked”, preserving existing marked pets. Layer controls require
+a recognized minimap and hide over menus. Known pet totals retain their
+current/required format when capture confirmation is lost, instead of being
+replaced by session gains. The public response checked does not include the
+full collection or soul balances; synchronization continues through the game
+connection and on-screen details.
 
 Beta 9 keeps Battlefield · Arena of Tactics in the app agenda only.
 Its windows no longer appear in the floating panel or its event picker.
@@ -36,7 +46,7 @@ The Vigília interface keeps module controls beside your session. The Impacto co
 
 Beta 12 puts frequency controls in **Overlay → Overlay performance**. Choose 15–360 Hz for drawing and 10–60 fps for minimap capture (up to 30 fps on the full map), with immediate changes and saved preferences. New installations start at 60 Hz/30 fps; existing choices are preserved. Stationary markers no longer redraw continuously, and visual processing uses fewer threads. In-game FPS improvement still needs checking after updating.
 
-Beta 11 adds Pets with 208 original portraits, favorites, Insight goals, a map filter, and a compact quick-menu panel. The initial collection matched two SA logins. Farming sites are client references without guaranteed current presence; live radar distance and direction are not available yet. See [Pets](docs/PETS.en-US.md).
+Beta 11 adds Pets with 208 original portraits, tracked pets, Insight goals, a map filter, and a compact quick-menu panel. The initial collection matched two SA logins. Farming sites are client references without guaranteed current presence; live radar distance and direction are not available yet. See [Pets](docs/PETS.en-US.md).
 
 Beta 10 makes party decoding more resilient: optional combat-power metadata
 cannot discard valid identities, and later members can be recovered after
@@ -95,7 +105,7 @@ Drag the header to move it.
 
 For Sonar, open the game, refresh applications, select AION 2 and enable
 Sonar. Audio is analyzed locally, without microphone access or recording.
-It starts off each session. A possible-cube alert is a sound cue, not proof
+Your activation choice is saved; it waits for the game before resuming. A possible-cube alert is a sound cue, not proof
 of a cube or its exact location. Test visual alert is labeled as a test.
 
 Click the floating mascot to expand quick controls for Sonar, maps, combat

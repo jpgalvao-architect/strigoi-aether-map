@@ -108,5 +108,16 @@
   "+{count} almas nesta captura": "+{count} souls this capture",
   "Os ganhos desta captura não são o total da coleção.": "Gains in this capture are not the collection total.",
   "Leitura desta captura": "Current capture reading",
-  "Abra os detalhes no jogo": "Open in-game pet details"
+  "Abra os detalhes no jogo": "Open in-game pet details",
+  "Escolha os pets em acompanhamento e veja seu progresso.": "Choose the pets to track and follow your progress.",
+  "Pets em acompanhamento": "Tracked pets",
+  "Marque um pet para acompanhar o farm aqui.": "Track a pet in the collection to follow its farming here.",
+  "Só em acompanhamento": "Tracked only",
+  "Acompanhar este pet": "Track this pet",
+  "Em acompanhamento": "Tracked",
+  "{registered} registrados · {favorites} em acompanhamento · {count} pets no catálogo": "{registered} recorded · {favorites} tracked · {count} pets in catalogue",
+  "{count} em acompanhamento": "{count} tracked",
+  "Expandir pets acompanhados": "Expand tracked pets",
+  "Pets lê Insight e almas no quadro de detalhes aberto no jogo. A leitura acontece localmente, sem salvar imagens nem o texto da tela. Marcar um pet para acompanhar escolhe o que aparece no painel; não fixa o contador.": "Pets reads Insight and souls from the details panel open in game. Reading stays local; images and screen text are not saved. Tracking selects what appears on the panel; it does not freeze the counter.",
+  "Conferir": "Check"
 }

@@ -145,6 +145,11 @@
           "title": "Enabled",
           "type": "boolean"
         },
+        "resume_enabled": {
+          "default": false,
+          "title": "Resume Enabled",
+          "type": "boolean"
+        },
         "opacity": {
           "default": 0.8,
           "maximum": 1,
@@ -253,7 +258,7 @@
           "type": "string"
         },
         "map_view": {
-          "default": "large",
+          "default": "minimap",
           "enum": [
             "large",
             "minimap"
@@ -742,6 +747,11 @@
     "sonar_enabled": {
       "default": false,
       "title": "Sonar Enabled",
+      "type": "boolean"
+    },
+    "sonar_resume": {
+      "default": false,
+      "title": "Sonar Resume",
       "type": "boolean"
     },
     "sonar_process_name": {

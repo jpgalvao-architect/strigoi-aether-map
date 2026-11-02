@@ -3,7 +3,8 @@
   "timezone": "America/Sao_Paulo",
   "overlay": {
     "enabled": false,
-    "map_id": "altgard"
+    "map_id": "altgard",
+    "map_view": "minimap"
   },
   "sonar_enabled": false,
   "map_id": "altgard",

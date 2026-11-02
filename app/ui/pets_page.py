@@ -99,7 +99,7 @@ class PetsPage(QWidget):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(26, 20, 26, 20)
         layout.setSpacing(12)
-        layout.addWidget(page_header('Pets', 'Escolha seus favoritos e acompanhe sua coleção.'))
+        layout.addWidget(page_header('Pets', 'Escolha os pets em acompanhamento e veja seu progresso.'))
         top = QHBoxLayout()
         self.summary = label('', 'subtitle')
         top.addWidget(self.summary, 1)
@@ -143,7 +143,7 @@ class PetsPage(QWidget):
                           ('Em evolução','growing'), ('Meta atingida','complete'),
                           ('Não registrados','unknown')]:
             self.state.addItem(text, key)
-        self.favorite_filter = QCheckBox('Só favoritos')
+        self.favorite_filter = QCheckBox('Só em acompanhamento')
         layout.addLayout(row(self.search, self.family, self.map_choice, self.state, self.favorite_filter))
         maps = QHBoxLayout()
         self.map_layer = QCheckBox('Mostrar locais nos mapas')
@@ -153,7 +153,7 @@ class PetsPage(QWidget):
         maps.addStretch()
         maps.addWidget(label('Nos mapas', 'subtitle'))
         self.map_filter = QComboBox()
-        for text, key in [('Todos os pets','all'), ('Favoritos','favorites'), ('Metas pendentes','needed')]:
+        for text, key in [('Todos os pets','all'), ('Em acompanhamento','favorites'), ('Metas pendentes','needed')]:
             self.map_filter.addItem(text, key)
         self.map_filter.currentIndexChanged.connect(self.map_filter_changed)
         maps.addWidget(self.map_filter)
@@ -192,7 +192,7 @@ class PetsPage(QWidget):
         detail.addWidget(self.family_caption)
         self.progress = label('', 'subtitle', True)
         detail.addWidget(self.progress)
-        self.favorite = QCheckBox('Favorito')
+        self.favorite = QCheckBox('Acompanhar este pet')
         self.favorite.toggled.connect(self.favorite_changed)
         detail.addWidget(self.favorite)
         self.goal = QComboBox()
@@ -331,7 +331,7 @@ class PetsPage(QWidget):
         entries = store.profile.entries.values()
         registered = sum(entry.progress is not None and entry.progress.level is not None for entry in entries)
         favorites = sum(entry.favorite for entry in store.profile.entries.values())
-        self.summary.setText(f'{registered} registrados · {favorites} favoritos · {len(pets)} pets no catálogo')
+        self.summary.setText(f'{registered} registrados · {favorites} em acompanhamento · {len(pets)} pets no catálogo')
         selected = self.selected_id
         self.grid.blockSignals(True)
         self.grid.clear()

@@ -1,6 +1,16 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.9 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.10 · Windows x64**
+
+A beta 10 usa minimapa + mapa grande automático como padrão em novas
+instalações. O toggle abre a seleção quando necessário; ativações seguintes
+mantêm a janela aberta. As escolhas de Mapas e Sonar ficam salvas e são
+retomadas quando o jogo aparece. Pets usa “Em acompanhamento”, preservando
+os pets já marcados. Os controles de camadas exigem um minimapa reconhecido e
+somem nos menus. O painel de pets conserva o total atual/necessário em vez de
+trocá-lo pelos ganhos da sessão quando perde a confirmação da leitura.
+A consulta pública verificada não inclui a coleção completa nem os saldos
+de almas; a sincronização continua pelo jogo e pela tela.
 
 A beta 9 mantém a Battlefield · Arena of Tactics apenas na agenda do app.
 Suas janelas não aparecem no painel flutuante nem no seletor de eventos
@@ -151,7 +161,7 @@ Captura visual começa somente ao ativar o overlay nesta sessão. Imagens
 ficam na memória; a seleção salva somente seus limites. Preferências e visitas
 ficam neste computador. O sonar captura somente o áudio do aplicativo
 escolhido e seus processos filhos, em memória, sem microfone ou gravação.
-Overlay e sonar começam desligados a cada abertura. A medição de combate
+Mapas e Sonar lembram a escolha de ativação e aguardam o jogo para retomar. A medição de combate
 começa automaticamente quando habilitada nas Configurações e Npcap está
 disponível. Não há telemetria.
 Rede é usada apenas para uma

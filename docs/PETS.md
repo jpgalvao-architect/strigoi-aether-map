@@ -1,6 +1,6 @@
 # Pets
 
-A aba **Pets** reúne o catálogo, os favoritos e seu progresso. A versão
+A aba **Pets** reúne o catálogo, os pets em acompanhamento e seu progresso. A versão
 0.10.0-beta.4 inclui retratos originais de 208 pets. O catálogo de referência
 não garante que todos estejam disponíveis na sua região.
 
@@ -8,7 +8,7 @@ não garante que todos estejam disponíveis na sua região.
 
 1. Abra o Azphelumbra. O contador também funciona com o personagem já logado.
 2. Na aba **Pets**, confirme a região e deixe **Sincronizar com o jogo** ativo.
-3. Favorite os pets que deseja acompanhar. Os ganhos recebidos aparecem como
+3. Marque os pets que deseja acompanhar. Os ganhos recebidos aparecem como
    **+N almas nesta captura**, mesmo antes de conhecer o total da coleção.
 4. Abra os detalhes de um pet no jogo: o app lê **Pet Insight**, as almas e
    o total exibido, sem preencher campos ou importar arquivos. Duas leituras
@@ -51,11 +51,11 @@ vivo após instalar esta correção ainda precisa ser conferida.
 ## Escolher o que acompanhar
 
 Busque pelo nome do pet ou de um monstro. Use os filtros de família, mapa,
-progresso e favoritos. Escolha uma meta de Insight e marque **Favorito**.
-Um favorito continua marcado depois de ser adquirido.
+progresso e pets acompanhados. Escolha uma meta de Insight e marque **Acompanhar este pet**.
+Um pet acompanhado continua marcado depois de ser adquirido.
 
 Ative **Mostrar painel de pets** ou use a opção **Painel de pets** no menu
-rápido. O painel acompanha os favoritos: recolhido mostra uma linha;
+rápido. O painel acompanha os pets em acompanhamento: recolhido mostra uma linha;
 expandido mostra até três e permite rolar pelos demais. Arraste pelo título,
 trave a posição e ajuste a opacidade na aba Pets. **Restaurar painel** traz
 um painel perdido de volta à área visível. Fechá-lo mantém a sincronização.
@@ -65,7 +65,7 @@ Alt+Tab e menus reconhecidos ocultam o painel temporariamente.
 
 Use **Ver locais no Atlas** no detalhe de um pet. A camada Pets pode aparecer
 junto de cubos e coletas e segue as mesmas escolhas nos overlays dos mapas.
-O filtro **Nos mapas** permite acompanhar todos, favoritos ou metas pendentes.
+O filtro **Nos mapas** permite acompanhar todos, pets acompanhados ou metas pendentes.
 
 Os 11.624 locais são referências documentadas de monstros nos mapas completos
 de Altgard e Verteron, identificadas como posições possíveis. A presença atual
@@ -75,3 +75,14 @@ continuam consultáveis sem criar um marcador inventado.
 Esta versão acompanha a coleção e os locais de referência. Ainda não rastreia
 NPCs em movimento nem apresenta distância ou direção de um radar ao vivo.
 Fontes e direitos estão em [SOURCES.md](SOURCES.md) e `THIRD_PARTY.md`.
+
+## Consulta pública de personagens
+
+Verificação em 2 de novembro de 2026: o [perfil oficial de personagens](https://aion2.plaync.com/pt-br/characters/index?region=la) e sua resposta pública de equipamentos expõem o pet equipado, com ID, nome, ícone e nível. A resposta conferida não inclui a coleção completa nem os saldos de almas de cada pet. Não foi identificada uma API pública suportada com esses totais.
+
+Por isso, o app mantém a sincronização pela conexão e pelos detalhes visíveis no jogo. Registros salvos continuam identificados como salvos até chegar uma leitura atual; valores desconhecidos não viram zero nem são apresentados como atualizados.
+
+Um total conhecido permanece no formato atual/necessário. Se a captura perder
+a confirmação, o painel identifica o registro como Salvo ou Conferir,
+sem trocá-lo pelos ganhos da sessão. Abra os detalhes novamente para confirmar
+o saldo após uma lacuna; com a leitura válida, cada ganho incrementa o total.

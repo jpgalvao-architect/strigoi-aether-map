@@ -51,11 +51,12 @@ def test_controls_do_not_emit_alerts(reference,kind):
     assert hits==[]
 
 
-def test_capture_never_resumes_from_saved_preference(qapp,tmp_path):
+def test_saved_enable_becomes_resume_request_without_starting_preview_audio(qapp,tmp_path):
     atomic_json(tmp_path/'preferences.json',Preferences(sonar_enabled=True,sonar_process_name='AION2.exe'))
     context=AppContext(tmp_path)
     service=SonarService(context)
     assert not context.prefs.sonar_enabled
+    assert context.prefs.sonar_resume
     assert service.worker is None and not service.active
     assert context.prefs.sonar_process_name=='AION2.exe'
 

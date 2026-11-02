@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Small external module launcher; hiding panels never changes capture state."""
-from pathlib import Path
 from PySide6.QtCore import Qt, QPoint, QSize, QRectF
 from PySide6.QtGui import QGuiApplication, QIcon, QPainter, QColor, QPen
 from PySide6.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout
@@ -156,8 +155,8 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         if not visible:
             self.panel.hide()
         self.setVisible(visible)
-        values = {"sonar": self.main.sonar.active,
-                  "maps": self.context.prefs.overlay.enabled and self.main.overlay.worker is not None,
+        values = {"sonar": self.context.prefs.sonar_resume or self.main.sonar.active,
+                  "maps": self.context.prefs.overlay.resume_enabled or self.context.prefs.overlay.enabled and self.main.overlay.worker is not None,
                   "combat": self.context.prefs.combat.panel_visible,
                   "pets": self.context.prefs.pets.panel_visible,
                   "routine": self.context.prefs.routine.panel_visible,
@@ -172,6 +171,11 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
             if key == "combat" and checked and not self.main.combat.in_instance:
                 self.states[key].setText("Aguardando instância")
                 continue
+            if key in ('maps','sonar') and checked:
+                running=self.main.sonar.active if key=='sonar' else self.main.overlay.worker is not None
+                if not running:
+                    self.states[key].setText('Aguardando jogo ou configuração')
+                    continue
             self.states[key].setText(("Visível" if checked else "Oculto") if key in ("combat", "events", "pets", "routine")
                                      else ("Ativo" if checked else "Desligado"))
         self.note.setText("Ocultar o placar mantém a medição ativa" if self.context.prefs.combat.auto_capture
@@ -209,6 +213,8 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
 
     def toggle_sonar(self, enabled):
         if enabled:
+            self.context.prefs.sonar_resume=True
+            self.context.save()
             self.main.sonar_page.refresh_processes(); self.main.sonar_page.start()
             if not self.main.sonar.active:
                 self.open_page('sonar')
@@ -218,16 +224,14 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
 
     def toggle_maps(self, enabled):
         if enabled:
-            saved = self.context.prefs.overlay.minimap_area
-            if not saved or not Path(saved).is_file():
-                self.open_page(6)
-                self.main.overlay_page.status.setText("Selecione a área do minimapa para usar os dois mapas")
-            else:
-                page = self.main.overlay_page
-                page.view_kind.setCurrentIndex(page.view_kind.findData("minimap"))
-                page.start()
-                if not self.context.prefs.overlay.enabled:
-                    self.open_page(6)
+            page = self.main.overlay_page
+            if page._selection_pending:return
+            page.view_kind.setCurrentIndex(page.view_kind.findData("minimap"))
+            self.context.prefs.overlay.resume_enabled=True
+            self.context.save()
+            if not page.minimap_ready():self.open_page('overlay')
+            page.start()
+            if not self.context.prefs.overlay.enabled and not page._selection_pending:self.open_page('overlay')
         else:
             self.main.overlay_page.stop()
         self.refresh()

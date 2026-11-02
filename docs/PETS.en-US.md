@@ -1,6 +1,6 @@
 # Pets
 
-The **Pets** tab combines the catalogue, favorites, and your collection.
+The **Pets** tab combines the catalogue, tracked pets, and your collection.
 Version 0.10.0-beta.4 includes original portraits for 208 pets. The reference
 catalogue does not guarantee availability in every region.
 
@@ -8,7 +8,7 @@ catalogue does not guarantee availability in every region.
 
 1. Open Azphelumbra. The counter also works if your character is already logged in.
 2. In **Pets**, check your region and leave **Sync with game** enabled.
-3. Favorite the pets to track. Received gains show **+N souls this capture**
+3. Mark the pets you are farming. Received gains show **+N souls this capture**
    even before the collection total is known.
 4. Open a pet's details in game. Two matching readings confirm **Pet Insight**,
    souls and the displayed target, without filling fields or importing files.
@@ -38,19 +38,21 @@ Importing preserves a previous copy, and exporting creates a backup.
 
 The initial snapshot matched the game in two SA logins. Kailin and Duduka
 soul gains were received live in SA. Level-up events still need a live check.
-After a data gap or an unresolved level-up, reopen this pet's details to sync
-its total. User-provided SA screenshots were read as 62/75 and 63/75; the
+A known total remains visible as current/required even if capture confirmation
+is lost; a Saved or Check label distinguishes it from a live balance. Capture
+gains are shown alone only when no progress is known. After a data gap or an
+unresolved level-up, reopen this pet's details to sync its total. User-provided SA screenshots were read as 62/75 and 63/75; the
 screen-to-pickup sequence passed controlled tests. Live capture after installing
 this correction still needs verification.
 
 ## Choose what to track
 
 Search by pet or monster name and filter by family, map, progress, or
-favorites. Choose an Insight goal and mark **Favorite**. Acquiring a pet
-does not remove its favorite status.
+tracked pets. Choose an Insight goal and mark **Track this pet**. Acquiring a pet
+does not remove it from tracking.
 
 Enable **Show pets panel**, or use **Pets panel** in the quick menu. The
-compact view shows one favorite; the expanded view shows up to three with
+compact view shows one tracked pet; the expanded view shows up to three with
 scrolling for the rest. Drag the title, lock its position, and change opacity
 in Pets. **Restore panel** brings it back on screen. Closing the panel keeps
 sync running. Alt+Tab and recognized menus temporarily hide it.
@@ -59,7 +61,7 @@ sync running. Alt+Tab and recognized menus temporarily hide it.
 
 Use **View locations in Atlas** in a pet's details. Pets can appear alongside
 cubes and gatherables, using the same choices on the map overlays. **On maps**
-can include all pets, favorites, or pending goals.
+can include all pets, tracked pets, or pending goals.
 
 The 11,624 locations are documented monster spawn references for the complete
 Altgard and Verteron maps, marked as possible sites. Current presence and
@@ -69,3 +71,9 @@ remain searchable without an invented marker.
 This version tracks collection progress and reference sites. It does not yet
 track moving NPCs or display live radar distance and direction. See
 [sources](SOURCES.md) and `THIRD_PARTY.md` for provenance and rights.
+
+## Public character lookup
+
+Checked on November 2, 2026: the [official character profile](https://aion2.plaync.com/en-us/characters/index?region=la) and its public equipment response expose the equipped pet with ID, name, icon and level. The checked response does not include the complete collection or per-pet soul balances. No supported public API for those totals was identified.
+
+The app therefore keeps connection and on-screen synchronization. A saved record remains labeled as saved until fresh evidence arrives; unknown totals are never replaced with zero or claimed to be current.

@@ -335,6 +335,7 @@ class OverlayService(QObject):
         self.last_result = time.perf_counter()
         self.matches = 0
         settings.enabled = True
+        settings.resume_enabled = True
         self.sync()
         self.worker.start()
         self.set_status("Aguardando referências visuais")
@@ -378,6 +379,7 @@ class OverlayService(QObject):
         self.detection_started = False
         self.last_report=0.;self.observation_count=0;self.observation_hz=0.;self.observation_since=time.perf_counter()
         settings.enabled = True
+        settings.resume_enabled = True
         self.sync()
         self.worker.start()
         self.set_status("Preparando reconhecimento do mapa…")

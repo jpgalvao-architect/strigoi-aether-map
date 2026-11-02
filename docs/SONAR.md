@@ -17,7 +17,9 @@ um aviso visual permite acompanhar uma pista sonora durante a exploração.
    correspondências e desaparece oito segundos após a última. Você pode
    movê-lo ou dispensá-lo.
 5. Clique em **Parar sonar** para encerrar a captura. Fechar o app também
-   encerra o componente nativo. O sonar nunca inicia sozinho ao reabrir.
+   encerra o componente nativo, mas conserva sua escolha de ativação. Se estava
+   habilitado, o sonar aguarda o AION 2 e retoma com o PID atual ao reabrir.
+   Usar **Parar sonar** ou desligar o toggle mantém o recurso desligado.
 
 **Testar aviso visual** exibe um cartão identificado como teste, sem capturar
 áudio, sem mostrar uma leitura de intensidade e sem declarar uma detecção.

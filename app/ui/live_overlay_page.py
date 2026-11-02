@@ -19,6 +19,9 @@ class LiveOverlayPage(QWidget):
         super().__init__()
         self.context, self.service = context, service
         self.selector = None
+        self._selection_pending=False
+        self._activate_after_selection=False
+        self._closed=False
         self.dataset_identity = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(26,20,26,20)
@@ -39,6 +42,13 @@ class LiveOverlayPage(QWidget):
         for screen in QGuiApplication.screens():
             g=screen.geometry();ratio=screen.devicePixelRatio()
             self.screens.addItem(f"{screen.name()} • {round(g.width()*ratio)} × {round(g.height()*ratio)} pixels • {ratio*100:.0f}%", screen.name())
+        try:
+            from app.infrastructure.storage import load_model
+            saved=context.prefs.overlay.minimap_area if context.prefs.overlay.map_view=='minimap' else context.prefs.overlay.capture_area
+            area=load_model(Path(saved),CaptureArea)
+            index=self.screens.findData(area.screen_name)
+            if index>=0:self.screens.setCurrentIndex(index)
+        except (OSError,ValueError):pass
         from app.ui.layer_menu import AtlasLayerMenu
         self.layers = AtlasLayerMenu(context)
         self.opacity = QDoubleSpinBox()
@@ -125,7 +135,7 @@ class LiveOverlayPage(QWidget):
                 self.maps.addItem(m.name.removesuffix(' • base compartilhada'),m.id)
             self.maps.setCurrentIndex(max(0,self.maps.findData(self.context.prefs.overlay.map_id)))
             self.dataset_identity = self.context.dataset
-        active = self.context.prefs.overlay.enabled or self.selector is not None
+        active = self.context.prefs.overlay.enabled or self._selection_pending
         for widget in [self.maps,self.screens,self.minimum,self.view_kind,self.start_button]:
             widget.setEnabled(not active)
         self.stop_button.setEnabled(self.context.prefs.overlay.enabled)
@@ -183,7 +193,21 @@ class LiveOverlayPage(QWidget):
         prefs.capture_hz=self.capture_rate.value()
         self.context.save()
 
-    def select_area(self):
+    def minimap_ready(self):
+        try:
+            from app.infrastructure.storage import load_model
+            area=load_model(Path(self.context.prefs.overlay.minimap_area),CaptureArea)
+            screens=[s for s in QGuiApplication.screens() if s.name()==area.screen_name]
+            if len(screens)!=1:return False
+            screen=screens[0];g=screen.geometry()
+            return (area.view_kind=='minimap' and area.map_id==self.maps.currentData()
+                and area.screen_name==self.screens.currentData()
+                and (area.screen_x,area.screen_y,area.screen_width,area.screen_height)==(g.x(),g.y(),g.width(),g.height())
+                and abs(area.pixel_ratio-screen.devicePixelRatio())<.01)
+        except (ValueError,OSError):return False
+
+    def select_area(self,*,activate_after=False):
+        if self._selection_pending or self._closed:return
         self.service.stop()
         self.save_fields()
         screens = [s for s in QGuiApplication.screens() if s.name()==self.screens.currentData()]
@@ -191,14 +215,18 @@ class LiveOverlayPage(QWidget):
             self.status.setText("Monitor indisponível. Reabra o app após conectar a tela.")
             return
         self.screen = screens[0]
+        self._selection_pending=True
+        self._activate_after_selection=activate_after or self.context.prefs.overlay.resume_enabled
         self.main_window = self.window()
         self.was_visible = self.main_window.isVisible()
         self.main_window.hide()
+        self.refresh()
         self.status.setText("Selecione a área do mapa na tela…")
         # Allow the app window to disappear before displaying the transparent selector.
         QTimer.singleShot(200,self.show_selector)
 
     def show_selector(self):
+        if self._closed or not self._selection_pending:return
         self.selector = ScreenSelection(self.screen)
         self.selector.chosen.connect(self.accept_area)
         self.selector.cancelled.connect(self.cancel_area)
@@ -210,6 +238,7 @@ class LiveOverlayPage(QWidget):
         if self.selector:
             self.selector.deleteLater()
             self.selector = None
+        self._selection_pending=False
         if self.was_visible:
             self.main_window.show()
             self.main_window.raise_()
@@ -217,6 +246,9 @@ class LiveOverlayPage(QWidget):
         self.refresh()
 
     def accept_area(self, rectangle):
+        resume=self._activate_after_selection
+        self._activate_after_selection=False
+        saved=False
         try:
             geometry = self.screen.geometry()
             area = CaptureArea(map_id=self.maps.currentData(),screen_name=self.screen.name(),
@@ -230,22 +262,32 @@ class LiveOverlayPage(QWidget):
                 self.context.prefs.overlay.capture_area = str(path)
             self.context.prefs.overlay.tracking_mode = "dynamic"
             self.context.save()
+            saved=True
             self.status.setText("Área salva. Ative o overlay com o mapa aberto.")
         except (ValueError,OSError) as exc:
             self.status.setText(str(exc))
         finally:
             self.finish_selection()
         routes=getattr(self.context,'routes',None)
-        if routes and routes.active and routes.route.map_id==self.maps.currentData() and self.view_kind.currentData()=='minimap':
-            self.start()
+        if saved and (resume or routes and routes.active and routes.route.map_id==self.maps.currentData()) and self.view_kind.currentData()=='minimap':
+            self.start(minimize=True)
 
     def cancel_area(self):
+        if self._activate_after_selection and not self.minimap_ready():
+            self.context.prefs.overlay.resume_enabled=False
+            self.context.save()
+        self._activate_after_selection=False
         self.status.setText("Seleção cancelada; área anterior preservada.")
         self.finish_selection()
 
-    def start(self):
+    def start(self,*,minimize=False):
         try:
             self.save_fields()
+            if self.context.prefs.overlay.map_view=='minimap' and not self.minimap_ready():
+                self.context.prefs.overlay.resume_enabled=True
+                self.context.save()
+                self.select_area(activate_after=True)
+                return
             if self.context.prefs.overlay.map_view=="large":
                 screens=[s for s in QGuiApplication.screens() if s.name()==self.screens.currentData()]
                 if len(screens)!=1:
@@ -259,12 +301,14 @@ class LiveOverlayPage(QWidget):
                 self.context.prefs.overlay.capture_area=str(path)
             self.context.prefs.overlay.tracking_mode = "dynamic"
             self.service.start()
-            # Minimize the companion so it does not cover the game area being recognized.
-            self.window().showMinimized()
+            self.context.prefs.overlay.resume_enabled=True
+            self.context.save()
+            if minimize:self.window().showMinimized()
         except Exception as exc:
             self.status.setText(str(exc))
 
     def stop(self):
+        self.context.prefs.overlay.resume_enabled=False
         self.service.stop()
         self.context.save()
 
@@ -289,6 +333,8 @@ class LiveOverlayPage(QWidget):
             QMessageBox.warning(self,"Referência fixa indisponível",str(exc))
 
     def shutdown(self):
+        self._closed=True
+        self._selection_pending=False
         self.rate_timer.stop()
         if self.selector:
             self.was_visible = False

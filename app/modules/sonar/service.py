@@ -137,6 +137,7 @@ class SonarService(QObject):
         self.active=True
         if self.context:
             self.context.prefs.sonar_enabled=True
+            self.context.prefs.sonar_resume=True
             self.context.save()
         self.set_status('Preparando áudio do jogo…')
         self.active_changed.emit(True)
@@ -190,6 +191,14 @@ class SonarService(QObject):
             worker.deleteLater()
         if self.context:
             self.context.prefs.sonar_enabled=False
+            self.context.prefs.sonar_resume=False
             self.context.save()
         self.active_changed.emit(False)
         self.set_status('Desligado')
+
+    def shutdown(self):
+        requested=self.context.prefs.sonar_resume if self.context else False
+        self.stop()
+        if self.context:
+            self.context.prefs.sonar_resume=requested
+            self.context.save()

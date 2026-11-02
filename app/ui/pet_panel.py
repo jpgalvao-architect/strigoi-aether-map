@@ -44,7 +44,7 @@ class PetPanel(HudSurface):
         header = QFrame(); header.setObjectName('petHeader')
         top = QHBoxLayout(header); top.setContentsMargins(6,2,3,2); top.setSpacing(3)
         picture = label(''); picture.setPixmap(icon('pets').pixmap(16,16)); top.addWidget(picture)
-        self.heading = label('Pets favoritos'); top.addWidget(self.heading,1)
+        self.heading = label('Pets em acompanhamento'); top.addWidget(self.heading,1)
         self.lock = QToolButton(); self.lock.setFixedSize(22,22)
         self.lock.clicked.connect(self.toggle_locked); top.addWidget(self.lock)
         self.expand = QToolButton(); self.expand.setFixedSize(22,22)
@@ -57,7 +57,7 @@ class PetPanel(HudSurface):
         self.list_widget = QWidget(); self.list_widget.setObjectName('petList')
         self.rows = QVBoxLayout(self.list_widget); self.rows.setContentsMargins(4,0,4,0); self.rows.setSpacing(0)
         self.scroller.setWidget(self.list_widget); layout.addWidget(self.scroller)
-        self.empty = label('Favorite um pet na coleção para acompanhá-lo aqui.', '', True)
+        self.empty = label('Marque um pet para acompanhar o farm aqui.', '', True)
         self.empty.setContentsMargins(7,5,7,5); layout.addWidget(self.empty)
         footer = QHBoxLayout(); footer.setContentsMargins(6,0,4,0)
         self.count = label(''); footer.addWidget(self.count,1)
@@ -102,10 +102,13 @@ class PetPanel(HudSurface):
                         if progress.required else tr(f'{progress.souls} almas'))
                 state=self.service.progress_status(pet.id)
                 gains=self.service.gain_count(pet.id)
-                if gains and state not in ('Sincronizado','Leitura desta captura'):
+                # A session gain is not a replacement for an absolute balance.
+                # Keep the last known total visible, with its freshness label;
+                # show capture gains alone only when there is no known progress.
+                if not caption and gains:
                     caption=tr('+{count} almas nesta captura').format(count=gains)
                 elif caption and state not in ('Sincronizado','Leitura desta captura'):
-                    caption+=' · '+tr({'Registro manual':'Manual','Registro salvo':'Salvo'}.get(state,'Aguardando leitura'))
+                    caption+=' · '+tr({'Registro manual':'Manual','Registro salvo':'Salvo'}.get(state,'Conferir'))
                 if not caption:caption=tr('Abra os detalhes no jogo')
                 detail = label(caption,'petProgress')
                 total=tr(progress_caption(entry))
@@ -117,9 +120,9 @@ class PetPanel(HudSurface):
             self.rows.addStretch()
         self.scroller.setVisible(bool(pets)); self.empty.setVisible(not pets)
         self.scroller.setFixedHeight(55*min(len(pets),3 if prefs.panel_expanded else 1))
-        self.count.setText(f'{len(pets)} favoritos')
+        self.count.setText(f'{len(pets)} em acompanhamento')
         self.expand.setIcon(icon('chevron-up' if prefs.panel_expanded else 'chevron-down'))
-        self.expand.setToolTip('Recolher painel' if prefs.panel_expanded else 'Expandir favoritos')
+        self.expand.setToolTip('Recolher painel' if prefs.panel_expanded else 'Expandir pets acompanhados')
         self.lock.setIcon(icon('lock' if prefs.panel_locked else 'unlock'))
         self.lock.setToolTip('Destravar posição' if prefs.panel_locked else 'Travar posição')
         self.setWindowOpacity(prefs.panel_opacity)

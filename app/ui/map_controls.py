@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-only
-"""Small Atlas-layer controls shared by the two game maps."""
+"""Atlas-layer controls visible only beside a confirmed minimap."""
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import QHBoxLayout
@@ -45,7 +45,12 @@ class MapControls(HudSurface):
             self.positioned=True
         self.move(max(area.left(),min(self.x(),area.right()-self.width()+1)),
                   max(area.top(),min(self.y(),area.bottom()-self.height()+1)))
-        self.setVisible(self.context.prefs.overlay.enabled and self.main.overlay.worker is not None)
+        overlay=self.main.overlay
+        ready=(self.context.prefs.overlay.enabled and overlay.worker is not None
+            and overlay.capture_area is not None and overlay.capture_area.view_kind=='minimap'
+            and overlay.window.registration is not None and overlay.matches>=2)
+        if not ready:self.layers.menu_widget.hide()
+        self.setVisible(bool(ready))
 
     def toggle_cubes(self,checked):
         disabled=self.context.prefs.disabled_categories

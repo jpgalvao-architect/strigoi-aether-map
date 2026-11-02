@@ -72,7 +72,7 @@ def test_live_selection_stores_only_bounds(qapp,tmp_path):
     page.main_window=window
     page.was_visible=False
     page.accept_area(QRect(30,40,400,300))
-    path=Path(window.context.prefs.overlay.capture_area)
+    path=Path(window.context.prefs.overlay.minimap_area)
     data=json.loads(path.read_text(encoding='utf-8'))
     assert (data['x'],data['y'],data['width'],data['height'])==(30,40,400,300)
     assert not list((tmp_path/'calibration').glob('*.png'))

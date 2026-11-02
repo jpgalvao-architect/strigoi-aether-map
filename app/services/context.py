@@ -54,7 +54,9 @@ class AppContext(QObject):
             self.prefs.ui_language=selected if selected in ('pt_BR','en_US') else 'pt_BR'
         if warning:
             self.messages.append(warning)
-        # Screen/audio capture starts off each session. Combat automation is a separate preference.
+        # Keep requested modules separate from workers, which start only in the runtime UI.
+        self.prefs.overlay.resume_enabled |= self.prefs.overlay.enabled
+        self.prefs.sonar_resume |= self.prefs.sonar_enabled
         self.prefs.overlay.enabled = False
         self.prefs.sonar_enabled = False
         if self.prefs.combat.panel_mode_release != "instances-v1":
