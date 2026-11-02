@@ -193,8 +193,8 @@ window.StrigoiGuide = {
         "en_US": "Pet collection"
       },
       "description": {
-        "pt_BR": "Favoritos, Insight e locais de farm.",
-        "en_US": "Favorites, Insight and farming locations."
+        "pt_BR": "Pets em acompanhamento, Insight e locais de farm.",
+        "en_US": "Tracked pets, Insight and farming locations."
       },
       "image": "pets",
       "steps": [
@@ -208,8 +208,8 @@ window.StrigoiGuide = {
             "en_US": "Pets → Sync with game"
           },
           "body": {
-            "pt_BR": "Deixe Sincronizar com o jogo ativo e favorite os pets que quer acompanhar. Mesmo com o personagem já logado, o painel mostra os ganhos recebidos nesta captura. A leitura automática usa Npcap.",
-            "en_US": "Leave Sync with game enabled and favorite the pets to track. Even when already logged in, the panel shows gains received in this capture. Automatic reading uses Npcap."
+            "pt_BR": "Deixe Sincronizar com o jogo ativo e marque Acompanhar este pet nos pets que está farmando. Sem uma leitura inicial, o painel mostra os ganhos recebidos nesta captura. A leitura automática usa Npcap.",
+            "en_US": "Leave Sync with game enabled and mark Track this pet for pets you are farming. Without an initial reading, the panel shows gains received in this capture. Automatic reading uses Npcap."
           },
           "tip": {
             "pt_BR": "Sem uma leitura inicial, ganhos recebidos não são o total da coleção. Abra os detalhes do pet no jogo para confirmar o saldo.",
@@ -218,16 +218,16 @@ window.StrigoiGuide = {
         },
         {
           "title": {
-            "pt_BR": "Escolha seus favoritos",
-            "en_US": "Choose your favorites"
+            "pt_BR": "Escolha o que acompanhar",
+            "en_US": "Choose what to track"
           },
           "where": {
             "pt_BR": "Pets → Busca, filtros e detalhe",
             "en_US": "Pets → Search, filters and details"
           },
           "body": {
-            "pt_BR": "Busque por pet ou monstro, filtre pelo mapa e escolha uma meta de Insight. Marque Favorito para acompanhar no painel. Pet Insight é diferente do nível da família.",
-            "en_US": "Search by pet or monster, filter by map and choose an Insight goal. Mark Favorite to track it in the panel. Pet Insight differs from the genus level."
+            "pt_BR": "Busque por pet ou monstro, filtre pelo mapa e escolha uma meta de Insight. Marque Acompanhar este pet para mostrar no painel. Pet Insight é diferente do nível da família.",
+            "en_US": "Search by pet or monster, filter by map and choose an Insight goal. Mark Track this pet to show it in the panel. Pet Insight differs from the genus level."
           },
           "tip": {
             "pt_BR": "Abra os detalhes do pet no jogo por alguns instantes. O app lê Pet Insight e almas; não confunde esse valor com o nível da família. Ajustar manualmente continua disponível.",
@@ -244,12 +244,12 @@ window.StrigoiGuide = {
             "en_US": "Pets or quick menu → Pets panel"
           },
           "body": {
-            "pt_BR": "Ative o painel, arraste pelo título e trave a posição. Recolha para uma linha ou expanda para até três, com rolagem para os demais favoritos. A aba Pets oferece opacidade e Restaurar painel.",
-            "en_US": "Enable the panel, drag its title and lock its position. Collapse to one row or expand to three, with scrolling for more favorites. Pets offers opacity and Restore panel controls."
+            "pt_BR": "Ative o painel, arraste pelo título e trave a posição. Recolha para uma linha ou expanda para até três, com rolagem para os demais pets acompanhados. A aba Pets oferece opacidade e Restaurar painel.",
+            "en_US": "Enable the panel, drag its title and lock its position. Collapse to one row or expand to three, with scrolling for more tracked pets. Pets offers opacity and Restore panel controls."
           },
           "tip": {
-            "pt_BR": "Fechar o painel mantém a sincronização ativa. Alt+Tab e menus reconhecidos o ocultam temporariamente.",
-            "en_US": "Closing the panel keeps sync running. Alt+Tab and recognized menus hide it temporarily."
+            "pt_BR": "O total atual/necessário não é substituído pelos ganhos da sessão. Se houver perda de dados, Salvo ou Conferir identifica o último total conhecido; abra os detalhes do pet para confirmar novamente. Fechar o painel mantém a sincronização.",
+            "en_US": "Current/required totals are not replaced by session gains. After data loss, Saved or Check marks the last known balance; reopen pet details to confirm it. Closing the panel keeps sync running."
           }
         },
         {
@@ -262,8 +262,8 @@ window.StrigoiGuide = {
             "en_US": "Pet details → View locations in Atlas"
           },
           "body": {
-            "pt_BR": "A camada Pets pode aparecer junto de cubos e coletas nos mapas. Use Todos, Favoritos ou Metas pendentes. Os locais são referências documentadas do cliente, sem confirmação da presença atual em SA.",
-            "en_US": "The Pets layer can appear alongside cubes and gatherables on maps. Choose All, Favorites or Pending goals. Locations are documented client references; current SA presence is unconfirmed."
+            "pt_BR": "A camada Pets pode aparecer junto de cubos e coletas nos mapas. Use Todos, Em acompanhamento ou Metas pendentes. Os locais são referências documentadas do cliente, sem confirmação da presença atual em SA.",
+            "en_US": "The Pets layer can appear alongside cubes and gatherables on maps. Choose All, Tracked or Pending goals. Locations are documented client references; current SA presence is unconfirmed."
           },
           "tip": {
             "pt_BR": "Ganhos de almas foram conferidos em SA. Os mapas indicam posições possíveis; distância e direção de um radar ao vivo não estão disponíveis.",
@@ -288,8 +288,8 @@ window.StrigoiGuide = {
             "en_US": "Is this panel a monster radar?"
           },
           "answer": {
-            "pt_BR": "Nesta versão, o painel acompanha seus pets favoritos e o progresso da coleção. Os mapas mostram locais de referência. Rastreamento de NPCs, distância e direção ainda dependem de validação no jogo.",
-            "en_US": "In this version the panel tracks favorite pets and collection progress. Maps show reference sites. NPC tracking, distance and direction still require in-game validation."
+            "pt_BR": "Nesta versão, o painel acompanha seus pets em acompanhamento e o progresso da coleção. Os mapas mostram locais de referência. Rastreamento de NPCs, distância e direção ainda dependem de validação no jogo.",
+            "en_US": "In this version the panel tracks tracked pets and collection progress. Maps show reference sites. NPC tracking, distance and direction still require in-game validation."
           }
         }
       ]
@@ -515,8 +515,8 @@ window.StrigoiGuide = {
             "en_US": "Overlay → Mode, Map, and Monitor"
           },
           "body": {
-            "pt_BR": "Com o jogo aberto, escolha Minimapa + mapa grande automático. Selecione o mapa atual e o monitor onde o jogo aparece. O minimapa suportado é retangular, com norte fixo.",
-            "en_US": "With the game open, choose Minimap + automatic full map. Select the current map and monitor showing the game. The supported minimap is rectangular with north fixed."
+            "pt_BR": "Minimapa + mapa grande automático é o padrão em novas instalações. Com o jogo aberto, confira o mapa e o monitor. O minimapa suportado é retangular, com norte fixo.",
+            "en_US": "Minimap + automatic full map is the default for new installations. With the game open, check the map and monitor. The supported minimap is rectangular with north fixed."
           },
           "tip": {
             "pt_BR": "Para usar só o mapa grande, escolha Mapa grande • monitor inteiro. Nesse modo não precisa selecionar uma área.",
@@ -533,8 +533,8 @@ window.StrigoiGuide = {
             "en_US": "Overlay → Select minimap"
           },
           "body": {
-            "pt_BR": "Clique em Selecionar minimapa. A janela do Azphelumbra desaparece temporariamente. Arraste um retângulo sobre o terreno do minimapa, sem incluir a barra com o nome da região nem as missões abaixo. Solte para salvar; Esc cancela.",
-            "en_US": "Click Select minimap. Azphelumbra temporarily hides its window. Drag a rectangle over minimap terrain, excluding the region title bar and quests below. Release to save; Esc cancels."
+            "pt_BR": "Ative Mapa + minimapa no menu rápido. Se ainda não há uma área válida, o app abre a seleção automaticamente. Arraste somente sobre o terreno, sem título ou missões. Solte para salvar e ativar; Esc cancela. Selecionar minimapa permite refazer o recorte.",
+            "en_US": "Enable Map + minimap in the quick menu. If no valid area exists, selection opens automatically. Drag over terrain only, excluding its title and quests. Release to save and enable; Esc cancels. Select minimap lets you repeat setup."
           },
           "tip": {
             "pt_BR": "Não precisa tirar screenshot nem mover arquivos. O app salva os limites da área.",
@@ -551,8 +551,8 @@ window.StrigoiGuide = {
             "en_US": "Overlay → Show / Enable overlay"
           },
           "body": {
-            "pt_BR": "Escolha as categorias em Camadas do Atlas e clique em Ativar overlay. O Azphelumbra minimiza e procura detalhes do terreno para posicionar os pontos. Depois, use o menu rápido para controlar os mapas.",
-            "en_US": "Choose categories in Atlas layers and click Enable overlay. Azphelumbra minimizes and looks for terrain details to place markers. Then use the quick menu to control maps."
+            "pt_BR": "Escolha as categorias em Camadas do Atlas e ative o overlay. A primeira seleção pode minimizar o app ao concluir; ativações seguintes mantêm sua janela aberta. A ativação é lembrada ao reiniciar e aguarda o jogo. Os controles abaixo do minimapa só aparecem quando ele é reconhecido.",
+            "en_US": "Choose categories in Atlas layers and enable the overlay. First setup may minimize the app on completion; later activations keep its window open. Activation is remembered across restarts and waits for the game. Controls below the minimap appear only when it is recognized."
           },
           "tip": {
             "pt_BR": "Os símbolos do minimapa têm tamanho 2× maior. Nos cubos, ↑ e ↓ indicam altura acima ou abaixo da mediana do grupo na fonte; não comparam com o personagem. Sem reconhecer o terreno, o app oculta os pontos. Alt+Tab oculta todos os overlays. Menus reconhecidos também ocultam os painéis; o mapa grande mantém seus marcadores. A medição continua.",
@@ -696,8 +696,8 @@ window.StrigoiGuide = {
             "en_US": "Sonar → Test visual alert / Stop Sonar"
           },
           "body": {
-            "pt_BR": "Testar aviso visual mostra só um cartão identificado como teste, sem detectar áudio. Para parar a análise, use Parar sonar ou o menu rápido. Ao reabrir o app, ative novamente.",
-            "en_US": "Test visual alert shows only a card labeled as a test, without detecting audio. Stop analysis using Stop Sonar or the quick menu. Enable it again after reopening the app."
+            "pt_BR": "Testar aviso visual mostra um cartão de teste sem detectar áudio. Parar sonar ou o menu rápido desliga a análise e salva essa escolha. Se fechar o app com o Sonar habilitado, ele aguarda o jogo e retoma ao reabrir, usando o processo atual.",
+            "en_US": "Test visual alert displays a test card without detecting audio. Stop Sonar or the quick menu stops analysis and saves that choice. If the app closes while Sonar is enabled, it waits for the game and resumes when reopened, using the current process."
           },
           "tip": {
             "pt_BR": "Fechar o app encerra a análise. O áudio não é gravado nem enviado.",
