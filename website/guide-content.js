@@ -1016,6 +1016,101 @@ window.StrigoiGuide = {
           }
         }
       ]
+    },
+    {
+      "id": "siege",
+      "icon": "siege",
+      "image": "siege",
+      "title": {
+        "pt_BR": "Siege Command",
+        "en_US": "Siege Command"
+      },
+      "description": {
+        "pt_BR": "Prepare calls e presets para Lower Reshanta.",
+        "en_US": "Prepare calls and presets for Lower Reshanta."
+      },
+      "steps": [
+        {
+          "title": {
+            "pt_BR": "Prepare o mapa e os anéis",
+            "en_US": "Prepare the map and rings"
+          },
+          "where": {
+            "pt_BR": "Siege Command → Importar mapa local",
+            "en_US": "Siege Command → Import local map"
+          },
+          "body": {
+            "pt_BR": "Importe o PNG calibrado de Lower Reshanta e carregue seu JSON em Catálogo de anéis → Importar catálogo local. Use arquivos que você tenha permissão para usar.",
+            "en_US": "Import the calibrated Lower Reshanta PNG. Load your JSON in Ring catalogue → Import local catalogue. Use files you have permission to use."
+          },
+          "tip": {
+            "pt_BR": "O instalador público inclui a lista de anéis pendentes por zona. O guia técnico explica o quadro cartográfico, os esquemas e a calibração.",
+            "en_US": "The public installer includes pending ring entries by zone. The technical guide explains the map frame, schemas, and calibration."
+          },
+          "action": {
+            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.11/docs/SIEGE.md",
+            "label": {
+              "pt_BR": "Abrir guia técnico",
+              "en_US": "Open technical guide"
+            }
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Monte e copie a call",
+            "en_US": "Build and copy a call"
+          },
+          "where": {
+            "pt_BR": "Siege Command → Call tática",
+            "en_US": "Siege Command → Tactical call"
+          },
+          "body": {
+            "pt_BR": "Escolha MID, BOT ou TOP. Selecione a ação, o objetivo e, se disponível, um anel numerado. Use Copiar call para passar o texto à área de transferência.",
+            "en_US": "Choose MID, BOT, or TOP. Select an action, objective, and a numbered ring when available. Copy call copies the text to your clipboard."
+          },
+          "tip": {
+            "pt_BR": "Os 12 objetivos foram transcritos da referência visual. Os anéis têm sua própria numeração, e a conferência em SA segue pendente.",
+            "en_US": "The 12 objectives come from the visual reference. Rings have their own numbering, and SA verification is pending."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Mostre os marcadores no jogo",
+            "en_US": "Show markers in the game"
+          },
+          "where": {
+            "pt_BR": "Siege Command → Overlay de siege",
+            "en_US": "Siege Command → Siege overlay"
+          },
+          "body": {
+            "pt_BR": "Clique em Ativar no mapa e minimapa. Se for a primeira vez, selecione a área do terreno no minimapa. Pressione M no jogo para ver os mesmos marcadores sobre o mapa grande. Ao fechar o mapa, eles retornam ao minimapa.",
+            "en_US": "Click Enable on map and minimap. On first setup, select the terrain area of the minimap. Press M in the game to see the same markers on the full map. Closing the map returns the markers to the minimap."
+          },
+          "tip": {
+            "pt_BR": "Os marcadores seguem o preset e aparecem quando o terreno é reconhecido. O HUD compacto de calls é opcional e pode ser arrastado pelo título.",
+            "en_US": "Markers follow your preset and appear when terrain is recognized. The compact call HUD is optional and can be dragged by its title."
+          }
+        },
+        {
+          "title": {
+            "pt_BR": "Crie um preset para o grupo",
+            "en_US": "Create a preset for your group"
+          },
+          "where": {
+            "pt_BR": "Siege Command → Camadas e presets",
+            "en_US": "Siege Command → Layers and presets"
+          },
+          "body": {
+            "pt_BR": "Duplique Siege Global v1 para personalizar apelidos, cores, camadas e marcadores. Exporte o JSON para uso com o mesmo catálogo de anéis.",
+            "en_US": "Duplicate Siege Global v1 to customize aliases, colors, layers, and markers. Export the JSON for use with the same ring catalogue."
+          },
+          "tip": {
+            "pt_BR": "Restaurar Global volta ao preset de referência. Para ver locais de pets em Lower Reshanta, importe um JSON autorizado.",
+            "en_US": "Restore Global returns to the reference preset. To see pet locations in Lower Reshanta, import an authorized JSON."
+          }
+        }
+      ],
+      "help": []
     }
   ],
   "ui": {
