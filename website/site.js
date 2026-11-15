@@ -128,9 +128,132 @@
     'legal.intro': 'The complete terms included in the installer. Original code uses GPLv3; third-party materials retain their respective rights and licenses.',
     'legal.license': 'Read the complete GPLv3 license →',
   };
+  const es = {
+    "skip": "Saltar al contenido",
+    "navigation": "Navegación principal",
+    "language": "Idioma",
+    "page.title": "Azphelumbra — tu próximo descubrimiento",
+    "legal.page.title": "Términos de uso — Azphelumbra",
+    "nav.explore": "Explorar",
+    "nav.sonar": "Sonar",
+    "nav.download": "Descargas",
+    "hero.title": "Descubre<br>tu próxima<br><em>aventura.</em>",
+    "hero.description": "Mapas, rutas de farmeo, cubos, mascotas, eventos y combate en un solo lugar. Aether se encarga del mapa mientras tú juegas.",
+    "hero.tour": "Conocer la aplicación",
+    "hero.platform": "Windows 10/11 · 64 bits · PT-BR / EN-US / ES-419",
+    "hero.free": "Gratis y de código abierto",
+    "hero.license": "Código GPLv3",
+    "hero.cube": "Tu próxima pista está cerca.",
+    "hero.map": "Tu cuaderno de exploración",
+    "hero.guardian": "PEQUEÑO GUARDIÁN. GRANDES DESCUBRIMIENTOS.",
+    "mascot.alt": "Aether, un pequeño vampiro inspirado en los asmodianos, con un mapa y alas oscuras",
+    "ribbon.maps": "Mapas reales",
+    "ribbon.overlay": "Superposición externa",
+    "ribbon.sonar": "Accesibilidad auditiva",
+    "ribbon.local": "Tus registros, en tu equipo",
+    "explore.eyebrow": "MENOS ALT+TAB. MÁS EXPLORACIÓN.",
+    "explore.title": "Un mapa que te acompaña<br><em>a donde vayas.</em>",
+    "explore.description": "Elige tus capas, registra tus visitas y sigue lo que te interesa mientras exploras.",
+    "showcase.label": "Explora las pantallas de la aplicación",
+    "tab.atlas": "Atlas",
+    "tab.overlay": "Superposición",
+    "tab.events": "Eventos",
+    "showcase.actual": "PANTALLA REAL DE LA APLICACIÓN",
+    "screen.atlas": "Atlas con el mapa de Altgard",
+    "screen.overlay": "Ajustes de superposición con capas compartidas entre el atlas, el minimapa y el mapa grande",
+    "screen.events": "Agenda de eventos de Azphelumbra con el perfil de Sudamérica",
+    "screen.sonar": "Pantalla del Sonar de cubos con controles para elegir la aplicación y la sensibilidad",
+    "showcase.atlas.title": "Tu atlas, con las capas que elijas",
+    "showcase.atlas.description": "Ve hierbas y cubos juntos, filtra los recursos y marca los lugares que ya visitaste.",
+    "showcase.overlay.title": "Un filtro para todos tus mapas",
+    "showcase.overlay.description": "Las capas siguen la región que el minimapa o el mapa grande reconocen. Tus filtros siguen activos cuando viajas.",
+    "showcase.events.title": "Ten a mano el horario de los eventos",
+    "showcase.events.description": "Elige el evento del panel flotante. Contrae el panel para seguir el próximo horario o expándelo para ver todo el día.",
+    "tab.routes": "Rutas",
+    "screen.routes": "Vista previa de una ruta de farmeo con paradas y controles del recorrido",
+    "showcase.routes.title": "Elige qué buscar y arma tu ruta",
+    "showcase.routes.description": "Crea circuitos o rutas de ida, ajusta los tramos y sigue las paradas en el minimapa con Trazado o Guía. Verifica los tramos sugeridos en el juego.",
+    "tab.routine": "Rutina",
+    "screen.routine": "Vista general de personajes y saldos de Energía de Odyle",
+    "showcase.routine.title": "Consulta el saldo de cada personaje",
+    "showcase.routine.description": "Ve los saldos de Odyle que llegan del juego y elige Pulso compacto o Barra para seguir al personaje actual. Cada registro muestra si la lectura es actual o guardada.",
+    "tab.pets": "Mascotas",
+    "screen.pets": "Colección de mascotas con retratos originales y controles de seguimiento",
+    "showcase.pets.title": "Sigue el progreso de tu colección",
+    "showcase.pets.description": "Elige una mascota y sigue las almas que recolectes. Abre sus detalles en el juego para leer el Insight y confirmar el total. Los mapas muestran ubicaciones de referencia para farmear.",
+    "tab.combat": "Combate",
+    "screen.combat": "Módulo de combate con daño registrado, DPS y participación de cada integrante del grupo",
+    "showcase.combat.title": "Revisa el daño que hizo tu grupo",
+    "showcase.combat.description": "La medición espera al juego y el panel aparece en las instancias reconocidas. Al salir de la instancia, el panel se oculta y la medición continúa. Puedes ocultarlo desde el menú rápido. Los resultados quedan en el historial.",
+    "download.beta": "La beta.15 incorpora español latinoamericano, un aviso más sencillo en el Sonar y dibujos tácticos en Siege Command. El instalador prepara el mapa de Lower Reshanta para usarlo sin conexión.",
+    "download.siege": "Configurar Siege Command",
+    "showcase.sonar.title": "Una alerta visual para el sonido del cubo",
+    "showcase.sonar.description": "Activa el Sonar para recibir un aviso visual cuando reconozca el sonido de un Cubo Oculto.",
+    "explore.source": "Imágenes de mapas reales y ubicaciones de la comunidad con fuentes documentadas. Confirma en el juego si el recurso está disponible en los puntos marcados.",
+    "sonar.eyebrow": "ACCESIBILIDAD AUDITIVA",
+    "sonar.title": "Una pista que<br>puedes <em>ver.</em>",
+    "sonar.description": "El Sonar reconoce el sonido característico del Cubo Oculto y te avisa para que busques en los alrededores.",
+    "sonar.point1": "Selecciona la aplicación del juego y activa el Sonar cuando quieras.",
+    "sonar.point2": "El audio se analiza en tu equipo, sin usar el micrófono ni grabar o enviar el sonido.",
+    "sonar.point3": "El Sonar recuerda tu elección y espera al juego cuando vuelves a abrir la aplicación.",
+    "sonar.note": "Creado como recurso de accesibilidad para personas sordas o con pérdida auditiva. Cuando recibas un aviso, busca por la zona para confirmar que el cubo está ahí.",
+    "sonar.visual": "UNA SEÑAL SONORA. UN AVISO VISUAL.",
+    "start.eyebrow": "DE LA DESCARGA A LA AVENTURA",
+    "start.title": "Empieza en tres pasos",
+    "start.one.title": "Instala y elige el idioma",
+    "start.one.text": "Descarga el instalador, elige tu idioma y lee los términos. Azphelumbra funciona sin instalar Python.",
+    "start.two.title": "Prepara tu mapa",
+    "start.two.text": "Elige las capas del atlas. La misma selección se aplica al minimapa y al mapa grande.",
+    "start.three.title": "Entra al juego",
+    "start.three.text": "Activa la superposición, selecciona el terreno del minimapa una vez y elige qué evento seguir.",
+    "download.eyebrow": "TU PEQUEÑO GUARDIÁN ESTÁ LISTO",
+    "download.title": "Nos vemos en Atreia.",
+    "download.description": "Elige cómo quieres usar Azphelumbra. Ambas ediciones ofrecen las mismas funciones e incluyen el código fuente.",
+    "download.installer": "Descargar instalador",
+    "download.recommended": "Recomendado",
+    "download.installer.detail": "Accesos directos, idioma inicial, desinstalador y asistente oficial de Npcap para Combate y Mascotas.",
+    "download.portable": "Descargar edición portátil",
+    "download.portable.detail": "Extrae la carpeta completa y abre la aplicación.",
+    "download.terms": "Leer los términos de uso",
+    "download.checksums": "Verificar archivos · SHA-256",
+    "faq.eyebrow": "PREGUNTAS FRECUENTES",
+    "faq.title": "Antes de jugar",
+    "faq.one.q": "¿La aplicación modifica el juego?",
+    "faq.one.a": "Los marcadores y avisos aparecen en ventanas externas superpuestas al juego. Azphelumbra analiza la imagen de la pantalla y recibe el audio a través de Windows. Funciona sin inyectar código en las DLL, modificar archivos o leer la memoria de AION 2. Combate lee pasivamente la conexión del juego mediante Npcap. Consulta las condiciones en los términos de uso.",
+    "faq.two.q": "¿Funciona en el minimapa y el mapa grande?",
+    "faq.two.a": "Sí, con el minimapa rectangular orientado con el norte fijo. Selecciona solo el terreno del minimapa y deja fuera la barra de título. La superposición cambia al mapa grande al presionar M y vuelve al minimapa cuando lo cierras.",
+    "faq.three.q": "¿La agenda es para Sudamérica?",
+    "faq.three.a": "Hay perfiles de agenda para Sudamérica con fuentes documentadas y horarios en la zona horaria que elijas. Los mapas y las posibles ubicaciones vienen de bases comunitarias. Puedes consultar sus fuentes en la aplicación y confirmar cada ubicación en el juego.",
+    "faq.four.q": "¿Puedo usar Azphelumbra con el juego cerrado?",
+    "faq.four.a": "El atlas, las visitas y la agenda local funcionan sin conexión. Para usar la superposición y el Sonar, abre el juego y activa esas funciones. Tus preferencias y registros se guardan en tu equipo.",
+    "faq.five.q": "¿Cómo cambio el idioma después de instalar?",
+    "faq.five.a": "Abre Configuración → Idioma de la aplicación. Puedes alternar al instante entre portugués de Brasil, inglés de Estados Unidos y español latinoamericano. Tus filtros, visitas, región y zona horaria se conservan.",
+    "faq.six.q": "¿Dónde están las licencias y el código?",
+    "faq.six.a": "El código propio usa GPLv3 y está disponible en GitHub y en las descargas. Los mapas, los datos comunitarios y los componentes de terceros conservan sus derechos y licencias. Los mapas y datos comunitarios incluyen material con licencia CC BY-NC 4.0.",
+    "faq.licenses": "Consultar licencias y créditos →",
+    "support.title": "¿Te está gustando Azphelumbra?",
+    "support.description": "Si mi trabajo te sirvió y quieres apoyarme, puedes hacerlo aquí. Usar la aplicación, enviarme comentarios o compartirla con tus amigos ya me ayuda muchísimo.",
+    "support.creator": "Apoyar al creador",
+    "support.recipient": "Apoyo personal al creador · Mercado Pago",
+    "support.community.eyebrow": "APOYA TAMBIÉN A LA COMUNIDAD SORDA",
+    "support.community.description": "Puedes contribuir directamente a organizaciones brasileñas que apoyan a las personas sordas.",
+    "support.community.note": "Usa los canales oficiales para que tu donación llegue directamente a la organización que elijas.",
+    "footer.creator": "Contacto:",
+    "footer.source": "Código fuente",
+    "footer.terms": "Términos de uso",
+    "footer.feedback": "Comentarios",
+    "footer.note": "Proyecto independiente sin afiliación oficial con AION 2 ni con NCSOFT. Las marcas e imágenes del juego pertenecen a sus respectivos titulares. La aplicación incluye las fuentes y los créditos.",
+    "legal.back": "← Volver a la aplicación",
+    "legal.title": "Términos de uso",
+    "legal.intro": "Estos son los términos completos que se incluyen en el instalador. El código propio usa GPLv3. Los materiales de terceros conservan sus derechos y licencias.",
+    "legal.license": "Leer el texto completo de la GPLv3 →"
+  };
   Object.assign(pt, window.StrigoiGuide?.ui.pt_BR || {'nav.guide':'Guia de uso','start.guide':'Abrir guia interativo'});
   Object.assign(en, window.StrigoiGuide?.ui.en_US || {'nav.guide':'User guide','start.guide':'Open interactive guide'});
-  const translations = { pt_BR: pt, en_US: en };
+  Object.assign(es, window.StrigoiGuide?.ui['es-419'] || {'nav.guide':'Guía de uso','start.guide':'Abrir guía interactiva'});
+  const translations = { pt_BR: pt, en_US: en, 'es-419': es };
+  const languageTags = { pt_BR: 'pt-BR', en_US: 'en-US', 'es-419': 'es-419' };
+  const supports = locale => Object.hasOwn(translations, locale);
   const htmlKeys = new Set(['hero.title', 'explore.title', 'sonar.title', 'guide.title']);
   const tabs = [...document.querySelectorAll('[data-tab]')];
   let selectedTab = 'atlas';
@@ -158,10 +281,11 @@
     }
   }
   function setLanguage(next) {
-    if (!translations[next]) return;
+    if (!supports(next)) return;
     language = next;
     const t = translations[next];
-    document.documentElement.lang = next === 'en_US' ? 'en-US' : 'pt-BR';
+    document.documentElement.lang = languageTags[next];
+    document.documentElement.dataset.locale = next;
     document.title = t[document.body.dataset.page === 'terms' ? 'legal.page.title' : document.body.dataset.page === 'guide' ? 'guide.page.title' : 'page.title'];
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const text = t[el.dataset.i18n];
@@ -175,14 +299,29 @@
     document.querySelectorAll('[data-legal-language]').forEach(article => { article.hidden = article.dataset.legalLanguage !== next; });
     document.querySelectorAll('[data-alert-image]').forEach(image => {
       image.width = 350;
-      image.height = next === 'en_US' ? 61 : 76;
+      image.height = next === 'pt_BR' ? 76 : 61;
       image.src = `assets/sonar-alert-${next}.webp`;
     });
     updateShowcase();
     document.dispatchEvent(new CustomEvent('strigoi:language', {detail: {language: next}}));
+    document.querySelectorAll('a[href]').forEach(link => {
+      const href = link.getAttribute('href');
+      if (!/^(?:index|guide|terms)\.html(?:[?#]|$)/.test(href)) return;
+      const url = new URL(link.href);
+      url.searchParams.set('lang', next);
+      link.setAttribute('href', href.split(/[?#]/, 1)[0] + url.search + url.hash);
+    });
     try { localStorage.setItem('strigoi-site-language', next); } catch { /* Reading the page never requires local storage. */ }
   }
-  for (const button of document.querySelectorAll('[data-language]')) button.addEventListener('click', () => setLanguage(button.dataset.language));
+  for (const button of document.querySelectorAll('[data-language]')) {
+    button.addEventListener('click', () => {
+      const next = button.dataset.language;
+      const url = new URL(location.href);
+      url.searchParams.set('lang', next);
+      history.replaceState(history.state, '', url);
+      setLanguage(next);
+    });
+  }
   for (const tab of tabs) {
     tab.addEventListener('click', () => { selectedTab = tab.dataset.tab; updateShowcase(); });
     tab.addEventListener('keydown', event => {
@@ -197,6 +336,14 @@
       selectedTab = tabs[next].dataset.tab; updateShowcase(); tabs[next].focus();
     });
   }
+  const requestedLanguage = () => new URLSearchParams(location.search).get('lang');
+  window.addEventListener('popstate', () => {
+    const next = requestedLanguage();
+    if (supports(next) && next !== language) setLanguage(next);
+  });
+  const requested = requestedLanguage();
   const preference = readPreference();
-  setLanguage(translations[preference] ? preference : (navigator.language.toLowerCase().startsWith('pt') ? 'pt_BR' : 'en_US'));
+  const browserLanguage = navigator.language.toLowerCase().split('-')[0];
+  const automatic = browserLanguage === 'es' ? 'es-419' : browserLanguage === 'pt' ? 'pt_BR' : 'en_US';
+  setLanguage(supports(requested) ? requested : supports(preference) ? preference : automatic);
 })();

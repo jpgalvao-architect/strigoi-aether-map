@@ -8,7 +8,7 @@
   const storageKey = 'strigoi-guide-v1';
   const keys = new Set(topics.flatMap(topic => topic.steps.map((_, index) => `${topic.id}:${index}`)));
   const total = keys.size;
-  let language = document.documentElement.lang === 'en-US' ? 'en_US' : 'pt_BR';
+  let language = document.documentElement.dataset.locale || 'pt_BR';
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(storageKey)) || {}; } catch { /* Optional local progress. */ }
   if (typeof saved !== 'object' || Array.isArray(saved)) saved = {};
@@ -16,7 +16,7 @@
   let edition = saved.edition === 'portable' ? 'portable' : 'installer';
   let topicIndex = Math.max(0, topics.findIndex(topic => topic.id === saved.topic));
   let stepIndex = Number.isInteger(saved.step) ? Math.max(0, Math.min(saved.step, topics[topicIndex].steps.length - 1)) : 0;
-  const text = value => value[language];
+  const text = value => value[language] ?? value.pt_BR;
   const t = (key, values = {}) => Object.entries(values).reduce((copy, [name, value]) => copy.replace(`{${name}}`, value), content.ui[language][key]);
   function route() {
     const match = location.hash.match(/^#([a-z]+)(?:\/(\d+))?$/);
@@ -79,14 +79,22 @@
     if (step.action) {
       action.href = step.action.href; action.textContent = text(step.action.label);
       if (step.action.href.startsWith('https:')) { action.target = '_blank'; action.rel = 'noopener noreferrer'; }
-      else { action.removeAttribute('target'); action.removeAttribute('rel'); }
+      else {
+        const url = new URL(action.href);
+        url.searchParams.set('lang', language);
+        action.href = url.href;
+        action.removeAttribute('target');
+        action.removeAttribute('rel');
+      }
     }
     const image = $('guide-image');
     const screen = step.image ?? topic.image;
     image.src = screen === 'quick-menu' ? `assets/quick-menu-${language}.webp` : `assets/app-${screen}-${language}.webp`;
     image.alt = t('guide.imageAlt', {topic: text(topic.title)});
-    image.width = topic.image === 'quick-menu' ? 288 : 1380; image.height = topic.image === 'quick-menu' ? 322 : 900;
-    $('guide-zoom').classList.toggle('compact-screen', topic.image === 'quick-menu');
+    const compact = screen === 'quick-menu';
+    image.width = compact ? (language === 'es-419' ? 265 : 288) : 1380;
+    image.height = compact ? (language === 'es-419' ? 504 : 322) : 900;
+    $('guide-zoom').classList.toggle('compact-screen', compact);
     $('guide-dialog-image').src = image.src; $('guide-dialog-image').alt = image.alt;
     $('guide-previous').disabled = stepIndex === 0;
     const nextTopic = stepIndex === topic.steps.length - 1;
