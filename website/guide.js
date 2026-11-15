@@ -82,7 +82,8 @@
       else { action.removeAttribute('target'); action.removeAttribute('rel'); }
     }
     const image = $('guide-image');
-    image.src = topic.image === 'quick-menu' ? `assets/quick-menu-${language}.webp` : `assets/app-${topic.image}-${language}.webp`;
+    const screen = step.image ?? topic.image;
+    image.src = screen === 'quick-menu' ? `assets/quick-menu-${language}.webp` : `assets/app-${screen}-${language}.webp`;
     image.alt = t('guide.imageAlt', {topic: text(topic.title)});
     image.width = topic.image === 'quick-menu' ? 288 : 1380; image.height = topic.image === 'quick-menu' ? 322 : 900;
     $('guide-zoom').classList.toggle('compact-screen', topic.image === 'quick-menu');

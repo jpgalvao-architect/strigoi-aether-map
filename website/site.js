@@ -31,10 +31,10 @@
     'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
     'showcase.combat.title': 'Seu grupo. Seu dano observado.',
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
-    'download.beta': "A beta.14 troca os marcadores automaticamente entre regiões e traz um editor de pins para Lower Reshanta. O instalador prepara o mapa de Reshanta para uso offline depois do download.",
+    'download.beta': "A beta.15 traz espanhol latino-americano, um aviso mais simples no Sonar e desenhos táticos no Siege Command. O instalador prepara o mapa de Lower Reshanta para uso offline.",
     'download.siege': "Configurar Siege Command",
     'showcase.sonar.title': 'O som vira uma pista na tela.',
-    'showcase.sonar.description': 'Ative o Sonar e acompanhe a intensidade estimada do som reconhecido no medidor do aviso.',
+    'showcase.sonar.description': 'Ative o Sonar para receber um aviso visual quando o som de um Cubo Oculto for reconhecido.',
   });
   const en = {
     'skip': 'Skip to content', 'navigation': 'Main navigation', 'language': 'Language',
@@ -42,7 +42,7 @@
     'nav.explore': 'Explore', 'nav.sonar': 'Sonar', 'nav.download': 'Downloads',
     'hero.title': 'Your next<br>discovery<br><em>starts here.</em>',
     'hero.description': 'Maps, farming routes, cubes, pets, events and combat in one place. Aether minds the map. You live the adventure.',
-    'hero.tour': 'Meet the app', 'hero.platform': 'Windows 10/11 · 64-bit · PT-BR / EN-US',
+    'hero.tour': 'Meet the app', 'hero.platform': 'Windows 10/11 · 64-bit · PT-BR / EN-US / ES-419',
     'hero.free': 'Free, with open-source code', 'hero.license': 'GPLv3 code',
     'hero.cube': 'Your next clue is nearby.', 'hero.map': 'Your exploration journal',
     'hero.guardian': 'LITTLE GUARDIAN. GREAT DISCOVERIES.',
@@ -79,21 +79,21 @@
     'screen.combat': 'Combat module with observed damage, DPS and group share',
     'showcase.combat.title': 'Your group. Your observed damage.',
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
-    'download.beta': "Beta.14 switches markers automatically between regions and adds a pin editor for Lower Reshanta. Setup prepares the Reshanta map for offline use after download.",
+    'download.beta': "Beta.15 adds Latin American Spanish, a simpler Sonar alert, and tactical drawings in Siege Command. Setup prepares the Lower Reshanta map for offline use.",
     'download.siege': "Set up Siege Command",
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
-    'showcase.sonar.description': 'Enable Sonar and follow recognized sound intensity in the alert meter. The Sonar page also shows recent history.',
+    'showcase.sonar.description': 'Enable Sonar to receive a visual alert when it recognizes the sound of a Hidden Cube.',
     'explore.source': 'Real map images and community locations with documented sources. Markers indicate possible locations, not guaranteed spawns.',
     'sonar.eyebrow': 'HEARING ACCESSIBILITY',
     'sonar.title': 'A clue you<br>can <em>see.</em>',
-    'sonar.description': 'Sonar looks for signs of the cube sound and shows an alert with an intensity meter. Game volume affects the reading.',
+    'sonar.description': 'Sonar recognizes the Hidden Cube sound and shows an alert so you can search nearby.',
     'sonar.point1': 'Select the game application and enable it when you want.',
     'sonar.point2': 'No microphone, recording or audio uploads.',
     'sonar.point3': 'Sonar remembers your choice and waits for the game when reopened.',
     'sonar.note': 'Developed as an accessibility feature for deaf and hard-of-hearing people. The alert is a clue: it does not confirm a cube or reveal its exact location.',
     'sonar.visual': 'A SOUND CUE. A VISUAL ALERT.',
     'start.eyebrow': 'FROM DOWNLOAD TO ADVENTURE', 'start.title': 'Ready in a few steps.',
-    'start.one.title': 'Install and choose your language', 'start.one.text': 'Download the installer, read the terms and choose Portuguese or English. No Python installation needed.',
+    'start.one.title': 'Install and choose your language', 'start.one.text': 'Download Setup, choose a language, and read the terms. Azphelumbra runs without installing Python.',
     'start.two.title': 'Build your map', 'start.two.text': 'Choose your atlas layers. The same selection appears on the minimap and full map.',
     'start.three.title': 'Join the adventure', 'start.three.text': 'Enable the overlay, select the minimap terrain once and choose the event to track.',
     'download.eyebrow': 'YOUR LITTLE GUARDIAN IS READY', 'download.title': 'See you in Atreia.',
@@ -112,7 +112,7 @@
     'faq.four.q': 'Can I use it without opening the game?',
     'faq.four.a': 'The atlas, visits and local schedule work offline. For overlay and Sonar, open the game and enable these features. Your preferences and records stay on your computer.',
     'faq.five.q': 'How do I change the language after installing?',
-    'faq.five.a': 'Open Settings → App language. Switching between Brazilian Portuguese and US English is immediate. It does not change your filters, visits, region or time zone.',
+    'faq.five.a': 'Open Settings → App language. Switch instantly between Brazilian Portuguese, US English, and Latin American Spanish. Your filters, visits, region, and time zone are preserved.',
     'faq.six.q': 'Where are the licenses and source code?',
     'faq.six.a': 'Original code uses GPLv3 and is available on GitHub and in the downloads. Maps, community data and third-party components retain their own rights and licenses, including CC BY-NC 4.0 for community maps and data.',
     'faq.licenses': 'View licenses and credits →',
@@ -175,7 +175,7 @@
     document.querySelectorAll('[data-legal-language]').forEach(article => { article.hidden = article.dataset.legalLanguage !== next; });
     document.querySelectorAll('[data-alert-image]').forEach(image => {
       image.width = 350;
-      image.height = next === 'en_US' ? 164 : 181;
+      image.height = next === 'en_US' ? 61 : 76;
       image.src = `assets/sonar-alert-${next}.webp`;
     });
     updateShowcase();

@@ -53,12 +53,12 @@ window.StrigoiGuide = {
             "en_US": "Follow the instructions for your edition."
           },
           "tip": {
-            "pt_BR": "Npcap é necessário somente para Combate. Atlas, eventos e Sonar funcionam sem esse componente.",
-            "en_US": "Npcap is needed only for Combat. Atlas, events, and Sonar work without it."
+            "pt_BR": "Npcap é usado por Combate, Pets e Rotina. Atlas, eventos e Sonar funcionam sem esse componente.",
+            "en_US": "Combat, Pets, and Routine use Npcap. Atlas, events, and Sonar work independently."
           },
           "installer": {
-            "pt_BR": "Execute o Setup, escolha português ou inglês, leia e aceite os termos e conclua a instalação. Se o fluxo oferecer Npcap, conclua o assistente oficial para usar Combate. O assistente do driver pode pedir permissão de administrador.",
-            "en_US": "Run Setup, choose Portuguese or English, read and accept the terms, and complete installation. If Npcap is offered, complete its official wizard to use Combat. The driver wizard may request administrator permission."
+            "pt_BR": "Execute o Setup, escolha português, inglês ou espanhol, leia os termos e conclua a instalação. Se Npcap for oferecido, conclua o assistente oficial para usar Combate e sincronizar Pets.",
+            "en_US": "Run Setup, choose Portuguese, English, or Spanish, read the terms, and complete installation. If Npcap is offered, complete its official wizard to use Combat and Pet sync."
           },
           "portable": {
             "pt_BR": "Extraia todo o ZIP antes de abrir StrigoiAetherMap.exe. Mantenha a pasta _internal ao lado do executável. Para usar Combate, instale Npcap pelo canal oficial; ele não vem embutido no portátil.",
@@ -67,8 +67,8 @@ window.StrigoiGuide = {
           "action": {
             "href": "https://npcap.com/#download",
             "label": {
-              "pt_BR": "Npcap oficial · somente para Combate",
-              "en_US": "Official Npcap · Combat only"
+              "pt_BR": "Npcap oficial",
+              "en_US": "Official Npcap"
             }
           }
         },
@@ -684,12 +684,12 @@ window.StrigoiGuide = {
             "en_US": "Explore when alerted"
           },
           "where": {
-            "pt_BR": "Aviso → Possível cubo por perto",
-            "en_US": "Alert → Possible cube nearby"
+            "pt_BR": "Aviso → Cubo oculto detectado!",
+            "en_US": "Alert → Hidden cube detected!"
           },
           "body": {
-            "pt_BR": "Quando o cartão aparecer, procure nos arredores. A barra e o histórico acompanham a intensidade estimada do som reconhecido. O volume do jogo influencia a leitura, que não indica distância em metros. Você pode mover ou dispensar o aviso.",
-            "en_US": "When the card appears, search nearby. The bar and history follow the estimated intensity of the recognized sound. Game volume affects the reading, which does not indicate distance in meters. You can move or dismiss the alert."
+            "pt_BR": "Quando o aviso aparecer, procure nos arredores. A aba Sonar mostra o estado da detecção. Você pode mover ou dispensar o aviso.",
+            "en_US": "Search nearby when the alert appears. The Sonar tab shows the detection status. You can move or dismiss the alert."
           },
           "tip": {
             "pt_BR": "É um recurso de acessibilidade auditiva. O aviso pode falhar ou ocorrer por um som parecido.",
@@ -1036,8 +1036,8 @@ window.StrigoiGuide = {
         "en_US": "Siege Command"
       },
       "description": {
-        "pt_BR": "Crie e compartilhe pins para Lower Reshanta.",
-        "en_US": "Create and share pins for Lower Reshanta."
+        "pt_BR": "Crie e compartilhe pins e desenhos para Lower Reshanta.",
+        "en_US": "Create and share pins and drawings for Lower Reshanta."
       },
       "steps": [
         {
@@ -1058,7 +1058,7 @@ window.StrigoiGuide = {
             "en_US": "Ring positions can be loaded in Ring catalogue → Import local catalogue. The public installer includes pending ring entries by zone."
           },
           "action": {
-            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.14/docs/SIEGE.md",
+            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.15/docs/SIEGE.md",
             "label": {
               "pt_BR": "Abrir guia técnico",
               "en_US": "Open technical guide"
@@ -1079,8 +1079,8 @@ window.StrigoiGuide = {
             "en_US": "Click Add pin and place it anywhere on the map, including over water. Drag to move it. Select a pin to edit its name, category, size, color, and visibility."
           },
           "tip": {
-            "pt_BR": "O primeiro pin no preset oficial cria uma cópia editável. O app salva as mudanças ao concluir cada edição.",
-            "en_US": "The first pin in the official preset creates an editable copy. The app saves changes as you finish each edit."
+            "pt_BR": "Os 12 objetivos padrão também são editáveis. O app salva cada alteração no preset ativo.",
+            "en_US": "You can edit the 12 default objectives. Each change is saved to the active preset."
           }
         },
         {
@@ -1111,13 +1111,32 @@ window.StrigoiGuide = {
             "en_US": "Siege Command → Edit pins"
           },
           "body": {
-            "pt_BR": "Use Exportar marcações (.json) para salvar o preset ativo. Para receber um preset, clique em Importar marcações (.json). Se o nome já existir, escolha entre criar uma cópia e substituir seu preset personalizado.",
-            "en_US": "Use Export markers (.json) to save the active preset. To receive a preset, click Import markers (.json). If the name already exists, you can create a copy or replace your custom preset."
+            "pt_BR": "Use Exportar marcações (.json) para salvar o preset ativo. O JSON leva pins, desenhos e calibrações manuais de anéis quando habilitadas. Ao importar, escolha criar um preset ou substituir o atual.",
+            "en_US": "Use Export markers (.json) to save the active preset. The JSON includes pins, drawings, and manual ring calibrations when enabled. Import it as a new preset or replace the current one."
           },
           "tip": {
-            "pt_BR": "O compartilhamento funciona offline. As posições de anéis e pets vêm de seus próprios catálogos.",
-            "en_US": "Sharing works offline. Ring and pet locations come from their own catalogues."
+            "pt_BR": "O compartilhamento funciona offline. Os catálogos de origem dos anéis e pets são importados à parte.",
+            "en_US": "Sharing works offline. The source catalogues for rings and pets are imported separately."
           }
+        },
+        {
+          "title": {
+            "pt_BR": "Desenhe no mapa",
+            "en_US": "Draw on the map"
+          },
+          "where": {
+            "pt_BR": "Siege Command → Desenhos táticos",
+            "en_US": "Siege Command → Tactical drawings"
+          },
+          "body": {
+            "pt_BR": "Escolha retângulo, elipse ou seta e arraste no mapa. Use Shift para quadrados e círculos. Selecione a forma para mover, redimensionar e ajustar cor, traço ou rótulo.",
+            "en_US": "Choose a rectangle, ellipse, or arrow and drag on the map. Hold Shift for squares or circles. Select a drawing to move it, resize it, or change its color, stroke, or label."
+          },
+          "tip": {
+            "pt_BR": "Com Formas táticas e Overlay de Reshanta ativos, as formas aparecem no minimapa e no mapa aberto com M.",
+            "en_US": "With Tactical shapes and Reshanta overlay enabled, drawings appear on the minimap and the full map opened with M."
+          },
+          "image": "siege-drawings"
         }
       ],
       "help": []
