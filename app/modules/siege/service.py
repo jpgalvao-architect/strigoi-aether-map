@@ -1,30 +1,23 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Owns validated local settings and emits tactical state without UI dependencies."""
-import hashlib
-import os
 import re
-import tempfile
 from pathlib import Path
 from uuid import uuid4
 
-import cv2
-import numpy as np
 from PySide6.QtCore import QObject, Signal
 
 from pydantic import Field
 
 from app.core.models import Category, Gatherable, MapDefinition, Model, PointOfInterest, Region, Subcategory
 from app.infrastructure.storage import PACKAGE, atomic_json, load_model, recover_model
+from app.modules.siege.map_setup import LOCAL_MAP, MAP_SIZE, MAP_SOURCE, PREPARED_MAP, validate_map, write_map
 from app.modules.siege.models import (
     COLORS, MAP_ID, OFFICIAL, PREFIX, SECTORS, Cartography, Coordinate, CustomMarker,
     Preset, RingCatalogue, RingPosition, SiegeState, TacticalCall,
 )
 from app.modules.siege.transit_codes import TRANSIT_CODES
 
-MAP_SOURCE = 'https://github.com/aion2-interactive-map/aion2-interactive-map/tree/89ce3984d569ff1a03ee6311d064231211212981/public/UI/Map/WorldMap/Abyss_Reshanta_A'
 RING_SOURCE = 'https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings'
-MAP_PIXELS_SHA256 = '4fd42390453a4baa4dd4f9a02e5fb3c4263d0a15ebc03b159e6b60fb08d00d57'
-MAP_SIZE = 4096
 ACTIONS = {'regroup': 'REAGRUPAR', 'attack': 'ATACAR', 'defend': 'DEFENDER', 'retreat': 'RECUAR'}
 
 
@@ -36,7 +29,8 @@ class SiegeService(QObject):
     def __init__(self, directory):
         super().__init__()
         self.path = directory / 'siege-command.json'
-        self.map_path = directory / 'siege-reshanta.png'
+        self.map_path = directory / LOCAL_MAP
+        self.prepared_map_path = directory / PREPARED_MAP
         self.data = load_model(PACKAGE / 'data/siege-cartography.json', Cartography)
         self.ring_path = directory / 'siege-ring-catalogue.json'
         original = RingCatalogue(map_frame=self.data.map_frame, rings=self.data.rings)
@@ -49,44 +43,32 @@ class SiegeService(QObject):
         self.definition = None
         self._base = None
         self._atlas = None
-        if self.map_path.exists():
-            try:
-                self._validate_map(self.map_path)
-                self._set_map()
-            except (ValueError, OSError):
-                self.warning = 'A imagem local de Reshanta não corresponde à base calibrada.'
+        self.refresh_map()
 
-    @staticmethod
-    def _validate_map(path):
-        if not 0 < path.stat().st_size <= 32_000_000:
-            raise ValueError('A imagem do mapa deve ter até 32 MB.')
-        raw = path.read_bytes()
-        # Check the PNG header before decoding an untrusted image.
-        if raw[:8] != b'\x89PNG\r\n\x1a\n' or raw[12:24] != b'IHDR\x00\x00\x10\x00\x00\x00\x10\x00':
-            raise ValueError('Use o PNG de Lower Reshanta no quadro calibrado de 4096 × 4096.')
-        pixels = cv2.imdecode(np.frombuffer(raw, dtype=np.uint8), cv2.IMREAD_COLOR)
-        if pixels is None or hashlib.sha256(pixels).hexdigest() != MAP_PIXELS_SHA256:
-            raise ValueError('A imagem local de Reshanta não corresponde à base calibrada.')
-        return raw
+    def refresh_map(self):
+        for path in (self.map_path, self.prepared_map_path):
+            if path.exists():
+                try:
+                    validate_map(path)
+                except (OSError, ValueError):
+                    continue
+                self._set_map(path)
+                self.map_changed.emit()
+                self.changed.emit()
+                return True
+        if any(path.exists() for path in (self.map_path, self.prepared_map_path)):
+            self.warning = self.warning or 'A imagem local de Reshanta não corresponde à base calibrada.'
+        return False
 
-    def _set_map(self):
+    def _set_map(self, path=None):
         self.definition = MapDefinition(
-            id=MAP_ID, name='Chaotic Lower Reshanta', region='abyss', image=str(self.map_path.resolve()),
+            id=MAP_ID, name='Chaotic Lower Reshanta', region='abyss', image=str((path or self.map_path).resolve()),
             width=MAP_SIZE, height=MAP_SIZE, source=MAP_SOURCE, supports_overlay=False,
         )
         self._base = self._atlas = None
 
     def import_map(self, path):
-        raw = self._validate_map(path)
-        fd, temporary = tempfile.mkstemp(prefix='siege-map-', dir=self.path.parent)
-        try:
-            with os.fdopen(fd, 'wb') as handle:
-                handle.write(raw)
-                handle.flush()
-                os.fsync(handle.fileno())
-            os.replace(temporary, self.map_path)
-        finally:
-            Path(temporary).unlink(missing_ok=True)
+        write_map(self.map_path, validate_map(path))
         self._set_map()
         self.map_changed.emit()
         self.changed.emit()

@@ -9,7 +9,7 @@ Unicode true
   !error "Define PAYLOAD as the complete prepared portable folder."
 !endif
 !ifndef OUTPUT
-  !define OUTPUT "StrigoiAetherMap-Setup-0.10.0-beta.12.exe"
+  !define OUTPUT "StrigoiAetherMap-Setup-0.10.0-beta.13.exe"
 !endif
 !ifndef UNINSTALL_MANIFEST
   !error "Generate the exact installed-file removal manifest first."
@@ -33,11 +33,11 @@ RequestExecutionLevel user
 ManifestDPIAware true
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
-BrandingText "Azphelumbra · 0.10.0-beta.12"
-VIProductVersion "0.10.0.12"
+BrandingText "Azphelumbra · 0.10.0-beta.13"
+VIProductVersion "0.10.0.13"
 VIAddVersionKey /LANG=1033 "ProductName" "Azphelumbra"
 VIAddVersionKey /LANG=1033 "FileDescription" "Azphelumbra installer"
-VIAddVersionKey /LANG=1033 "FileVersion" "0.10.0-beta.12"
+VIAddVersionKey /LANG=1033 "FileVersion" "0.10.0-beta.13"
 VIAddVersionKey /LANG=1033 "LegalCopyright" "2026 Strigoi Aether Map contributors"
 !define MUI_ICON "..\app\assets\azphelumbra.ico"
 !define MUI_UNICON "..\app\assets\azphelumbra.ico"
@@ -87,6 +87,10 @@ LangString SilentTerms ${LANG_PORTUGUESEBR} "A instalação silenciosa exige /AC
 LangString SilentTerms ${LANG_ENGLISH} "Silent installation requires /ACCEPTTERMS after reviewing the terms."
 LangString CloseApp ${LANG_PORTUGUESEBR} "Feche o Strigoi Aether Map e tente novamente."
 LangString CloseApp ${LANG_ENGLISH} "Close Strigoi Aether Map and try again."
+LangString ReshantaSetup ${LANG_PORTUGUESEBR} "Preparando o mapa de Lower Reshanta..."
+LangString ReshantaSetup ${LANG_ENGLISH} "Preparing the Lower Reshanta map..."
+LangString ReshantaRetry ${LANG_PORTUGUESEBR} "O download do mapa de Lower Reshanta precisa de conexão. Tente novamente ou conclua a instalação e use Baixar mapa no Siege Command."
+LangString ReshantaRetry ${LANG_ENGLISH} "The Lower Reshanta map download requires a connection. Retry or finish setup and use Download map in Siege Command."
 Var DefaultLanguage
 Var SeedDirectory
 
@@ -139,7 +143,7 @@ Section "$(AppSection)" Core
     Abort
   ${EndIf}
   FileOpen $0 "$INSTDIR\.strigoi-install-owned" w
-  FileWrite $0 "StrigoiAetherMap-0.10.0-beta.12"
+  FileWrite $0 "StrigoiAetherMap-0.10.0-beta.13"
   FileClose $0
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "${REGKEY}" "InstallDir" "$INSTDIR"
@@ -147,7 +151,7 @@ Section "$(AppSection)" Core
   WriteRegStr HKCU "${REGKEY}" "TermsSHA256" "${TERMS_HASH}"
   WriteRegStr HKCU "${REGKEY}" "InstallerLanguage" "$DefaultLanguage"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayName" "Azphelumbra"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.10.0-beta.12"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.10.0-beta.13"
   WriteRegStr HKCU "${UNINSTALLKEY}" "Publisher" "Thoth Worlds"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayIcon" "$INSTDIR\StrigoiAetherMap.exe"
   WriteRegStr HKCU "${UNINSTALLKEY}" "InstallLocation" "$INSTDIR"
@@ -169,6 +173,20 @@ Section "$(AppSection)" Core
     CreateShortcut "$SMPROGRAMS\Strigoi Aether Map\Azphelumbra.lnk" "$INSTDIR\StrigoiAetherMap.exe"
     CreateShortcut "$SMPROGRAMS\Strigoi Aether Map\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   !endif
+SectionEnd
+
+Section "-Lower Reshanta"
+  DetailPrint "$(ReshantaSetup)"
+  reshanta_retry:
+    ClearErrors
+    ExecWait '"$INSTDIR\StrigoiAetherMap.exe" --prepare-reshanta-map "$SeedDirectory"' $0
+    ${If} ${Errors}
+    ${OrIf} $0 != 0
+      DetailPrint "$(ReshantaRetry)"
+      IfSilent reshanta_done
+      MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "$(ReshantaRetry)" IDRETRY reshanta_retry
+    ${EndIf}
+  reshanta_done:
 SectionEnd
 
 Section "$(NpcapSection)" Npcap

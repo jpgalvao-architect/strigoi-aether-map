@@ -6,13 +6,15 @@ fica neste computador e **Copiar call** envia texto para a área de transferênc
 
 ## Preparar e usar
 
-1. Com o PNG local pronto, escolha **Importar mapa local**. O aplicativo
-   confere a identidade dos pixels no quadro de 4096 × 4096 antes de aceitar.
+1. O instalador prepara o mapa de Lower Reshanta automaticamente com internet.
+   Depois, o mesmo mapa fica disponível offline no Siege Command e no Atlas.
+   Na versão portátil, ou se a conexão cair na instalação, use **Baixar mapa**
+   no Siege Command.
 2. Em **Catálogo de anéis**, escolha **Importar catálogo local** e abra um
    [catálogo compatível](../schemas/siege-ring-catalogue.schema.json) com o
    quadro `Abyss_Reshanta_A/4096-north-up`. Os downloads públicos incluem a
-   lista de pendências por zona. O mapa e as posições individuais de anéis
-   são importados à parte.
+   lista de pendências por zona. As posições individuais de anéis são
+   importadas à parte.
 3. Em **Call tática**, escolha MID, BOT ou TOP. Selecione um objetivo no
    mapa ou no seletor. Escolha um anel numerado e a ação desejada. O mapa
    destaca os alvos e **Copiar call** copia, por exemplo,
@@ -69,7 +71,8 @@ tática do Azphelumbra e permanece estável ao aplicar uma calibração local.
 - **Base.** Mosaico integral dos 16 tiles `Abyss_Reshanta_A` da referência
   comunitária. A licença do repositório declara CC BY-NC 4.0 para
   `public/data`. Os tiles consultados estão em `public/UI`. A arte de AION 2
-  é da NCSOFT. A prévia pessoal carrega a imagem em uma pasta local.
+  é da NCSOFT. O instalador baixa os tiles da origem, confere o SHA-256
+  de cada arquivo e do quadro final e guarda o mapa na pasta de dados do app.
   [Tiles no commit consultado](https://github.com/aion2-interactive-map/aion2-interactive-map/tree/89ce3984d569ff1a03ee6311d064231211212981/public/UI/Map/WorldMap/Abyss_Reshanta_A/Res).
 - **Objetivos.** As pontas dos marcadores da imagem do usuário foram medidas
   no arquivo de 1782 × 759. Cada recorte usa uma transformação afim própria

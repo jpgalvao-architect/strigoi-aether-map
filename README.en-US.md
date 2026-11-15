@@ -1,6 +1,9 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.12 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.13 · Windows x64**
+
+Beta 13 prepares Lower Reshanta during setup with an internet connection.
+The map then works offline in Siege Command and the Atlas.
 
 Beta 12 standardizes **Siege Command** markers on the map and minimap.
 Rings use a circular icon with a code below it. Other points use pins.
@@ -76,7 +79,7 @@ The app doubles minimap symbols, adds arrows to cube sites with supplied height 
 The app shows the combat panel in recognized dungeons and 1v1/5v5 arenas and hides it on exit. Entry and exit signals were observed for one map per arena mode in SA; other rotating maps still need identification. PvP totals include outgoing attacks by confirmed participants and exclude received damage. Calculation remains experimental without live accuracy validation; the complete 5v5 team roster is not confirmed yet. Quick controls can hide the panel without stopping capture.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.12) ·
+[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.13) ·
 [Português](README.md)
 
 Your exploration journal: maps, gatherables, possible cube locations and

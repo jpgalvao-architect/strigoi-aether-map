@@ -1,6 +1,9 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.12 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.13 · Windows x64**
+
+A beta 13 prepara Lower Reshanta durante a instalação, com internet.
+Depois, o mapa abre offline no Siege Command e no Atlas.
 
 A beta 12 padroniza os marcadores do **Siege Command** no mapa e no minimapa.
 Os anéis têm um círculo e o código abaixo. Os outros pontos usam pins.
@@ -78,7 +81,7 @@ O aplicativo amplia os símbolos do minimapa em 100%, mostra setas nas posiçõe
 O aplicativo mostra o painel de combate nas dungeons e arenas 1v1/5v5 identificadas e o oculta ao sair. Foram observados os sinais de entrada e saída de um mapa de cada modalidade em SA; outros mapas da rotação ainda precisam de identificação. O dano PvP contabiliza ataques de participantes confirmados e exclui o dano recebido. O cálculo continua experimental, sem validação de precisão ao vivo; no 5v5, a lista completa do time ainda não foi confirmada. O menu rápido permite ocultar o painel sem parar a medição.
 
 [Página do aplicativo](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.12) ·
+[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.13) ·
 [English](README.en-US.md)
 
 Seu caderno de exploração: mapas, coletas, cubos e eventos em um só lugar.

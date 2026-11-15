@@ -339,6 +339,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         if self.module_resume:self.module_resume.shutdown()
         if self.overlay_visibility: self.overlay_visibility.shutdown()
+        self.siege_page.shutdown()
         self.siege_overlay.shutdown()
         self.quick_menu.shutdown()
         self.pet_panel.shutdown()

@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Siege Command workspace and controls shared with the expanded overlay."""
 from pathlib import Path
+import sys
 
-from PySide6.QtCore import QSignalBlocker, Qt, Signal
+from PySide6.QtCore import QProcess, QSignalBlocker, Qt, Signal
 from PySide6.QtWidgets import (
     QApplication, QButtonGroup, QColorDialog, QFileDialog, QHBoxLayout, QInputDialog, QStackedWidget,
     QVBoxLayout,
@@ -136,8 +137,9 @@ class SiegeCallControls(QWidget):
 
 
 class SiegeBoard(QWidget):
-    """Map canvas, view controls and an import prompt for the local map."""
+    """Map canvas and actions for preparing the calibrated base."""
     import_requested = Signal()
+    download_requested = Signal()
 
     def __init__(self, context):
         super().__init__()
@@ -155,12 +157,13 @@ class SiegeBoard(QWidget):
         self.stack = QStackedWidget()
         empty, content = card()
         content.addStretch()
-        content.addWidget(label('Importe a base calibrada de Lower Reshanta', 'title', True))
+        content.addWidget(label('Mapa de Lower Reshanta', 'title', True))
         content.addWidget(label(
-            'Use o PNG de 4096 × 4096 do quadro Abyss_Reshanta_A. Veja a preparação da imagem no guia do Siege Command.',
+            'Baixe o mapa uma vez para usá-lo no Siege Command e no Atlas, inclusive offline.',
             'subtitle', True,
         ))
-        content.addWidget(button('Importar mapa local', lambda: self.import_requested.emit(), True))
+        self.download_button = button('Baixar mapa', lambda: self.download_requested.emit(), True)
+        content.addWidget(self.download_button)
         content.addStretch()
         self.stack.addWidget(empty)
         self.stack.addWidget(self.view)
@@ -186,6 +189,10 @@ class SiegePage(QWidget):
         body = QHBoxLayout()
         self.board = SiegeBoard(context)
         self.board.import_requested.connect(self.import_map)
+        self.board.download_requested.connect(self.download_map)
+        self.map_downloader = QProcess(self)
+        self.map_downloader.finished.connect(self.finish_map_download)
+        self.map_downloader.errorOccurred.connect(self.map_download_error)
         body.addWidget(self.board, 1)
         sidebar, side = card()
         sidebar.setFixedWidth(320)
@@ -239,6 +246,32 @@ class SiegePage(QWidget):
                 self.board.view.fit_islands()
                 self.message('Base cartográfica conferida e importada.')
             self.guard(load)
+
+    def download_map(self):
+        if self.map_downloader.state() != QProcess.NotRunning:
+            return
+        self.board.download_button.setEnabled(False)
+        self.message('Preparando o mapa de Lower Reshanta…')
+        args = [] if getattr(sys, 'frozen', False) else [str(Path(__file__).resolve().parents[2] / 'launcher.py')]
+        self.map_downloader.start(sys.executable, [*args, '--prepare-reshanta-map', str(self.context.directory)])
+
+    def finish_map_download(self, exit_code, status):
+        self.board.download_button.setEnabled(True)
+        if status == QProcess.NormalExit and exit_code == 0 and self.service.refresh_map():
+            self.board.view.fit_islands()
+            self.message('Mapa pronto no Siege Command e no Atlas.')
+        else:
+            self.map_download_error()
+
+    def map_download_error(self, *_):
+        self.board.download_button.setEnabled(True)
+        self.message('O download do mapa está indisponível. Confira a conexão e tente novamente.')
+
+    def shutdown(self):
+        if self.map_downloader.state() != QProcess.NotRunning:
+            self.map_downloader.blockSignals(True)
+            self.map_downloader.kill()
+            self.map_downloader.waitForFinished(1500)
 
     def catalogue_page(self):
         widget = QWidget()

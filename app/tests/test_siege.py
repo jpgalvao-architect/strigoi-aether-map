@@ -47,6 +47,43 @@ def test_reference_numbers_and_relative_positions_replay_from_calibration(tmp_pa
     assert all(r.position is None and not service.callsign(r) for r in service.rings.values())
 
 
+def test_setup_uses_cached_map_and_loads_it_in_the_atlas(tmp_path, monkeypatch):
+    import hashlib
+    import cv2
+    from app.modules.siege import map_setup
+
+    tiles = {(col, row): np.full((1024, 1024, 3), col + 4*row, dtype=np.uint8)
+             for row in range(4) for col in range(4)}
+    pixels = np.vstack([np.hstack([tiles[col, row] for col in range(4)]) for row in range(4)])
+    monkeypatch.setattr(map_setup, 'MAP_PIXELS_SHA256', hashlib.sha256(pixels).hexdigest())
+    monkeypatch.setattr(map_setup, 'download_tile', lambda col, row, _: (col, row, tiles[col, row]))
+    manual = tmp_path / map_setup.LOCAL_MAP
+    manual.write_bytes(b'preserve this invalid local file')
+    path = map_setup.prepare_map(tmp_path)
+    assert path.name == map_setup.PREPARED_MAP
+    assert np.array_equal(cv2.imread(str(path)), pixels)
+    assert manual.read_bytes() == b'preserve this invalid local file'
+    context = AppContext(tmp_path)
+    assert context.siege.definition.image == str(path)
+    assert any(item.id == 'lower-reshanta' for item in context.atlas_dataset.maps)
+    assert sum(point.map_id == 'lower-reshanta' for point in context.atlas_dataset.points) == 240
+    monkeypatch.setattr(map_setup, 'download_tile', lambda *_: pytest.fail('unexpected network request'))
+    assert map_setup.prepare_map(tmp_path) == path
+
+
+def test_map_setup_keeps_partial_download_out_of_the_profile(tmp_path, monkeypatch):
+    from app.modules.siege import map_setup
+
+    def fail_download(*_):
+        raise OSError('offline')
+
+    monkeypatch.setattr(map_setup, 'download_tile', fail_download)
+    with pytest.raises(OSError, match='offline'):
+        map_setup.prepare_map(tmp_path)
+    assert not (tmp_path / map_setup.PREPARED_MAP).exists()
+    assert not list(tmp_path.glob('siege-map-*'))
+
+
 def test_catalogue_updates_keep_frozen_callsigns_and_old_records(tmp_path):
     service = SiegeService(tmp_path)
     old = ring(1, callsign='B1')

@@ -24,7 +24,18 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Azphelumbra")
     parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument("--screenshot", type=Path, help="Save the rendered app window, without capturing the desktop")
+    parser.add_argument("--prepare-reshanta-map", type=Path, metavar="DATA_DIR")
     args = parser.parse_args()
+    if args.prepare_reshanta_map:
+        from app.modules.siege.map_setup import prepare_map
+        configure_logging(args.prepare_reshanta_map)
+        try:
+            prepare_map(args.prepare_reshanta_map)
+        except (OSError, ValueError):
+            logging.exception('Falha ao preparar mapa de Lower Reshanta')
+            return 1
+        logging.info('Mapa calibrado de Lower Reshanta disponível')
+        return 0
     app = QApplication(sys.argv[:1])
     app.setApplicationName("Azphelumbra")
     app.setOrganizationName("Strigoi")
