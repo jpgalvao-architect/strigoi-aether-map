@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Owns validated local settings and emits tactical state without UI dependencies."""
 import json
+import logging
 import re
 from pathlib import Path
 from uuid import uuid4
@@ -13,8 +14,9 @@ from app.core.models import Category, Gatherable, MapDefinition, Model, PointOfI
 from app.infrastructure.storage import PACKAGE, atomic_json, load_model, recover_model
 from app.modules.siege.map_setup import LOCAL_MAP, MAP_SIZE, MAP_SOURCE, PREPARED_MAP, validate_map, write_map
 from app.modules.siege.models import (
-    COLORS, MAP_ID, OFFICIAL, PREFIX, SECTORS, Cartography, Coordinate, CustomMarker,
-    Preset, RingCatalogue, RingPosition, SiegeState, TacticalCall,
+    COLORS, LEGACY_OFFICIAL, MAP_ID, OBJECTIVE_CATEGORY, OFFICIAL, PREFIX, SECTORS,
+    CalibratedRing, Cartography, Coordinate, CustomMarker,
+    Preset, RingCatalogue, RingPosition, SiegeState, TacticalCall, TacticalDrawing,
 )
 from app.modules.siege.transit_codes import TRANSIT_CODES
 
@@ -36,10 +38,11 @@ class SiegeService(QObject):
         self.ring_path = directory / 'siege-ring-catalogue.json'
         original = RingCatalogue(map_frame=self.data.map_frame, rings=self.data.rings)
         catalogue, catalogue_warning = recover_model(self.ring_path, RingCatalogue, original)
-        self.rings = {ring.ring_id: ring for ring in catalogue.rings}
+        self.catalogue = {ring.ring_id: ring for ring in catalogue.rings}
         self.objectives = {objective.number: objective for objective in self.data.objectives}
         self.state, self.warning = recover_model(self.path, SiegeState, SiegeState())
         self.warning = self.warning or catalogue_warning
+        self._migrate_state()
         self._clear_unusable_call(self.state)
         self.definition = None
         self._base = None
@@ -78,7 +81,7 @@ class SiegeService(QObject):
         incoming = load_model(path, RingCatalogue)
         if any(ring.ring_id.startswith('ring-pending-') for ring in incoming.rings):
             raise ValueError('O catálogo local precisa usar identificadores de origem.')
-        active = {key: ring for key, ring in self.rings.items() if not key.startswith('ring-pending-')}
+        active = {key: ring for key, ring in self.catalogue.items() if not key.startswith('ring-pending-')}
         for ring in incoming.rings:
             previous = active.get(ring.ring_id)
             if previous is not None and (previous.default_callsign != ring.default_callsign
@@ -86,11 +89,14 @@ class SiegeService(QObject):
                 raise ValueError('O catálogo não pode trocar o callsign ou setor já fixado de um anel.')
             active[ring.ring_id] = ring
         official = {ring.default_callsign: ring.ring_id for ring in active.values() if ring.default_callsign}
-        if any(code in official and official[code] != ring_id for ring_id, code in self.state.local_callsigns.items()):
+        portable = ((ring.ring_id, ring.default_callsign) for preset in self.state.presets
+                    for ring in preset.calibrated_rings if ring.default_callsign)
+        local = self.state.local_callsigns.items()
+        if any(code in official and official[code] != ring_id for ring_id, code in (*local, *portable)):
             raise ValueError('O catálogo conflita com um callsign local já fixado.')
         complete = RingCatalogue(map_frame=incoming.map_frame, rings=list(active.values()))
         atomic_json(self.ring_path, complete)
-        self.rings = active
+        self.catalogue = active
         previous = self.call
         self._clear_unusable_call(self.state)
         if self.call != previous:
@@ -131,10 +137,61 @@ class SiegeService(QObject):
         self._base = base
         return self._atlas
 
+    def standard_markers(self):
+        return [
+            CustomMarker(id=f'objective-{objective.code.lower()}', name=objective.code,
+                         category=OBJECTIVE_CATEGORY, origin='default',
+                         position=objective.map_position.model_copy())
+            for objective in sorted(self.objectives.values(), key=lambda objective: objective.number)
+        ]
+
+    def default_preset(self, name=OFFICIAL):
+        return Preset(name=name, layers={'SiegeObjectives', 'SiegeRings', 'TransitRings', 'CustomMarkers'},
+                      markers=self.standard_markers())
+
+    def _upgrade_preset(self, preset):
+        if preset.schema_version == 3:
+            return preset
+        markers = preset.markers
+        if preset.schema_version == 1:
+            existing = {marker.id for marker in markers}
+            markers = [*(marker for marker in self.standard_markers() if marker.id not in existing), *markers]
+        return Preset.model_validate({**preset.model_dump(), 'schema_version': 3, 'markers': markers})
+
+    def _migrate_state(self):
+        previous = self.state
+        presets = [self._upgrade_preset(preset) for preset in previous.presets]
+        official = next((preset for preset in presets if preset.name.strip().casefold() == OFFICIAL.casefold()), None)
+        if official is None:
+            official = self.default_preset()
+            presets.insert(0, official)
+        selected = previous.selected_preset
+        if selected == LEGACY_OFFICIAL or selected not in {preset.name for preset in presets}:
+            selected = official.name
+        self.state = SiegeState.model_validate({
+            **previous.model_dump(), 'schema_version': 3, 'presets': presets, 'selected_preset': selected,
+        })
+        if self.path.is_file() and previous != self.state:
+            try:
+                atomic_json(self.path, self.state)
+            except OSError:
+                logging.getLogger(__name__).exception('Falha ao gravar a migração dos presets de siege')
+                self.warning = self.warning or 'Não foi possível salvar a migração das marcações.'
+
     @property
     def preset(self):
-        return next((preset for preset in self.state.presets if preset.name == self.state.selected_preset),
-                    Preset(name=OFFICIAL, layers={'SiegeObjectives', 'SiegeRings', 'TransitRings'}))
+        return next(preset for preset in self.state.presets if preset.name == self.state.selected_preset)
+
+    @property
+    def rings(self):
+        return self.rings_for(self.state)
+
+    def rings_for(self, state):
+        preset = next(p for p in state.presets if p.name == state.selected_preset)
+        if not preset.use_local_calibration or not preset.calibrated_rings:
+            return self.catalogue
+        imported = {ring.ring_id: ring for ring in preset.calibrated_rings}
+        return imported | self.catalogue
 
     @property
     def call(self):
@@ -155,30 +212,43 @@ class SiegeService(QObject):
             self._commit(overlay={**self.state.overlay.model_dump(), **changes})
 
     def select_preset(self, name):
-        if name != OFFICIAL and not any(preset.name == name for preset in self.state.presets):
-            raise ValueError('Preset não encontrado.')
         if name != self.state.selected_preset:
+            if not any(preset.name == name for preset in self.state.presets):
+                raise ValueError('Preset não encontrado.')
             self._commit(selected_preset=name)
 
     def save_preset(self, preset, *, replace=True):
-        if preset.name.strip().casefold() == OFFICIAL.casefold():
-            raise ValueError('Escolha outro nome para preservar Siege Global v1.')
-        if not preset.name.strip() or not preset.name.isprintable():
+        preset = self._upgrade_preset(preset)
+        name = preset.name.strip()
+        if not name or not name.isprintable():
             raise ValueError('Nome do preset inválido.')
-        key = preset.name.strip().casefold()
-        presets = [p for p in self.state.presets if p.name.strip().casefold() != key]
-        if not replace and len(presets) != len(self.state.presets):
+        if name != preset.name:
+            preset = preset.model_copy(update={'name': name})
+        presets = list(self.state.presets)
+        key = name.casefold()
+        index = next((i for i, existing in enumerate(presets) if existing.name.strip().casefold() == key), None)
+        if index is None:
+            presets.append(preset)
+        elif not replace:
             raise ValueError('Já existe um preset com este nome.')
-        presets.append(preset)
-        self._commit(presets=presets, selected_preset=preset.name)
+        else:
+            presets[index] = preset
+        self._commit(presets=presets, selected_preset=name)
+
+    def create_preset(self, name):
+        self.save_preset(self.default_preset(name), replace=False)
 
     def edit_preset(self, **changes):
-        if self.preset.name == OFFICIAL:
-            raise ValueError('Crie uma cópia do preset para editar.')
         self.save_preset(Preset.model_validate({**self.preset.model_dump(), **changes}))
 
+    def restore_standard_markers(self):
+        defaults = self.standard_markers()
+        ids = {marker.id for marker in defaults}
+        extras = [marker for marker in self.preset.markers if marker.id not in ids]
+        self.edit_preset(markers=[*defaults, *extras], layers=self.preset.layers | {'SiegeObjectives'})
+
     def available_name(self, name):
-        used = {OFFICIAL.casefold(), *(p.name.strip().casefold() for p in self.state.presets)}
+        used = {p.name.strip().casefold() for p in self.state.presets}
         candidate = name
         suffix = 2
         while candidate.casefold() in used:
@@ -188,7 +258,7 @@ class SiegeService(QObject):
         return candidate
 
     def read_preset(self, path):
-        maximum = 256 * 1024
+        maximum = 5_000_000
         with path.open('rb') as stream:
             payload = stream.read(maximum + 1)
         if len(payload) > maximum:
@@ -197,7 +267,11 @@ class SiegeService(QObject):
             data = json.loads(payload)
             if not isinstance(data, dict) or not {'schema_version', 'map_id'} <= data.keys():
                 raise ValueError('Cabeçalho de marcações incompleto.')
-            return Preset.model_validate(data)
+            if data['schema_version'] in (2, 3) and 'markers' not in data:
+                raise ValueError('Lista de marcações ausente.')
+            if data['schema_version'] == 3 and 'drawings' not in data:
+                raise ValueError('Lista de formas ausente.')
+            return self._upgrade_preset(Preset.model_validate(data))
         except (ValueError, RecursionError) as error:
             raise ValueError('JSON de marcações inválido. Confira a versão, o mapa, os IDs e as coordenadas.') from error
 
@@ -206,26 +280,48 @@ class SiegeService(QObject):
 
     def accept_preset(self, preset, *, replace=False):
         name = preset.name.strip()
-        if not replace or name.casefold() == OFFICIAL.casefold():
+        numbered = {ring.default_callsign: ring.ring_id for ring in self.catalogue.values() if ring.default_callsign}
+        numbered.update({code: ring_id for ring_id, code in self.state.local_callsigns.items()})
+        for ring in preset.calibrated_rings:
+            known = self.catalogue.get(ring.ring_id)
+            if ((known is not None and known.sector != ring.sector)
+                    or numbered.get(ring.default_callsign, ring.ring_id) != ring.ring_id):
+                raise ValueError('A calibração importada conflita com um anel ou código local.')
+        if replace:
+            name = self.preset.name
+        elif name:
             name = self.available_name(name)
-        elif not any(p.name.strip().casefold() == name.casefold() for p in self.state.presets):
-            raise ValueError('Preset a substituir não encontrado.')
-        self.save_preset(Preset.model_validate({**preset.model_dump(), 'name': name}))
+        self.save_preset(preset.model_copy(update={'name': name}), replace=replace)
 
     def export_preset(self, path):
-        atomic_json(path, self.preset)
+        preset = self.preset
+        if preset.use_local_calibration:
+            calibrated = {ring.ring_id: self.portable_ring(ring, ring.position) for ring in preset.calibrated_rings}
+            for ring_id, position in self.state.local_rings.items():
+                ring = self.catalogue.get(ring_id)
+                if ring is not None and ring_id not in calibrated:
+                    calibrated[ring_id] = self.portable_ring(ring, position)
+            preset = Preset.model_validate({**preset.model_dump(), 'calibrated_rings': list(calibrated.values())})
+        atomic_json(path, preset)
+
+    def portable_ring(self, ring, position):
+        official = self.catalogue.get(ring.ring_id) or ring
+        code = ring.default_callsign or official.default_callsign or self.state.local_callsigns.get(ring.ring_id)
+        if not ring.sector or not code or not code.startswith(PREFIX[ring.sector]):
+            code = None
+        return CalibratedRing.model_validate({
+            **ring.model_dump(), 'position': position, 'source': position.source,
+            'geographic_description': '', 'default_callsign': code,
+        })
 
     def add_marker(self, name, position):
-        preset = self.preset
         marker = CustomMarker(id=f'local-{uuid4().hex}', name=name, position=position)
-        name = self.available_name('Minhas marcações') if preset.name == OFFICIAL else preset.name
-        self.save_preset(Preset.model_validate({
-            **preset.model_dump(), 'name': name, 'layers': preset.layers | {'CustomMarkers'},
-            'markers': [*preset.markers, marker],
-        }))
+        self.edit_preset(markers=[*self.preset.markers, marker], layers=self.preset.layers | {'CustomMarkers'})
         return marker
 
     def edit_marker(self, marker_id, **changes):
+        if {'id', 'origin'} & changes.keys():
+            raise ValueError('A identidade do pin é permanente.')
         markers = self.preset.markers
         if not any(marker.id == marker_id for marker in markers):
             raise ValueError('Pin não encontrado.')
@@ -237,11 +333,29 @@ class SiegeService(QObject):
     def delete_marker(self, marker_id):
         self.edit_preset(markers=[marker for marker in self.preset.markers if marker.id != marker_id])
 
+    def add_drawing(self, kind, start, end, **style):
+        defaults = {'stroke': 'solid'} if kind == 'arrow' else {}
+        drawing = TacticalDrawing(id=f'shape-{uuid4().hex}', kind=kind, start=start, end=end, **(defaults | style))
+        self.edit_preset(drawings=[*self.preset.drawings, drawing], layers=self.preset.layers | {'TacticalShapes'})
+        return drawing
+
+    def edit_drawing(self, drawing_id, **changes):
+        drawing = next((drawing for drawing in self.preset.drawings if drawing.id == drawing_id), None)
+        if drawing is None or 'id' in changes:
+            raise ValueError('Forma tática não encontrada.')
+        replacement = TacticalDrawing.model_validate({**drawing.model_dump(), **changes})
+        if replacement != drawing:
+            self.edit_preset(drawings=[replacement if item.id == drawing_id else item
+                                       for item in self.preset.drawings])
+
+    def delete_drawing(self, drawing_id):
+        self.edit_preset(drawings=[drawing for drawing in self.preset.drawings if drawing.id != drawing_id])
+
     def _clear_unusable_call(self, state):
         call = state.tactical_call
         changes = {}
         if call.ring_id:
-            ring = self.rings.get(call.ring_id)
+            ring = self.rings_for(state).get(call.ring_id)
             if not ring or ring.sector != call.sector or not self.callsign(ring, state=state):
                 changes['ring_id'] = None
         if call.objective and self.objectives[call.objective].sector != call.sector:
@@ -251,10 +365,17 @@ class SiegeService(QObject):
 
     def position(self, ring, *, state=None):
         state = self.state if state is None else state
-        custom = next((preset for preset in state.presets if preset.name == state.selected_preset), None)
-        if custom and custom.use_local_calibration:
+        preset = next((p for p in state.presets if p.name == state.selected_preset), None)
+        if preset and preset.use_local_calibration:
+            imported = next((r for r in preset.calibrated_rings if r.ring_id == ring.ring_id), None)
+            if imported is not None:
+                return imported.position
             return state.local_rings.get(ring.ring_id) or ring.position
         return ring.position
+
+    def local_position(self, ring_id):
+        imported = next((ring for ring in self.preset.calibrated_rings if ring.ring_id == ring_id), None)
+        return imported.position if imported is not None else self.state.local_rings.get(ring_id)
 
     def callsign(self, ring, *, state=None):
         state = self.state if state is None else state
@@ -263,7 +384,9 @@ class SiegeService(QObject):
             return None
         if ring.default_callsign:
             return ring.default_callsign
-        code = state.local_callsigns.get(ring.ring_id, '')
+        preset = next(p for p in state.presets if p.name == state.selected_preset)
+        imported_code = next((r.default_callsign for r in preset.calibrated_rings if r.ring_id == ring.ring_id), None)
+        code = (imported_code if preset.use_local_calibration else None) or state.local_callsigns.get(ring.ring_id, '')
         if ring.sector and re.fullmatch(
             PREFIX[ring.sector] + r'[1-9][0-9]*', code
         ):
@@ -283,10 +406,19 @@ class SiegeService(QObject):
     def calibrate_ring(self, ring_id, position):
         if ring_id not in self.rings:
             raise ValueError('Anel fora do catálogo atual.')
-        self._commit(local_rings={**self.state.local_rings, ring_id: position})
+        calibrated = self.preset.calibrated_rings
+        if any(ring.ring_id == ring_id for ring in calibrated):
+            self.edit_preset(calibrated_rings=[
+                self.portable_ring(ring, position) if ring.ring_id == ring_id else ring for ring in calibrated
+            ])
+        else:
+            self._commit(local_rings={**self.state.local_rings, ring_id: position})
 
     def reset_ring(self, ring_id):
-        if ring_id in self.state.local_rings:
+        calibrated = self.preset.calibrated_rings
+        if any(ring.ring_id == ring_id for ring in calibrated):
+            self.edit_preset(calibrated_rings=[ring for ring in calibrated if ring.ring_id != ring_id])
+        elif ring_id in self.state.local_rings:
             local = dict(self.state.local_rings)
             del local[ring_id]
             self._commit(local_rings=local)
@@ -294,15 +426,18 @@ class SiegeService(QObject):
     def freeze_callsigns(self, sector):
         prefix = PREFIX[sector]
         codes = dict(self.state.local_callsigns)
+        imported = {r.ring_id: r.default_callsign for r in self.preset.calibrated_rings if r.default_callsign}
         used = [r.default_callsign for r in self.rings.values() if r.default_callsign]
         used.extend(codes.values())
+        used.extend(imported.values())
         latest = max((int(c[1:]) for c in used if re.fullmatch(prefix + r'[1-9][0-9]*', c)), default=0)
         eligible = [r for r in self.rings.values() if r.sector == sector and not r.default_callsign
-                    and r.ring_id not in codes and (position := self.state.local_rings.get(r.ring_id) or r.position)
+                    and r.ring_id not in codes and r.ring_id not in imported
+                    and (position := self.local_position(r.ring_id) or r.position)
                     and position.status == 'verified']
         # 8 px bands on the canonical frame. Within a band, west comes first.
         def order(ring):
-            position = self.state.local_rings.get(ring.ring_id) or ring.position
+            position = self.local_position(ring.ring_id) or ring.position
             point = position.map_position
             altitude = position.altitude if position.altitude is not None else 0
             return (round(point.y * MAP_SIZE / 8), point.x, point.y, altitude, ring.ring_id)

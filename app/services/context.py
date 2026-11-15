@@ -8,6 +8,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal
 
+from app.core.i18n import LANGUAGES, suggested_language
 from app.core.models import Dataset, EventFeed, MapLocation, Preferences
 from app.infrastructure.storage import PACKAGE, atomic_json, load_model, recover_model, resolve_map_image
 from app.modules.notifications.service import AlertEngine
@@ -60,10 +61,10 @@ class AppContext(QObject):
         if self.prefs.ui_language is None:
             try:
                 seed=json.loads((directory/'installation.json').read_text(encoding='utf-8-sig'))
-                selected=seed.get('default_language','pt_BR')
+                selected=seed.get('default_language')
             except (OSError,ValueError,AttributeError):
-                selected='pt_BR'
-            self.prefs.ui_language=selected if selected in ('pt_BR','en_US') else 'pt_BR'
+                selected=None
+            self.prefs.ui_language=selected if isinstance(selected, str) and selected in LANGUAGES else suggested_language()
         if warning:
             self.messages.append(warning)
         # Keep requested modules separate from workers, which start only in the runtime UI.

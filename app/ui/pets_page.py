@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (QDialogButtonBox, QFileDialog, QFormLayout,
     QHBoxLayout, QInputDialog, QListWidget, QListWidgetItem, QStyledItemDelegate,
     QStyle, QVBoxLayout)
 
-from app.core.i18n import tr
+from app.core.i18n import Verbatim, tr
 from app.infrastructure.storage import PACKAGE
 from app.ui.localized_widgets import (QCheckBox, QComboBox, QDialog, QLineEdit,
     QDoubleSpinBox, QSpinBox, QToolButton, QWidget)
@@ -60,7 +60,7 @@ class PetCardDelegate(QStyledItemDelegate):
 class ProgressDialog(QDialog):
     def __init__(self, pet, entry, parent):
         super().__init__(parent)
-        self.setWindowTitle(pet.name)
+        self.setWindowTitle(Verbatim(pet.name))
         self.setMinimumWidth(380)
         body = QVBoxLayout(self)
         body.addWidget(page_header('Registrar progresso', 'Copie o nível e as almas que aparecem na coleção do jogo.'))
@@ -264,7 +264,7 @@ class PetsPage(QWidget):
         self.profiles.blockSignals(True)
         self.profiles.clear()
         for key, profile in self.service.store.collection.profiles.items():
-            self.profiles.addItem(profile.name, key)
+            self.profiles.addItem(profile.name if key == 'local' else Verbatim(profile.name), key)
         self.profiles.setCurrentIndex(self.profiles.findData(current))
         self.profiles.blockSignals(False)
         self.automatic.blockSignals(True)
@@ -350,7 +350,7 @@ class PetsPage(QWidget):
             item.setData(Qt.ItemDataRole.UserRole+2, 'Não registrado' if entry.state=='unknown' else progress_caption(entry))
             item.setData(Qt.ItemDataRole.UserRole+3, entry.favorite)
             item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-            item.setToolTip(pet.name+' · '+pet.family+'\n'+tr(progress_caption(entry)))
+            item.setToolTip(pet.name+' · '+tr(pet.family)+'\n'+tr(progress_caption(entry)))
             self.grid.addItem(item)
             if pet.id == selected:
                 target = item
@@ -381,7 +381,7 @@ class PetsPage(QWidget):
         entry = self.service.entry(pet.id)
         self.picture.setPixmap(QPixmap(str(PACKAGE/'assets'/pet.portrait)).scaled(
             120, 120, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
-        self.name.setText(pet.name)
+        self.name.setText(Verbatim(pet.name))
         self.family_caption.setText('Especial' if pet.family == 'Special' else pet.family)
         progress = entry.progress
         caption = progress_caption(entry)

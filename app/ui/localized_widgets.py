@@ -2,7 +2,7 @@
 """Qt controls remember source captions so language switches do not lose state."""
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
-from app.core.i18n import tr
+from app.core.i18n import Verbatim, tr
 
 TEXT_ROLE = int(Qt.ItemDataRole.UserRole)+481
 TIP_ROLE = TEXT_ROLE+1
@@ -12,12 +12,14 @@ class _TextMixin:
     def __init__(self, *args, **kwargs):
         self._captions = {}
         super().__init__(*args, **kwargs)
+        original = next((value for value in args if isinstance(value, Verbatim)), None)
         for getter, setter in [('text','setText'),('title','setTitle'),('windowTitle','setWindowTitle')]:
             method = getattr(super(),getter,None)
             if getter=='text' and isinstance(self,QtWidgets.QLineEdit):
                 continue
-            if method and method():
-                getattr(self,setter)(method())
+            caption = method() if method else ''
+            if caption:
+                getattr(self,setter)(original if original == caption else caption)
 
     def _caption(self, setter, text):
         self._captions[setter] = text
@@ -74,7 +76,8 @@ class QComboBox(_TextMixin, QtWidgets.QComboBox):
         source=args[position]
         args[position]=tr(source)
         super().addItem(*args)
-        super().setItemData(self.count()-1,source,TEXT_ROLE)
+        if not isinstance(source, Verbatim):
+            super().setItemData(self.count()-1,source,TEXT_ROLE)
 
     def addItems(self,texts):
         for text in texts:self.addItem(text)
@@ -114,10 +117,10 @@ class QTableWidgetItem(QtWidgets.QTableWidgetItem):
         source=args[position] if position is not None else ''
         if position is not None:args[position]=tr(source)
         super().__init__(*args)
-        self.setData(TEXT_ROLE,source)
+        self.setData(TEXT_ROLE,None if isinstance(source, Verbatim) else source)
 
     def setText(self,text):
-        self.setData(TEXT_ROLE,text)
+        self.setData(TEXT_ROLE,None if isinstance(text, Verbatim) else text)
         super().setText(tr(text))
 
     def setToolTip(self,text):
@@ -125,7 +128,8 @@ class QTableWidgetItem(QtWidgets.QTableWidgetItem):
         super().setToolTip(tr(text))
 
     def retranslate(self):
-        super().setText(tr(self.data(TEXT_ROLE) or ''))
+        source = self.data(TEXT_ROLE)
+        if source is not None:super().setText(tr(source))
         if self.data(TIP_ROLE) is not None:super().setToolTip(tr(self.data(TIP_ROLE)))
 
 

@@ -6,23 +6,23 @@ um aviso visual permite acompanhar uma pista sonora durante a exploração.
 
 ## Usar
 
-1. Abra o AION 2 e o Strigoi Aether Map.
+1. Abra o AION 2 e o Azphelumbra.
 2. Em **Sonar**, clique em **Atualizar aplicativos** e selecione o processo
    que reproduz o áudio do jogo. O nome escolhido é lembrado; o PID é atual.
 3. Escolha **Equilibrada** ou **Alta** e clique em **Ativar sonar**.
-4. Um cartão **Possível cubo por perto** aparece quando o detector confirma
-   correspondências. O texto de orientação é **Procure nos arredores antes que
-   outro jogador colete!**. A barra e o histórico acompanham a intensidade
-   estimada do som reconhecido. O cartão permanece visível enquanto há novas
-   correspondências e desaparece oito segundos após a última. Você pode
-   movê-lo ou dispensá-lo.
+4. O Sonar mostra **Cubo detectado** ou **Cubo não detectado** enquanto está
+   ligado. Quando a assinatura sonora é confirmada, aparece o cartão **Cubo
+   oculto detectado!** com o texto **Há um cubo nas proximidades.** Você pode
+   mover ou dispensar o cartão. Ele fecha oito segundos após a última
+   confirmação. Em uma detecção contínua, o Sonar só pode abrir outro
+   cartão após o intervalo entre avisos.
 5. Clique em **Parar sonar** para encerrar a captura. Fechar o app também
    encerra o componente nativo, mas conserva sua escolha de ativação. Se estava
    habilitado, o sonar aguarda o AION 2 e retoma com o PID atual ao reabrir.
    Usar **Parar sonar** ou desligar o toggle mantém o recurso desligado.
 
-**Testar aviso visual** exibe um cartão identificado como teste, sem capturar
-áudio, sem mostrar uma leitura de intensidade e sem declarar uma detecção.
+**Testar aviso visual** exibe uma prévia identificada como teste. A captura
+de áudio fica no estado em que estiver.
 O aviso funciona com o mapa fechado e
 independe da ativação do overlay visual. Não há alerta sonoro obrigatório.
 
@@ -71,32 +71,6 @@ Silêncio e PCM inválido não geram detecção. Descontinuidade reinicia a
 referência temporal. Sensibilidade alta reduz o limiar e pode gerar mais
 avisos. O score interno não é uma probabilidade nem aparece como certeza
 percentual na interface. A filtragem não altera o áudio ouvido pelo usuário.
-
-## Intensidade do som reconhecido
-
-A barra e o histórico de 15 segundos aparecem na página **Sonar** e no aviso
-flutuante. As leituras continuam durante o intervalo entre notificações.
-**Fraco**, **Moderado** e **Forte** descrevem o sinal estimado; cores e texto
-acompanham a barra. O volume configurado no jogo também muda a leitura.
-
-O cálculo usa o ganho da referência no ponto de correlação correspondente,
-ponderado pelas mesmas faixas espectrais usadas na detecção. O ganho é a
-correlação dividida pela energia ponderada da referência. Multiplicá-lo pelo
-RMS da referência produz uma estimativa de nível em dBFS. Esse cálculo é
-independente do score normalizado e do RMS total da mistura. A barra usa uma
-escala fixa de -80 a -20 dBFS; o indicador não se ajusta automaticamente para
-encher quando o som está fraco.
-
-A leitura exige confirmação temporal. Sem uma correspondência recente,
-o indicador volta a **Aguardando sinal**. Parar a captura ou receber uma
-descontinuidade descarta o estado anterior. O histórico fica somente na
-memória. Fechar o aviso não faz cada nova leitura reabri-lo.
-
-A estimativa não separa perfeitamente todos os efeitos e não mede distância,
-direção ou altura do cubo. Ela acompanha a força da assinatura reconhecida,
-com latência de análise e suavização, e pode perder a correspondência em
-áudio mascarado. A relação entre essa barra e a proximidade no jogo ainda
-precisa de validação em partidas reais.
 
 ## Evidência e limites
 

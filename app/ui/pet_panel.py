@@ -4,7 +4,7 @@ from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QGuiApplication, QPixmap
 from PySide6.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout
 
-from app.core.i18n import language, tr
+from app.core.i18n import Verbatim, language, tr
 from app.infrastructure.storage import PACKAGE
 from app.ui.icons import icon
 from app.ui.localized_widgets import QFrame, QToolButton, QWidget
@@ -92,8 +92,8 @@ class PetPanel(HudSurface):
                     43,43,Qt.AspectRatioMode.KeepAspectRatio,Qt.TransformationMode.SmoothTransformation))
                 box.addWidget(portrait)
                 copy = QVBoxLayout(); copy.setSpacing(2)
-                name = label(pet.name); name.setToolTip(pet.name)
-                name.setText(name.fontMetrics().elidedText(pet.name,Qt.TextElideMode.ElideRight,175))
+                name = label(Verbatim(pet.name)); name.setToolTip(Verbatim(pet.name))
+                name.setText(Verbatim(name.fontMetrics().elidedText(pet.name,Qt.TextElideMode.ElideRight,175)))
                 copy.addWidget(name)
                 progress = entry.progress
                 caption = tr(progress_caption(entry)) if progress and progress.level is not None else ''

@@ -5,20 +5,44 @@ fica disponível no Atlas para consulta de Coletas e Pets.
 
 ## Editar pins
 
-1. Abra **Siege Command → Editar pins** e clique em **Adicionar pin**.
-2. Clique no ponto desejado, inclusive sobre a água ou entre ilhas.
-   O primeiro pin no preset oficial cria e seleciona **Minhas marcações**.
-3. Selecione o pin no mapa ou na lista para editar nome, categoria, cor,
-   tamanho e visibilidade. Arraste o pin no mapa para reposicioná-lo.
-   As mudanças são salvas ao concluir cada edição.
-4. Use **Excluir pin** para remover um pin do preset.
+**Siege Global — Default** começa com P1–P12 nas coordenadas de
+referência. Abra **Siege Command → Editar pins** para editar o preset ativo.
+
+1. Clique em um pin no mapa ou selecione-o na lista. Edite nome, categoria,
+   cor, tamanho e visibilidade. Arraste o pin para reposicioná-lo.
+2. Use **Adicionar pin** para marcar qualquer ponto, inclusive sobre a água.
+   Para criar um objetivo como P13, dê esse nome ao pin e use a categoria
+   **Objetivo de siege**.
+3. Clique em **Excluir pin** e confirme para remover o pin do preset.
    **Cancelar edição** ou **Esc** abandonam o posicionamento em curso.
+
+As mudanças são salvas ao concluir cada edição. Use **Restaurar marcações
+padrão** para recuperar P1–P12 no preset atual. Confirme para substituir
+as edições desses 12 pins e manter as outras marcações.
 
 Use **Ilhas** para enquadrar a área jogável e **Mapa inteiro** para ver toda
 a extensão. Role para ampliar e arraste o terreno para deslocar o mapa.
-Os anéis usam um símbolo circular com código abaixo. Objetivos e marcações
-personalizadas usam pins. Quando falta espaço para um rótulo, os objetivos
-e os anéis de siege têm prioridade.
+Os anéis usam um símbolo circular com código abaixo. Todos os pins usam o
+mesmo formato e podem herdar a cor da camada.
+
+## Desenhos táticos
+
+1. Abra **Siege Command → Desenhos táticos** e escolha **Retângulo**,
+   **Círculo / elipse** ou **Seta**. Arraste no mapa para desenhar. Segure
+   **Shift** para fazer um quadrado ou círculo.
+2. Clique na forma ou escolha-a na lista. Arraste a forma para mover ou
+   arraste uma das alças para redimensionar. Na seta, arraste as pontas
+   para mudar a direção.
+3. Ajuste cor, espessura, opacidade, traço e, se quiser, adicione um rótulo.
+   Na seta, também dá para ajustar o tamanho da ponta.
+4. Use **Duplicar forma** para criar uma cópia ou **Excluir forma** para
+   removê-la do preset. Use **Esc** ou **Cancelar** para abandonar o gesto.
+   **Formas táticas** controla a camada. **Forma visível** controla apenas a
+   seleção atual.
+
+Presets novos começam sem desenhos. O editor salva as mudanças ao concluir
+cada edição. As formas aparecem no minimapa e no mapa aberto com M quando
+a camada e o **Overlay de Reshanta** estão ativos.
 
 ## Ver as marcações no jogo
 
@@ -35,46 +59,55 @@ e os anéis de siege têm prioridade.
 
 O overlay geral mostra as camadas de exploração do mapa reconhecido.
 O controle **Overlay de Reshanta** atua nos objetivos, nos anéis e nos
-pins do preset ativo. A aba **Camadas e presets** controla as categorias
+pins e formas do preset ativo. A aba **Camadas e presets** controla as categorias
 e a aparência do preset. O modo de mapa com referência fixa usa somente
 a referência importada. O modo automático acompanha a região exibida no jogo.
 
 ## Compartilhar marcações
 
-Clique em **Exportar marcações (.json)** no editor para salvar o preset
-ativo. Em outra instalação, use **Importar marcações (.json)**. O programa
-valida e seleciona o preset importado. Se já existir um preset com aquele
-nome, escolha **Importar como novo** para manter ambos ou **Substituir preset**
-para atualizar a cópia com o mesmo nome. O preset oficial é sempre protegido.
-
-A exportação e a importação funcionam offline. O JSON inclui os pins e
-as preferências de visualização do preset. Anéis oficiais, imagens, dados de
-pets e calibrações administrativas têm seus próprios arquivos. Um apelido de
-anel pode ser importado antes do catálogo e passa a aparecer quando o
-respectivo anel estiver disponível.
+Clique em **Exportar marcações (.json)** para salvar o preset ativo. Em
+outra instalação, use **Importar marcações (.json)** e escolha **Importar
+como novo** ou **Substituir preset atual**. A segunda opção mantém o nome
+do preset ativo e aplica todas as marcações e opções do arquivo. A exportação
+e a importação funcionam offline.
 
 O [esquema de marcações](../schemas/siege-preset.schema.json) descreve os
-campos aceitos. Use `schema_version` igual a `1`, `map_id` igual a
-`lower-reshanta` e `map_frame` igual a `Abyss_Reshanta_A`. Arquivos antigos
-com versão 1 também são aceitos quando omitem `map_frame`.
+campos aceitos. As exportações atuais usam `schema_version` igual a `3`,
+`map_id` igual a `lower-reshanta` e `map_frame` igual a `Abyss_Reshanta_A`.
+A lista `markers` contém todos os pins existentes no preset, inclusive os
+ocultos. Um pin removido permanece ausente. Ao migrar um preset da versão 1,
+o app incorpora os objetivos que aquela versão desenhava separadamente e
+preserva os pins personalizados e as camadas existentes. A versão 2
+mantém os pins como estavam e começa com a lista de formas vazia.
 
-- `name` identifica o preset. `layers` controla as camadas desenhadas.
-  Inclua `CustomMarkers` para mostrar os pins.
-- Cada entrada em `markers` tem um `id` único dentro do preset começando
-  com `local-`, um `name` e uma `position` com `x` e `y` numéricos
-  entre 0 e 1. A origem fica no canto superior esquerdo do quadro.
-  Mantenha o ID ao editar ou compartilhar novas revisões do mesmo pin.
+- Cada pin tem um `id` único dentro do preset, um `name` editável e uma
+  `position` com `x` e `y` numéricos de 0 a 1. A origem das coordenadas
+  fica no canto superior esquerdo. Mantenha o ID ao editar ou compartilhar
+  novas revisões do mesmo pin.
+- Os pins padrão usam IDs `objective-p1` a `objective-p12`. Pins criados
+  no editor recebem um ID começando com `local-`. `origin` registra se
+  o pin veio do modelo padrão ou foi criado pelo usuário.
 - `color` usa `#RRGGBB` ou `null` para herdar a cor da camada. `scale`
-  multiplica o tamanho do preset entre 0,65 e 1,8. `category` é um nome
-  livre com até 32 caracteres. `visible` indica se o pin aparece.
-- `colors`, `marker_scale`, `aliases` e `use_local_calibration` guardam
-  as preferências de camada, tamanho, apelidos e uso de calibração local.
+  multiplica o tamanho por um valor de 0,65 a 1,8 e `visible` indica se o
+  pin está habilitado.
+- `category` aceita até 32 caracteres. `siege-objective` usa a camada
+  `SiegeObjectives`. As outras categorias usam `CustomMarkers`.
+- Cada entrada em `drawings` tem ID, tipo e coordenadas normalizadas
+  `start` e `end`. Esses pontos representam cantos opostos ou as
+  extremidades da seta. O JSON também guarda a cor, a largura do traço,
+  a opacidade, o estilo, o tamanho da ponta, o rótulo e a visibilidade.
+- `layers`, `colors`, `marker_scale`, `aliases` e `use_local_calibration`
+  guardam as preferências de visualização, os apelidos e o uso de calibração
+  local. Quando habilitadas, as calibrações manuais dos anéis são
+  exportadas em `calibrated_rings` e aplicadas ao preset importado.
+  A base do mapa, o catálogo de origem dos anéis e os locais de pets
+  têm arquivos próprios.
 
 ## Configurar anéis e camadas
 
-**Siege Global v1** mostra os 12 objetivos e os anéis com posição
-disponível. Em **Camadas e presets**, duplique o preset para ajustar cores,
-tamanho, camadas e apelidos. **Restaurar Global** volta ao preset oficial.
+Em **Camadas e presets**, use **Novo preset** para começar com P1–P12
+ou **Duplicar preset** para continuar a partir de uma cópia do plano atual.
+Você também pode ajustar cores, tamanho, camadas e apelidos dos anéis.
 
 Em **Catálogo de anéis**, use **Importar catálogo local** com um
 [catálogo compatível](../schemas/siege-ring-catalogue.schema.json) no

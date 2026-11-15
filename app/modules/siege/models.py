@@ -2,15 +2,17 @@
 import re
 from typing import Literal
 
-from pydantic import Field, FiniteFloat, field_validator, model_validator
+from pydantic import Field, FiniteFloat, field_serializer, field_validator, model_validator
 
 from app.core.models import Model
 
 MAP_ID = 'lower-reshanta'
-OFFICIAL = 'Siege Global v1'
+OFFICIAL = 'Siege Global — Default'
+LEGACY_OFFICIAL = 'Siege Global v1'
+OBJECTIVE_CATEGORY = 'siege-objective'
 Sector = Literal['MID', 'BOT', 'TOP']
 Action = Literal['regroup', 'attack', 'defend', 'retreat']
-Layer = Literal['SiegeObjectives', 'SiegeRings', 'TransitRings', 'Pets', 'Gathering', 'CustomMarkers']
+Layer = Literal['SiegeObjectives', 'SiegeRings', 'TransitRings', 'Pets', 'Gathering', 'CustomMarkers', 'TacticalShapes']
 SECTORS = {
     'MID': 'Raiz de Reshanta',
     'BOT': 'Arquipélago das Asas de Siel',
@@ -23,7 +25,8 @@ LAYERS = {
     'TransitRings': 'Anéis de trânsito',
     'Pets': 'Pets',
     'Gathering': 'Coletas',
-    'CustomMarkers': 'Marcadores locais',
+    'CustomMarkers': 'Outros pins',
+    'TacticalShapes': 'Formas táticas',
 }
 COLORS = {
     'SiegeObjectives': '#f8d38b',
@@ -32,6 +35,7 @@ COLORS = {
     'Pets': '#cc9ce5',
     'Gathering': '#92ddab',
     'CustomMarkers': '#87c8f4',
+    'TacticalShapes': '#f8d38b',
 }
 SOURCE_MAX = 420
 
@@ -75,14 +79,26 @@ class Ring(Model):
     default_callsign: str | None = Field(default=None, pattern=r'^[MBT][1-9][0-9]*$')
 
     @model_validator(mode='after')
-    def check_callsign(self):
+    def check_ring_identity(self):
         if (self.category == 'siege') != (self.sector is not None):
             raise ValueError('Anel e setor incompatíveis')
-        if self.default_callsign and (
-            self.sector is None or not self.default_callsign.startswith(PREFIX[self.sector])
-            or self.position is None or self.position.status != 'verified'
-        ):
+        if self.default_callsign and (not self.sector or not self.default_callsign.startswith(PREFIX[self.sector])):
+            raise ValueError('Callsign incompatível com o setor')
+        return self
+
+    @model_validator(mode='after')
+    def check_callsign_position(self):
+        if self.default_callsign and (self.position is None or self.position.status != 'verified'):
             raise ValueError('Callsign oficial exige posição verificada no setor')
+        return self
+
+
+class CalibratedRing(Ring):
+    position: RingPosition
+
+    @model_validator(mode='after')
+    def check_callsign_position(self):
+        # A manual adjustment keeps its original code while the new position is provisional.
         return self
 
 
@@ -113,12 +129,13 @@ class Cartography(RingCatalogue):
 
 
 class CustomMarker(Model):
-    id: str = Field(pattern=r'^local-[a-z0-9-]+$', max_length=100)
+    id: str = Field(pattern=r'^(local-[a-z0-9-]+|objective-p[1-9][0-9]*)$', max_length=100)
     name: str = Field(min_length=1, max_length=60)
     position: Coordinate
     color: str | None = Field(default=None, pattern=r'^#[0-9a-fA-F]{6}$')
     scale: float = Field(default=1., ge=.65, le=1.8)
     category: str = Field(default='Tático', min_length=1, max_length=32)
+    origin: Literal['default', 'custom'] = 'custom'
     visible: bool = Field(default=True, strict=True)
 
     @field_validator('name', 'category')
@@ -130,10 +147,48 @@ class CustomMarker(Model):
         return value
 
 
-class Preset(Model):
-    model_config = Model.model_config | {'json_schema_extra': {'required': ['schema_version', 'map_id', 'name']}}
+DrawingKind = Literal['rectangle', 'ellipse', 'arrow']
 
-    schema_version: Literal[1] = 1
+
+class TacticalDrawing(Model):
+    id: str = Field(pattern=r'^shape-[a-z0-9-]+$', max_length=100)
+    kind: DrawingKind
+    start: Coordinate
+    end: Coordinate
+    color: str | None = Field(default=None, pattern=r'^#[0-9a-fA-F]{6}$')
+    width: float = Field(default=2., ge=.75, le=10, strict=True)
+    opacity: float = Field(default=.9, ge=.1, le=1, strict=True)
+    stroke: Literal['dashed', 'solid'] = 'dashed'
+    head_size: float = Field(default=15., ge=4, le=36, strict=True)
+    label: str = Field(default='', max_length=60)
+    visible: bool = Field(default=True, strict=True)
+
+    @field_validator('label')
+    @classmethod
+    def validate_label(cls, value):
+        value = value.strip()
+        if value and not value.isprintable():
+            raise ValueError('Texto da forma inválido.')
+        return value
+
+    @model_validator(mode='after')
+    def check_geometry(self):
+        dx, dy = abs(self.start.x-self.end.x), abs(self.start.y-self.end.y)
+        if (max(dx, dy) if self.kind == 'arrow' else min(dx, dy)) < 1e-6:
+            raise ValueError('Arraste para dar tamanho à forma.')
+        return self
+
+
+class Preset(Model):
+    model_config = Model.model_config | {'json_schema_extra': {
+        'required': ['schema_version', 'map_id', 'name'],
+        'allOf': [
+            {'if': {'properties': {'schema_version': {'enum': [2, 3]}}}, 'then': {'required': ['markers']}},
+            {'if': {'properties': {'schema_version': {'const': 3}}}, 'then': {'required': ['drawings']}},
+        ],
+    }}
+
+    schema_version: Literal[1, 2, 3] = 3
     map_id: Literal['lower-reshanta'] = MAP_ID
     map_frame: Literal['Abyss_Reshanta_A'] = 'Abyss_Reshanta_A'
     name: str = Field(min_length=1, max_length=70)
@@ -142,7 +197,13 @@ class Preset(Model):
     use_local_calibration: bool = False
     marker_scale: float = Field(default=1.0, ge=.65, le=1.8)
     aliases: dict[str, str] = Field(default_factory=dict, max_length=250)
-    markers: list[CustomMarker] = Field(default_factory=list, max_length=150)
+    markers: list[CustomMarker] = Field(default_factory=list)
+    drawings: list[TacticalDrawing] = Field(default_factory=list)
+    calibrated_rings: list[CalibratedRing] = Field(default_factory=list, max_length=250)
+
+    @field_serializer('layers', when_used='json')
+    def serialize_layers(self, layers):
+        return sorted(layers)
 
     @field_validator('schema_version', mode='before')
     @classmethod
@@ -162,6 +223,12 @@ class Preset(Model):
             raise ValueError('Apelido inválido')
         if len({m.id for m in self.markers}) != len(self.markers):
             raise ValueError('Marcador local duplicado')
+        if len({drawing.id for drawing in self.drawings}) != len(self.drawings):
+            raise ValueError('Forma tática duplicada')
+        ring_ids = {ring.ring_id for ring in self.calibrated_rings}
+        codes = [ring.default_callsign for ring in self.calibrated_rings if ring.default_callsign]
+        if len(ring_ids) != len(self.calibrated_rings) or len(set(codes)) != len(codes):
+            raise ValueError('Calibração de anel inválida ou duplicada')
         return self
 
 
@@ -195,19 +262,30 @@ class OverlayOptions(Model):
 
 
 class SiegeState(Model):
-    schema_version: Literal[1] = 1
+    schema_version: Literal[1, 2, 3] = 3
     selected_preset: str = OFFICIAL
-    presets: list[Preset] = Field(default_factory=list, max_length=30)
+    presets: list[Preset] = Field(default_factory=list, max_length=31)
     local_rings: dict[str, RingPosition] = Field(default_factory=dict, max_length=250)
     local_callsigns: dict[str, str] = Field(default_factory=dict, max_length=250)
     tactical_call: TacticalCall = Field(default_factory=TacticalCall)
     overlay: OverlayOptions = Field(default_factory=OverlayOptions)
 
+    @model_validator(mode='before')
+    @classmethod
+    def read_legacy_presets(cls, value):
+        if isinstance(value, dict) and value.get('schema_version', 1) == 1:
+            presets = value.get('presets', [])
+            if isinstance(presets, list):
+                return {**value, 'presets': [
+                    {'schema_version': 1, **preset} if isinstance(preset, dict) else preset for preset in presets
+                ]}
+        return value
+
     @model_validator(mode='after')
     def check_presets_and_codes(self):
         names = [preset.name.strip().casefold() for preset in self.presets]
-        if OFFICIAL.casefold() in names or len(set(names)) != len(names):
-            raise ValueError('Nome de preset reservado ou duplicado')
+        if len(set(names)) != len(names):
+            raise ValueError('Nome de preset duplicado')
         callsigns = list(self.local_callsigns.values())
         if len(set(callsigns)) != len(callsigns) or any(not re.fullmatch(r'[MBT][1-9][0-9]*', code) for code in callsigns):
             raise ValueError('Callsign local inválido ou duplicado')

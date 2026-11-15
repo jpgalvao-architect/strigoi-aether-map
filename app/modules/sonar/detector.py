@@ -45,6 +45,7 @@ class CubeDetector:
         self.last_alert=-float('inf')
         self.last_score=0.
         self.last_level_db=None
+        self.confirmed=False
         self.analysis_count=0
 
     def match(self, audio):
@@ -113,6 +114,7 @@ class CubeDetector:
         self.since_analysis=0
         self.analysis_count+=1
         self.last_level_db=None
+        self.confirmed=False
         matches=[self.match(self.buffer[:,channel]) for channel in range(2)]
         matches=[m for m in matches if m is not None]
         now=self.samples_seen/self.rate
@@ -125,6 +127,7 @@ class CubeDetector:
         previous=self.previous
         self.previous=(absolute,now)
         coherent=previous is not None and abs(previous[0]-absolute)<.08 and now-previous[1]<1.
+        self.confirmed=coherent
         if coherent:
             self.last_level_db=candidate.level_db
         if coherent and now-self.last_alert>=15.:

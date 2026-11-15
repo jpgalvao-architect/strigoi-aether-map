@@ -1,5 +1,90 @@
 {
   "$defs": {
+    "CalibratedRing": {
+      "additionalProperties": false,
+      "properties": {
+        "ring_id": {
+          "maxLength": 100,
+          "pattern": "^ring-[a-z0-9-]+$",
+          "title": "Ring Id",
+          "type": "string"
+        },
+        "map_id": {
+          "const": "lower-reshanta",
+          "default": "lower-reshanta",
+          "title": "Map Id",
+          "type": "string"
+        },
+        "zone_id": {
+          "title": "Zone Id",
+          "type": "string"
+        },
+        "sector": {
+          "anyOf": [
+            {
+              "enum": [
+                "MID",
+                "BOT",
+                "TOP"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sector"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "geographic_description": {
+          "default": "",
+          "title": "Geographic Description",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "siege",
+            "transit"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/$defs/RingPosition"
+        },
+        "default_callsign": {
+          "anyOf": [
+            {
+              "pattern": "^[MBT][1-9][0-9]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Callsign"
+        }
+      },
+      "required": [
+        "ring_id",
+        "zone_id",
+        "display_name",
+        "category",
+        "source",
+        "position"
+      ],
+      "title": "CalibratedRing",
+      "type": "object"
+    },
     "Coordinate": {
       "additionalProperties": false,
       "properties": {
@@ -28,7 +113,7 @@
       "properties": {
         "id": {
           "maxLength": 100,
-          "pattern": "^local-[a-z0-9-]+$",
+          "pattern": "^(local-[a-z0-9-]+|objective-p[1-9][0-9]*)$",
           "title": "Id",
           "type": "string"
         },
@@ -68,6 +153,15 @@
           "title": "Category",
           "type": "string"
         },
+        "origin": {
+          "default": "custom",
+          "enum": [
+            "default",
+            "custom"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
         "visible": {
           "default": true,
           "title": "Visible",
@@ -81,13 +175,211 @@
       ],
       "title": "CustomMarker",
       "type": "object"
+    },
+    "RingPosition": {
+      "additionalProperties": false,
+      "properties": {
+        "map_position": {
+          "$ref": "#/$defs/Coordinate"
+        },
+        "source": {
+          "maxLength": 420,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "provisional",
+            "verified"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "world_coordinates": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "World Coordinates"
+        },
+        "altitude": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Altitude"
+        }
+      },
+      "required": [
+        "map_position",
+        "source",
+        "status"
+      ],
+      "title": "RingPosition",
+      "type": "object"
+    },
+    "TacticalDrawing": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 100,
+          "pattern": "^shape-[a-z0-9-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "rectangle",
+            "ellipse",
+            "arrow"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "start": {
+          "$ref": "#/$defs/Coordinate"
+        },
+        "end": {
+          "$ref": "#/$defs/Coordinate"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Color"
+        },
+        "width": {
+          "default": 2.0,
+          "maximum": 10,
+          "minimum": 0.75,
+          "title": "Width",
+          "type": "number"
+        },
+        "opacity": {
+          "default": 0.9,
+          "maximum": 1,
+          "minimum": 0.1,
+          "title": "Opacity",
+          "type": "number"
+        },
+        "stroke": {
+          "default": "dashed",
+          "enum": [
+            "dashed",
+            "solid"
+          ],
+          "title": "Stroke",
+          "type": "string"
+        },
+        "head_size": {
+          "default": 15.0,
+          "maximum": 36,
+          "minimum": 4,
+          "title": "Head Size",
+          "type": "number"
+        },
+        "label": {
+          "default": "",
+          "maxLength": 60,
+          "title": "Label",
+          "type": "string"
+        },
+        "visible": {
+          "default": true,
+          "title": "Visible",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "start",
+        "end"
+      ],
+      "title": "TacticalDrawing",
+      "type": "object"
     }
   },
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "enum": [
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "markers"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": 3
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "drawings"
+        ]
+      }
+    }
+  ],
   "properties": {
     "schema_version": {
-      "const": 1,
-      "default": 1,
+      "default": 3,
+      "enum": [
+        1,
+        2,
+        3
+      ],
       "title": "Schema Version",
       "type": "integer"
     },
@@ -117,7 +409,8 @@
           "TransitRings",
           "Pets",
           "Gathering",
-          "CustomMarkers"
+          "CustomMarkers",
+          "TacticalShapes"
         ],
         "type": "string"
       },
@@ -136,7 +429,8 @@
           "TransitRings",
           "Pets",
           "Gathering",
-          "CustomMarkers"
+          "CustomMarkers",
+          "TacticalShapes"
         ]
       },
       "title": "Colors",
@@ -166,8 +460,22 @@
       "items": {
         "$ref": "#/$defs/CustomMarker"
       },
-      "maxItems": 150,
       "title": "Markers",
+      "type": "array"
+    },
+    "drawings": {
+      "items": {
+        "$ref": "#/$defs/TacticalDrawing"
+      },
+      "title": "Drawings",
+      "type": "array"
+    },
+    "calibrated_rings": {
+      "items": {
+        "$ref": "#/$defs/CalibratedRing"
+      },
+      "maxItems": 250,
+      "title": "Calibrated Rings",
       "type": "array"
     }
   },

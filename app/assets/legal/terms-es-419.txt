@@ -1,0 +1,56 @@
+Términos de uso — Strigoi Aether Map
+Versión 1.2 · 12 de octubre de 2026
+
+1. Sobre el software y su licencia
+
+Strigoi Aether Map es una aplicación independiente que facilita la exploración en AION 2. Su código propio se distribuye bajo la GNU GPL versión 3, que permite usar, estudiar, modificar y redistribuir el software de acuerdo con sus condiciones. El texto completo de la licencia se incluye en la distribución.
+
+Los mapas, los datos comunitarios, el audio de referencia, las marcas y los componentes de terceros conservan sus respectivas licencias y derechos. La GPLv3 del código propio no otorga derechos adicionales sobre esos materiales.
+
+Estos términos no limitan los permisos otorgados por la GPLv3 ni reemplazan las licencias de terceros.
+
+2. Disponibilidad y ausencia de garantía
+
+El software se proporciona tal como está, sin garantía de funcionamiento continuo, exactitud de los datos ni adecuación para un propósito específico, en la medida permitida por la legislación aplicable.
+
+Pueden ocurrir fallas, cambios de compatibilidad, desactualizaciones y resultados incorrectos. El sonar ofrece una señal visual basada en el audio analizado. La presencia y la posición exacta del cubo se deben confirmar en el juego.
+
+3. Cómo funciona la aplicación
+
+Los marcadores, el panel de eventos y los avisos aparecen en ventanas externas superpuestas al juego. El reconocimiento del mapa analiza la imagen de la pantalla, y el sonar recibe el audio de la aplicación seleccionada mediante funciones de Windows.
+
+Strigoi no inyecta código en las DLL del juego, no modifica sus archivos, no lee su memoria y no ejecuta acciones del juego automáticamente. Esta descripción técnica no implica autorización de la empresa desarrolladora ni de la operadora de AION 2.
+
+El módulo experimental de Combate lee pasivamente el tráfico que llega por la conexión del juego mediante Npcap. Con la medición automática activada, esta lectura comienza al abrir Strigoi y espera la conexión del juego. Puedes desactivarla en Configuración. El módulo muestra el daño observado. Los resultados pueden ser parciales y la compatibilidad regional requiere validación. El módulo no envía ni modifica los paquetes del juego. Npcap se obtiene del fabricante y tiene su propia licencia y asistente de instalación.
+
+4. Datos y funciones de accesibilidad
+
+Las preferencias y los registros de exploración se guardan en este equipo. El análisis de la imagen y del audio se realiza localmente. El sonar funciona sin usar el micrófono ni grabar el audio analizado.
+
+El historial de combate también se guarda localmente. Los paquetes sin procesar no se graban ni se envían. Los nombres observados y los resultados pueden quedar en el historial y en el texto copiado voluntariamente por el usuario. La descarga de Npcap accede al sitio del fabricante cuando se elige esa opción durante la instalación.
+
+El sonar se desarrolló como recurso de accesibilidad auditiva que convierte una señal sonora en un aviso visual. El usuario activa el sonar y los mapas. La medición automática del combate puede comenzar al abrir la aplicación, según la preferencia elegida en Configuración. Las actualizaciones remotas de la agenda y los enlaces externos, cuando se usan, acceden a los servicios elegidos y se sujetan a las políticas de esos servicios.
+
+5. Uso con el juego y decisiones sobre la cuenta
+
+El usuario es responsable de consultar y cumplir los términos y las reglas vigentes de AION 2 y de decidir si desea utilizar esta aplicación.
+
+No se garantiza la aprobación de la empresa desarrolladora, de la operadora ni de los sistemas de protección del juego. Aunque funciona externamente y sin modificar el juego, la aplicación puede quedar sujeta a otras interpretaciones o a cambios en esas reglas.
+
+En la medida permitida por la legislación aplicable, el autor y los colaboradores no se hacen responsables de advertencias, suspensiones, bloqueos, pérdida de acceso a la cuenta ni otros perjuicios derivados de decisiones de la empresa desarrolladora o de la operadora relacionadas con el uso de esta aplicación.
+
+El autor y los colaboradores no controlan esas decisiones ni prometen que se reviertan las sanciones o se recuperen las cuentas. El usuario reconoce estas condiciones al optar por usar la aplicación.
+
+6. Apoyo económico
+
+Las donaciones son voluntarias. Apoyar al creador no otorga autorización para usar la aplicación en el juego, garantías de funcionamiento, prioridad de soporte ni protección contra sanciones.
+
+Los enlaces de apoyo al creador y de donación a las instituciones identifican destinatarios distintos. Los pagos se realizan en los servicios externos, que se encargan de procesarlos.
+
+7. Derechos previstos por la ley
+
+Ninguna disposición de estos términos excluye responsabilidades que la ley impida excluir ni implica la renuncia a derechos garantizados legalmente. Las limitaciones de garantías y responsabilidad deben interpretarse conforme a la GPLv3 y a la legislación aplicable.
+
+8. Aceptación en el instalador
+
+Al marcar «Leí y acepto los términos de uso», el usuario declara que tuvo acceso al documento y acepta sus condiciones. La instalación puede cancelarse si no se aceptan los términos.

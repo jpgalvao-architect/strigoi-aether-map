@@ -1,6 +1,6 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.14 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.15 · Windows x64**
 
 A beta 13 prepara Lower Reshanta durante a instalação, com internet.
 Depois, o mapa abre offline no Siege Command e no Atlas.
@@ -76,12 +76,14 @@ controlados; ainda precisa de confirmação ao vivo em SA.
 
 A beta 8 corrige os sumiços indevidos dos overlays durante o jogo: um desenho parecido com “X” na tela não basta para reconhecer um menu. A ocultação por Alt+Tab continua funcionando. Menus dependem da leitura local de títulos conhecidos; a cobertura não é universal. O mapa grande preserva seus marcadores, a medição continua em segundo plano e avisos antigos do Sonar não reaparecem.
 
-O aplicativo amplia os símbolos do minimapa em 100%, mostra setas nas posições de cubos com altura informada e acrescenta uma barra com histórico de intensidade ao Sonar. As setas seguem a altura relativa do grupo registrada na fonte; a barra estima o som reconhecido e também depende do volume do jogo. A proximidade no jogo ainda precisa de validação.
+O aplicativo amplia os símbolos do minimapa em 100% e mostra setas nos locais
+de cubos com altura informada pela fonte. A beta.15 simplifica o Sonar para
+um estado de detecção e um aviso visual.
 
 O aplicativo mostra o painel de combate nas dungeons e arenas 1v1/5v5 identificadas e o oculta ao sair. Foram observados os sinais de entrada e saída de um mapa de cada modalidade em SA; outros mapas da rotação ainda precisam de identificação. O dano PvP contabiliza ataques de participantes confirmados e exclui o dano recebido. O cálculo continua experimental, sem validação de precisão ao vivo; no 5v5, a lista completa do time ainda não foi confirmada. O menu rápido permite ocultar o painel sem parar a medição.
 
 [Página do aplicativo](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.14) ·
+[Instalador e downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.15) ·
 [English](README.en-US.md)
 
 Seu caderno de exploração: mapas, coletas, cubos e eventos em um só lugar.
@@ -93,9 +95,13 @@ histórico local. A leitura ainda precisa de validação em SA; resultados
 são identificados como dados parciais. O Setup conduz o download oficial
 e abre o assistente do Npcap quando necessário. Veja [Combate](docs/COMBAT.md).
 
-Na 0.8.0, o instalador oferece português do Brasil e inglês dos EUA e exige
-aceite dos termos antes de instalar. A escolha define o idioma inicial;
-Configurações permite trocar imediatamente, preservando visitas e filtros.
+O instalador oferece português do Brasil, inglês dos EUA e espanhol e exige
+o aceite dos termos antes de instalar. A escolha define o idioma inicial.
+Em **Configurações → Idioma do aplicativo**, você pode trocar imediatamente
+entre português do Brasil, inglês dos EUA e espanhol latino-americano.
+A preferência fica salva junto com seus filtros e registros. Em um perfil novo
+sem idioma definido pelo instalador, a aplicação sugere espanhol
+latino-americano se o Windows estiver em espanhol.
 Leia os [termos](docs/TERMS.pt-BR.txt) e as
 [instruções de instalação](docs/INSTALLER.md).
 O código próprio usa GPLv3; dados, mapas e componentes mantêm suas licenças.
@@ -136,8 +142,9 @@ nem executar como administrador. O app usa mapas e agenda locais.
   ao fechar, o minimapa retorna. Escolha a frequência em Fluidez do overlay; comece em 60 Hz/30 fps.
   Ajustes avançados reúne precisão e referência fixa.
 - **Sonar:** abra o jogo, atualize a lista de aplicativos, selecione o AION 2
-  e clique em Ativar sonar. O aviso visual indica som compatível com o cubo;
-  não fornece posição nem distância. Testar aviso visual não detecta áudio.
+  e clique em **Ativar sonar**. Ao reconhecer a assinatura sonora, o Sonar
+  exibe **Cubo oculto detectado!**. Use **Testar aviso visual** para ver
+  uma prévia do cartão.
 - **Donate:** apoie o criador pelo Mercado Pago ou abra o canal oficial da
   instituição escolhida no navegador. As opções indicam quem recebe o apoio.
 - **Configurações:** escolha fuso e notificações. Alertas exigem o app aberto.

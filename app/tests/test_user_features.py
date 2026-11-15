@@ -62,7 +62,7 @@ def test_visual_test_does_not_claim_cube_detection(qapp,tmp_path):
         alert.present(test=True)
         assert alert.isVisible() and alert.title.text()=='Teste do aviso do sonar'
         alert.present()
-        assert alert.title.text()=='Possível cubo por perto'
+        assert alert.title.text()=='Cubo oculto detectado!'
     finally:alert.timer.stop();alert.close()
 
 

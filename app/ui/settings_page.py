@@ -7,7 +7,7 @@ from app.ui.localized_widgets import QCheckBox, QComboBox, QFileDialog, QFormLay
 from app.core.models import Preferences
 from app.infrastructure.storage import atomic_json
 from app.ui.widgets import button, label, page_header, row
-from app.core.i18n import set_language
+from app.core.i18n import LANGUAGES, Verbatim, set_language, tr, validation_text
 
 
 class SettingsPage(QWidget):
@@ -21,8 +21,8 @@ class SettingsPage(QWidget):
         language_group=QGroupBox('Idioma')
         language_form=QFormLayout(language_group)
         self.language=QComboBox()
-        self.language.addItem('Português (Brasil)','pt_BR')
-        self.language.addItem('English (United States)','en_US')
+        for code, title in LANGUAGES.items():
+            self.language.addItem(title, code)
         self.language.setCurrentIndex(self.language.findData(context.prefs.ui_language))
         language_form.addRow('Idioma do aplicativo',self.language)
         language_form.addRow(label('O idioma muda imediatamente. Sua seleção fica salva neste computador.','subtitle',True))
@@ -79,8 +79,17 @@ class SettingsPage(QWidget):
         layout.addLayout(row(button("Importar atlas JSON", self.import_dataset), button("Exportar preferências", self.export_preferences)))
         self.feedback = label("", "subtitle", True)
         layout.addWidget(self.feedback)
-        layout.addWidget(label(f"Armazenamento local: {context.directory}", "subtitle", True))
+        self.storage = label("", "subtitle", True)
+        layout.addWidget(self.storage)
+        self.refresh_storage()
         layout.addStretch()
+
+    def retranslate(self):
+        super().retranslate()
+        self.refresh_storage()
+
+    def refresh_storage(self):
+        self.storage.setText(Verbatim(tr("Armazenamento local: {directory}").format(directory=self.context.directory)))
 
     def change_quick_menu(self, enabled):
         self.context.prefs.quick_menu.enabled = enabled
@@ -102,7 +111,7 @@ class SettingsPage(QWidget):
 
     def choose_language(self):
         selected=self.language.currentData()
-        if selected not in ('pt_BR','en_US'):return
+        if selected not in LANGUAGES:return
         self.context.prefs.ui_language=selected
         set_language(selected)
         self.context.save()
@@ -116,7 +125,7 @@ class SettingsPage(QWidget):
             self.context.save()
             self.feedback.setText("Preferências aplicadas.")
         except ValueError as exc:
-            self.feedback.setText(f"Revise o fuso horário: {exc}")
+            self.feedback.setText(f"Revise o fuso horário: {validation_text(exc)}")
 
     def test_notification(self):
         self.tray.notify("Strigoi está por perto", "Este é um alerta de teste do seu companion.")
@@ -129,7 +138,7 @@ class SettingsPage(QWidget):
                 self.context.import_dataset(Path(filename))
                 self.feedback.setText("Atlas validado e importado. O overlay foi desligado para revisão da calibração.")
             except Exception as exc:
-                QMessageBox.warning(self, "Atlas não importado", str(exc))
+                QMessageBox.warning(self, "Atlas não importado", validation_text(exc))
 
     def export_preferences(self):
         filename, _ = QFileDialog.getSaveFileName(self, "Exportar preferências", "preferences.json", "JSON (*.json)")

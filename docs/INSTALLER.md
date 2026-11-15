@@ -1,8 +1,8 @@
-# Instalação • 0.9.0-beta.1
+# Instalação do Azphelumbra
 
-Execute `StrigoiAetherMap-Setup-0.9.0-beta.1.exe`. O primeiro diálogo permite escolher
-Português Brasileiro ou English. A tela de termos exige marcar o aceite;
-a caixa começa desmarcada. Sem aceite, não é possível avançar para instalar.
+Execute `StrigoiAetherMap-Setup-0.10.0-beta.15.exe`. Escolha português do
+Brasil, inglês dos EUA ou espanhol. A tela de termos exige marcar o aceite.
+A caixa começa desmarcada. Sem aceite, não é possível avançar para instalar.
 Os termos gerais vêm primeiro, seguidos da descrição técnica e, na seção 5,
 das condições sobre decisões da operadora e sanções na conta.
 
@@ -27,7 +27,7 @@ O download tem limite de tamanho e tempo; o temporário próprio é removido.
 `installer/install-npcap.ps1 -VerifyOnly` testa download e assinatura sem
 instalar o driver. `-CheckOnly` consulta disponibilidade sem capturar.
 
-A versão dos termos, hash dos dois textos e idioma do instalador ficam
+A versão dos termos, hash dos três textos e idioma do instalador ficam
 no registro HKCU, sob `Software\StrigoiAetherMap`. Não são enviados a um
 servidor. O idioma inicial é lido de `installation.json` no diretório de dados.
 Uma preferência de idioma já salva pelo usuário tem prioridade.
@@ -55,13 +55,13 @@ o Sonar exige as APIs de áudio documentadas em `SONAR.md`.
 .\scripts\build-installer.ps1 -Payload 'C:\build\StrigoiAetherMap' -Python '.\.venv\Scripts\python.exe'
 ```
 
-`prepare-installer.py` gera os RTFs em português/inglês, hash dos termos e
+`prepare-installer.py` gera os RTFs nos três idiomas, o hash dos termos e
 lista exata de remoção, e compila o script em `installer/StrigoiAetherMap.nsi`.
 Os termos originais estão em `app/assets/legal/`. Nenhuma biblioteca ou arquivo
 do jogo participa da montagem.
 
-Instalação silenciosa exige `/S /ACCEPTTERMS` e aceita `/LANG=en_US` ou
-`/LANG=pt_BR`. Sem o parâmetro de aceite, termina com código 2 sem instalar.
+Instalação silenciosa exige `/S /ACCEPTTERMS` e aceita `/LANG=pt_BR`,
+`/LANG=en_US` ou `/LANG=es-419`. Sem o parâmetro de aceite, termina com código 2 sem instalar.
 O operador deve ler os termos antes de autorizar esse modo.
 O modo silencioso não instala Npcap nem abre seu assistente. Para obter o
 componente no fluxo integrado, use a instalação interativa. Instalação

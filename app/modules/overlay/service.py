@@ -54,6 +54,9 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.markers = []
+        self.drawings = ()
+        self._projected_drawings = ()
+        self._drawing_registration = None
         self.scale = 1.0
         self.viewport = None
         self.ratio = 1.0
@@ -107,6 +110,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
     def clear_registration(self):
         self.registration=None
         self._drawing_registration=None
+        self._projected_drawings = ()
         self.smoothing.clear()
         self.draw_timer.stop()
         self.dirty_region=QRegion()
@@ -143,7 +147,8 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
             tuple((round(px*4),round(py*4),color,shape,index in labels)
                   for index,(px,py,color,shape) in enumerate(visible)),
             tuple((tuple((round(x*4),round(y*4)) for x,y in vertices),reviewed,active) for vertices,reviewed,active in routes),
-            (round(target[0]/self.ratio*4),round(target[1]/self.ratio*4),self.route_target[2]) if target else None)
+            (round(target[0]/self.ratio*4),round(target[1]/self.ratio*4),self.route_target[2]) if target else None,
+            (self.drawings, tuple(round(value*4) for value in registration.matrix.flat)) if self.drawings else ())
         if not self.smoothing.settled(now):
             self.request_frame()
         if signature==self._frame_signature:
@@ -151,6 +156,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         self._frame_signature=signature
         self._visible_markers=visible
         self._visible_labels=labels
+        self._projected_drawings = self.project_drawings(registration)
         for px,py,_,_ in visible:
             rectangle=QRect(round(px)-radius,round(py)-radius,radius*2+1,radius*2+1)
             current=rectangle if current.isNull() else current.united(rectangle)
@@ -160,11 +166,21 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
             route_bounds=circle if route_bounds.isNull() else route_bounds.united(circle)
         if not route_bounds.isNull():current=route_bounds if current.isNull() else current.united(route_bounds)
         current=QRegion(current)
+        for drawing in self._projected_drawings:
+            current |= QRegion(drawing.bounds().toAlignedRect().intersected(self.rect()))
         dirty=self.dirty_region.united(current)
         self.dirty_region=current
         if not dirty.isEmpty():
             # Qt coalesces invalidations; a stationary map needs no ongoing paints.
             self.update(dirty)
+
+    def project_drawings(self, registration):
+        if not self.drawings:
+            return ()
+        from app.modules.siege.drawing import project_drawing, registration_transform
+        transform = registration_transform(registration, self.ratio)
+        projected = (project_drawing(drawing, color, transform) for drawing, color in self.drawings)
+        return tuple(drawing for drawing in projected if drawing.bounds().toAlignedRect().intersects(self.rect()))
 
     def visible_markers(self,registration,radius=0):
         # Project in one array operation; do not construct thousands of NumPy
@@ -257,6 +273,9 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         if self.registration:
             registration=getattr(self,'_drawing_registration',None) or self.registration
             from app.modules.routes.drawing import paint_lines,project_lines
+            drawings = self._projected_drawings if self._drawing_registration else self.project_drawings(registration)
+            for drawing in drawings:
+                drawing.paint(painter)
             paint_lines(painter,project_lines(self.route_lines,registration,self.ratio))
             visible=self._visible_markers if getattr(self,'_drawing_registration',None) else self.visible_markers(registration)
             labels=self._visible_labels if getattr(self,'_drawing_registration',None) else self.marker_labels(visible)
@@ -579,7 +598,7 @@ class OverlayService(QObject):
             self.set_status("Confirmando reconhecimento…")
             return
         self.update_location(area.map_id, area.view_kind, observe_minimap=area.view_kind == 'minimap')
-        if self.window.markers or self.window.route_target or self.window.route_lines:
+        if self.window.markers or self.window.drawings or self.window.route_target or self.window.route_lines:
             self.window.show()
         else:
             self.window.hide()
@@ -648,7 +667,11 @@ class OverlayService(QObject):
             self._exclusion_points = points
             self._exclusion_markers = window.markers
         if self.capture_area:
-            self.worker.set_exclusion(registration, self._exclusion_points, self.capture_area.view_kind)
+            view_kind = self.capture_area.view_kind
+            self.worker.set_exclusion(registration, self._exclusion_points, view_kind)
+            if hasattr(self.worker, 'set_drawing_exclusion'):
+                stencil = tuple(drawing.stencil(ratio) for drawing in window.project_drawings(registration))
+                self.worker.set_drawing_exclusion(stencil, view_kind)
         else:
             self.worker.set_exclusion(registration, self._exclusion_points)
 
@@ -668,10 +691,14 @@ class OverlayService(QObject):
         exploration = bool(map_id and prefs.overlay.enabled and (
             prefs.overlay.map_view != 'large' or self.context.map_location.view == 'large'
         ))
+        drawings = ()
         if map_id == MAP_ID:
             from app.modules.siege.markers import markers_for
             tactical = siege.state.overlay.map_markers
             markers = markers_for(siege, dataset, tactical=tactical, exploration=exploration) if siege.definition else []
+            if tactical and siege.definition:
+                from app.modules.siege.drawing import visible_drawings
+                drawings = visible_drawings(siege.preset)
         elif exploration:
             resources = {r.id: r for r in dataset.resources}
             categories = {c.id: c for c in dataset.categories}
@@ -681,6 +708,7 @@ class OverlayService(QObject):
         else:
             markers = []
         self.window.markers = markers
+        self.window.drawings = drawings
         self.window.badge_symbols = {shape for _,_,_,shape in markers if isinstance(shape, Badge)}
         self.window.scale = prefs.overlay.scale
         self.window.set_render_rate(prefs.overlay.render_hz)

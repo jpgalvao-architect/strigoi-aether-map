@@ -18,6 +18,22 @@ def apply_route_stencil(frame,feature_mask,registration,lines,width,target=None)
         cv2.circle(feature_mask,(round(x),round(y)),radius,0,-1)
 
 
+def apply_drawing_stencil(frame, feature_mask, shapes):
+    import cv2
+    import numpy as np
+    for strokes, heads, width, label in shapes:
+        edges = [np.asarray(line, dtype=np.int32) for line in strokes if len(line) > 1]
+        tips = [np.asarray(head, dtype=np.int32) for head in heads if len(head) > 2]
+        for surface, tint in ((frame, (128, 128, 128)), (feature_mask, 0)):
+            if edges:
+                cv2.polylines(surface, edges, False, tint, width)
+            for tip in tips:
+                cv2.fillPoly(surface, [tip], tint)
+                cv2.polylines(surface, [tip], True, tint, 4)
+            if label:
+                cv2.rectangle(surface, label[:2], label[2:], tint, -1)
+
+
 def apply_stencil(frame, feature_mask, registration, points):
     import cv2
     import numpy as np

@@ -9,13 +9,13 @@ Unicode true
   !error "Define PAYLOAD as the complete prepared portable folder."
 !endif
 !ifndef OUTPUT
-  !define OUTPUT "StrigoiAetherMap-Setup-0.10.0-beta.14.exe"
+  !define OUTPUT "StrigoiAetherMap-Setup-0.10.0-beta.15.exe"
 !endif
 !ifndef UNINSTALL_MANIFEST
   !error "Generate the exact installed-file removal manifest first."
 !endif
 !ifndef TERMS_HASH
-  !error "Define TERMS_HASH from both versioned terms files."
+  !error "Define TERMS_HASH from the versioned terms files."
 !endif
 !ifdef TEST_BUILD
   !define REGKEY "Software\StrigoiAetherMapInstallerTest"
@@ -33,11 +33,11 @@ RequestExecutionLevel user
 ManifestDPIAware true
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
-BrandingText "Azphelumbra · 0.10.0-beta.14"
-VIProductVersion "0.10.0.14"
+BrandingText "Azphelumbra · 0.10.0-beta.15"
+VIProductVersion "0.10.0.15"
 VIAddVersionKey /LANG=1033 "ProductName" "Azphelumbra"
 VIAddVersionKey /LANG=1033 "FileDescription" "Azphelumbra installer"
-VIAddVersionKey /LANG=1033 "FileVersion" "0.10.0-beta.14"
+VIAddVersionKey /LANG=1033 "FileVersion" "0.10.0-beta.15"
 VIAddVersionKey /LANG=1033 "LegalCopyright" "2026 Strigoi Aether Map contributors"
 !define MUI_ICON "..\app\assets\azphelumbra.ico"
 !define MUI_UNICON "..\app\assets\azphelumbra.ico"
@@ -60,37 +60,53 @@ VIAddVersionKey /LANG=1033 "LegalCopyright" "2026 Strigoi Aether Map contributor
 !insertmacro MUI_UNPAGE_FINISH
 !insertmacro MUI_LANGUAGE "PortugueseBR"
 !insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "SpanishInternational"
 
 LicenseLangString TermsFile ${LANG_PORTUGUESEBR} "terms-pt_BR.rtf"
 LicenseLangString TermsFile ${LANG_ENGLISH} "terms-en_US.rtf"
+LicenseLangString TermsFile ${LANG_SPANISHINTERNATIONAL} "terms-es-419.rtf"
 LangString WelcomeText ${LANG_PORTUGUESEBR} "Seu companheiro de exploração: atlas, coletas, cubos e eventos.$\r$\n$\r$\nA instalação inclui o aplicativo, as licenças e o código-fonte. Suas visitas e preferências serão preservadas.$\r$\n$\r$\nO idioma escolhido também será o padrão da primeira abertura. Depois, você pode mudá-lo em Configurações."
 LangString WelcomeText ${LANG_ENGLISH} "Your exploration companion: atlas, gatherables, cubes and events.$\r$\n$\r$\nSetup includes the application, licenses and source code. Your visits and preferences will be preserved.$\r$\n$\r$\nThe selected language will be the default on first launch. You can change it later in Settings."
+LangString WelcomeText ${LANG_SPANISHINTERNATIONAL} "Atlas, recolección, cubos y eventos para tus aventuras.$\r$\n$\r$\nLa instalación incluye la aplicación, sus licencias y el código fuente. Tus visitas y preferencias se conservan.$\r$\n$\r$\nEste idioma se usará al abrir la aplicación por primera vez. Puedes cambiarlo en Configuración."
 LangString TermsTitle ${LANG_PORTUGUESEBR} "Termos de uso"
 LangString TermsTitle ${LANG_ENGLISH} "Terms of use"
+LangString TermsTitle ${LANG_SPANISHINTERNATIONAL} "Términos de uso"
 LangString TermsSubtitle ${LANG_PORTUGUESEBR} "Leia os termos antes de continuar."
 LangString TermsSubtitle ${LANG_ENGLISH} "Read the terms before continuing."
+LangString TermsSubtitle ${LANG_SPANISHINTERNATIONAL} "Lee los términos antes de continuar."
 LangString AcceptText ${LANG_PORTUGUESEBR} "Li e aceito os termos de uso"
 LangString AcceptText ${LANG_ENGLISH} "I have read and accept the terms of use"
+LangString AcceptText ${LANG_SPANISHINTERNATIONAL} "Leí y acepto los términos de uso"
 LangString AppSection ${LANG_PORTUGUESEBR} "Aplicativo, licenças e código-fonte"
 LangString AppSection ${LANG_ENGLISH} "Application, licenses and source code"
+LangString AppSection ${LANG_SPANISHINTERNATIONAL} "Aplicación, licencias y código fuente"
 LangString DesktopSection ${LANG_PORTUGUESEBR} "Atalho na área de trabalho"
 LangString DesktopSection ${LANG_ENGLISH} "Desktop shortcut"
+LangString DesktopSection ${LANG_SPANISHINTERNATIONAL} "Acceso directo en el escritorio"
 LangString NpcapSection ${LANG_PORTUGUESEBR} "Npcap · Combate e coleção automática de pets"
 LangString NpcapSection ${LANG_ENGLISH} "Npcap · Combat and automatic pet collection"
+LangString NpcapSection ${LANG_SPANISHINTERNATIONAL} "Npcap · Combate y sincronización de mascotas"
 LangString NpcapExplain ${LANG_PORTUGUESEBR} "O instalador verificará se Npcap já está disponível. Caso necessário, baixará a cópia oficial verificada e abrirá o assistente do fabricante, que pode solicitar permissão do Windows. Conclua esse assistente para usar Combate e sincronizar a coleção de pets."
 LangString NpcapExplain ${LANG_ENGLISH} "Setup checks whether Npcap is already available. If needed, it downloads the verified official copy and opens the publisher's wizard, which may request Windows permission. Complete that wizard to use Combat and sync the pet collection."
+LangString NpcapExplain ${LANG_SPANISHINTERNATIONAL} "Si falta Npcap, se descargará una copia oficial verificada y se abrirá el asistente del fabricante. Windows podría pedir autorización. Completa el asistente para usar Combate y sincronizar tus mascotas."
 LangString NpcapMissing ${LANG_PORTUGUESEBR} "Npcap não foi instalado. Atlas, Sonar e coleção manual continuam disponíveis; Combate e sincronização de pets precisam do componente. Tentar novamente?"
 LangString NpcapMissing ${LANG_ENGLISH} "Npcap was not installed. Atlas, Sonar and the manual collection remain available; Combat and pet sync need this component. Try again?"
+LangString NpcapMissing ${LANG_SPANISHINTERNATIONAL} "Npcap no se instaló. El Atlas, el Sonar y la colección manual siguen disponibles. Combate y la sincronización de mascotas requieren Npcap. ¿Quieres intentarlo de nuevo?"
 LangString Unsupported ${LANG_PORTUGUESEBR} "Este aplicativo requer Windows 10/11 de 64 bits."
 LangString Unsupported ${LANG_ENGLISH} "This application requires 64-bit Windows 10/11."
+LangString Unsupported ${LANG_SPANISHINTERNATIONAL} "Esta aplicación requiere Windows 10 u 11 de 64 bits."
 LangString SilentTerms ${LANG_PORTUGUESEBR} "A instalação silenciosa exige /ACCEPTTERMS após a leitura dos termos."
 LangString SilentTerms ${LANG_ENGLISH} "Silent installation requires /ACCEPTTERMS after reviewing the terms."
+LangString SilentTerms ${LANG_SPANISHINTERNATIONAL} "Lee los términos y usa /ACCEPTTERMS para la instalación silenciosa."
 LangString CloseApp ${LANG_PORTUGUESEBR} "Feche o Strigoi Aether Map e tente novamente."
 LangString CloseApp ${LANG_ENGLISH} "Close Strigoi Aether Map and try again."
+LangString CloseApp ${LANG_SPANISHINTERNATIONAL} "Cierra Azphelumbra e inténtalo de nuevo."
 LangString ReshantaSetup ${LANG_PORTUGUESEBR} "Preparando o mapa de Lower Reshanta..."
 LangString ReshantaSetup ${LANG_ENGLISH} "Preparing the Lower Reshanta map..."
+LangString ReshantaSetup ${LANG_SPANISHINTERNATIONAL} "Preparando el mapa de Lower Reshanta..."
 LangString ReshantaRetry ${LANG_PORTUGUESEBR} "O download do mapa de Lower Reshanta precisa de conexão. Tente novamente ou conclua a instalação e use Baixar mapa no Siege Command."
 LangString ReshantaRetry ${LANG_ENGLISH} "The Lower Reshanta map download requires a connection. Retry or finish setup and use Download map in Siege Command."
+LangString ReshantaRetry ${LANG_SPANISHINTERNATIONAL} "La descarga del mapa de Lower Reshanta requiere conexión. Vuelve a intentarlo o finaliza la instalación y usa Descargar mapa en Siege Command."
 Var DefaultLanguage
 Var SeedDirectory
 
@@ -105,6 +121,8 @@ Function .onInit
     ${GetOptions} $CMDLINE "/LANG=" $0
     ${If} $0 == "en_US"
       StrCpy $LANGUAGE ${LANG_ENGLISH}
+    ${ElseIf} $0 == "es-419"
+      StrCpy $LANGUAGE ${LANG_SPANISHINTERNATIONAL}
     ${EndIf}
     ClearErrors
     ${GetOptions} $CMDLINE "/ACCEPTTERMS" $0
@@ -121,6 +139,8 @@ Function .onInit
   ${EndIf}
   ${If} $LANGUAGE == ${LANG_ENGLISH}
     StrCpy $DefaultLanguage "en_US"
+  ${ElseIf} $LANGUAGE == ${LANG_SPANISHINTERNATIONAL}
+    StrCpy $DefaultLanguage "es-419"
   ${Else}
     StrCpy $DefaultLanguage "pt_BR"
   ${EndIf}
@@ -143,7 +163,7 @@ Section "$(AppSection)" Core
     Abort
   ${EndIf}
   FileOpen $0 "$INSTDIR\.strigoi-install-owned" w
-  FileWrite $0 "StrigoiAetherMap-0.10.0-beta.14"
+  FileWrite $0 "StrigoiAetherMap-0.10.0-beta.15"
   FileClose $0
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "${REGKEY}" "InstallDir" "$INSTDIR"
@@ -151,7 +171,7 @@ Section "$(AppSection)" Core
   WriteRegStr HKCU "${REGKEY}" "TermsSHA256" "${TERMS_HASH}"
   WriteRegStr HKCU "${REGKEY}" "InstallerLanguage" "$DefaultLanguage"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayName" "Azphelumbra"
-  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.10.0-beta.14"
+  WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayVersion" "0.10.0-beta.15"
   WriteRegStr HKCU "${UNINSTALLKEY}" "Publisher" "Thoth Worlds"
   WriteRegStr HKCU "${UNINSTALLKEY}" "DisplayIcon" "$INSTDIR\StrigoiAetherMap.exe"
   WriteRegStr HKCU "${UNINSTALLKEY}" "InstallLocation" "$INSTDIR"

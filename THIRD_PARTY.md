@@ -45,7 +45,7 @@ componentes. O aviso integral e os links de fontes acompanham
 `third-party-notices/NSIS/`. As licenças do núcleo e módulo de compressão
 permanecem separadas da GPLv3 do script de instalação próprio.
 
-`qtbase_pt_BR.qm` vem da instalação PySide6/Qt 6.12 e mantém os termos do Qt.
+Os catálogos `qtbase_pt_BR.qm` e `qtbase_es.qm` vêm do PySide6/Qt 6.12 e mantêm os termos do Qt.
 O catálogo `en_US.json` e os controles de tradução são próprios do projeto.
 
 ## Combate experimental

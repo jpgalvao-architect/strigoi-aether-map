@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Qt uses the OS tray notification integration; app UI provides a fallback."""
 from PySide6.QtCore import QObject, Signal
-from PySide6.QtGui import QAction, QIcon
-from PySide6.QtWidgets import QMenu, QSystemTrayIcon
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QSystemTrayIcon
+from app.ui.localized_widgets import QMenu
 
 
 class DesktopNotifications(QObject):
@@ -13,12 +14,8 @@ class DesktopNotifications(QObject):
         self.tray = QSystemTrayIcon(icon, self)
         self.tray.setToolTip("STRIGOI AETHER MAP")
         menu = QMenu(window)
-        action = QAction("Abrir Strigoi", menu)
-        action.triggered.connect(window.showNormal)
-        menu.addAction(action)
-        action = QAction("Sair", menu)
-        action.triggered.connect(window.close)
-        menu.addAction(action)
+        menu.addAction("Abrir aplicativo", window.showNormal)
+        menu.addAction("Sair", window.close)
         self.tray.setContextMenu(menu)
         self.tray.activated.connect(lambda reason: window.showNormal() if reason == QSystemTrayIcon.ActivationReason.DoubleClick else None)
         if QSystemTrayIcon.isSystemTrayAvailable():

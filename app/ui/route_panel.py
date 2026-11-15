@@ -7,7 +7,7 @@ from app.ui.localized_widgets import QToolButton
 from app.ui.hud import HudSurface
 from app.ui.widgets import label
 from app.ui.icons import icon
-from app.core.i18n import tr
+from app.core.i18n import Verbatim, tr
 
 
 class RoutePanel(HudSurface):
@@ -44,8 +44,8 @@ class RoutePanel(HudSurface):
         guide=prefs.panel_style=='guide';self.detail.setVisible(guide);self.setFixedHeight(54 if guide else 38)
         resources={r.id:r.name for r in self.context.atlas_dataset.resources}
         name=' + '.join(resources.get(r,r) for r in service.route.resources) or service.route.name
-        self.name.setText(self.name.fontMetrics().elidedText(name,Qt.ElideRight,max(25,self.name.width())))
-        self.name.setToolTip(name)
+        self.name.setText(Verbatim(self.name.fontMetrics().elidedText(name,Qt.ElideRight,max(25,self.name.width()))))
+        self.name.setToolTip(Verbatim(name))
         if service.complete:status='Volta concluída'
         elif service.paused:status='Rota pausada'
         elif not service.position:status='Aguardando minimapa'

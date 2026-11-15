@@ -25,29 +25,18 @@ class SonarDetection:
     label: str = "possible_cube"
 
 
-@dataclass(frozen=True)
-class SonarLevel:
-    level_db: float | None
-    timestamp: float
-    reset: bool = False
-
-
 class LoopbackSource(Protocol):
     def frames(self) -> Iterable[AudioFrame]: ...
     def stop(self) -> None: ...
 
 
-class CubeSoundDetector(Protocol):
-    def analyze(self, frame: AudioFrame) -> SonarDetection | None: ...
-
-
 class SonarWorker(QThread):
     detected = Signal(object)
-    level_updated = Signal(object)
+    confirmation_updated = Signal(bool)
     status_changed = Signal(str)
     failed = Signal(str)
 
-    def __init__(self, source, detector):
+    def __init__(self, source: LoopbackSource, detector):
         super().__init__()
         self.source=source
         self.detector=detector
@@ -65,7 +54,7 @@ class SonarWorker(QThread):
                     raise ValueError('Formato de áudio incompatível')
                 if frame.discontinuity:
                     self.detector.reset()
-                    self.level_updated.emit(SonarLevel(None,frame.timestamp,True))
+                    self.confirmation_updated.emit(False)
                 pcm=np.frombuffer(frame.pcm,dtype='<f4').reshape(-1,2)
                 if len(pcm):
                     last_pcm=time.monotonic()
@@ -76,12 +65,13 @@ class SonarWorker(QThread):
                 before=getattr(self.detector,'analysis_count',0)
                 match=self.detector.push(pcm) if len(pcm) else None
                 if getattr(self.detector,'analysis_count',0)!=before:
-                    self.level_updated.emit(SonarLevel(self.detector.last_level_db,frame.timestamp))
+                    self.confirmation_updated.emit(self.detector.confirmed)
                 # An empty heartbeat means no new packet, not missing evidence.
-                if not len(pcm) and time.monotonic()-last_pcm>1.:
+                if not len(pcm) and time.monotonic()-last_pcm>1. and self.detector.previous is not None:
                     self.detector.previous=None
                     self.detector.last_level_db=None
-                    self.level_updated.emit(SonarLevel(None,frame.timestamp))
+                    self.detector.confirmed=False
+                    self.confirmation_updated.emit(False)
                 if match is not None and time.monotonic()-last_notice>=15.:
                     last_notice=time.monotonic()
                     self.detected.emit(SonarDetection(match.score,frame.timestamp))
@@ -95,7 +85,7 @@ class SonarWorker(QThread):
 
 class SonarService(QObject):
     detected = Signal(object)
-    level_updated = Signal(object)
+    confirmation_updated = Signal(bool)
     status_changed = Signal(str)
     active_changed = Signal(bool)
 
@@ -105,7 +95,6 @@ class SonarService(QObject):
         self.worker=None
         self.active=False
         self.status='Desligado'
-        self.level=None
         from app.modules.sonar.capture import HELPER
         self.available=os.name=='nt' and HELPER.is_file()
 
@@ -130,7 +119,7 @@ class SonarService(QObject):
                 detector=CubeDetector(reference['pcm'],self.context.prefs.sonar_sensitivity if self.context else 'balanced')
         self.worker=SonarWorker(source,detector)
         self.worker.detected.connect(self.on_detection)
-        self.worker.level_updated.connect(self.on_level)
+        self.worker.confirmation_updated.connect(self.on_confirmation)
         self.worker.status_changed.connect(self.on_status)
         self.worker.failed.connect(self.on_failure)
         self.worker.finished.connect(self.on_finished)
@@ -147,14 +136,9 @@ class SonarService(QObject):
         if self.active and self.sender() is self.worker:
             self.detected.emit(detection)
 
-    def on_level(self, reading):
+    def on_confirmation(self, confirmed):
         if self.active and self.sender() is self.worker:
-            self.level=reading.level_db
-            self.level_updated.emit(reading)
-
-    def clear_level(self):
-        self.level=None
-        self.level_updated.emit(SonarLevel(None,time.monotonic(),True))
+            self.confirmation_updated.emit(confirmed)
 
     def on_status(self, text):
         if self.active and self.sender() is self.worker:
@@ -170,7 +154,7 @@ class SonarService(QObject):
         worker=self.worker
         self.worker=None
         self.active=False
-        self.clear_level()
+        self.confirmation_updated.emit(False)
         if self.context:
             self.context.prefs.sonar_enabled=False
             self.context.save()
@@ -181,7 +165,7 @@ class SonarService(QObject):
 
     def stop(self):
         self.active=False
-        self.clear_level()
+        self.confirmation_updated.emit(False)
         worker=self.worker
         if worker:
             worker.requestInterruption()

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-only
-"""Build both language RTFs and a safe exact-file uninstall manifest, then NSIS."""
+"""Build the language RTFs and a safe exact-file uninstall manifest, then NSIS."""
 from pathlib import Path
 import argparse,hashlib,subprocess
 
@@ -16,7 +16,8 @@ assert (payload/'source/strigoi-aether-map-source.zip').is_file()
 build=args.output.resolve().parent/'installer-build'
 build.mkdir(parents=True,exist_ok=True)
 digest=hashlib.sha256()
-for language in ('pt_BR','en_US'):
+languages=('pt_BR','en_US','es-419')
+for language in languages:
     path=source/f'app/assets/legal/terms-{language}.txt'
     original=path.read_bytes()
     digest.update(original)
@@ -26,7 +27,7 @@ for language in ('pt_BR','en_US'):
     rtf='{\\rtf1\\ansi\\ansicpg1252\\deff0{\\fonttbl{\\f0 Segoe UI;}}\\f0\\fs20\n'
     for index,line in enumerate(paragraphs):
         heading=index==0 or (line and line[0].isdigit() and '. ' in line[:4])
-        clause=line.startswith(('Na extensão permitida pela legislação aplicável, o autor','To the extent permitted by applicable law, the author'))
+        clause=line.startswith(('Na extensão permitida pela legislação aplicável, o autor','To the extent permitted by applicable law, the author','En la medida permitida por la legislación aplicable, el autor'))
         rtf+=('\\b ' if heading or clause else '')+escape(line)+('\\b0' if heading or clause else '')+'\\par\n'
     rtf+='}'
     (build/f'terms-{language}.rtf').write_text(rtf,encoding='ascii')
@@ -45,7 +46,9 @@ arguments=[str(args.compiler),'/V2',f'/DPAYLOAD={payload}',f'/DOUTPUT={args.outp
 if args.test_build:arguments.append('/DTEST_BUILD')
 # Localized license files are resolved relative to the script.
 script=(source/'installer/StrigoiAetherMap.nsi').read_text(encoding='utf-8')
-script=script.replace('"terms-pt_BR.rtf"',f'"{build}/terms-pt_BR.rtf"').replace('"terms-en_US.rtf"',f'"{build}/terms-en_US.rtf"')
+for language in languages:
+    name=f'terms-{language}.rtf'
+    script=script.replace(f'"{name}"',f'"{build/name}"')
 script=script.replace('"..\\app\\assets\\azphelumbra.ico"',f'"{source}/app/assets/azphelumbra.ico"')
 script=script.replace('"install-npcap.ps1"',f'"{source / "installer" / "install-npcap.ps1"}"')
 generated=build/('setup-test.nsi' if args.test_build else 'setup.nsi')

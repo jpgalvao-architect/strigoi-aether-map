@@ -117,3 +117,79 @@ def test_discontinuity_does_not_bypass_alert_cooldown(qapp):
     worker=SonarWorker(Source(),Detector());spy=QSignalSpy(worker.detected)
     worker.run()
     assert spy.count()==1
+
+
+
+def test_worker_keeps_binary_confirmation_through_cooldown(qapp, monkeypatch):
+    from app.modules.sonar.detector import Match
+    from types import SimpleNamespace
+    from app.modules.sonar import service as module
+
+    now = 0.
+
+    class Detector:
+        analysis_count = 0
+        previous = None
+        confirmed = False
+        last_level_db = None
+
+        def push(self, pcm):
+            self.analysis_count += 1
+            self.confirmed = True
+            self.previous = (0., 1.)
+            return Match(12., 0., 2)
+
+    class Source:
+        def frames(self):
+            payload = np.zeros((480, 2), '<f4').tobytes()
+            nonlocal now
+            for now, pcm in [(0., payload), (.5, payload), (1.8, b'')]:
+                yield AudioFrame(pcm, 48000, 2, now)
+
+        def stop(self):
+            pass
+
+    monkeypatch.setattr(module, 'time', SimpleNamespace(monotonic=lambda: now))
+    worker = SonarWorker(Source(), Detector())
+    confirmations = QSignalSpy(worker.confirmation_updated)
+    alerts = QSignalSpy(worker.detected)
+    worker.run()
+    assert [confirmations.at(i)[0] for i in range(confirmations.count())] == [True, True, False]
+    assert alerts.count() == 1
+
+
+def test_alert_holds_while_confirmed_and_stops_after_dismiss_or_disable(qapp, tmp_path):
+    from app.ui.sonar_page import ALERT_DURATION_MS, SonarAlert, SonarPage
+
+    context = AppContext(tmp_path)
+    service = SonarService(context)
+    alert = SonarAlert(context)
+    page = SonarPage(context, service, alert)
+    try:
+        service.active_changed.emit(True)
+        service.confirmation_updated.emit(True)
+        assert page.presence.text() == 'Cubo detectado'
+        assert not alert.isVisible()
+        alert.present()
+        assert alert.isVisible() and alert.timer.interval() == ALERT_DURATION_MS
+        alert.timer.start(1)
+        service.confirmation_updated.emit(True)
+        assert alert.timer.interval() == ALERT_DURATION_MS
+        service.confirmation_updated.emit(False)
+        assert page.presence.text() == 'Cubo não detectado'
+        alert.timer.timeout.emit()
+        assert not alert.isVisible() and not alert.timer.isActive()
+        service.confirmation_updated.emit(True)
+        assert not alert.isVisible()
+        alert.present()
+        service.stop()
+        assert not alert.isVisible() and page.presence.isHidden()
+        assert not alert.timer.isActive() and not context.prefs.sonar_resume
+        alert.present(test=True)
+        assert alert.testing and alert.isVisible()
+        alert.timer.start(1)
+        alert.keep_visible()
+        assert alert.timer.interval() == 1
+    finally:
+        alert.close()
+        page.close()

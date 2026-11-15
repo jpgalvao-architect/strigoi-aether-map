@@ -7,7 +7,7 @@ import time
 from PySide6.QtCore import QThread, Signal
 
 from app.modules.overlay.selection import find_monitor, physical_region
-from app.modules.overlay.stencil import apply_stencil
+from app.modules.overlay.stencil import apply_drawing_stencil, apply_stencil
 
 
 class MapCandidates:
@@ -103,6 +103,7 @@ class LiveMapWorker(QThread):
         self.full_area = self.area.model_copy(update=dict(x=0,y=0,width=area.screen_width,height=area.screen_height,view_kind="large")) if area.view_kind=="minimap" else None
         self.stop_event = threading.Event()
         self.paint_exclusion = None
+        self.drawing_exclusion = None
         self._mask_lock = threading.Lock()
         self.route_exclusion=None
         self.route_tracking=False
@@ -118,6 +119,7 @@ class LiveMapWorker(QThread):
     def set_capture_context(self, context):
         with self._mask_lock:
             self.capture_context = context
+            self.drawing_exclusion = None
 
     def set_route_tracking(self,enabled):
         with self._mask_lock:self.route_tracking=bool(enabled)
@@ -125,11 +127,17 @@ class LiveMapWorker(QThread):
     def set_route_exclusion(self,registration,lines,kind,pen=6,target=None):
         with self._mask_lock:self.route_exclusion=(registration,lines,kind,pen,target) if registration else None
 
+    def set_drawing_exclusion(self, shapes, view_kind):
+        with self._mask_lock:
+            self.drawing_exclusion = (shapes, view_kind) if shapes else None
+
     def set_exclusion(self, registration, points, view_kind=None):
         # A recent marker stencil is masked out of the next frame, preventing
         # the overlay's own icons from supplying visual matching evidence.
         with self._mask_lock:
             self.paint_exclusion = (registration, list(points), view_kind or self.area.view_kind) if registration else None
+            if registration is None:
+                self.drawing_exclusion = None
 
     def run(self):
         try:
@@ -176,12 +184,15 @@ class LiveMapWorker(QThread):
                     with self._mask_lock:
                         stencil = self.paint_exclusion
                         routes=self.route_exclusion
+                        drawings = self.drawing_exclusion
                         wants=self.route_tracking
                     if area.view_kind=='minimap' and wants:
                         last_mini_shape=frame.shape;last_mini_at=time.perf_counter();last_mini_game=probe.game_foreground()
                     if stencil and stencil[2]==area.view_kind:
                         registration, points, _ = stencil
                         apply_stencil(frame, feature_mask, registration, points)
+                    if drawings and drawings[1] == area.view_kind:
+                        apply_drawing_stencil(frame, feature_mask, drawings[0])
                     if routes and routes[2]==area.view_kind:
                         from app.modules.overlay.stencil import apply_route_stencil
                         apply_route_stencil(frame,feature_mask,routes[0],routes[1],routes[3],routes[4])

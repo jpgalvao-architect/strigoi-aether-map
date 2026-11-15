@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 # Downloads from the publisher for this user; never redistributes Npcap.
 param(
-    [ValidateSet('pt_BR','en_US')][string]$Language='pt_BR',
+    [ValidateSet('pt_BR','en_US','es-419')][string]$Language='pt_BR',
     [switch]$CheckOnly,
     [switch]$VerifyOnly
 )

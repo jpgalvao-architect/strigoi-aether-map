@@ -2,7 +2,7 @@
 """Panorama of real character records; missing readings never become zero."""
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout,QHBoxLayout,QGridLayout
-from app.core.i18n import calendar_date,clock,language,tr
+from app.core.i18n import Verbatim, calendar_date,clock,language,tr
 from app.modules.routine.models import RESOURCES
 from app.ui.localized_widgets import QWidget,QFrame,QToolButton,QCheckBox,QComboBox,QDialog,QFormLayout,QDoubleSpinBox
 from app.ui.widgets import label,button
@@ -124,7 +124,7 @@ class RoutinePage(QWidget):
         line=QHBoxLayout(header);line.setContentsMargins(15,17,15,17);line.setSpacing(10)
         picture=label('');picture.setPixmap(colored_class_icon(profile.job).pixmap(31,34));line.addWidget(picture)
         copy=QVBoxLayout();copy.setSpacing(4)
-        name=label(profile.character,'routineName',True);copy.addWidget(name)
+        name=label(Verbatim(profile.character),'routineName',True);copy.addWidget(name)
         copy.addWidget(label(class_label(profile.job),'routineState'))
         copy.addWidget(label(tr('Servidor {servidor}').format(servidor=profile.server)+' · '+profile.region.upper(),'routineState'))
         copy.addWidget(label(self.service.profile_status(key),'routineState'));line.addLayout(copy,1)
@@ -164,7 +164,7 @@ class RoutinePage(QWidget):
         title=QWidget();row=QHBoxLayout(title);row.setContentsMargins(0,0,0,0);row.setSpacing(12)
         picture=label('');picture.setPixmap(colored_class_icon(profile.job).pixmap(36,40));row.addWidget(picture)
         copy=QVBoxLayout();copy.setSpacing(3)
-        copy.addWidget(label(profile.character,'routineName'))
+        copy.addWidget(label(Verbatim(profile.character),'routineName'))
         copy.addWidget(label(tr('Servidor {servidor}').format(servidor=profile.server)+' · '+tr(self.service.profile_status(self.detail_key)),'subtitle'))
         row.addLayout(copy,1);self.layout.addWidget(title)
         values=QWidget();line=QHBoxLayout(values);line.setContentsMargins(0,0,0,0);line.setSpacing(14)

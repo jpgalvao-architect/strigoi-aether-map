@@ -1,21 +1,32 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Siege preset layers in the live overlay's normalized marker format."""
 from app.modules.overlay.badges import Badge
-from app.modules.siege.models import COLORS, MAP_ID
+from app.modules.siege.models import COLORS, MAP_ID, OBJECTIVE_CATEGORY
 
 
 def badge_for(layer, caption, scale, *, selected=False, provisional=False):
     ring = layer in {'SiegeRings', 'TransitRings'}
     priority = {'SiegeObjectives': 4, 'CustomMarkers': 4, 'SiegeRings': 3, 'TransitRings': 2}.get(layer, 1)
-    objective = layer == 'SiegeObjectives'
-    size = 12. if objective else 10. if priority >= 2 else 4.5
     return Badge(caption, scale, selected=selected, provisional=provisional,
-                 ring=ring, priority=priority, size=size, pin_code=objective)
+                 ring=ring, priority=priority, size=10. if priority >= 2 else 4.5)
+
+
+def pin_layer(marker):
+    return 'SiegeObjectives' if marker.category == OBJECTIVE_CATEGORY else 'CustomMarkers'
+
+
+def pin_color(marker, preset):
+    layer = pin_layer(marker)
+    return marker.color or preset.colors.get(layer, COLORS[layer])
+
+
+def pin_visible(marker, preset):
+    return marker.visible and pin_layer(marker) in preset.layers
 
 
 def pin_badge(marker, preset, *, selected=False):
     caption = marker.name if len(marker.name) <= 12 else marker.name[:11] + '…'
-    return badge_for('CustomMarkers', caption, preset.marker_scale * marker.scale, selected=selected)
+    return badge_for(pin_layer(marker), caption, preset.marker_scale * marker.scale, selected=selected)
 
 
 def markers_for(siege, dataset, *, tactical=True, exploration=True):
@@ -36,9 +47,8 @@ def markers_for(siege, dataset, *, tactical=True, exploration=True):
                     markers.append((point.x, point.y, colors[layer], badge_for(layer, '', preset.marker_scale)))
     if not tactical:
         return markers
-    if 'CustomMarkers' in preset.layers:
-        markers.extend((marker.position.x, marker.position.y, marker.color or colors['CustomMarkers'],
-                        pin_badge(marker, preset)) for marker in preset.markers if marker.visible)
+    markers.extend((marker.position.x, marker.position.y, pin_color(marker, preset), pin_badge(marker, preset))
+                   for marker in preset.markers if pin_visible(marker, preset))
     for ring in siege.rings.values():
         layer = 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
         if layer not in preset.layers:
@@ -47,9 +57,5 @@ def markers_for(siege, dataset, *, tactical=True, exploration=True):
         if position is not None:
             markers.append(badge(position.map_position, layer, siege.ring_code(ring) or '?',
                                  provisional=position.status == 'provisional'))
-    if 'SiegeObjectives' in preset.layers:
-        markers.extend(badge(objective.map_position, 'SiegeObjectives', objective.code,
-                             provisional=objective.status != 'verified')
-                       for objective in siege.objectives.values())
     markers.sort(key=lambda marker: marker[3].priority)
     return markers

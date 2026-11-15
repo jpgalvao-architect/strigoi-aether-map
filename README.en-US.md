@@ -1,6 +1,6 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.14 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.15 · Windows x64**
 
 Beta 13 prepares Lower Reshanta during setup with an internet connection.
 The map then works offline in Siege Command and the Atlas.
@@ -74,12 +74,13 @@ confirmation is still pending.
 
 Beta 8 fixes overlays disappearing during gameplay: an X-shaped screen detail alone cannot identify a menu. Alt+Tab hiding still works. Menus require local recognition of known titles; coverage is not universal. The full map keeps its markers, capture continues, and old Sonar alerts are not replayed.
 
-The app doubles minimap symbols, adds arrows to cube sites with supplied height flags, and adds an intensity bar and recent history to Sonar. Arrows follow the source group's relative height; the bar estimates the recognized sound and is affected by game volume. Its relationship with in-game proximity still needs validation.
+The app doubles minimap symbols and shows arrows where cube locations have
+height flags. Beta.15 simplifies Sonar to a detection status and a visual alert.
 
 The app shows the combat panel in recognized dungeons and 1v1/5v5 arenas and hides it on exit. Entry and exit signals were observed for one map per arena mode in SA; other rotating maps still need identification. PvP totals include outgoing attacks by confirmed participants and exclude received damage. Calculation remains experimental without live accuracy validation; the complete 5v5 team roster is not confirmed yet. Quick controls can hide the panel without stopping capture.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.14) ·
+[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.15) ·
 [Português](README.md)
 
 Your exploration journal: maps, gatherables, possible cube locations and
@@ -90,11 +91,11 @@ observed DPS/share, explicit summon ownership, target filtering and local
 history. SA capture still needs validation; results are marked partial.
 See [Combat](docs/COMBAT.md) for current scope and limitations.
 
-Run `StrigoiAetherMap-Setup-0.10.0-beta.1.exe`, choose English and review the terms
+Run `StrigoiAetherMap-Setup-0.10.0-beta.15.exe`, choose a language and review the terms
 before accepting. Setup installs for the current user and includes an
 uninstaller and corresponding source code. Existing preferences and visits
-are preserved. English is the default for a fresh installation; an explicit
-language preference from an earlier installation remains yours.
+are preserved. The installer language sets the first-launch default. An
+existing app language preference takes priority.
 
 If Npcap is missing, Setup downloads the verified official installer and
 opens the publisher's wizard in the same flow. Complete that wizard and its
@@ -103,7 +104,7 @@ Windows permission prompt. No Npcap copy is embedded in our download.
 For the portable edition, extract the entire ZIP and open
 `StrigoiAetherMap.exe`. Keep `_internal` beside the executable. Python does
 not need to be installed. Open **Settings → App language** to switch
-between English (United States) and Portuguese (Brazil) immediately.
+between English (United States), Portuguese (Brazil), and Spanish (Latin America).
 This changes the interface, not your region or event time zone.
 
 Choose layers in the atlas or Overlay; the same selection applies to the

@@ -319,7 +319,7 @@ class RouteSettings(Model):
 class Preferences(Model):
     schema_version: Literal[1] = 1
     boss_timers_enabled: bool = True
-    ui_language: Literal['pt_BR','en_US'] | None = None
+    ui_language: Literal['pt_BR','en_US','es-419'] | None = None
     timezone: str = "local"
     content_release: str = ""
     cube_data_release: str = ""

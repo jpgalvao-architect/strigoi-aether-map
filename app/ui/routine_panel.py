@@ -3,7 +3,7 @@
 from PySide6.QtCore import QEvent,Qt
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import QHBoxLayout,QVBoxLayout,QLayout
-from app.core.i18n import tr,language
+from app.core.i18n import Verbatim, tr,language
 from app.modules.routine.models import RESOURCES
 from app.ui.hud import HudSurface
 from app.ui.identity import emblem_icon
@@ -62,12 +62,12 @@ class RoutinePanel(HudSurface):
             header=QFrame();head=QHBoxLayout(header);head.setContentsMargins(6,2,3,2);head.setSpacing(3)
             mark=label('');mark.setPixmap(emblem_icon().pixmap(16,16));head.addWidget(mark)
             heading=label('' if strip else 'Rotina');head.addWidget(heading,0 if strip else 1)
-            caption=profile.character if profile else tr('Aguardando leitura')
+            caption=Verbatim(profile.character) if profile else tr('Aguardando leitura')
             if profile and not strip:
-                title=tr('Rotina')+' · '+profile.character
-                heading.setText(heading.fontMetrics().elidedText(title,Qt.TextElideMode.ElideRight,110))
+                title=Verbatim(tr('Rotina')+' · '+profile.character)
+                heading.setText(Verbatim(heading.fontMetrics().elidedText(title,Qt.TextElideMode.ElideRight,110)))
                 heading.setToolTip(title)
-            header.setToolTip(tr('Rotina')+' · '+caption)
+            header.setToolTip(Verbatim(tr('Rotina')+' · '+caption))
             for widget in (header,mark,heading):widget.installEventFilter(self)
             if strip:
                 resources=prefs.pinned if prefs.panel_expanded else prefs.pinned[:1]

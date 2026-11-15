@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (QVBoxLayout,QHBoxLayout,QListWidget,QListWidgetIt
 from app.ui.localized_widgets import QWidget,QFrame,QDialog,QLineEdit,QComboBox,QCheckBox,QPushButton,QFileDialog,QMessageBox,QToolButton
 from app.ui.widgets import label,button,row
 from app.ui.icons import icon
-from app.core.i18n import tr
+from app.core.i18n import Verbatim, tr, validation_text
 from app.modules.routes.models import Vertex
 from app.modules.routes.planner import candidates,rebuild,distance
 from app.ui.route_view import RouteView
@@ -84,6 +84,11 @@ class RoutesPage(QWidget):
         service.changed.connect(self.refresh)
         self.map_changed()
 
+    def retranslate(self):
+        super().retranslate()
+        self.limit.setAccessibleName(tr('Quantidade de paradas'))
+        self.refresh()
+
     def map_changed(self):
         if self._refreshing:return
         dataset=self.service.dataset;map_id=self.maps.currentData()
@@ -102,7 +107,7 @@ class RoutesPage(QWidget):
             self.history=[];self.service.plan(self.maps.currentData(),self.resources,self.limit.value(),self.mode,start)
             self._shown_draft=self.service.draft;self.view.fit_route(self.service.draft)
         except ValueError as exc:
-            self.service.draft=None;self.refresh();self.status.setText(str(exc))
+            self.service.draft=None;self.refresh();self.status.setText(validation_text(exc))
 
     def change_mode(self,mode):
         self.mode=mode
@@ -121,7 +126,7 @@ class RoutesPage(QWidget):
         for resource in sorted(dataset.resources,key=lambda r:r.name):
             if counts.get(resource.id,0)<1:continue
             item=QListWidgetItem(resource.name+f' · {counts[resource.id]} '+tr('locais'),listing)
-            item.setData(Qt.UserRole,resource.id);item.setToolTip(resource.verification)
+            item.setData(Qt.UserRole,resource.id);item.setToolTip(tr(resource.verification))
             item.setFlags(item.flags()|Qt.ItemIsUserCheckable);item.setCheckState(Qt.Checked if resource.id in self.resources else Qt.Unchecked)
         search.textChanged.connect(lambda text:[listing.item(i).setHidden(text.casefold() not in listing.item(i).text().casefold()) for i in range(listing.count())])
         def accept():
@@ -141,13 +146,13 @@ class RoutesPage(QWidget):
         try:
             route=self.service.draft;names={r.id:r.name for r in self.service.dataset.resources}
             text=' + '.join(names.get(r,r) for r in self.resources) or tr('Meus pontos')
-            self.targets.setText(self.targets.fontMetrics().elidedText(text,Qt.ElideRight,max(170,self.targets.width()-44)))
-            self.targets.setToolTip(text)
+            self.targets.setText(Verbatim(self.targets.fontMetrics().elidedText(text,Qt.ElideRight,max(170,self.targets.width()-44))))
+            self.targets.setToolTip(Verbatim(text))
             self.count.setText(tr('{count} locais cadastrados neste mapa.').format(count=len(candidates(self.service.dataset,self.maps.currentData(),self.resources))))
             self.limit_label.setText(str(self.limit.value()));self.loop.setChecked(self.mode=='loop');self.open.setChecked(self.mode=='open')
             self.limit.setEnabled(bool(self.resources))
             self.view.show_route(route)
-            self.title.setText(route.name if route else 'Escolha pelo menos dois locais.')
+            self.title.setText(Verbatim(route.name) if route else 'Escolha pelo menos dois locais.')
             self.summary.setText(tr('{count} paradas · {mode}').format(count=len(route.stops),mode=tr('volta ao início' if route.mode=='loop' else 'termina no último ponto')) if route else '')
             self.start_button.setEnabled(route is not None);self.edit_button.setEnabled(route is not None)
             self.undo.setVisible(bool(self.history))
@@ -174,7 +179,7 @@ class RoutesPage(QWidget):
         if self.edit_mode=='custom':
             self.remember()
             try:self.service.custom_pair(self.maps.currentData(),point,self.mode)
-            except ValueError as exc:self.status.setText(str(exc))
+            except ValueError as exc:self.status.setText(validation_text(exc))
         elif self.edit_mode=='origin' and draft:
             self.remember();index=min(range(len(draft.stops)),key=lambda i:distance(draft.stops[i],point))
             changed=draft.model_copy(deep=True,update={'stops':draft.stops[index:]+draft.stops[:index]})
@@ -183,7 +188,7 @@ class RoutesPage(QWidget):
             self.remember()
             index=min(range(len(draft.legs)),key=lambda i:min(self.segment_distance(point,a,b) for a,b in zip(draft.legs[i].vertices,draft.legs[i].vertices[1:])))
             try:self.service.edit_passage(index,point)
-            except ValueError as exc:self.status.setText(str(exc))
+            except ValueError as exc:self.status.setText(validation_text(exc))
 
     @staticmethod
     def segment_distance(p,a,b):
@@ -209,11 +214,11 @@ class RoutesPage(QWidget):
             self.debounce.stop();self.service.start()
             self.context.prefs.routes.panel_visible=True;self.context.save()
             if self.start_overlay:self.start_overlay()
-        except (ValueError,OSError) as exc:self.status.setText(str(exc))
+        except (ValueError,OSError) as exc:self.status.setText(validation_text(exc))
 
     def save(self):
         try:self.service.save()
-        except (ValueError,OSError) as exc:self.status.setText(str(exc))
+        except (ValueError,OSError) as exc:self.status.setText(validation_text(exc))
 
     def rename(self):
         if not self.service.draft:return
@@ -232,7 +237,7 @@ class RoutesPage(QWidget):
             if not item:return
             try:
                 self.service.load(item.data(Qt.UserRole));self.display_draft();dialog.accept()
-            except (ValueError,OSError) as exc:QMessageBox.warning(dialog,'Rota indisponível',str(exc))
+            except (ValueError,OSError) as exc:QMessageBox.warning(dialog,'Rota indisponível',validation_text(exc))
         def delete():
             item=listing.currentItem()
             if item and QMessageBox.question(dialog,'Excluir rota','Excluir somente esta rota salva?')==QMessageBox.Yes:
@@ -246,11 +251,11 @@ class RoutesPage(QWidget):
         if not name:return
         try:
             self.service.import_file(Path(name)) if importing else self.service.export_file(Path(name));callback()
-        except (OSError,ValueError) as exc:QMessageBox.warning(self,'Rotas',str(exc))
+        except (OSError,ValueError) as exc:QMessageBox.warning(self,'Rotas',validation_text(exc))
 
     def review_recorded(self):
         try:self.service.use_recorded();self.display_draft()
-        except ValueError as exc:self.status.setText(str(exc))
+        except ValueError as exc:self.status.setText(validation_text(exc))
 
     def display_draft(self):
         route=self.service.draft;self.debounce.stop();self.history=[];self.edit_mode='';self.view.editing=False

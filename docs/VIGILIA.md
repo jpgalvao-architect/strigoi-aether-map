@@ -32,7 +32,7 @@ Drag the event title to move the strip. No timezone conversion rules changed.
 ## Other overlays
 
 The emblem opens module switches and the app. Sonar retains its audio
-detector and shows a segmented intensity meter. The favorite-pet panel uses
+detector and shows a short visual notice. The favorite-pet panel uses
 original portraits and the existing collection. Map controls share Atlas
 layers with both game maps. Closing a panel does not stop another module.
 

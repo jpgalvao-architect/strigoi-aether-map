@@ -212,7 +212,7 @@ def test_sonar_visual_preview_stays_in_app_when_game_hud_is_blocked(gated,qapp,m
         preview=dialog.findChild(SonarAlert)
         assert preview.isVisible() and not preview.isWindow()
         assert not dialog.windowFlags() & Qt.WindowType.WindowStaysOnTopHint
-        assert preview.testing and not preview.intensity.isVisible()
+        assert preview.testing and preview.detail.text() == 'Este é apenas um teste visual.'
         assert not main.sonar_alert.isVisible() and not main.sonar.active
         from PySide6.QtTest import QTest
         position=main.context.prefs.sonar_alert_position

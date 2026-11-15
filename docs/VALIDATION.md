@@ -387,3 +387,21 @@ e passa de três para cinco linhas sem alterar o total, recalculando DPS
 e participação. Dano sem identidade observada continua não atribuído.
 A partida encerrou antes da alteração: a recuperação completa no jogo
 ainda precisa ser confirmada numa nova instância.
+
+## Espanhol latino-americano e Sonar de cubos
+
+- A inicialização abriu as 15 páginas em português do Brasil, inglês dos EUA e
+  espanhol latino-americano. A revisão visual em 1280 × 800 incluiu o editor de
+  formas táticas, o menu rápido, o Sonar, o Atlas, as rotas, pets, combate e
+  eventos.
+- O teste de troca de idioma usa nomes personalizados que também são palavras
+  da interface. Os nomes e códigos de anéis permanecem iguais. Exportar em
+  português, importar em um perfil novo em espanhol e exportar de novo gera
+  o mesmo JSON.
+- No Windows, o helper capturou a própria aplicação de teste reproduzindo a
+  amostra de referência a −20 dB de relação sinal/ruído. O Sonar exibiu um
+  aviso em espanhol e encerrou o helper ao ser desligado. Os testes também
+  cobrem silêncio, ruído, tons, a amostra invertida, o intervalo entre avisos
+  e o fechamento do popup.
+- Falta repetir o teste com um Cubo Oculto em uma partida de AION 2. O ensaio
+  no Windows usou somente o áudio do processo de teste.
