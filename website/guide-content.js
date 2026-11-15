@@ -1036,19 +1036,19 @@ window.StrigoiGuide = {
             "en_US": "Prepare the map and rings"
           },
           "where": {
-            "pt_BR": "Siege Command → Importar mapa local",
-            "en_US": "Siege Command → Import local map"
+            "pt_BR": "Siege Command ou Atlas → Chaotic Lower Reshanta",
+            "en_US": "Siege Command or Atlas → Chaotic Lower Reshanta"
           },
           "body": {
-            "pt_BR": "Importe o PNG calibrado de Lower Reshanta e carregue seu JSON em Catálogo de anéis → Importar catálogo local. Use arquivos que você tenha permissão para usar.",
-            "en_US": "Import the calibrated Lower Reshanta PNG. Load your JSON in Ring catalogue → Import local catalogue. Use files you have permission to use."
+            "pt_BR": "O instalador baixa o mapa calibrado automaticamente. Na versão portátil ou se a conexão cair, escolha Baixar mapa no Siege Command. Depois, a região abre offline nos dois módulos.",
+            "en_US": "Setup automatically downloads the calibrated map. In the portable edition, or if the connection drops, choose Download map in Siege Command. The region then works offline in both modules."
           },
           "tip": {
-            "pt_BR": "O instalador público inclui a lista de anéis pendentes por zona. O guia técnico explica o quadro cartográfico, os esquemas e a calibração.",
-            "en_US": "The public installer includes pending ring entries by zone. The technical guide explains the map frame, schemas, and calibration."
+            "pt_BR": "As posições dos anéis podem ser carregadas em Catálogo de anéis → Importar catálogo local. O instalador público inclui a lista de pendências por zona.",
+            "en_US": "Ring positions can be loaded in Ring catalogue → Import local catalogue. The public installer includes pending ring entries by zone."
           },
           "action": {
-            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.12/docs/SIEGE.md",
+            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.13/docs/SIEGE.md",
             "label": {
               "pt_BR": "Abrir guia técnico",
               "en_US": "Open technical guide"
