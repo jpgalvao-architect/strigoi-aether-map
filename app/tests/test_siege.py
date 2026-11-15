@@ -139,3 +139,82 @@ def test_shortcut_parser_rejects_plain_keys_and_canonicalizes_modifiers():
         shortcut('F9')
     with pytest.raises(ValueError):
         shortcut('Ctrl+Ctrl+F9')
+
+
+def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_path, monkeypatch):
+    from app.modules.overlay.badges import Badge
+    from app.modules.overlay.selection import CaptureArea
+    from app.modules.overlay.tracking import Registration
+    from app.modules.siege.models import MAP_ID, OverlayOptions
+
+    context = AppContext(tmp_path)
+    siege = context.siege
+    rally = ring(3, callsign='B3')
+    import_rings(siege, tmp_path, rally)
+    import cv2
+    assert cv2.imwrite(str(siege.map_path), np.full((320, 320, 3), 30, np.uint8))
+    siege._set_map()  # Exercise drawing with a stand-in for the local reference.
+    siege.set_call(sector='BOT', objective=7, ring_id=rally.ring_id)
+    assert OverlayOptions.model_validate({'map_shortcut':'Alt+F9', 'visible':True}).map_markers
+    window = MainWindow(context)
+    overlay = window.overlay
+    screen = qapp.primaryScreen()
+    geometry = screen.geometry()
+    mini = CaptureArea(map_id='altgard', screen_name=screen.name(), screen_x=geometry.x(),
+        screen_y=geometry.y(), screen_width=geometry.width(), screen_height=geometry.height(),
+        pixel_ratio=screen.devicePixelRatio(), x=450, y=40, width=290, height=210, view_kind='minimap')
+    path = tmp_path/'selected-minimap.json'
+    atomic_json(path, mini)
+    context.prefs.overlay.minimap_area = str(path)
+    observations = []
+
+    class Worker:
+        def set_exclusion(self, *args):
+            observations.append(args)
+
+    def start():
+        assert context.prefs.overlay.map_id == MAP_ID
+        assert window.overlay_page.minimap_ready()
+        context.prefs.overlay.enabled = True
+        overlay.worker = Worker()
+        overlay.sync()
+
+    monkeypatch.setattr(overlay, 'start', start)
+    try:
+        window.siege_page.start_map_button.click()
+        assert context.prefs.overlay.map_view == 'minimap'
+        assert not hasattr(window.siege_overlay, 'expanded')
+        shared = overlay.window
+        assert shared.windowFlags() & Qt.WindowTransparentForInput
+        assert len(shared.markers) == 13
+        caption = next(shape for _, _, _, shape in shared.markers if isinstance(shape, Badge) and shape.text == 'P7')
+        assert caption.selected and caption.provisional
+        mini = mini.model_copy(update={'map_id': MAP_ID})
+        full = mini.model_copy(update={'x':0, 'y':0, 'width':geometry.width(), 'height':geometry.height(), 'view_kind':'large'})
+        objective = siege.objectives[7].map_position
+        for area, zoom, center in [(mini, 1100, (140, 95)), (full, 620, (430, 340)),
+                                   (full, 920, (470, 390)), (mini, 1150, (118, 92))]:
+            with_area = overlay.capture_area == area
+            px, py = np.asarray(center) * area.pixel_ratio
+            registration = Registration(np.array([[zoom,0,px-zoom*objective.x],
+                                                  [0,zoom,py-zoom*objective.y]]), 55, .99)
+            overlay.on_registration(registration, {'area':area})
+            assert with_area or not shared.isVisible()
+            overlay.on_registration(registration, {'area':area})
+            assert shared.isVisible() and overlay.window is shared
+            visible = shared.visible_markers(registration)
+            point = next((x, y) for x, y, _, shape in visible if shape == caption)
+            assert point == pytest.approx(center)
+            swatch = shared.symbol('#f7cb74', caption).toImage()
+            assert swatch.pixelColor(0, 0).alpha() == 0
+            assert swatch.pixelColor(swatch.width()//2, swatch.height()//2).alpha() > 0
+            assert observations[-1][2] == area.view_kind
+        siege.update_overlay(map_markers=False)
+        assert not shared.markers
+        assert observations[-1][1] == []
+        overlay.on_registration(None, {'area':mini})
+        assert not shared.isVisible()
+    finally:
+        overlay.worker = None
+        window.close()
+        overlay.watchdog.stop()

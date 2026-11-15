@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         from app.ui.siege_overlay import SiegeOverlay
         from app.ui.siege_page import SiegePage
         self.siege_overlay = SiegeOverlay(self, runtime=runtime)
-        self.siege_page = SiegePage(context, self.siege_overlay.toggle_expanded, self.siege_overlay.configure_shortcuts)
+        self.siege_page = SiegePage(context, self.start_siege_overlay, self.siege_overlay.configure_shortcut)
         self.atlas.route_requested.connect(self.show_route_target)
         self.cubes.route_requested.connect(self.show_route_target)
         self.catalog.route_requested.connect(self.show_route_target)
@@ -232,6 +232,21 @@ class MainWindow(QMainWindow):
             self.navigate('overlay');page.select_area();return
         page.start()
         if not self.context.prefs.overlay.enabled:self.navigate('overlay')
+
+    def start_siege_overlay(self):
+        from app.modules.siege.models import MAP_ID
+        self.context.siege.update_overlay(map_markers=True)
+        page = self.overlay_page
+        prefs = self.context.prefs.overlay
+        if prefs.enabled:
+            if prefs.map_id == MAP_ID and prefs.map_view == 'minimap' and prefs.tracking_mode == 'dynamic':
+                self.navigate('overlay')
+                return
+            self.overlay.stop()
+        self.navigate('overlay')
+        page.maps.setCurrentIndex(page.maps.findData(MAP_ID))
+        page.view_kind.setCurrentIndex(page.view_kind.findData('minimap'))
+        page.start()
 
     def show_route_target(self,map_id,resource_id):
         self.routes_page.choose_resource(map_id,resource_id);self.navigate('routes')

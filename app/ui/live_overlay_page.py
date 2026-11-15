@@ -25,7 +25,7 @@ class LiveOverlayPage(QWidget):
         self.dataset_identity = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(26,20,26,20)
-        layout.addWidget(page_header("Overlay", "Veja os pontos do atlas sobre o mapa do jogo."))
+        layout.addWidget(page_header("Overlay", "Veja os marcadores sobre o mapa do jogo."))
         layout.addWidget(label("Escolha o mapa e a tela. Para usar o minimapa, selecione somente a área do terreno uma vez.", "badge", True))
         form_group = QGroupBox("Mapa e tela")
         columns=QHBoxLayout(form_group)
@@ -129,12 +129,13 @@ class LiveOverlayPage(QWidget):
         self.refresh_rates()
 
     def refresh(self):
-        if self.dataset_identity is not self.context.dataset:
+        dataset = self.context.exploration_dataset
+        if self.dataset_identity is not dataset:
             self.maps.clear()
-            for m in self.context.dataset.maps:
+            for m in dataset.maps:
                 self.maps.addItem(m.name.removesuffix(' • base compartilhada'),m.id)
             self.maps.setCurrentIndex(max(0,self.maps.findData(self.context.prefs.overlay.map_id)))
-            self.dataset_identity = self.context.dataset
+            self.dataset_identity = dataset
         active = self.context.prefs.overlay.enabled or self._selection_pending
         for widget in [self.maps,self.screens,self.minimum,self.view_kind,self.start_button]:
             widget.setEnabled(not active)
@@ -155,11 +156,14 @@ class LiveOverlayPage(QWidget):
             try:
                 from app.infrastructure.storage import load_model
                 area = load_model(Path(path),CaptureArea)
+                screen = next((s for s in QGuiApplication.screens() if s.name()==area.screen_name), None)
+                if screen is not None:
+                    area = area.on_screen(screen)
                 r=area.pixel_ratio
                 width=round((area.x+area.width)*r)-round(area.x*r)
                 height=round((area.y+area.height)*r)-round(area.y*r)
                 self.area_label.setText(f"Minimapa selecionado · {width} × {height} pixels")
-                self.area_label.setToolTip(f"{area.screen_name} · escala {r*100:.0f}% · {area.map_id}")
+                self.area_label.setToolTip(f"{area.screen_name} · escala {r*100:.0f}%")
             except (ValueError,OSError):
                 self.area_label.setText("A seleção anterior precisa ser refeita.")
         else:
@@ -199,11 +203,8 @@ class LiveOverlayPage(QWidget):
             area=load_model(Path(self.context.prefs.overlay.minimap_area),CaptureArea)
             screens=[s for s in QGuiApplication.screens() if s.name()==area.screen_name]
             if len(screens)!=1:return False
-            screen=screens[0];g=screen.geometry()
-            return (area.view_kind=='minimap' and area.map_id==self.maps.currentData()
-                and area.screen_name==self.screens.currentData()
-                and (area.screen_x,area.screen_y,area.screen_width,area.screen_height)==(g.x(),g.y(),g.width(),g.height())
-                and abs(area.pixel_ratio-screen.devicePixelRatio())<.01)
+            area.on_screen(screens[0])
+            return area.view_kind=='minimap' and area.screen_name==self.screens.currentData()
         except (ValueError,OSError):return False
 
     def select_area(self,*,activate_after=False):

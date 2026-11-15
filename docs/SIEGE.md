@@ -17,13 +17,16 @@ fica neste computador e **Copiar call** envia texto para a área de transferênc
    mapa ou no seletor. Escolha um anel numerado e a ação desejada. O mapa
    destaca os alvos e **Copiar call** copia, por exemplo,
    `REAGRUPAR B3 → ATACAR P7`.
-4. Em **Overlay de siege**, habilite o HUD compacto, ajuste escala e
-   opacidade, e arraste pelo título para posicionar. Depois de posicionar,
-   use **Clique através do HUD** para liberar os cliques para o jogo.
-5. O botão **Mapa** abre o overlay expandido. Você também pode configurar
-   atalhos distintos para o HUD e o mapa, como Ctrl+Alt+F9 e Ctrl+Alt+F10.
-   Os atalhos do Windows são ativados enquanto o jogo está em primeiro plano
-   e em modo de jogo. Alt+Tab e menus reconhecidos ocultam os overlays.
+4. Em **Overlay de siege**, clique em **Ativar no mapa e minimapa**. O app
+   seleciona Lower Reshanta no overlay de mapas. Se for a primeira vez,
+   selecione a área do terreno do minimapa no jogo.
+5. Os marcadores do preset aparecem quando o terreno de Lower Reshanta é
+   reconhecido. Use **M** normalmente para abrir o mapa do jogo e ver os
+   desenhos sobre ele. Ao fechá-lo, os marcadores retornam ao minimapa.
+   Refaça a seleção se o minimapa mudar de área na interface do jogo.
+6. Se quiser o HUD compacto de calls, habilite-o, ajuste escala e opacidade e
+   arraste pelo título. Use **Clique através do HUD** depois de posicioná-lo.
+   Alt+Tab e menus reconhecidos ocultam o HUD.
 
 **Ilhas** reenquadra a área jogável. **Mapa inteiro** mostra o quadro cartográfico
 completo. Role para ampliar e arraste para deslocar. Um traço liga cada
@@ -108,7 +111,8 @@ Os contratos de importação ficam em [schemas](../schemas).
 `SiegeService` mantém presets, ajustes de anéis e HUD em
 `siege-command.json`. O mapa e o catálogo local ficam em arquivos separados.
 O serviço publica `call_changed` com um estado imutável para uso por outros
-componentes. O overlay reaproveita o controle de visibilidade do Azphelumbra e a
-cena de mapa do Atlas. A visualização tática é manual. A integração com
-identificação automática da posição no Abyss e sincronização entre clientes
-fica para etapas futuras.
+componentes. As camadas do preset alimentam a janela transparente de mapas
+do Azphelumbra. O reconhecimento visual alterna entre o minimapa e o mapa
+grande e recalcula a projeção conforme o terreno muda de posição ou zoom.
+Uma mudança de resolução ou DPI recalcula a área de captura a partir da seleção
+salva. A aba Siege Command continua disponível para planejamento e presets.

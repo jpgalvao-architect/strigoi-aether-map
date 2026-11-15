@@ -13,6 +13,7 @@ from app.infrastructure.storage import load_model, resolve_map_image
 from app.modules.atlas.view import marker_path
 from app.modules.atlas.heights import point_marker_shape
 from app.modules.gatherables.service import FilterQuery, filter_points
+from app.modules.overlay.badges import Badge
 from app.modules.overlay.detector import Calibration, MapDetector, project
 from app.ui.overlay_visibility import OverlayVisibilityMixin
 
@@ -78,6 +79,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         self._coordinates=None
         self._marker_identity=None
         self._frame_signature=None
+        self.badge_scale=0.
         self.route_lines=()
         self.route_target=None
 
@@ -178,10 +180,14 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         mini=self.capture_area is not None and self.capture_area.view_kind=='minimap'
         return 6 if shape.startswith('cube') and not mini else 4
 
+    def badge_zoom(self):
+        return self.scale * (1.3 if self.capture_area and self.capture_area.view_kind=='minimap' else 1.)
+
     def paint_radius(self):
         # Includes arrows, outlines and antialiasing; the cube stays at its coordinate.
         return math.ceil(max(10*self.effective_scale()+2,
-            (self.shape_radius('cube')*2.3+.65)*self.effective_scale()+2))
+            (self.shape_radius('cube')*2.3+.65)*self.effective_scale()+2,
+            10*self.badge_scale*self.badge_zoom()+2))
 
     def symbol(self,color,shape):
         mini=self.capture_area is not None and self.capture_area.view_kind=='minimap'
@@ -189,7 +195,9 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         if key not in self._symbols:
             scale=self.effective_scale()
             size=round(20*scale)+4
-            if shape in ('cube-up','cube-down'):
+            if isinstance(shape, Badge):
+                size=2*shape.radius(self.badge_zoom())
+            elif shape in ('cube-up','cube-down'):
                 size=max(size,2*math.ceil((2.3*self.shape_radius(shape)+.65)*scale+2))
             pixmap=QPixmap(round(size*self.ratio),round(size*self.ratio))
             pixmap.setDevicePixelRatio(self.ratio)
@@ -198,10 +206,13 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
             logical=pixmap.deviceIndependentSize()
             painter.translate(logical.width()/2,logical.height()/2)
-            painter.scale(scale,scale)
-            painter.setPen(QPen(QColor('#e7ffff'),1.3))
-            painter.setBrush(QColor(color))
-            painter.drawPath(marker_path(shape,self.shape_radius(shape)))
+            if isinstance(shape, Badge):
+                shape.paint(painter,color,self.badge_zoom())
+            else:
+                painter.scale(scale,scale)
+                painter.setPen(QPen(QColor('#e7ffff'),1.3))
+                painter.setBrush(QColor(color))
+                painter.drawPath(marker_path(shape,self.shape_radius(shape)))
             painter.end()
             # Bound cache growth after many scale/DPI changes.
             if len(self._symbols)>100:self._symbols.clear()
@@ -284,6 +295,7 @@ class OverlayService(QObject):
         self.watchdog.timeout.connect(self.check_stale)
         self.watchdog.start()
         context.changed.connect(self.sync)
+        context.siege.changed.connect(self.sync)
 
     def attach_routes(self,routes):
         self.routes=routes;routes.changed.connect(self.sync_routes)
@@ -316,7 +328,9 @@ class OverlayService(QObject):
             return
         from pathlib import Path
         settings = self.context.prefs.overlay
-        definition = next(m for m in self.context.dataset.maps if m.id == settings.map_id)
+        definition = next((m for m in self.context.exploration_dataset.maps if m.id == settings.map_id), None)
+        if definition is None:
+            raise ValueError("Selecione um mapa com uma referência visual disponível.")
         if settings.tracking_mode == "dynamic":
             self.start_dynamic(definition)
             return
@@ -350,17 +364,14 @@ class OverlayService(QObject):
         if not area_path:
             raise ValueError("Clique em Selecionar área na tela antes de ativar")
         area = load_model(Path(area_path), CaptureArea)
-        if area.map_id != settings.map_id:
+        if area.view_kind != "minimap" and area.map_id != settings.map_id:
             raise ValueError("A área foi selecionada para outro mapa. Selecione-a novamente.")
         if area.view_kind!=settings.map_view:
             raise ValueError("A seleção pertence a outro modo de mapa. Selecione novamente.")
         screens = [s for s in QApplication.screens() if s.name()==area.screen_name]
         if len(screens)!=1:
             raise ValueError("Monitor não encontrado. Selecione a área novamente.")
-        screen = screens[0]
-        geometry = screen.geometry()
-        if (geometry.x(),geometry.y(),geometry.width(),geometry.height()) != (area.screen_x,area.screen_y,area.screen_width,area.screen_height) or abs(screen.devicePixelRatio()-area.pixel_ratio)>.01:
-            raise ValueError("Resolução ou escala mudou. Selecione a área novamente.")
+        area = area.on_screen(screens[0]).model_copy(update={"map_id": settings.map_id})
         image = resolve_map_image(definition.image)
         if image.suffix.lower()==".svg":
             raise ValueError("O reconhecimento dinâmico precisa de um mapa raster com terreno.")
@@ -373,7 +384,7 @@ class OverlayService(QObject):
         self.worker = LiveMapWorker(area, image, settings.minimum_matches,settings.capture_hz)
         self.worker.observed.connect(self.on_registration)
         self.worker.failed.connect(self.on_error)
-        self.worker.progress.connect(lambda message: self.set_status(message) if settings.enabled else None)
+        self.worker.progress.connect(self.on_progress)
         self.last_result = time.perf_counter()
         self.matches = 0
         self.detection_started = False
@@ -386,7 +397,7 @@ class OverlayService(QObject):
         self.context.save()
 
     def on_registration(self, registration, metadata):
-        if not self.context.prefs.overlay.enabled:
+        if not self.context.prefs.overlay.enabled or not self.current_worker_signal():
             return
         observed_area=metadata.get("area")
         if observed_area is not None and observed_area!=self.capture_area:
@@ -420,7 +431,7 @@ class OverlayService(QObject):
             screen = screens[0]
             g = screen.geometry()
             if (g.x(),g.y(),g.width(),g.height())!=(area.screen_x,area.screen_y,area.screen_width,area.screen_height) or abs(screen.devicePixelRatio()-area.pixel_ratio)>.01:
-                self.on_error("Monitor ou escala mudou. Selecione a área novamente.")
+                self.refresh_screen()
                 return
         if registration is None:
             self.observation_hz=0.
@@ -440,8 +451,7 @@ class OverlayService(QObject):
             self.set_status("Confirmando reconhecimento…")
             return
         self.window.show()
-        radius = round((7*self.window.scale+2)*self.window.ratio)
-        self.set_exclusion(registration,radius)
+        self.set_exclusion(registration)
         self.sync_routes()
         if self.last_result-self.last_report>=.5:
             self.last_report=self.last_result
@@ -466,12 +476,25 @@ class OverlayService(QObject):
         self.window.capture_area = None
         self.set_status("Desligado")
 
-    def set_exclusion(self,registration,radius):
+    def current_worker_signal(self):
+        return self.sender() is None or self.sender() is self.worker
+
+    def on_progress(self, message):
+        if self.context.prefs.overlay.enabled and self.current_worker_signal():
+            self.set_status(message)
+
+    def set_exclusion(self,registration):
         # Mask the painted silhouette, preserving terrain between dense candidates.
         scale=self.window.effective_scale()*self.window.ratio
-        points=[(x,y,math.ceil((self.window.shape_radius(shape)*(1.3 if shape in ('leaf','wood') else 1)+.8)*scale)+2,shape,
-                 self.window.shape_radius(shape)*scale,1.3*scale)
-                for x,y,_,shape in self.window.markers]
+        points=[]
+        for x,y,_,shape in self.window.markers:
+            if isinstance(shape, Badge):
+                radius=math.ceil(shape.radius(self.window.badge_zoom())*self.window.ratio)+2
+                points.append((x,y,radius))
+            else:
+                base=self.window.shape_radius(shape)
+                extent=base*(1.3 if shape in ('leaf','wood') else 1)+.8
+                points.append((x,y,math.ceil(extent*scale)+2,shape,base*scale,1.3*scale))
         if self.capture_area:
             self.worker.set_exclusion(registration,points,self.capture_area.view_kind)
         else:
@@ -485,11 +508,19 @@ class OverlayService(QObject):
             return
         prefs = self.context.prefs
         dataset = self.context.atlas_dataset
-        resources = {r.id: r for r in dataset.resources}
-        categories = {c.id: c for c in dataset.categories}
-        points = filter_points(dataset, prefs, FilterQuery(map_id=prefs.overlay.map_id, overlay=True))
-        self.window.markers = [(p.x, p.y, categories[resources[p.resource_id].category].color,
-            point_marker_shape(p,categories[resources[p.resource_id].category].icon)) for p in points]
+        from app.modules.siege.models import MAP_ID
+        if prefs.overlay.map_id == MAP_ID:
+            from app.modules.siege.markers import markers_for
+            siege = self.context.siege
+            markers = markers_for(siege, dataset) if siege.definition and siege.state.overlay.map_markers else []
+        else:
+            resources = {r.id: r for r in dataset.resources}
+            categories = {c.id: c for c in dataset.categories}
+            points = filter_points(dataset, prefs, FilterQuery(map_id=prefs.overlay.map_id, overlay=True))
+            markers = [(p.x, p.y, categories[resources[p.resource_id].category].color,
+                point_marker_shape(p,categories[resources[p.resource_id].category].icon)) for p in points]
+        self.window.markers = markers
+        self.window.badge_scale = max((shape.scale for _,_,_,shape in markers if isinstance(shape, Badge)), default=0.)
         self.window.scale = prefs.overlay.scale
         self.window.set_render_rate(prefs.overlay.render_hz)
         self.window.setWindowOpacity(prefs.overlay.opacity)
@@ -497,11 +528,10 @@ class OverlayService(QObject):
         if self.capture_area and self.worker:
             self.worker.capture_hz=prefs.overlay.capture_hz
         if self.capture_area and self.worker and self.window.registration:
-            radius = round((7*self.window.scale+2)*self.window.ratio)
-            self.set_exclusion(self.window.registration,radius)
+            self.set_exclusion(self.window.registration)
 
     def on_detection(self, matched, confidence, monitor):
-        if not self.context.prefs.overlay.enabled:
+        if not self.context.prefs.overlay.enabled or not self.current_worker_signal():
             return
         self.last_result = time.perf_counter()
         self.matches = self.matches + 1 if matched else 0
@@ -536,7 +566,17 @@ class OverlayService(QObject):
             self.matches = 0
             self.set_status("Captura sem resposta • overlay oculto")
 
+    def refresh_screen(self):
+        self.stop()
+        try:
+            self.start()
+        except (OSError, ValueError) as exc:
+            self.context.save()
+            self.set_status(f"Indisponível: {exc}")
+
     def on_error(self, message):
+        if not self.current_worker_signal():
+            return
         self.stop()
         self.context.save()
         self.set_status(f"Indisponível: {message}")

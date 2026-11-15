@@ -139,7 +139,7 @@ class SiegeBoard(QWidget):
     """Map canvas, view controls and an import prompt for the local map."""
     import_requested = Signal()
 
-    def __init__(self, context, *, expanded=False):
+    def __init__(self, context):
         super().__init__()
         self.view = SiegeMapView(context)
         box = QVBoxLayout(self)
@@ -150,8 +150,7 @@ class SiegeBoard(QWidget):
         for title, action in [('−', lambda: self.view.zoom(-1)), ('+', lambda: self.view.zoom(1)),
                               ('Ilhas', self.view.fit_islands), ('Mapa inteiro', self.view.fit_full)]:
             toolbar.addWidget(button(title, action))
-        if not expanded:
-            toolbar.addWidget(button('Importar mapa local', lambda: self.import_requested.emit()))
+        toolbar.addWidget(button('Importar mapa local', lambda: self.import_requested.emit()))
         box.addLayout(toolbar)
         self.stack = QStackedWidget()
         empty, content = card()
@@ -161,8 +160,7 @@ class SiegeBoard(QWidget):
             'Use o PNG de 4096 × 4096 do quadro Abyss_Reshanta_A. Veja a preparação da imagem no guia do Siege Command.',
             'subtitle', True,
         ))
-        if not expanded:
-            content.addWidget(button('Importar mapa local', lambda: self.import_requested.emit(), True))
+        content.addWidget(button('Importar mapa local', lambda: self.import_requested.emit(), True))
         content.addStretch()
         self.stack.addWidget(empty)
         self.stack.addWidget(self.view)
@@ -174,11 +172,11 @@ class SiegeBoard(QWidget):
 
 
 class SiegePage(QWidget):
-    def __init__(self, context, show_expanded, configure_shortcuts):
+    def __init__(self, context, start_map_overlay, configure_shortcut):
         super().__init__()
         self.context = context
         self.service = context.siege
-        self.configure_shortcuts = configure_shortcuts
+        self.configure_shortcut = configure_shortcut
         self.placement = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(24, 18, 24, 18)
@@ -207,7 +205,7 @@ class SiegePage(QWidget):
         self.sections.addWidget(self.controls)
         self.sections.addWidget(self.catalogue_page())
         self.sections.addWidget(self.preset_page())
-        self.sections.addWidget(self.overlay_page(show_expanded))
+        self.sections.addWidget(self.overlay_page(start_map_overlay))
         body.addWidget(sidebar)
         layout.addLayout(body, 1)
         self.feedback = label(self.service.warning, 'subtitle', True)
@@ -512,10 +510,16 @@ class SiegePage(QWidget):
             index = names.index(selected)
             self.guard(self.service.edit_preset, markers=[mark for n, mark in enumerate(markers) if n != index])
 
-    def overlay_page(self, expanded):
+    def overlay_page(self, start_map_overlay):
         widget = QWidget()
         box = QVBoxLayout(widget)
         box.setContentsMargins(0, 0, 0, 0)
+        self.map_markers = QCheckBox('Mostrar marcadores de siege')
+        self.map_markers.toggled.connect(lambda enabled: self.guard(self.service.update_overlay, map_markers=enabled))
+        box.addWidget(self.map_markers)
+        self.start_map_button = button('Ativar no mapa e minimapa', start_map_overlay, True)
+        box.addWidget(self.start_map_button)
+        box.addWidget(label('Veja as camadas do preset no minimapa e no mapa do jogo ao abrir com M.', 'subtitle', True))
         self.hud_visible = QCheckBox('Mostrar HUD compacto')
         self.hud_locked = QCheckBox('Clique através do HUD')
         self.hud_visible.toggled.connect(lambda visible: self.guard(self.service.update_overlay, visible=visible))
@@ -532,26 +536,22 @@ class SiegePage(QWidget):
         self.hud_scale.setSuffix('×')
         self.hud_scale.editingFinished.connect(lambda: self.guard(self.service.update_overlay, scale=self.hud_scale.value()))
         self.hud_key = QLineEdit()
-        self.map_key = QLineEdit()
-        for field in (self.hud_key, self.map_key):
-            field.setMaxLength(40)
-            field.setPlaceholderText('Ctrl+Alt+F9')
+        self.hud_key.setMaxLength(40)
+        self.hud_key.setPlaceholderText('Ctrl+Alt+F9')
         form = QFormLayout()
         form.addRow('Opacidade', self.opacity)
         form.addRow('Escala do HUD', self.hud_scale)
         form.addRow('Atalho do HUD', self.hud_key)
-        form.addRow('Atalho do mapa', self.map_key)
         box.addLayout(form)
-        box.addWidget(button('Salvar atalhos', self.save_shortcuts))
+        box.addWidget(button('Salvar atalho do HUD', self.save_shortcut))
         box.addWidget(label('Use Ctrl ou Alt com F1–F12. Limpe o campo para desativar o atalho.', 'subtitle', True))
-        box.addWidget(button('Abrir mapa sobre o jogo', expanded, True))
         box.addWidget(button('Restaurar posição do HUD', lambda: self.guard(self.service.update_overlay, position=None)))
         box.addWidget(label('Arraste pelo título com o HUD destravado. Volte ao jogo para ver os overlays.', 'subtitle', True))
         box.addStretch()
         return widget
 
-    def save_shortcuts(self):
-        result = self.guard(self.configure_shortcuts, self.hud_key.text().strip(), self.map_key.text().strip())
+    def save_shortcut(self):
+        result = self.guard(self.configure_shortcut, self.hud_key.text().strip())
         if result:
             self.message(result)
 
@@ -574,9 +574,10 @@ class SiegePage(QWidget):
         self.marker.setEnabled(custom and service.definition is not None)
         self.remove_marker.setEnabled(custom and bool(service.preset.markers))
         prefs = service.state.overlay
+        self.start_map_button.setEnabled(service.definition is not None)
+        update(self.map_markers, 'setChecked', prefs.map_markers)
         update(self.hud_visible, 'setChecked', prefs.visible)
         update(self.hud_locked, 'setChecked', prefs.locked)
         update(self.opacity, 'setValue', prefs.opacity)
         update(self.hud_scale, 'setValue', prefs.scale)
         self.hud_key.setText(prefs.hud_shortcut)
-        self.map_key.setText(prefs.map_shortcut)

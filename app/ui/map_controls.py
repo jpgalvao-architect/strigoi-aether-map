@@ -8,6 +8,7 @@ from app.ui.localized_widgets import QToolButton
 from app.ui.layer_menu import AtlasLayerMenu
 from app.ui.icons import icon
 from app.ui.widgets import label
+from app.modules.siege.models import MAP_ID
 
 
 class MapControls(HudSurface):
@@ -48,6 +49,7 @@ class MapControls(HudSurface):
         overlay=self.main.overlay
         ready=(self.context.prefs.overlay.enabled and overlay.worker is not None
             and overlay.capture_area is not None and overlay.capture_area.view_kind=='minimap'
+            and self.context.prefs.overlay.map_id != MAP_ID
             and overlay.window.registration is not None and overlay.matches>=2)
         if not ready:self.layers.menu_widget.hide()
         self.setVisible(bool(ready))

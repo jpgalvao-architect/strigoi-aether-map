@@ -151,13 +151,21 @@ class TacticalCall(Model):
 
 
 class OverlayOptions(Model):
+    map_markers: bool = True
     visible: bool = False
     locked: bool = False
     opacity: float = Field(default=.94, ge=.25, le=1)
     scale: float = Field(default=1, ge=.75, le=1.6)
     position: tuple[int, int] | None = None
     hud_shortcut: str = Field(default='', max_length=40)
-    map_shortcut: str = Field(default='', max_length=40)
+
+    @model_validator(mode='before')
+    @classmethod
+    def migrate_map_shortcut(cls, settings):
+        # Previous previews stored a shortcut for a separate map window.
+        if isinstance(settings, dict) and 'map_shortcut' in settings:
+            return {key: value for key, value in settings.items() if key != 'map_shortcut'}
+        return settings
 
 
 class SiegeState(Model):

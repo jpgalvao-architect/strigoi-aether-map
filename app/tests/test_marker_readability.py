@@ -55,7 +55,7 @@ def test_stencil_covers_the_actual_painted_symbol_including_arrow(qapp,tmp_path,
     window.markers=[(0,0,'#e6c576',shape)]
     registration=Registration(np.array([[0.,0,150],[0,0,150]]),40,.9)
     try:
-        service.set_exclusion(registration,0)
+        service.set_exclusion(registration)
         pixmap=window.symbol('#e6c576',shape)
         image=pixmap.toImage().convertToFormat(QImage.Format.Format_RGBA8888)
         rgba=np.frombuffer(image.constBits(),dtype=np.uint8).reshape(image.height(),image.bytesPerLine())

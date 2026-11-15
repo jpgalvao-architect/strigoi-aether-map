@@ -27,6 +27,21 @@ class CaptureArea(Model):
             raise ValueError("A seleção precisa ficar dentro do monitor")
         return self
 
+    def on_screen(self, screen):
+        """Rebase the saved selection to the current logical screen geometry."""
+        geometry = screen.geometry()
+        sx = geometry.width() / self.screen_width
+        sy = geometry.height() / self.screen_height
+        x, y = round(self.x * sx), round(self.y * sy)
+        return CaptureArea(
+            map_id=self.map_id, screen_name=screen.name(),
+            screen_x=geometry.x(), screen_y=geometry.y(),
+            screen_width=geometry.width(), screen_height=geometry.height(),
+            pixel_ratio=screen.devicePixelRatio(), view_kind=self.view_kind,
+            x=x, y=y, width=round((self.x+self.width)*sx)-x,
+            height=round((self.y+self.height)*sy)-y,
+        )
+
 
 def physical_region(area, monitor):
     """MSS provides physical monitor origins, including mixed-DPI and negative origins."""

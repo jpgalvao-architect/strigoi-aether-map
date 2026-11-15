@@ -100,7 +100,7 @@ def main() -> int:
                     logging.info('SMOKE_ROUTES_OK: real atlas route generated; no live capture')
                     assert len(window.context.siege.objectives) == 12
                     assert len(window.context.siege.data.rings) == 49 and window.context.siege.rings
-                    assert not window.siege_overlay.hud.isVisible() and not window.siege_overlay.expanded.isVisible()
+                    assert not window.siege_overlay.hud.isVisible() and not window.overlay.window.isVisible()
                     logging.info('SMOKE_SIEGE_OK: tactical workspace and catalog rendered without live capture')
                     from PySide6.QtGui import QImageReader
                     assert window.pets.store.catalogue.pets

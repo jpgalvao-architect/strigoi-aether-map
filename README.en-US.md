@@ -3,7 +3,7 @@
 **AION 2 Companion App · 0.10.0-beta.11 · Windows x64**
 
 Beta 11 adds **Siege Command** for Lower Reshanta, with copyable calls,
-a HUD, a tactical map, and presets. Import your own authorized map,
+a HUD, presets, and markers on the in-game map and minimap. Import your own authorized map,
 positioned ring catalogue, and pet locations.
 See [Siege Command setup](docs/SIEGE.md).
 

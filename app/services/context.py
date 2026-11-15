@@ -146,7 +146,7 @@ class AppContext(QObject):
             self.prefs.map_id = default
         if self.prefs.catalog_map_id and self.prefs.catalog_map_id not in ids:
             self.prefs.catalog_map_id = default
-        overlay_ids = {m.id for m in self.dataset.maps}
+        overlay_ids = ids
         if self.prefs.overlay.map_id not in overlay_ids:
             self.prefs.overlay.map_id = self.prefs.map_id if self.prefs.map_id in overlay_ids else default
 

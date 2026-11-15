@@ -13,6 +13,23 @@ def areas(screen_name='test'):
     return mini,full
 
 
+def test_selected_terrain_adapts_to_resolution_and_dpi_without_rewriting_selection():
+    from types import SimpleNamespace
+    from PySide6.QtCore import QRect
+    from app.modules.overlay.selection import physical_region
+
+    mini, full = areas()
+    screen = SimpleNamespace(name=lambda: 'test', geometry=lambda: QRect(-1600, 20, 1200, 800),
+                             devicePixelRatio=lambda: 1.5)
+    moved = mini.on_screen(screen)
+    assert (moved.x, moved.y, moved.width, moved.height) == (804, 46, 396, 251)
+    monitor = {'left':-1600, 'top':20, 'width':1800, 'height':1200}
+    assert physical_region(moved, monitor) == {'left':-394, 'top':89, 'width':594, 'height':377}
+    assert (mini.x, mini.y, mini.pixel_ratio) == (670, 40, 1.)
+    area = full.on_screen(screen)
+    assert (area.x, area.y, area.width, area.height) == (0, 0, 1200, 800)
+
+
 def test_automatic_priority_and_return_to_minimap():
     mini,full=areas()
     registration=object()
