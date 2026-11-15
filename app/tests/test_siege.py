@@ -61,6 +61,41 @@ def test_catalogue_updates_keep_frozen_callsigns_and_old_records(tmp_path):
     assert service.callsign(service.rings[newer.ring_id]) == 'B2'
 
 
+def test_transit_codes_use_source_identity_even_with_a_partial_catalogue(tmp_path):
+    service = SiegeService(tmp_path)
+    transit = Ring(ring_id='ring-reshanta-295279', zone_id='2616', category='transit',
+        display_name='Flight Circle', source='Controlled test',
+        position=RingPosition(map_position=Coordinate(x=.59, y=.40), source='Controlled test', status='verified'))
+    import_rings(service, tmp_path, transit)
+    assert service.ring_label(transit) == 'ER1'
+    assert service.callsign(transit) is None  # Transit IDs do not enter tactical call selection.
+    service.calibrate_ring(transit.ring_id, transit.position.model_copy(update={'map_position':Coordinate(x=.43,y=.55)}))
+    service.save_preset(Preset(name='Calibração local', use_local_calibration=True))
+    restored = SiegeService(tmp_path)
+    assert restored.ring_code(restored.rings[transit.ring_id]) == 'ER1'
+    assert restored.rings[transit.ring_id].position == transit.position
+
+
+def test_ring_labels_are_centred_below_and_declutter_by_priority(qapp):
+    from PySide6.QtCore import QRectF
+    from app.modules.overlay.badges import label_indices
+    from app.modules.siege.markers import badge_for
+
+    transit = badge_for('TransitRings', 'BF1', 1.)
+    siege = badge_for('SiegeRings', 'B1', 1.)
+    pin = badge_for('SiegeObjectives', 'P1', 1.)
+    icon, label, _ = transit.layout(1.)
+    assert transit.ring and siege.ring and not pin.ring
+    assert icon == siege.layout(1.)[0]
+    assert pin.layout(1.)[0].bottom() == 0
+    assert label.center().x() == icon.center().x() == 0
+    assert label.top() > icon.bottom()
+    viewport = QRectF(0, 0, 180, 150)
+    assert pin.pin_code and pin.layout(1.)[1].isEmpty()
+    assert label_indices([(40, 40, transit), (61, 40, siege), (110, 50, pin)], 1., viewport) == {1}
+    assert label_indices([(34, 40, transit), (80, 40, siege), (131, 50, pin)], 1., viewport) == {0, 1}
+
+
 def test_local_calibration_and_aliases_stay_out_of_official_preset(tmp_path):
     service = SiegeService(tmp_path)
     official = ring(1, callsign='B1')
@@ -145,12 +180,17 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
     from app.modules.overlay.badges import Badge
     from app.modules.overlay.selection import CaptureArea
     from app.modules.overlay.tracking import Registration
-    from app.modules.siege.models import MAP_ID, OverlayOptions
+    from app.modules.siege.models import COLORS, MAP_ID, OverlayOptions
 
     context = AppContext(tmp_path)
     siege = context.siege
     rally = ring(3, callsign='B3')
-    import_rings(siege, tmp_path, rally)
+    objective = siege.objectives[7].map_position
+    transit = Ring(ring_id='ring-fixture-transit', zone_id='fixture', category='transit',
+        display_name='Transit fixture', source='Controlled test',
+        position=RingPosition(map_position=Coordinate(x=objective.x-.02, y=objective.y),
+                              source='Controlled test', status='verified'))
+    import_rings(siege, tmp_path, rally, transit)
     import cv2
     assert cv2.imwrite(str(siege.map_path), np.full((320, 320, 3), 30, np.uint8))
     siege._set_map()  # Exercise drawing with a stand-in for the local reference.
@@ -186,12 +226,11 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
         assert not hasattr(window.siege_overlay, 'expanded')
         shared = overlay.window
         assert shared.windowFlags() & Qt.WindowTransparentForInput
-        assert len(shared.markers) == 13
+        assert len(shared.markers) == 14
         caption = next(shape for _, _, _, shape in shared.markers if isinstance(shape, Badge) and shape.text == 'P7')
         assert caption.selected and caption.provisional
         mini = mini.model_copy(update={'map_id': MAP_ID})
         full = mini.model_copy(update={'x':0, 'y':0, 'width':geometry.width(), 'height':geometry.height(), 'view_kind':'large'})
-        objective = siege.objectives[7].map_position
         for area, zoom, center in [(mini, 1100, (140, 95)), (full, 620, (430, 340)),
                                    (full, 920, (470, 390)), (mini, 1150, (118, 92))]:
             with_area = overlay.capture_area == area
@@ -205,10 +244,17 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
             visible = shared.visible_markers(registration)
             point = next((x, y) for x, y, _, shape in visible if shape == caption)
             assert point == pytest.approx(center)
+            transit_point = next((x, y) for x, y, color, _ in visible if color == COLORS['TransitRings'])
+            assert transit_point == pytest.approx((center[0]-.02*zoom/area.pixel_ratio, center[1]))
             swatch = shared.symbol('#f7cb74', caption).toImage()
             assert swatch.pixelColor(0, 0).alpha() == 0
             assert swatch.pixelColor(swatch.width()//2, swatch.height()//2).alpha() > 0
             assert observations[-1][2] == area.view_kind
+        siege.save_preset(Preset(name='Só objetivos', layers={'SiegeObjectives'}))
+        assert len(shared.markers) == 12
+        assert SiegeService(tmp_path).preset.layers == {'SiegeObjectives'}
+        siege.select_preset(OFFICIAL)
+        assert len(shared.markers) == 14
         siege.update_overlay(map_markers=False)
         assert not shared.markers
         assert observations[-1][1] == []

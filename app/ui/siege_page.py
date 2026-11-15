@@ -317,7 +317,7 @@ class SiegePage(QWidget):
             return
         local = self.service.state.local_rings.get(ring.ring_id)
         position = local or ring.position
-        code = self.service.callsign(ring)
+        code = self.service.ring_code(ring)
         state = 'Pendente de calibração' if position is None else 'Verificado' if position.status == 'verified' else 'Provisório'
         note = f'{ring.display_name}\n{ring.sector or tr("Trânsito")} · {tr(state)}'
         if local:

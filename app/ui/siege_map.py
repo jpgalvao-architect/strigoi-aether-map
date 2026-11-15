@@ -3,59 +3,52 @@
 from html import escape
 
 from PySide6.QtCore import QPointF, QRectF, Qt, Signal
-from PySide6.QtGui import QColor, QFont, QPen, QBrush
-from PySide6.QtWidgets import QGraphicsEllipseItem, QGraphicsItem, QGraphicsLineItem, QGraphicsSimpleTextItem
+from PySide6.QtGui import QColor, QPainterPath, QPen, QBrush
+from PySide6.QtWidgets import QGraphicsItem
 
 from app.core.i18n import tr
 from app.modules.atlas.view import AtlasView
-from app.modules.siege.models import COLORS, LAYERS, MAP_ID, SECTORS, Coordinate
+from app.modules.overlay.badges import label_indices
+from app.modules.siege.markers import badge_for
+from app.modules.siege.models import COLORS, MAP_ID, SECTORS, Coordinate
 
 # Initial view frames the islands. Full extent remains available via Fit map.
 ISLANDS = (.295, .310, .47, .365)
 
 
-class TacticalMarker(QGraphicsEllipseItem):
-    def __init__(self, caption, color, size, tooltip, callback, *, selected=False, provisional=False):
-        super().__init__(-size, -size, 2 * size, 2 * size)
+class TacticalMarker(QGraphicsItem):
+    def __init__(self, badge, color, tooltip, callback=None):
+        super().__init__()
+        self.badge = badge
+        self.color = color
         self.callback = callback
-        self.radius = size
-        self.priority = 3 if selected else 0
+        self.draw_label = True
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
-        self.setZValue(30 if selected else 12)
-        edge = QPen(QColor('#ffffff' if selected else color), 2.7 if selected else 1.4)
-        if provisional:
-            edge.setStyle(Qt.PenStyle.DashLine)
-        self.setPen(edge)
-        self.setBrush(QBrush(QColor('#292139' if selected else '#171522')))
+        self.setZValue(30 if badge.selected else 10 + badge.priority)
         self.setToolTip(escape(tooltip).replace('\n', '<br>'))
-        self.setCursor(Qt.CursorShape.PointingHandCursor if callback else Qt.CursorShape.ArrowCursor)
-        self.leader = QGraphicsLineItem(self)
-        self.leader.setPen(QPen(QColor(color), 1.15))
-        self.leader.setFlag(QGraphicsItem.GraphicsItemFlag.ItemStacksBehindParent)
-        self.leader.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
-        self.anchor = QGraphicsEllipseItem(-2.5, -2.5, 5, 5, self)
-        self.anchor.setPen(QPen(QColor('#171522'), 1))
-        self.anchor.setBrush(QBrush(QColor(color)))
-        self.anchor.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
-        self.caption = text = QGraphicsSimpleTextItem(caption, self)
-        font = QFont('Segoe UI')
-        font.setPixelSize(round(size * .9 + 1))
-        font.setBold(True)
-        text.setFont(font)
-        text.setBrush(QBrush(QColor('#ffffff' if selected else color)))
-        text.setPos(-text.boundingRect().width() / 2, -text.boundingRect().height() / 2)
-        text.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
-        if not callback:
+        if callback:
+            self.setCursor(Qt.CursorShape.PointingHandCursor)
+        else:
             self.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
 
-    def shift_badge(self, x, y):
-        radius = self.radius
-        self.setRect(x-radius, y-radius, 2*radius, 2*radius)
-        self.caption.setPos(x-self.caption.boundingRect().width()/2, y-self.caption.boundingRect().height()/2)
-        self.leader.setLine(0, 0, x, y)
-        shifted = bool(x or y)
-        self.leader.setVisible(shifted)
-        self.anchor.setVisible(shifted)
+    def boundingRect(self):
+        return self.badge.bounds(1.)
+
+    def paint(self, painter, option, widget=None):
+        self.badge.paint(painter, self.color, 1., self.draw_label)
+
+    def shape(self):
+        icon, label, _ = self.badge.layout(1.)
+        shape = QPainterPath()
+        shape.addRect(icon)
+        if self.draw_label and not label.isEmpty():
+            shape.addRect(label)
+        return shape
+
+    def set_label_visible(self, visible):
+        if visible != self.draw_label:
+            self.draw_label = visible
+            self.update()
 
     def mousePressEvent(self, event):
         if self.callback and event.button() == Qt.MouseButton.LeftButton:
@@ -82,6 +75,8 @@ class SiegeMapView(AtlasView):
         self.setAccessibleName('Mapa tático de Lower Reshanta')
         self.service.changed.connect(self.refresh)
         context.changed.connect(self.refresh)
+        self.horizontalScrollBar().valueChanged.connect(self.position_badges)
+        self.verticalScrollBar().valueChanged.connect(self.position_badges)
         self.refresh()
 
     def fit_islands(self):
@@ -118,36 +113,20 @@ class SiegeMapView(AtlasView):
     def _at(self, position):
         return QPointF(position.x * self.map.width, position.y * self.map.height)
 
-    def _add(self, item, position, *, objective=False):
+    def _add(self, item, position):
         item.setPos(self._at(position))
         self.scene().addItem(item)
         self.tactical_items.append(item)
-        if isinstance(item, TacticalMarker):
-            item.priority += 4 if objective else 0
-            self.badges.append(item)
+        self.badges.append(item)
 
     def position_badges(self):
-        occupied = []
-        for item in sorted(self.badges, key=lambda badge: -badge.priority):
+        markers = []
+        for item in self.badges:
             point = self.mapFromScene(item.pos())
-            radius = item.radius
-            for distance in (0, radius*2.1, radius*3.1, radius*4.2, radius*6):
-                offsets = [(0, 0)] if distance == 0 else [
-                    (distance, 0), (-distance, 0), (0, -distance), (0, distance),
-                    (distance*.8, -distance*.8), (-distance*.8, -distance*.8),
-                    (distance*.8, distance*.8), (-distance*.8, distance*.8),
-                ]
-                for x, y in offsets:
-                    rect = QRectF(point.x()+x-radius-2, point.y()+y-radius-2, 2*radius+4, 2*radius+4)
-                    if not any(rect.intersects(other) for other in occupied):
-                        occupied.append(rect)
-                        item.shift_badge(x, y)
-                        break
-                else:
-                    continue
-                break
-            else:
-                item.shift_badge(0, 0)
+            markers.append((point.x(), point.y(), item.badge))
+        labels = label_indices(markers, 1., QRectF(self.viewport().rect()))
+        for index, item in enumerate(self.badges):
+            item.set_label_visible(index in labels)
 
     def zoom(self, delta):
         super().zoom(delta)
@@ -192,16 +171,17 @@ class SiegeMapView(AtlasView):
                 tooltip = f'{objective.code} · {tr(name)}'
                 if objective.status == 'reference':
                     tooltip += '\n' + tr('Posição transcrita da referência visual; validação em jogo pendente.')
-                self._add(TacticalMarker(
-                    objective.code, colors['SiegeObjectives'], 14 * preset.marker_scale, tooltip,
-                    lambda n=objective.number: self.objective_selected.emit(n),
-                    selected=call.objective == objective.number, provisional=objective.status != 'verified',
-                ), objective.map_position, objective=True)
+                badge = badge_for('SiegeObjectives', objective.code, preset.marker_scale,
+                                  selected=call.objective == objective.number,
+                                  provisional=objective.status != 'verified')
+                self._add(TacticalMarker(badge, colors['SiegeObjectives'], tooltip,
+                                         lambda n=objective.number: self.objective_selected.emit(n)),
+                          objective.map_position)
         for ring in self.service.rings.values():
             position = self.service.position(ring)
             layer = 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
             if position is not None and layer in preset.layers:
-                code = self.service.callsign(ring)
+                code = self.service.ring_code(ring)
                 state = tr('Verificado') if position.status == 'verified' else tr('Provisório')
                 note = f'{self.service.ring_label(ring)}\n{ring.display_name}\n{state} · {position.source}'
                 if position.altitude is not None:
@@ -209,19 +189,17 @@ class SiegeMapView(AtlasView):
                 coordinates = position.world_coordinates
                 if coordinates:
                     note += f'\nX {coordinates[0]:.2f} · Y {coordinates[1]:.2f}'
-                item = TacticalMarker(
-                    code or ('?' if position.status == 'provisional' else '○'),
-                    colors[layer], 12 * preset.marker_scale, note,
-                    lambda key=ring.ring_id: self.ring_selected.emit(key),
-                    selected=call.ring_id == ring.ring_id, provisional=position.status == 'provisional',
-                )
-                self._add(item, position.map_position)
+                badge = badge_for(layer, code or '?', preset.marker_scale,
+                                  selected=call.ring_id == ring.ring_id,
+                                  provisional=position.status == 'provisional')
+                self._add(TacticalMarker(badge, colors[layer], note,
+                                         lambda key=ring.ring_id: self.ring_selected.emit(key)),
+                          position.map_position)
 
         if 'CustomMarkers' in preset.layers:
             for marker in preset.markers:
-                self._add(TacticalMarker(
-                    marker.name[:4], colors['CustomMarkers'], 14 * preset.marker_scale, marker.name, None,
-                ), marker.position)
+                badge = badge_for('CustomMarkers', marker.name[:4], preset.marker_scale)
+                self._add(TacticalMarker(badge, colors['CustomMarkers'], marker.name), marker.position)
         self._refresh_exploration(preset, colors)
         self.position_badges()
 
@@ -235,13 +213,9 @@ class SiegeMapView(AtlasView):
             layer = 'Pets' if resource.category == 'pets' else 'Gathering'
             if layer not in preset.layers and not self.exploration:
                 continue
-            item = QGraphicsEllipseItem(-3, -3, 6, 6)
-            item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
-            item.setBrush(QColor(colors[layer]))
-            item.setPen(QPen(QColor('#211827'), 1))
-            item.setToolTip(escape(resource.name + ' · ' + point.name + '\n' + point.source))
-            item.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
-            self._add(item, Coordinate(x=point.x, y=point.y))
+            badge = badge_for(layer, '', preset.marker_scale)
+            note = f'{resource.name} · {point.name}\n{point.source}'
+            self._add(TacticalMarker(badge, colors[layer], note), Coordinate(x=point.x, y=point.y))
 
     def pick_position(self, enabled):
         self.placement = enabled

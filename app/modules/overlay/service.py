@@ -5,7 +5,7 @@ import math
 import threading
 import time
 
-from PySide6.QtCore import QObject, QPointF, QRect, Qt, QThread, QTimer, Signal
+from PySide6.QtCore import QObject, QPointF, QRect, QRectF, Qt, QThread, QTimer, Signal
 from PySide6.QtGui import QColor, QPainter, QPen, QRegion, QPixmap
 from PySide6.QtWidgets import QApplication, QWidget
 
@@ -13,7 +13,7 @@ from app.infrastructure.storage import load_model, resolve_map_image
 from app.modules.atlas.view import marker_path
 from app.modules.atlas.heights import point_marker_shape
 from app.modules.gatherables.service import FilterQuery, filter_points
-from app.modules.overlay.badges import Badge
+from app.modules.overlay.badges import Badge, label_indices
 from app.modules.overlay.detector import Calibration, MapDetector, project
 from app.ui.overlay_visibility import OverlayVisibilityMixin
 
@@ -75,11 +75,12 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         self.rate_started=time.perf_counter()
         self.dirty_region=QRegion()
         self._visible_markers=[]
+        self._visible_labels=set()
         self._symbols={}
         self._coordinates=None
         self._marker_identity=None
         self._frame_signature=None
-        self.badge_scale=0.
+        self.badge_symbols=set()
         self.route_lines=()
         self.route_target=None
 
@@ -109,6 +110,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         self.draw_timer.stop()
         self.dirty_region=QRegion()
         self._visible_markers=[]
+        self._visible_labels=set()
         self._frame_signature=None
 
     def accept_registration(self,registration):
@@ -132,11 +134,13 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
         current=QRect()
         radius=self.paint_radius()
         visible=self.visible_markers(registration,radius)
+        labels=self.marker_labels(visible)
         from app.modules.routes.drawing import project_lines,bounds
         routes=project_lines(self.route_lines,registration,self.ratio)
         target=registration.project(*self.route_target[:2]) if self.route_target else None
         signature=(self.scale,self.ratio,self.width(),self.height(),radius,
-            tuple((round(px*4),round(py*4),color,shape) for px,py,color,shape in visible),
+            tuple((round(px*4),round(py*4),color,shape,index in labels)
+                  for index,(px,py,color,shape) in enumerate(visible)),
             tuple((tuple((round(x*4),round(y*4)) for x,y in vertices),reviewed,active) for vertices,reviewed,active in routes),
             (round(target[0]/self.ratio*4),round(target[1]/self.ratio*4),self.route_target[2]) if target else None)
         if not self.smoothing.settled(now):
@@ -145,6 +149,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
             return
         self._frame_signature=signature
         self._visible_markers=visible
+        self._visible_labels=labels
         for px,py,_,_ in visible:
             rectangle=QRect(round(px)-radius,round(py)-radius,radius*2+1,radius*2+1)
             current=rectangle if current.isNull() else current.united(rectangle)
@@ -183,15 +188,22 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
     def badge_zoom(self):
         return self.scale * (1.3 if self.capture_area and self.capture_area.view_kind=='minimap' else 1.)
 
+    def marker_labels(self, visible):
+        if not self.badge_symbols:
+            return set()
+        badges = [(index,x,y,shape) for index,(x,y,_,shape) in enumerate(visible) if isinstance(shape, Badge)]
+        shown = label_indices([(x,y,shape) for _,x,y,shape in badges], self.badge_zoom(), QRectF(self.rect()))
+        return {badges[index][0] for index in shown}
+
     def paint_radius(self):
         # Includes arrows, outlines and antialiasing; the cube stays at its coordinate.
         return math.ceil(max(10*self.effective_scale()+2,
             (self.shape_radius('cube')*2.3+.65)*self.effective_scale()+2,
-            10*self.badge_scale*self.badge_zoom()+2))
+            max((badge.radius(self.badge_zoom()) for badge in self.badge_symbols), default=0)))
 
-    def symbol(self,color,shape):
+    def symbol(self,color,shape,draw_label=True):
         mini=self.capture_area is not None and self.capture_area.view_kind=='minimap'
-        key=(color,shape,self.scale,self.ratio,mini)
+        key=(color,shape,self.scale,self.ratio,mini,draw_label)
         if key not in self._symbols:
             scale=self.effective_scale()
             size=round(20*scale)+4
@@ -207,7 +219,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
             logical=pixmap.deviceIndependentSize()
             painter.translate(logical.width()/2,logical.height()/2)
             if isinstance(shape, Badge):
-                shape.paint(painter,color,self.badge_zoom())
+                shape.paint(painter,color,self.badge_zoom(),draw_label)
             else:
                 painter.scale(scale,scale)
                 painter.setPen(QPen(QColor('#e7ffff'),1.3))
@@ -215,7 +227,7 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
                 painter.drawPath(marker_path(shape,self.shape_radius(shape)))
             painter.end()
             # Bound cache growth after many scale/DPI changes.
-            if len(self._symbols)>100:self._symbols.clear()
+            if len(self._symbols)>256:self._symbols.clear()
             self._symbols[key]=pixmap
         return self._symbols[key]
 
@@ -246,8 +258,9 @@ class OverlayWindow(OverlayVisibilityMixin, QWidget):
             from app.modules.routes.drawing import paint_lines,project_lines
             paint_lines(painter,project_lines(self.route_lines,registration,self.ratio))
             visible=self._visible_markers if getattr(self,'_drawing_registration',None) else self.visible_markers(registration)
-            for px,py,color,shape in visible:
-                pixmap=self.symbol(color,shape)
+            labels=self._visible_labels if getattr(self,'_drawing_registration',None) else self.marker_labels(visible)
+            for index,(px,py,color,shape) in enumerate(visible):
+                pixmap=self.symbol(color,shape,index in labels)
                 painter.drawPixmap(QPointF(px-pixmap.deviceIndependentSize().width()/2,py-pixmap.deviceIndependentSize().height()/2),pixmap)
             if self.route_target:
                 x,y=registration.project(*self.route_target[:2]);x/=self.ratio;y/=self.ratio
@@ -489,8 +502,12 @@ class OverlayService(QObject):
         points=[]
         for x,y,_,shape in self.window.markers:
             if isinstance(shape, Badge):
-                radius=math.ceil(shape.radius(self.window.badge_zoom())*self.window.ratio)+2
-                points.append((x,y,radius))
+                zoom, ratio = self.window.badge_zoom(), self.window.ratio
+                radius=math.ceil(shape.radius(zoom)*ratio)+2
+                rectangles = tuple((math.floor(rect.left()*ratio)-2, math.floor(rect.top()*ratio)-2,
+                                    math.ceil(rect.right()*ratio)+2, math.ceil(rect.bottom()*ratio)+2)
+                                   for rect in shape.layout(zoom)[:2] if not rect.isEmpty())
+                points.append((x,y,radius,'badge',rectangles))
             else:
                 base=self.window.shape_radius(shape)
                 extent=base*(1.3 if shape in ('leaf','wood') else 1)+.8
@@ -520,7 +537,7 @@ class OverlayService(QObject):
             markers = [(p.x, p.y, categories[resources[p.resource_id].category].color,
                 point_marker_shape(p,categories[resources[p.resource_id].category].icon)) for p in points]
         self.window.markers = markers
-        self.window.badge_scale = max((shape.scale for _,_,_,shape in markers if isinstance(shape, Badge)), default=0.)
+        self.window.badge_symbols = {shape for _,_,_,shape in markers if isinstance(shape, Badge)}
         self.window.scale = prefs.overlay.scale
         self.window.set_render_rate(prefs.overlay.render_hz)
         self.window.setWindowOpacity(prefs.overlay.opacity)

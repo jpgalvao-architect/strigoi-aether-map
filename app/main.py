@@ -101,6 +101,14 @@ def main() -> int:
                     assert len(window.context.siege.objectives) == 12
                     assert len(window.context.siege.data.rings) == 49 and window.context.siege.rings
                     assert not window.siege_overlay.hud.isVisible() and not window.overlay.window.isVisible()
+                    from app.modules.siege.markers import markers_for
+                    from app.modules.siege.models import OFFICIAL
+                    siege = window.context.siege
+                    if siege.preset.name == OFFICIAL:
+                        assert 'TransitRings' in siege.preset.layers
+                        markers = markers_for(siege, window.context.atlas_dataset)
+                        assert sum(badge.pin_code for _, _, _, badge in markers) == 12
+                        assert all(badge.ring for _, _, _, badge in markers if not badge.pin_code)
                     logging.info('SMOKE_SIEGE_OK: tactical workspace and catalog rendered without live capture')
                     from PySide6.QtGui import QImageReader
                     assert window.pets.store.catalogue.pets

@@ -19,6 +19,7 @@ from app.modules.siege.models import (
     COLORS, MAP_ID, OFFICIAL, PREFIX, SECTORS, Cartography, Coordinate, CustomMarker,
     Preset, RingCatalogue, RingPosition, SiegeState, TacticalCall,
 )
+from app.modules.siege.transit_codes import TRANSIT_CODES
 
 MAP_SOURCE = 'https://github.com/aion2-interactive-map/aion2-interactive-map/tree/89ce3984d569ff1a03ee6311d064231211212981/public/UI/Map/WorldMap/Abyss_Reshanta_A'
 RING_SOURCE = 'https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings'
@@ -150,7 +151,7 @@ class SiegeService(QObject):
     @property
     def preset(self):
         return next((preset for preset in self.state.presets if preset.name == self.state.selected_preset),
-                    Preset(name=OFFICIAL))
+                    Preset(name=OFFICIAL, layers={'SiegeObjectives', 'SiegeRings', 'TransitRings'}))
 
     @property
     def call(self):
@@ -236,10 +237,13 @@ class SiegeService(QObject):
             return code
         return None
 
+    def ring_code(self, ring):
+        if ring.category == 'transit':
+            return TRANSIT_CODES.get(ring.ring_id)
+        return self.callsign(ring) or ring.default_callsign
+
     def ring_label(self, ring):
-        label = self.callsign(ring) or ring.display_name
-        if ring.default_callsign and not self.callsign(ring):
-            label = f'{ring.default_callsign} · {label}'
+        label = self.ring_code(ring) or ring.display_name
         alias = self.preset.aliases.get(ring.ring_id)
         return f'{label} · {alias}' if alias else label
 

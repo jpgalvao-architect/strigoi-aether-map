@@ -29,14 +29,17 @@ fica neste computador e **Copiar call** envia texto para a área de transferênc
    Alt+Tab e menus reconhecidos ocultam o HUD.
 
 **Ilhas** reenquadra a área jogável. **Mapa inteiro** mostra o quadro cartográfico
-completo. Role para ampliar e arraste para deslocar. Um traço liga cada
-etiqueta deslocada ao ponto real quando duas etiquetas poderiam se encobrir.
+completo. Role para ampliar e arraste para deslocar. Os anéis usam o mesmo
+símbolo circular com código abaixo; os demais pontos usam pins. Quando falta
+espaço para os códigos, os objetivos e os anéis de siege têm preferência.
+Os símbolos permanecem ancorados nas coordenadas.
 
 ## Personalizar
 
 Duplique **Siege Global v1** em **Camadas e presets** para ajustar cor,
-tamanho, alias, camadas e marcadores. O callsign continua visível quando
-você acrescenta um alias. **Restaurar Global** volta às cores e posições
+tamanho, alias, camadas e marcadores. O preset oficial mostra objetivos, anéis
+de siege e anéis de trânsito com posição disponível. O callsign continua
+visível quando você acrescenta um alias. **Restaurar Global** volta às cores e posições
 do preset de referência. O JSON exportado inclui opções do preset, aliases
 e marcadores locais. A instalação que importa o preset precisa do catálogo
 com os mesmos IDs. As posições do catálogo e os registros administrativos
@@ -54,6 +57,12 @@ conferidos que ainda não têm código, conservando todos os códigos anteriores
 A ordenação inicial considera faixas de 8 px de norte a sul e posições de
 oeste a leste na mesma faixa. Uma importação posterior pode acrescentar IDs.
 A troca de setor ou callsign de um ID já registrado é rejeitada.
+
+Os 30 anéis de trânsito do catálogo de referência recebem códigos fixos por
+ID de origem. **BF** agrupa Black Fragments, **DR** agrupa Devastated Remnants,
+**ER** e **WR** identificam as aproximações das bases Eastern e Western Root,
+e **LR** cobre os corredores gerais de Lower Reshanta. A nomenclatura é
+tática do Azphelumbra e permanece estável ao aplicar uma calibração local.
 
 ## Cartografia e fontes
 

@@ -1,6 +1,10 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.11 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.12 · Windows x64**
+
+Beta 12 standardizes **Siege Command** markers on the map and minimap.
+Rings use a circular icon with a code below it. Other points use pins.
+Transit rings are enabled by default in the Siege Global v1 preset.
 
 Beta 11 adds **Siege Command** for Lower Reshanta, with copyable calls,
 a HUD, presets, and markers on the in-game map and minimap. Import your own authorized map,
@@ -49,7 +53,7 @@ login; caps and recharge rules are not assumed. See [Routine](docs/ROUTINE.en-US
 
 The Vigília interface keeps module controls beside your session. The Impacto combat overlay shows DPS bars with class icons and colors. The compact Fita event strip expands to show the day’s schedule. Use the floating emblem to open quick controls. Existing preferences, visits and collections are preserved.
 
-Beta 12 puts frequency controls in **Overlay → Overlay performance**. Choose 15–360 Hz for drawing and 10–60 fps for minimap capture (up to 30 fps on the full map), with immediate changes and saved preferences. New installations start at 60 Hz/30 fps; existing choices are preserved. Stationary markers no longer redraw continuously, and visual processing uses fewer threads. In-game FPS improvement still needs checking after updating.
+Beta 12 of the 0.9 series puts frequency controls in **Overlay → Overlay performance**. Choose 15–360 Hz for drawing and 10–60 fps for minimap capture (up to 30 fps on the full map), with immediate changes and saved preferences. New installations start at 60 Hz/30 fps; existing choices are preserved. Stationary markers no longer redraw continuously, and visual processing uses fewer threads. In-game FPS improvement still needs checking after updating.
 
 Beta 11 adds Pets with 208 original portraits, tracked pets, Insight goals, a map filter, and a compact quick-menu panel. The initial collection matched two SA logins. Farming sites are client references without guaranteed current presence; live radar distance and direction are not available yet. See [Pets](docs/PETS.en-US.md).
 
@@ -72,7 +76,7 @@ The app doubles minimap symbols, adds arrows to cube sites with supplied height 
 The app shows the combat panel in recognized dungeons and 1v1/5v5 arenas and hides it on exit. Entry and exit signals were observed for one map per arena mode in SA; other rotating maps still need identification. PvP totals include outgoing attacks by confirmed participants and exclude received damage. Calculation remains experimental without live accuracy validation; the complete 5v5 team roster is not confirmed yet. Quick controls can hide the panel without stopping capture.
 
 [App website](https://jpgalvao-architect.github.io/strigoi-aether-map/) ·
-[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.1) ·
+[Installer and downloads](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.12) ·
 [Português](README.md)
 
 Your exploration journal: maps, gatherables, possible cube locations and
