@@ -1048,7 +1048,7 @@ window.StrigoiGuide = {
             "en_US": "The public installer includes pending ring entries by zone. The technical guide explains the map frame, schemas, and calibration."
           },
           "action": {
-            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.11/docs/SIEGE.md",
+            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.12/docs/SIEGE.md",
             "label": {
               "pt_BR": "Abrir guia técnico",
               "en_US": "Open technical guide"
@@ -1087,8 +1087,8 @@ window.StrigoiGuide = {
             "en_US": "Click Enable on map and minimap. On first setup, select the terrain area of the minimap. Press M in the game to see the same markers on the full map. Closing the map returns the markers to the minimap."
           },
           "tip": {
-            "pt_BR": "Os marcadores seguem o preset e aparecem quando o terreno é reconhecido. O HUD compacto de calls é opcional e pode ser arrastado pelo título.",
-            "en_US": "Markers follow your preset and appear when terrain is recognized. The compact call HUD is optional and can be dragged by its title."
+            "pt_BR": "Os objetivos usam pins. Os anéis usam círculos com códigos abaixo. Ao reduzir o zoom, os rótulos de menor prioridade dão espaço aos demais.",
+            "en_US": "Objectives use pins. Rings use circles with labels below. At lower zoom levels, lower-priority labels give way where space is limited."
           }
         },
         {
