@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Owns validated local settings and emits tactical state without UI dependencies."""
+import json
 import re
 from pathlib import Path
 from uuid import uuid4
@@ -159,12 +160,16 @@ class SiegeService(QObject):
         if name != self.state.selected_preset:
             self._commit(selected_preset=name)
 
-    def save_preset(self, preset):
+    def save_preset(self, preset, *, replace=True):
         if preset.name.strip().casefold() == OFFICIAL.casefold():
             raise ValueError('Escolha outro nome para preservar Siege Global v1.')
-        if not preset.name.strip() or not preset.name.isprintable() or not preset.aliases.keys() <= self.rings.keys():
-            raise ValueError('Nome do preset ou referência a anel inválida.')
-        presets = [p for p in self.state.presets if p.name != preset.name] + [preset]
+        if not preset.name.strip() or not preset.name.isprintable():
+            raise ValueError('Nome do preset inválido.')
+        key = preset.name.strip().casefold()
+        presets = [p for p in self.state.presets if p.name.strip().casefold() != key]
+        if not replace and len(presets) != len(self.state.presets):
+            raise ValueError('Já existe um preset com este nome.')
+        presets.append(preset)
         self._commit(presets=presets, selected_preset=preset.name)
 
     def edit_preset(self, **changes):
@@ -172,19 +177,65 @@ class SiegeService(QObject):
             raise ValueError('Crie uma cópia do preset para editar.')
         self.save_preset(Preset.model_validate({**self.preset.model_dump(), **changes}))
 
-    def import_preset(self, path):
-        preset = load_model(path, Preset)
-        if any(p.name.strip().casefold() == preset.name.strip().casefold() for p in self.state.presets):
-            raise ValueError('Já existe um preset com este nome.')
-        self.save_preset(preset)
+    def available_name(self, name):
+        used = {OFFICIAL.casefold(), *(p.name.strip().casefold() for p in self.state.presets)}
+        candidate = name
+        suffix = 2
+        while candidate.casefold() in used:
+            ending = f' ({suffix})'
+            candidate = name[:70-len(ending)].rstrip() + ending
+            suffix += 1
+        return candidate
+
+    def read_preset(self, path):
+        maximum = 256 * 1024
+        with path.open('rb') as stream:
+            payload = stream.read(maximum + 1)
+        if len(payload) > maximum:
+            raise ValueError('O arquivo de marcações é grande demais.')
+        try:
+            data = json.loads(payload)
+            if not isinstance(data, dict) or not {'schema_version', 'map_id'} <= data.keys():
+                raise ValueError('Cabeçalho de marcações incompleto.')
+            return Preset.model_validate(data)
+        except (ValueError, RecursionError) as error:
+            raise ValueError('JSON de marcações inválido. Confira a versão, o mapa, os IDs e as coordenadas.') from error
+
+    def import_preset(self, path, *, replace=False):
+        self.accept_preset(self.read_preset(path), replace=replace)
+
+    def accept_preset(self, preset, *, replace=False):
+        name = preset.name.strip()
+        if not replace or name.casefold() == OFFICIAL.casefold():
+            name = self.available_name(name)
+        elif not any(p.name.strip().casefold() == name.casefold() for p in self.state.presets):
+            raise ValueError('Preset a substituir não encontrado.')
+        self.save_preset(Preset.model_validate({**preset.model_dump(), 'name': name}))
 
     def export_preset(self, path):
         atomic_json(path, self.preset)
 
     def add_marker(self, name, position):
-        self.edit_preset(markers=[*self.preset.markers, CustomMarker(
-            id=f'local-{uuid4().hex}', name=name, position=position,
-        )])
+        preset = self.preset
+        marker = CustomMarker(id=f'local-{uuid4().hex}', name=name, position=position)
+        name = self.available_name('Minhas marcações') if preset.name == OFFICIAL else preset.name
+        self.save_preset(Preset.model_validate({
+            **preset.model_dump(), 'name': name, 'layers': preset.layers | {'CustomMarkers'},
+            'markers': [*preset.markers, marker],
+        }))
+        return marker
+
+    def edit_marker(self, marker_id, **changes):
+        markers = self.preset.markers
+        if not any(marker.id == marker_id for marker in markers):
+            raise ValueError('Pin não encontrado.')
+        self.edit_preset(markers=[
+            CustomMarker.model_validate({**marker.model_dump(), **changes}) if marker.id == marker_id else marker
+            for marker in markers
+        ])
+
+    def delete_marker(self, marker_id):
+        self.edit_preset(markers=[marker for marker in self.preset.markers if marker.id != marker_id])
 
     def _clear_unusable_call(self, state):
         call = state.tactical_call

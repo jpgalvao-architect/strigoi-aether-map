@@ -14,7 +14,8 @@ from app.modules.siege.service import SiegeService
 from app.services.context import AppContext
 from app.ui.main_window import MainWindow
 from app.ui.overlay_visibility import OverlayVisibility
-from app.ui.siege_overlay import shortcut
+from app.ui.siege_overlay import SiegeOverlay, shortcut
+from app.ui.siege_page import SiegeCallControls
 
 
 def ring(key, *, x=.55, y=.55, callsign=None, status='verified'):
@@ -165,19 +166,23 @@ def test_known_calls_copy_and_hud_visibility_respects_game_context(qapp, tmp_pat
     rally = ring(3, callsign='B3')
     import_rings(service, tmp_path, rally)
     window = MainWindow(context)
-    overlay = window.siege_overlay
+    overlay = SiegeOverlay(window, runtime=False)
+    controls = SiegeCallControls(service)
     gate = OverlayVisibility(window, SimpleNamespace())
     overlay.bind_visibility(gate)
     try:
         calls = []
         service.call_changed.connect(calls.append)
         window.navigate('siege')
-        window.siege_page.controls.sectors['BOT'].click()
+        assert not hasattr(window, 'siege_overlay')
+        assert 'Call tática' not in [window.siege_page.section.itemText(i)
+                                     for i in range(window.siege_page.section.count())]
+        controls.sectors['BOT'].click()
         assert service.call.sector == 'BOT'
         assert service.call.objective is None
-        window.siege_page.controls.select_objective(7)
-        window.siege_page.controls.select_ring(rally.ring_id)
-        window.siege_page.controls.copy_call()
+        controls.select_objective(7)
+        controls.select_ring(rally.ring_id)
+        controls.copy_call()
         assert qapp.clipboard().text() == 'REAGRUPAR B3 → ATACAR P7'
         assert calls[-1].objective == 7
         with pytest.raises(ValueError, match='outro setor'):
@@ -200,6 +205,7 @@ def test_known_calls_copy_and_hud_visibility_respects_game_context(qapp, tmp_pat
         assert persisted.state.overlay.opacity == .8
     finally:
         gate.shutdown()
+        overlay.shutdown()
         set_language('pt_BR')
         window.close()
 
@@ -217,6 +223,7 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
     from app.modules.overlay.badges import Badge
     from app.modules.overlay.selection import CaptureArea
     from app.modules.overlay.tracking import Registration
+    from app.core.models import MapLocation
     from app.modules.siege.models import COLORS, MAP_ID, OverlayOptions
 
     context = AppContext(tmp_path)
@@ -249,23 +256,33 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
         def set_exclusion(self, *args):
             observations.append(args)
 
-    def start():
-        assert context.prefs.overlay.map_id == MAP_ID
-        assert window.overlay_page.minimap_ready()
-        context.prefs.overlay.enabled = True
-        overlay.worker = Worker()
-        overlay.sync()
+        def set_references(self, references, minimap_enabled):
+            self.references = dict(references)
 
-    monkeypatch.setattr(overlay, 'start', start)
+    overlay.worker = Worker()
+    context.prefs.overlay.enabled = True
+    overlay.update_location('altgard', 'minimap', observe_minimap=True)
+    atlas_markers = overlay.window.markers
+    assert atlas_markers
     try:
-        window.siege_page.start_map_button.click()
-        assert context.prefs.overlay.map_view == 'minimap'
-        assert not hasattr(window.siege_overlay, 'expanded')
+        window.siege_page.overlay_toggle.setChecked(True)
+        assert window.quick_menu.switches['reshanta'].isChecked()
+        assert context.prefs.overlay.map_view == 'minimap' and context.prefs.overlay.map_id == 'altgard'
+        assert not hasattr(window, 'siege_overlay')
+        assert MAP_ID in overlay.worker.references
+        assert overlay.window.markers == atlas_markers
+        window.quick_menu.switches['reshanta'].setChecked(False)
+        assert not window.siege_page.overlay_toggle.isChecked()
+        assert overlay.window.markers == atlas_markers and MAP_ID in overlay.worker.references
+        window.quick_menu.switches['reshanta'].setChecked(True)
+        assert window.siege_page.overlay_toggle.isChecked()
+        window.siege_page.overlay_toggle.setChecked(False)
+        assert not window.quick_menu.switches['reshanta'].isChecked()
+        window.siege_page.overlay_toggle.setChecked(True)
+        marker = siege.add_marker('Entrada', Coordinate(x=objective.x+.02, y=objective.y))
         shared = overlay.window
         assert shared.windowFlags() & Qt.WindowTransparentForInput
-        assert len(shared.markers) == 14
-        caption = next(shape for _, _, _, shape in shared.markers if isinstance(shape, Badge) and shape.text == 'P7')
-        assert caption.selected and caption.provisional
+        assert shared.markers == atlas_markers
         mini = mini.model_copy(update={'map_id': MAP_ID})
         full = mini.model_copy(update={'x':0, 'y':0, 'width':geometry.width(), 'height':geometry.height(), 'view_kind':'large'})
         for area, zoom, center in [(mini, 1100, (140, 95)), (full, 620, (430, 340)),
@@ -278,7 +295,12 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
             assert with_area or not shared.isVisible()
             overlay.on_registration(registration, {'area':area})
             assert shared.isVisible() and overlay.window is shared
+            assert len(shared.markers) == 15
+            caption = next(shape for _, _, _, shape in shared.markers if isinstance(shape, Badge) and shape.text == 'P7')
+            assert not caption.selected and caption.provisional
             visible = shared.visible_markers(registration)
+            pin = next((x, y) for x, y, _, shape in visible if shape.text == marker.name)
+            assert pin == pytest.approx((center[0]+.02*zoom/area.pixel_ratio, center[1]))
             point = next((x, y) for x, y, _, shape in visible if shape == caption)
             assert point == pytest.approx(center)
             transit_point = next((x, y) for x, y, color, _ in visible if color == COLORS['TransitRings'])
@@ -295,9 +317,172 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
         siege.update_overlay(map_markers=False)
         assert not shared.markers
         assert observations[-1][1] == []
+        assert context.map_location == MapLocation(MAP_ID, MAP_ID, 'minimap')
         overlay.on_registration(None, {'area':mini})
         assert not shared.isVisible()
+        regular = mini.model_copy(update={'map_id': 'altgard'})
+        overlay.on_registration(registration, {'area': regular})
+        overlay.on_registration(registration, {'area': regular})
+        assert shared.markers == atlas_markers
+        assert context.prefs.overlay.enabled
+        assert not SiegeService(tmp_path).state.overlay.map_markers
     finally:
         overlay.worker = None
         window.close()
         overlay.watchdog.stop()
+
+
+def test_free_pin_editor_persists_positions_and_properties(qapp, tmp_path):
+    import cv2
+    from PySide6.QtCore import QPoint, QPointF
+    from PySide6.QtTest import QTest
+
+    context = AppContext(tmp_path)
+    siege = context.siege
+    assert cv2.imwrite(str(siege.map_path), np.full((320, 320, 3), 40, np.uint8))
+    siege._set_map()
+    window = MainWindow(context)
+    window.navigate('siege')
+    window.show()
+    qapp.processEvents()
+    page = window.siege_page
+    view = page.board.view
+    view.fit_full()
+    left = Qt.MouseButton.LeftButton
+    try:
+        locations = [siege.objectives[n].map_position for n in (10, 2, 6)]
+        # Black Fragments and open water outside the three sets of objectives.
+        locations += [Coordinate(x=.55, y=.42), Coordinate(x=.34, y=.26)]
+        for position in locations:
+            point = view.mapFromScene(QPointF(position.x * 4096, position.y * 4096))
+            page.marker.click()
+            QTest.mouseClick(view.viewport(), left, pos=point)
+            pin = page.selected_marker()
+            assert pin is not None and pin.visible
+            assert pin.position.x == pytest.approx(position.x, abs=.003)
+            assert pin.position.y == pytest.approx(position.y, abs=.003)
+        assert len(siege.preset.markers) == 5 and 'CustomMarkers' in siege.preset.layers
+        assert siege.preset.name != OFFICIAL
+        marker = page.selected_marker()
+        point = view.mapFromScene(view._at(marker.position)) - QPoint(0, 5)
+        end = point + QPoint(65, 20)
+        delta = view.mapToScene(end) - view.mapToScene(point)
+        QTest.mousePress(view.viewport(), left, pos=point)
+        QTest.mouseMove(view.viewport(), end)
+        QTest.mouseRelease(view.viewport(), left, pos=end)
+        moved = page.selected_marker()
+        assert moved.id == marker.id
+        assert moved.position.x == pytest.approx(marker.position.x + delta.x()/4096)
+        assert moved.position.y == pytest.approx(marker.position.y + delta.y()/4096)
+        view.zoom(2)
+        view.horizontalScrollBar().setValue(view.horizontalScrollBar().minimum())
+        window.resize(1230, 820)
+        qapp.processEvents()
+        assert page.selected_marker().position == moved.position
+        page.pin_name.setText('Vigia')
+        page.pin_name.editingFinished.emit()
+        page.edit_pin(color='#2a8bef', category='Defesa', scale=1.4, visible=False)
+        reopened = SiegeService(tmp_path)
+        pin = next(mark for mark in reopened.preset.markers if mark.id == marker.id)
+        assert (pin.name, pin.color, pin.category, pin.scale, pin.visible) == ('Vigia', '#2a8bef', 'Defesa', 1.4, False)
+        assert pin.position == moved.position
+        page.marker.click()
+        QTest.keyClick(view, Qt.Key_Escape)
+        assert not view.placement and len(siege.preset.markers) == 5
+        page.select_pin(marker.id)
+        page.delete_marker()
+        assert len(SiegeService(tmp_path).preset.markers) == 4
+        assert len(siege.objectives) == 12
+        siege.select_preset(OFFICIAL)
+        assert not siege.preset.markers
+    finally:
+        window.close()
+
+
+def test_share_pin_preset_offline_and_validate_before_replacement(tmp_path):
+    source = SiegeService(tmp_path/'source')
+    a = source.add_marker('Vigia', Coordinate(x=.12, y=.84))
+    source.add_marker('Ponte', Coordinate(x=.56, y=.42))
+    source.edit_marker(a.id, color='#458efa', category='Entrada', scale=1.35, visible=False)
+    source.edit_preset(aliases={'ring-reshanta-295279': 'Base'})
+    export = tmp_path/'siege.json'
+    source.export_preset(export)
+    exported = json.loads(export.read_text(encoding='utf-8'))
+    assert exported['schema_version'] == 1 and exported['map_frame'] == 'Abyss_Reshanta_A'
+    target = SiegeService(tmp_path/'clean')
+    target.import_preset(export)
+    assert target.preset == source.preset
+    assert target.preset.markers[0].id == a.id
+    target.import_preset(export)
+    assert len(target.state.presets) == 2 and target.preset.name.endswith(' (2)')
+    target.import_preset(export, replace=True)
+    assert target.preset == source.preset and len(target.state.presets) == 2
+    state = target.state.model_dump()
+    for field, value in [('schema_version', 99), ('schema_version', True), ('map_frame', 'another-map'),
+                         ('markers', [exported['markers'][0]] * 2),
+                         ('markers', [{**exported['markers'][0], 'position': {'x': 1.1, 'y': .3}}]),
+                         ('markers', [{**exported['markers'][0], 'position': {'x': '0.7', 'y': .3}}])]:
+        export.write_text(json.dumps({**exported, field: value}), encoding='utf-8')
+        with pytest.raises(ValueError, match='JSON de marcações inválido'):
+            target.import_preset(export, replace=True)
+        assert target.state.model_dump() == state
+    for malformed in ('{', '{"name": "Sem versão"}'):
+        export.write_text(malformed, encoding='utf-8')
+        with pytest.raises(ValueError, match='JSON de marcações inválido'):
+            target.import_preset(export)
+    legacy = {key: value for key, value in exported.items() if key != 'map_frame'}
+    legacy['name'] = OFFICIAL
+    legacy['markers'] = [{key: pin[key] for key in ('id', 'name', 'position')} for pin in exported['markers']]
+    export.write_text(json.dumps(legacy), encoding='utf-8')
+    target.import_preset(export, replace=True)
+    assert target.preset.name != OFFICIAL and target.preset.markers[0].visible
+    target.select_preset(OFFICIAL)
+    assert not target.preset.markers
+
+
+def test_reshanta_can_start_independently_and_share_the_existing_capture(qapp, tmp_path, monkeypatch):
+    import cv2
+    from app.modules.overlay.live_worker import LiveMapWorker
+    from app.modules.overlay.selection import CaptureArea
+    from app.modules.siege.models import MAP_ID
+
+    context = AppContext(tmp_path)
+    siege = context.siege
+    assert cv2.imwrite(str(siege.map_path), np.full((320, 320, 3), 40, np.uint8))
+    siege._set_map()
+    screen = qapp.primaryScreen()
+    geom = screen.geometry()
+    area = CaptureArea(map_id='altgard', screen_name=screen.name(), screen_x=geom.x(),
+                       screen_y=geom.y(), screen_width=geom.width(), screen_height=geom.height(),
+                       pixel_ratio=screen.devicePixelRatio(), x=30, y=30, width=260, height=180,
+                       view_kind='minimap')
+    selection = tmp_path/'minimap.json'
+    atomic_json(selection, area)
+    context.prefs.overlay.minimap_area = str(selection)
+    monkeypatch.setattr(LiveMapWorker, 'start', lambda self: None)
+    window = MainWindow(context)
+    try:
+        overlay = window.overlay
+        surface = overlay.window
+        siege_box = window.siege_page.overlay_toggle
+        regular_box = window.quick_menu.switches['maps']
+        siege_box.setChecked(True)
+        assert overlay.siege_only and not regular_box.isChecked() and not overlay.capture_area.map_id
+        assert not surface.markers
+        overlay.update_location(MAP_ID, 'minimap', observe_minimap=True)
+        assert len(surface.markers) == 12
+        assert overlay.worker.area.view_kind == 'minimap'
+        assert not context.prefs.overlay.enabled and not context.prefs.overlay.resume_enabled
+        window.quick_menu.switches['reshanta'].setChecked(False)
+        assert overlay.worker is None and not context.prefs.overlay.enabled
+        window.quick_menu.switches['reshanta'].setChecked(True)
+        assert overlay.worker is not None and overlay.siege_only
+        overlay.start()
+        assert overlay.window is surface and MAP_ID in dict(overlay.worker.references)
+        assert not overlay.siege_only and context.prefs.overlay.enabled
+        window.overlay_page.stop()
+        assert overlay.window is surface and overlay.siege_only
+        assert not regular_box.isChecked() and siege_box.isChecked()
+        assert SiegeService(tmp_path).state.overlay.map_markers
+    finally:
+        window.close()

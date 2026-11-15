@@ -9,7 +9,7 @@ from app.modules.overlay.foreground import GAME_NAMES
 class ModuleResume(QObject):
     def __init__(self,main):
         super().__init__(main)
-        self.main=main;self.closed=False;self.next_map=0.;self.next_sonar=0.
+        self.main=main;self.closed=False;self.next_map=0.;self.next_sonar=0.;self.next_siege=0.
         self.timer=QTimer(self);self.timer.setInterval(5000)
         self.timer.timeout.connect(self.refresh);self.timer.start()
         QTimer.singleShot(0,self.refresh)
@@ -17,9 +17,11 @@ class ModuleResume(QObject):
     def refresh(self):
         if self.closed:return
         main=self.main;prefs=main.context.prefs;now=time.monotonic()
-        maps=prefs.overlay.resume_enabled and main.overlay.worker is None
+        maps=prefs.overlay.resume_enabled and (main.overlay.worker is None or getattr(main.overlay, 'siege_only', False))
+        siege=getattr(main.context, 'siege', None)
+        reshanta=bool(siege and siege.definition and siege.state.overlay.map_markers and main.overlay.worker is None)
         sonar=prefs.sonar_resume and not main.sonar.active
-        if not maps and not sonar:return
+        if not maps and not sonar and not reshanta:return
         try:games=[p for p in processes() if p.name.casefold() in GAME_NAMES]
         except OSError:return
         if not games:
@@ -32,6 +34,9 @@ class ModuleResume(QObject):
             if prefs.overlay.map_view=='minimap' and not page.minimap_ready():
                 main.overlay.set_status('Selecione o minimapa para retomar o overlay')
             else:page.start()
+        if reshanta and now>=self.next_siege and not page._selection_pending:
+            self.next_siege=now+15
+            main.overlay.start_siege()
         if sonar and now>=self.next_sonar and main.sonar.available:
             self.next_sonar=now+15
             preferred=prefs.sonar_process_name.casefold()

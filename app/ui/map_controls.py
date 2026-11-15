@@ -49,7 +49,7 @@ class MapControls(HudSurface):
         overlay=self.main.overlay
         ready=(self.context.prefs.overlay.enabled and overlay.worker is not None
             and overlay.capture_area is not None and overlay.capture_area.view_kind=='minimap'
-            and self.context.prefs.overlay.map_id != MAP_ID
+            and self.context.map_location.display_id != MAP_ID
             and overlay.window.registration is not None and overlay.matches>=2)
         if not ready:self.layers.menu_widget.hide()
         self.setVisible(bool(ready))

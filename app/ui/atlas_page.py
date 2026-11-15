@@ -29,7 +29,9 @@ class AtlasPage(QWidget):
         self.resource = QComboBox()
         for title, value in [("Todas as raridades", ""), ("Comum", "common"), ("Incomum", "uncommon"), ("Raro", "rare"), ("Épico", "epic"), ("Não informada", "unknown")]:
             self.rarity.addItem(title, value)
-        layout.addLayout(row(self.maps, self.resource, self.search, self.rarity))
+        self.current_region = button("Ver região atual", self.open_current_region)
+        layout.addLayout(row(self.maps, self.resource, self.search, self.rarity, self.current_region))
+        context.map_location_changed.connect(self.refresh_current_region)
         body = QHBoxLayout()
         layout.addLayout(body, 1)
         self.view = RouteView()
@@ -79,6 +81,15 @@ class AtlasPage(QWidget):
         context.changed.connect(self.refresh)
         if getattr(context,'routes',None):context.routes.changed.connect(self.refresh_route)
         self.refresh()
+
+    def refresh_current_region(self, *_):
+        index = self.maps.findData(self.context.map_location.region_id)
+        self.current_region.setVisible(index >= 0 and index != self.maps.currentIndex())
+
+    def open_current_region(self):
+        index = self.maps.findData(self.context.map_location.region_id)
+        if index >= 0:
+            self.maps.setCurrentIndex(index)
 
     def refresh_route(self):
         route=getattr(getattr(self.context,'routes',None),'route',None)
@@ -145,6 +156,7 @@ class AtlasPage(QWidget):
         self.hide.setChecked(self.context.prefs.hide_visited)
         self.hide.blockSignals(False)
         self.refresh_points()
+        self.refresh_current_region()
 
     def category_changed(self, key, checked):
         disabled = self.context.prefs.disabled_categories

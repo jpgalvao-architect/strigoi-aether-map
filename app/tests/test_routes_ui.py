@@ -72,6 +72,9 @@ def test_route_page_fits_small_window_and_projection_uses_same_transform(qapp,tm
         assert page.start_button.isVisible() and page.status.isVisible()
         assert not hasattr(page,'calibration_button')
         window.routes.start();target=window.routes.target
+        assert window.overlay.window.route_target is None
+        window.context.prefs.overlay.enabled = True
+        window.overlay.update_location(window.routes.route.map_id, 'minimap', observe_minimap=True)
         assert window.overlay.window.route_target[:2]==(target.x,target.y)
         lines=window.overlay.window.route_lines
         transform=Registration(np.array([[1200,0,-200],[0,900,-100]],float),25,.95)

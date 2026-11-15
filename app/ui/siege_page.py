@@ -5,7 +5,7 @@ import sys
 
 from PySide6.QtCore import QProcess, QSignalBlocker, Qt, Signal
 from PySide6.QtWidgets import (
-    QApplication, QButtonGroup, QColorDialog, QFileDialog, QHBoxLayout, QInputDialog, QStackedWidget,
+    QApplication, QButtonGroup, QColorDialog, QFileDialog, QHBoxLayout, QInputDialog, QMessageBox, QStackedWidget,
     QVBoxLayout,
 )
 from PySide6.QtGui import QColor
@@ -175,15 +175,17 @@ class SiegeBoard(QWidget):
 
 
 class SiegePage(QWidget):
-    def __init__(self, context, start_map_overlay, configure_shortcut):
+    def __init__(self, context, toggle_reshanta, setup_minimap, minimap_ready):
         super().__init__()
         self.context = context
         self.service = context.siege
-        self.configure_shortcut = configure_shortcut
+        self.pin_id = None
+        self.pin_preset = None
+        self.minimap_ready = minimap_ready
         self.placement = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(24, 18, 24, 18)
-        layout.addWidget(page_header('Siege Command', 'Prepare calls para Lower Reshanta e acompanhe o setor no jogo.'))
+        layout.addWidget(page_header('Siege Command', 'Edite marcações de Lower Reshanta e veja o plano no mapa do jogo.'))
         self.summary = label('', 'subtitle', True)
         layout.addWidget(self.summary)
         body = QHBoxLayout()
@@ -198,21 +200,26 @@ class SiegePage(QWidget):
         sidebar.setFixedWidth(320)
         side.setContentsMargins(12, 12, 12, 12)
         self.section = QComboBox()
-        self.section.addItems(['Call tática', 'Catálogo de anéis', 'Camadas e presets', 'Overlay de siege'])
+        self.overlay_toggle = QCheckBox('Overlay de Reshanta')
+        self.overlay_toggle.toggled.connect(toggle_reshanta)
+        side.addWidget(self.overlay_toggle)
+        side.addWidget(label('Mostra os marcadores táticos no minimapa e no mapa do jogo (M).', 'subtitle', True))
+        self.setup_minimap = button('Selecionar minimapa', setup_minimap)
+        side.addWidget(self.setup_minimap)
+        context.changed.connect(self.refresh_minimap_button)
+        self.section.addItems(['Editar pins', 'Catálogo de anéis', 'Camadas e presets'])
         side.addWidget(self.section)
         self.sections = QStackedWidget()
         side.addWidget(self.sections, 1)
         self.section.currentIndexChanged.connect(self.change_section)
-        self.controls = SiegeCallControls(self.service)
-        self.controls.sector_focused.connect(self.board.view.focus_sector)
-        self.controls.notice.connect(self.message)
-        self.board.view.objective_selected.connect(self.controls.select_objective)
-        self.board.view.ring_selected.connect(self.select_ring_on_map)
-        self.board.view.coordinate_selected.connect(self.placement_chosen)
-        self.sections.addWidget(self.controls)
+        self.sections.addWidget(self.pin_page())
         self.sections.addWidget(self.catalogue_page())
         self.sections.addWidget(self.preset_page())
-        self.sections.addWidget(self.overlay_page(start_map_overlay))
+        self.board.view.ring_selected.connect(self.select_ring_on_map)
+        self.board.view.coordinate_selected.connect(self.placement_chosen)
+        self.board.view.pin_selected.connect(self.select_pin_on_map)
+        self.board.view.pin_moved.connect(self.move_pin)
+        self.board.view.editing_cancelled.connect(self.cancel_placement)
         body.addWidget(sidebar)
         layout.addLayout(body, 1)
         self.feedback = label(self.service.warning, 'subtitle', True)
@@ -232,11 +239,18 @@ class SiegePage(QWidget):
 
     def change_section(self, index):
         self.sections.setCurrentIndex(index)
+        self.board.view.editing_pins = index == 0
         self.cancel_placement()
 
     def cancel_placement(self):
+        view = self.board.view
         self.placement = None
-        self.board.view.pick_position(False)
+        view.pick_position(False)
+        view.cancel_drag()
+        self.message('')
+        self.pin_id = None
+        view.select_pin(None)
+        self.refresh_pins()
 
     def import_map(self):
         name, _ = QFileDialog.getOpenFileName(self, tr('Importar mapa local'), '', 'PNG (*.png)')
@@ -367,13 +381,9 @@ class SiegePage(QWidget):
         self.freeze.setEnabled(ring.sector is not None)
 
     def select_ring_on_map(self, ring_id):
-        ring = self.service.rings[ring_id]
-        if self.section.currentIndex() == 1 or not self.service.callsign(ring):
-            self.section.setCurrentIndex(1)
-            self.ring_filter.setCurrentIndex(0)
-            self.catalogue.setCurrentIndex(self.catalogue.findData(ring_id))
-        else:
-            self.controls.select_ring(ring_id)
+        self.section.setCurrentIndex(1)
+        self.ring_filter.setCurrentIndex(0)
+        self.catalogue.setCurrentIndex(self.catalogue.findData(ring_id))
 
     def start_ring_placement(self):
         self.placement = ('ring', self.catalogue.currentData())
@@ -382,7 +392,8 @@ class SiegePage(QWidget):
 
     def placement_chosen(self, position):
         placement = self.placement
-        self.cancel_placement()
+        self.placement = None
+        self.board.view.pick_position(False)
         if position is None or placement is None:
             return
         kind, key = placement
@@ -392,9 +403,16 @@ class SiegePage(QWidget):
             self.y.setValue(position.y)
             self.message('Informe a fonte e salve a posição.')
         else:
-            name, accepted = QInputDialog.getText(self, tr('Marcador local'), tr('Nome do marcador'))
-            if accepted and name.strip():
-                self.guard(self.service.add_marker, name.strip(), position)
+            names = {pin.name for pin in self.service.preset.markers}
+            number = 1
+            while f'Pin {number}' in names:
+                number += 1
+            marker = self.guard(self.service.add_marker, f'Pin {number}', position)
+            if marker is not None:
+                self.select_pin(marker.id)
+                self.pin_name.setFocus()
+                self.pin_name.selectAll()
+                self.message('Pin adicionado. Arraste no mapa para ajustar.')
 
     def save_calibration(self):
         def save():
@@ -426,7 +444,6 @@ class SiegePage(QWidget):
         self.presets.currentIndexChanged.connect(lambda: self.guard(self.service.select_preset, self.presets.currentData()))
         box.addWidget(self.presets)
         box.addLayout(row(button('Duplicar preset', self.duplicate_preset), button('Restaurar Global', self.restore_preset)))
-        box.addLayout(row(button('Importar JSON', self.import_preset), button('Exportar JSON', self.export_preset)))
         self.layers = {}
         self.layer_color = QComboBox()
         for key, title in LAYERS.items():
@@ -455,10 +472,7 @@ class SiegePage(QWidget):
         form.addRow('Tamanho dos marcadores', self.marker_scale)
         box.addLayout(form)
         self.alias = button('Editar apelido do anel', self.edit_alias)
-        self.marker = button('Adicionar marcador', self.start_marker)
-        self.remove_marker = button('Remover marcador', self.delete_marker)
         box.addWidget(self.alias)
-        box.addLayout(row(self.marker, self.remove_marker))
         box.addWidget(button('Importar locais de pets', self.import_pet_sites))
         box.addStretch()
         return widget
@@ -478,21 +492,46 @@ class SiegePage(QWidget):
             def duplicate():
                 if any(name.strip() == preset.name for preset in self.service.state.presets):
                     raise ValueError(tr('Já existe um preset com este nome.'))
-                self.service.save_preset(Preset.model_validate({**self.service.preset.model_dump(), 'name': name.strip()}))
+                self.service.save_preset(Preset.model_validate({**self.service.preset.model_dump(), 'name': name.strip()}),
+                                         replace=False)
             self.guard(duplicate)
 
     def restore_preset(self):
         self.guard(self.service.select_preset, OFFICIAL)
 
     def import_preset(self):
-        path, _ = QFileDialog.getOpenFileName(self, tr('Importar JSON'), '', 'JSON (*.json)')
+        path, _ = QFileDialog.getOpenFileName(self, tr('Importar marcações (.json)'), '', 'JSON (*.json)')
         if path:
-            self.guard(self.service.import_preset, Path(path))
+            self.guard(self.import_markers, Path(path))
+
+    def import_markers(self, path):
+        preset = self.service.read_preset(path)
+        replace = False
+        if any(p.name.strip().casefold() == preset.name.strip().casefold() for p in self.service.state.presets):
+            dialog = QMessageBox(self)
+            dialog.setWindowTitle(tr('Importar marcações (.json)'))
+            dialog.setText(tr('Já existe um preset com este nome.'))
+            new = dialog.addButton(tr('Importar como novo'), QMessageBox.AcceptRole)
+            overwrite = dialog.addButton(tr('Substituir preset'), QMessageBox.DestructiveRole)
+            dialog.addButton(QMessageBox.Cancel)
+            dialog.setDefaultButton(new)
+            dialog.exec()
+            if dialog.clickedButton() not in (new, overwrite):
+                return
+            replace = dialog.clickedButton() is overwrite
+        self.service.accept_preset(preset, replace=replace)
+        self.section.setCurrentIndex(0)
+        if self.service.preset.markers:
+            self.select_pin(self.service.preset.markers[0].id)
+        self.message('Marcações importadas.')
 
     def export_preset(self):
-        path, _ = QFileDialog.getSaveFileName(self, tr('Exportar JSON'), 'siege-preset.json', 'JSON (*.json)')
+        path, _ = QFileDialog.getSaveFileName(self, tr('Exportar marcações (.json)'), 'siege-preset.json', 'JSON (*.json)')
         if path:
-            self.guard(self.service.export_preset, Path(path))
+            path = Path(path)
+            if not path.suffix:
+                path = path.with_suffix('.json')
+            self.guard(self.service.export_preset, path)
 
     def toggle_exploration(self, enabled):
         self.board.view.exploration = enabled
@@ -530,70 +569,122 @@ class SiegePage(QWidget):
                     aliases.pop(ring_id, None)
                 self.guard(self.service.edit_preset, aliases=aliases)
 
-    def start_marker(self):
-        self.placement = ('marker', None)
-        self.board.view.pick_position(True)
-        self.message('Clique no mapa para adicionar o marcador.')
-
-    def delete_marker(self):
-        markers = self.service.preset.markers
-        names = [f'{n}. {mark.name}' for n, mark in enumerate(markers, 1)]
-        selected, accepted = QInputDialog.getItem(self, tr('Remover marcador'), tr('Marcador local'), names, 0, False)
-        if accepted:
-            index = names.index(selected)
-            self.guard(self.service.edit_preset, markers=[mark for n, mark in enumerate(markers) if n != index])
-
-    def overlay_page(self, start_map_overlay):
+    def pin_page(self):
         widget = QWidget()
         box = QVBoxLayout(widget)
         box.setContentsMargins(0, 0, 0, 0)
-        self.map_markers = QCheckBox('Mostrar marcadores de siege')
-        self.map_markers.toggled.connect(lambda enabled: self.guard(self.service.update_overlay, map_markers=enabled))
-        box.addWidget(self.map_markers)
-        self.start_map_button = button('Ativar no mapa e minimapa', start_map_overlay, True)
-        box.addWidget(self.start_map_button)
-        box.addWidget(label('Veja as camadas do preset no minimapa e no mapa do jogo ao abrir com M.', 'subtitle', True))
-        self.hud_visible = QCheckBox('Mostrar HUD compacto')
-        self.hud_locked = QCheckBox('Clique através do HUD')
-        self.hud_visible.toggled.connect(lambda visible: self.guard(self.service.update_overlay, visible=visible))
-        self.hud_locked.toggled.connect(lambda locked: self.guard(self.service.update_overlay, locked=locked))
-        box.addWidget(self.hud_visible)
-        box.addWidget(self.hud_locked)
-        self.opacity = QDoubleSpinBox()
-        self.opacity.setRange(.25, 1)
-        self.opacity.setSingleStep(.05)
-        self.opacity.editingFinished.connect(lambda: self.guard(self.service.update_overlay, opacity=self.opacity.value()))
-        self.hud_scale = QDoubleSpinBox()
-        self.hud_scale.setRange(.75, 1.6)
-        self.hud_scale.setSingleStep(.05)
-        self.hud_scale.setSuffix('×')
-        self.hud_scale.editingFinished.connect(lambda: self.guard(self.service.update_overlay, scale=self.hud_scale.value()))
-        self.hud_key = QLineEdit()
-        self.hud_key.setMaxLength(40)
-        self.hud_key.setPlaceholderText('Ctrl+Alt+F9')
-        form = QFormLayout()
-        form.addRow('Opacidade', self.opacity)
-        form.addRow('Escala do HUD', self.hud_scale)
-        form.addRow('Atalho do HUD', self.hud_key)
-        box.addLayout(form)
-        box.addWidget(button('Salvar atalho do HUD', self.save_shortcut))
-        box.addWidget(label('Use Ctrl ou Alt com F1–F12. Limpe o campo para desativar o atalho.', 'subtitle', True))
-        box.addWidget(button('Restaurar posição do HUD', lambda: self.guard(self.service.update_overlay, position=None)))
-        box.addWidget(label('Arraste pelo título com o HUD destravado. Volte ao jogo para ver os overlays.', 'subtitle', True))
+        self.pin_presets = QComboBox()
+        self.pin_presets.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self.pin_presets.currentIndexChanged.connect(
+            lambda: self.guard(self.service.select_preset, self.pin_presets.currentData()))
+        box.addWidget(self.pin_presets)
+        self.marker = button('Adicionar pin', self.start_marker, True)
+        box.addLayout(row(self.marker, button('Cancelar edição', self.cancel_placement)))
+        self.pin_list = QComboBox()
+        self.pin_list.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self.pin_list.currentIndexChanged.connect(lambda: self.select_pin(self.pin_list.currentData()))
+        box.addWidget(self.pin_list)
+        self.pin_details = QWidget()
+        form = QFormLayout(self.pin_details)
+        form.setContentsMargins(0, 0, 0, 0)
+        self.pin_name = QLineEdit()
+        self.pin_name.setMaxLength(60)
+        self.pin_name.editingFinished.connect(lambda: self.edit_pin(name=self.pin_name.text()))
+        self.pin_category = QLineEdit()
+        self.pin_category.setMaxLength(32)
+        self.pin_category.editingFinished.connect(self.edit_pin_category)
+        self.pin_scale = QDoubleSpinBox()
+        self.pin_scale.setRange(.65, 1.8)
+        self.pin_scale.setSingleStep(.1)
+        self.pin_scale.setSuffix('×')
+        self.pin_scale.editingFinished.connect(lambda: self.edit_pin(scale=self.pin_scale.value()))
+        self.pin_visibility = QCheckBox('Pin visível')
+        self.pin_visibility.toggled.connect(lambda visible: self.edit_pin(visible=visible))
+        self.pin_color = button('Escolher cor', self.choose_pin_color)
+        form.addRow('Nome do pin', self.pin_name)
+        form.addRow('Categoria', self.pin_category)
+        form.addRow('Tamanho do pin', self.pin_scale)
+        form.addRow('Cor do pin', self.pin_color)
+        form.addRow(self.pin_visibility)
+        form.addRow(button('Excluir pin', self.delete_marker))
+        box.addWidget(self.pin_details)
+        box.addWidget(button('Importar marcações (.json)', self.import_preset))
+        box.addWidget(button('Exportar marcações (.json)', self.export_preset))
         box.addStretch()
         return widget
 
-    def save_shortcut(self):
-        result = self.guard(self.configure_shortcut, self.hud_key.text().strip())
-        if result:
-            self.message(result)
+    def start_marker(self):
+        self.placement = ('marker', None)
+        self.board.view.pick_position(True)
+        self.message('Clique no mapa para adicionar um pin. Esc cancela.')
+
+    def select_pin(self, marker_id):
+        self.pin_id = marker_id
+        self.board.view.select_pin(marker_id)
+        self.refresh_pins()
+
+    def select_pin_on_map(self, marker_id):
+        self.pin_id = marker_id
+        self.refresh_pins()
+
+    def selected_marker(self):
+        return next((pin for pin in self.service.preset.markers if pin.id == self.pin_id), None)
+
+    def edit_pin(self, **changes):
+        pin = self.selected_marker()
+        if pin and any(getattr(pin, key) != value for key, value in changes.items()):
+            self.guard(self.service.edit_marker, pin.id, **changes)
+            self.refresh_pins()
+
+    def edit_pin_category(self):
+        category = self.pin_category.text()
+        self.edit_pin(category='Tático' if category == tr('Tático') else category)
+
+    def move_pin(self, marker_id, position):
+        try:
+            self.service.edit_marker(marker_id, position=position)
+        except (OSError, ValueError) as error:
+            self.message(str(error))
+            self.board.view.refresh()
+
+    def choose_pin_color(self):
+        marker = self.selected_marker()
+        if marker:
+            color = marker.color or self.service.preset.colors.get('CustomMarkers', COLORS['CustomMarkers'])
+            selected = QColorDialog.getColor(QColor(color), self, tr('Cor do pin'))
+            if selected.isValid():
+                self.edit_pin(color=selected.name())
+
+    def delete_marker(self):
+        if self.pin_id:
+            self.guard(self.service.delete_marker, self.pin_id)
+
+    def refresh_pins(self):
+        preset = self.service.preset
+        names = [(tr('Selecionar pin'), None), *((pin.name, pin.id) for pin in preset.markers)]
+        choice(self.pin_list, self.pin_id, names)
+        pin = self.selected_marker()
+        self.pin_details.setEnabled(pin is not None)
+        update(self.pin_name, 'setText', pin.name if pin else '')
+        update(self.pin_category, 'setText', (tr('Tático') if pin.category == 'Tático' else pin.category) if pin else '')
+        update(self.pin_scale, 'setValue', pin.scale if pin else 1.)
+        update(self.pin_visibility, 'setChecked', bool(pin and pin.visible))
+        color = (pin.color if pin else None) or preset.colors.get('CustomMarkers', COLORS['CustomMarkers'])
+        self.pin_color.setStyleSheet(f'border-left: 4px solid {color};')
 
     def refresh(self):
         service = self.service
         count = sum(service.position(r) is not None for r in service.rings.values())
         self.summary.setText(f'12 objetivos de referência · {count}/{len(service.rings)} anéis posicionados')
         self.refresh_catalogue()
-        choice(self.presets, service.preset.name, [(OFFICIAL, OFFICIAL), *[(p.name, p.name) for p in service.state.presets]])
+        entries = [(OFFICIAL, OFFICIAL), *((p.name, p.name) for p in service.state.presets)]
+        choice(self.presets, service.preset.name, entries)
+        choice(self.pin_presets, service.preset.name, entries)
+        if self.pin_preset != service.preset.name or (self.pin_id and not self.selected_marker()):
+            self.pin_preset = service.preset.name
+            self.pin_id = None
+            self.board.view.select_pin(None)
+        self.refresh_pins()
         custom = service.preset.name != OFFICIAL
         for key, checkbox in self.layers.items():
             update(checkbox, 'setChecked', key in service.preset.layers)
@@ -604,13 +695,11 @@ class SiegePage(QWidget):
         self.marker_scale.setEnabled(custom)
         update(self.marker_scale, 'setValue', service.preset.marker_scale)
         self.alias.setEnabled(custom)
-        self.marker.setEnabled(custom and service.definition is not None)
-        self.remove_marker.setEnabled(custom and bool(service.preset.markers))
-        prefs = service.state.overlay
-        self.start_map_button.setEnabled(service.definition is not None)
-        update(self.map_markers, 'setChecked', prefs.map_markers)
-        update(self.hud_visible, 'setChecked', prefs.visible)
-        update(self.hud_locked, 'setChecked', prefs.locked)
-        update(self.opacity, 'setValue', prefs.opacity)
-        update(self.hud_scale, 'setValue', prefs.scale)
-        self.hud_key.setText(prefs.hud_shortcut)
+        self.marker.setEnabled(service.definition is not None)
+        update(self.overlay_toggle, 'setChecked', service.state.overlay.map_markers)
+        self.refresh_minimap_button()
+
+    def refresh_minimap_button(self):
+        self.setup_minimap.setVisible(self.service.state.overlay.map_markers
+                                     and self.service.definition is not None
+                                     and not self.minimap_ready())

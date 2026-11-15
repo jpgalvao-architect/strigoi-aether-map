@@ -112,6 +112,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         for key, title, symbol, callback in [
             ("sonar", "Sonar", "sonar", self.toggle_sonar),
             ("maps", "Mapa + minimapa", "atlas", self.toggle_maps),
+            ("reshanta", "Reshanta / Siege", "siege", main.toggle_reshanta),
             ("routes", "Guia de rotas", "routes", self.toggle_routes),
             ("combat", "Painel de combate", "combat", self.toggle_combat),
             ("events", "Painel de eventos", "events", self.toggle_events),
@@ -141,6 +142,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
             self.move(area.left()+18, area.top()+area.height()//3)
         self.fit_screen()
         self.context.changed.connect(self.refresh)
+        self.context.siege.changed.connect(self.refresh)
         main.sonar.active_changed.connect(self.refresh)
         main.overlay.status_changed.connect(self.refresh)
         main.combat.changed.connect(self.refresh)
@@ -157,6 +159,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         self.setVisible(visible)
         values = {"sonar": self.context.prefs.sonar_resume or self.main.sonar.active,
                   "maps": self.context.prefs.overlay.resume_enabled or self.context.prefs.overlay.enabled and self.main.overlay.worker is not None,
+                  "reshanta": self.context.siege.state.overlay.map_markers,
                   "combat": self.context.prefs.combat.panel_visible,
                   "pets": self.context.prefs.pets.panel_visible,
                   "routine": self.context.prefs.routine.panel_visible,
@@ -165,6 +168,9 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
         for key, checked in values.items():
             switch = self.switches[key]; switch.blockSignals(True)
             switch.setChecked(bool(checked)); switch.blockSignals(False)
+            if key == 'reshanta':
+                self.states[key].setText('Marcadores táticos do Abyss')
+                continue
             if key=='routes':
                 self.states[key].setText('Rota pausada' if self.main.routes.paused and checked else ('Visível' if checked else 'Escolha uma rota'))
                 continue
@@ -172,7 +178,7 @@ class QuickMenu(OverlayVisibilityMixin, QFrame):
                 self.states[key].setText("Aguardando instância")
                 continue
             if key in ('maps','sonar') and checked:
-                running=self.main.sonar.active if key=='sonar' else self.main.overlay.worker is not None
+                running=self.main.sonar.active if key=='sonar' else self.context.prefs.overlay.enabled
                 if not running:
                     self.states[key].setText('Aguardando jogo ou configuração')
                     continue

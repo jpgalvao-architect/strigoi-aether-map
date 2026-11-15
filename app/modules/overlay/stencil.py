@@ -21,22 +21,29 @@ def apply_route_stencil(frame,feature_mask,registration,lines,width,target=None)
 def apply_stencil(frame, feature_mask, registration, points):
     import cv2
     import numpy as np
-    for point in points:
-        x, y, radius = point[:3]
+    if not points:
+        return
+    xy = np.asarray([(point[0], point[1], 1.) for point in points])
+    projected = xy @ registration.matrix.T
+    extents = np.asarray([max(point[2], 2.3*point[4]+.8*point[5]+2)
+                          if len(point) > 5 and point[3] in ('cube-up', 'cube-down') else point[2]
+                          for point in points])
+    h, w = frame.shape[:2]
+    visible = np.flatnonzero((projected[:, 0] >= -extents) & (projected[:, 0] < w+extents)
+                            & (projected[:, 1] >= -extents) & (projected[:, 1] < h+extents))
+    for index in visible:
+        point = points[index]
+        radius = point[2]
         shape = point[3] if len(point) > 3 else 'circle'
-        px, py = registration.project(x, y)
+        px, py = projected[index]
         if shape == 'badge':
-            if -radius <= px < frame.shape[1]+radius and -radius <= py < frame.shape[0]+radius:
-                cx, cy = round(px), round(py)
-                for left, top, right, bottom in point[4]:
-                    cv2.rectangle(frame, (cx+left,cy+top), (cx+right,cy+bottom), (128,128,128), -1)
-                    cv2.rectangle(feature_mask, (cx+left,cy+top), (cx+right,cy+bottom), 0, -1)
+            cx, cy = round(px), round(py)
+            for left, top, right, bottom in point[4]:
+                cv2.rectangle(frame, (cx+left,cy+top), (cx+right,cy+bottom), (128,128,128), -1)
+                cv2.rectangle(feature_mask, (cx+left,cy+top), (cx+right,cy+bottom), 0, -1)
             continue
         base = point[4] if len(point) > 4 else radius
         pen = point[5] if len(point) > 5 else 2
-        extent = max(radius, 2.3*base+pen*.8+2) if shape in ('cube-up', 'cube-down') else radius
-        if not (-extent <= px < frame.shape[1]+extent and -extent <= py < frame.shape[0]+extent):
-            continue
         cx, cy = round(px), round(py)
         for image, color in ((frame, (128,128,128)), (feature_mask, 0)):
             if shape.startswith('cube') or shape == 'diamond':

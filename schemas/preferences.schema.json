@@ -183,6 +183,11 @@
           "title": "Map Id",
           "type": "string"
         },
+        "fallback_map_id": {
+          "default": "",
+          "title": "Fallback Map Id",
+          "type": "string"
+        },
         "calibration": {
           "default": "",
           "title": "Calibration",

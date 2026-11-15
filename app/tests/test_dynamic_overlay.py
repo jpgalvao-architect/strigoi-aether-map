@@ -100,6 +100,7 @@ def test_screen_selection_escape_and_drag(qapp):
 
 def test_overlay_hides_on_first_lost_registration(qapp,tmp_path):
     from app.services.context import AppContext
+    from app.modules.overlay.selection import CaptureArea
     from app.modules.overlay.service import OverlayService
     service=OverlayService(AppContext(tmp_path))
     class Worker:
@@ -107,9 +108,14 @@ def test_overlay_hides_on_first_lost_registration(qapp,tmp_path):
     service.worker=Worker()
     service.context.prefs.overlay.enabled=True
     registration=Registration(np.array([[600.,0,0],[0,600.,0]]),40,.9)
-    service.on_registration(registration,{})
+    screen = qapp.primaryScreen()
+    geom = screen.geometry()
+    area = CaptureArea(map_id='altgard', screen_name=screen.name(), screen_x=geom.x(), screen_y=geom.y(),
+                       screen_width=geom.width(), screen_height=geom.height(), x=0, y=0,
+                       width=geom.width(), height=geom.height(), pixel_ratio=screen.devicePixelRatio())
+    service.on_registration(registration, {'area': area})
     assert not service.window.isVisible()
-    service.on_registration(registration,{})
+    service.on_registration(registration, {'area': area})
     assert service.window.isVisible()
     service.on_registration(None,{})
     assert not service.window.isVisible() and service.window.registration is None

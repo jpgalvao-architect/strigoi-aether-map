@@ -1,44 +1,38 @@
-# Overlay dinâmico • 0.7.0
+# Overlay de mapas
 
-O mapa grande usa automaticamente o monitor escolhido. O minimapa usa uma
-seleção própria do terreno no canto superior direito. Nenhum modo exige
-que você tire screenshots ou mova arquivos. Ativar o minimapa também mantém a busca do mapa grande no mesmo monitor.
-Ambos leem pixels da tela para reconhecer o terreno; as imagens ficam na memória e a captura permanece
-desligada a cada abertura do aplicativo.
+O Azphelumbra reconhece a região pelo terreno capturado e projeta os
+marcadores sobre o mapa original do AION 2. O reconhecimento usa as
+referências raster disponíveis no Atlas, incluindo Altgard, Verteron e
+Lower Reshanta quando a base da região está instalada.
 
-## Usar o mapa grande
+## Configurar e usar
 
-1. Abra o mapa do jogo com **M**, ocupando a tela do monitor escolhido.
-2. Em **Overlay**, escolha **Mapa grande • monitor inteiro**,
-   **Altgard** ou **Verteron**, e o monitor.
-3. Em **Camadas do Atlas**, habilite as categorias desejadas. Elas também
-   podem ser escolhidas no Atlas e combinadas, por exemplo ervas e cubos.
-4. Clique em **Ativar overlay**. O Strigoi minimiza a própria janela,
-   prepara o reconhecimento e mostra os pontos após duas observações válidas.
-5. Ao fechar o mapa ou perder a referência, os pontos são ocultados. Ao
-   reabrir o mapa e reconhecê-lo novamente, os pontos retornam.
+1. Em **Overlay**, escolha o monitor do jogo e mantenha **Minimapa + mapa
+   grande automático**. Use o minimapa retangular com o norte fixo.
+2. Clique em **Selecionar minimapa** e demarque apenas o terreno, sem a
+   barra de título ou a lista de missões. O recorte é salvo para reutilizar
+   em todas as regiões nesse monitor.
+3. Use **Camadas do Atlas** para escolher os recursos e ative o overlay.
+   A linha **Detecção** mostra o mapa reconhecido.
+4. Abra o mapa grande com **M**. O overlay acompanha a região exibida
+   nessa tela. A região física do personagem vem do minimapa e é mantida
+   ao consultar outro mapa. Ao fechar o mapa grande, os marcadores voltam
+   ao minimapa assim que o terreno for reconhecido.
 
-Não é preciso destacar uma área nesse modo. O app verifica a imagem da tela;
-ele não observa a tecla M. Prefira janela sem bordas; fullscreen exclusivo
-pode impedir a captura.
+Quem usa apenas o mapa completo pode selecionar **Mapa grande • monitor
+inteiro** e ativar o overlay sem demarcar um recorte.
 
-## Usar o minimapa
+Na falta de evidência suficiente, o aplicativo mostra **Mapa não identificado**
+e oculta os marcadores de mapa enquanto continua buscando referências.
+Em **Ajustes avançados → Mapa de fallback**, você pode priorizar um mapa na
+busca. Ele ainda precisa corresponder ao terreno antes de exibir pontos.
+**Usar referência fixa de uma imagem** continua disponível para calibrar
+manualmente uma vista de posição e zoom fixos. Escolha o mapa no ajuste de
+fallback antes de abrir a calibração caso nenhuma região esteja reconhecida.
 
-1. Mantenha visível o minimapa **retangular, com norte fixo**.
-2. Escolha **Minimapa + mapa grande automático**, o mapa e o monitor.
-3. Clique em **Selecionar minimapa**. A janela do Strigoi desaparece
-   temporariamente. Arraste um retângulo somente sobre o terreno do minimapa
-   no canto superior direito, sem a barra de título e as missões abaixo.
-4. Solte o mouse para salvar os limites; Esc cancela. Clique em Ativar overlay.
-5. O reconhecimento projeta apenas os pontos dentro do recorte e acompanha
-   o deslocamento do terreno. Ao abrir o mapa grande com M, ele tem prioridade;
-   ao fechar, o overlay retorna ao minimapa. Não é preciso trocar o modo.
-   As seleções do mapa grande e minimapa são separadas.
-
-Refaça a seleção se o minimapa mudar de posição/tamanho, monitor ou DPI.
-Escolha uma área de terreno com detalhes suficientes. A seleção precisa
-ficar dentro de um único monitor. Para parar a captura, retorne ao Strigoi
-e clique em **Desligar overlay**.
+Os controles de camadas e o toggle **Reshanta / Siege** permanecem ativos
+durante as viagens. Objetivos, anéis e pins táticos aparecem enquanto estiver
+visível um mapa reconhecido de Lower Reshanta e a camada tática estiver ligada.
 
 ## Resolução e escala
 
@@ -74,9 +68,10 @@ Sem pontos visíveis no recorte, não há redesenho de ícones e o contador pode
 ficar em zero mesmo com o terreno reconhecido.
 
 A leitura e o reconhecimento são separados do desenho: o minimapa permite
-limite de 10 a 60 leituras/s, e o mapa grande tem teto de 30. Enquanto usa o minimapa, o monitor inteiro é consultado a cada 0,5 segundo
-para procurar o mapa grande. O mapa ativo é revalidado a cada 0,5 segundo; entre verificações, o deslocamento visual é
-acompanhado por fluxo óptico. Uma interpolação curta de 12 ms suaviza as
+limite de 10 a 60 leituras/s, e o mapa grande tem teto de 30. Um recorte do cabeçalho ajuda a procurar
+a abertura do mapa grande sem analisar o monitor inteiro a cada quadro.
+A região ativa é verificada novamente a intervalos. Entre as
+verificações, o deslocamento visual é acompanhado por fluxo óptico. Uma interpolação curta de 12 ms suaviza as
 transformações observadas, sem prever posições futuras. A interface informa
 as duas taxas separadamente. A meta de 240 Hz não significa 240 detecções/s.
 
@@ -98,30 +93,26 @@ o perfil escolhido no Event Tracker e exige o aplicativo aberto.
 
 ## Reconhecimento e recuperação
 
-SIFT e uma transformação robusta comparam o terreno capturado com o mapa
-raster incluído no app. O minimapa usa uma referência mais detalhada e
-refinamento local na resolução original do mapa. Na revalidação, a última
-transformação observada limita a região pesquisada, mas são exigidas novas
-correspondências de terreno: uma referência antiga nunca mantém os pontos
-visíveis se a verificação falhar. A evidência precisa estar distribuída no terreno, com
-correspondências suficientes, escala plausível e norte fixo.
+SIFT e uma transformação de similaridade comparam o terreno capturado
+com as referências cartográficas. A detecção reutiliza o mapa ativo
+enquanto há evidência visual. Após perder o terreno, procura as outras
+referências uma por vez. Uma região nova só é aceita após duas verificações
+cartográficas independentes. O minimapa refina a correspondência pela
+referência de maior resolução. Com falha de observação, os marcadores são
+ocultados até a recuperação. Um movimento visual ainda coerente pode
+cobrir uma falha breve na revalidação do minimapa por até 250 ms depois
+do intervalo normal de verificação.
 
-O fluxo óptico acompanha somente detalhes previamente reconhecidos. A
-primeira falha oculta os pontos; duas observações válidas permitem mostrá-los
-novamente. Um watchdog oculta a janela após 1,5 segundo sem retorno, depois
-que a observação começou. As posições dos próprios ícones são mascaradas na
-leitura para reduzir a interferência do overlay no reconhecimento.
-
-A janela é externa, transparente e deixa os cliques passarem. Não altera
-arquivos ou processos do jogo, observa teclas, deduz a posição do personagem
-ou envia comandos. O modo dinâmico salva apenas um JSON com mapa, monitor,
-DPI e limites. **Usar imagem já existente** preserva a calibração fixa das
-versões anteriores, com posição e zoom fixos.
+Os próprios ícones são mascarados para reduzir a interferência na leitura.
+A janela é externa, transparente e deixa os cliques passarem. O
+reconhecimento lê pixels enquanto o jogo está em primeiro plano e usa
+o mesmo contexto visual que oculta o overlay em menus. Os recortes do
+monitor e as preferências são salvos. A região detectada só vale na sessão.
 
 ## Mapa reconhecido sem pontos
 
 O status informa quando a camada escolhida não tem pontos no recorte. Isso
-é diferente de **Mapa não reconhecido**. No exemplo de Battlescar Mound
+é diferente de **Mapa não identificado**. No exemplo de Battlescar Mound
 enviado pelo usuário, a base contém cinco pontos de outras categorias e
 nenhum cubo naquele recorte. Para testar nessa região, habilite recursos de coleta em **Camadas do Atlas**;
 visitas e exclusões salvas continuam valendo. A seleção de categorias vale
@@ -129,12 +120,8 @@ para Atlas, minimapa e mapa grande, sem um filtro adicional de somente cubos.
 
 ## Limites e sonar
 
-O usuário confirmou pontos no mapa grande da 0.3.0. O novo minimapa foi
-testado com o recorte enviado e captura nativa de uma janela própria; ainda
-precisa de teste dentro do cliente AION 2. Minimapas circulares ou rotativos,
-HDR, mudanças importantes no terreno, fullscreen exclusivo e oclusão podem
-impedir o reconhecimento. Uma imagem do mesmo mapa também pode ser detectada:
-o detector verifica os pixels, não o processo do jogo.
+Minimapas circulares ou rotativos, HDR, mudanças no terreno, fullscreen
+exclusivo e oclusão podem impedir o reconhecimento.
 
 O **Sonar** é ativado separadamente, pela análise do áudio do aplicativo
 escolhido. Os marcadores do overlay continuam vindo do Atlas; não são

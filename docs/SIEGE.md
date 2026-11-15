@@ -1,51 +1,86 @@
 # Siege Command
 
-O Siege Command reúne o mapa de Chaotic Lower Reshanta, o catálogo de anéis e
-o estado da call. A aba usa o mesmo mapa do Atlas para Coletas e Pets. A call
-fica neste computador e **Copiar call** envia texto para a área de transferência.
+O Siege Command é o editor tático de Chaotic Lower Reshanta. O mapa também
+fica disponível no Atlas para consulta de Coletas e Pets.
 
-## Preparar e usar
+## Editar pins
 
-1. O instalador prepara o mapa de Lower Reshanta automaticamente com internet.
-   Depois, o mesmo mapa fica disponível offline no Siege Command e no Atlas.
-   Na versão portátil, ou se a conexão cair na instalação, use **Baixar mapa**
-   no Siege Command.
-2. Em **Catálogo de anéis**, escolha **Importar catálogo local** e abra um
-   [catálogo compatível](../schemas/siege-ring-catalogue.schema.json) com o
-   quadro `Abyss_Reshanta_A/4096-north-up`. Os downloads públicos incluem a
-   lista de pendências por zona. As posições individuais de anéis são
-   importadas à parte.
-3. Em **Call tática**, escolha MID, BOT ou TOP. Selecione um objetivo no
-   mapa ou no seletor. Escolha um anel numerado e a ação desejada. O mapa
-   destaca os alvos e **Copiar call** copia, por exemplo,
-   `REAGRUPAR B3 → ATACAR P7`.
-4. Em **Overlay de siege**, clique em **Ativar no mapa e minimapa**. O app
-   seleciona Lower Reshanta no overlay de mapas. Se for a primeira vez,
-   selecione a área do terreno do minimapa no jogo.
-5. Os marcadores do preset aparecem quando o terreno de Lower Reshanta é
-   reconhecido. Use **M** normalmente para abrir o mapa do jogo e ver os
-   desenhos sobre ele. Ao fechá-lo, os marcadores retornam ao minimapa.
-   Refaça a seleção se o minimapa mudar de área na interface do jogo.
-6. Se quiser o HUD compacto de calls, habilite-o, ajuste escala e opacidade e
-   arraste pelo título. Use **Clique através do HUD** depois de posicioná-lo.
-   Alt+Tab e menus reconhecidos ocultam o HUD.
+1. Abra **Siege Command → Editar pins** e clique em **Adicionar pin**.
+2. Clique no ponto desejado, inclusive sobre a água ou entre ilhas.
+   O primeiro pin no preset oficial cria e seleciona **Minhas marcações**.
+3. Selecione o pin no mapa ou na lista para editar nome, categoria, cor,
+   tamanho e visibilidade. Arraste o pin no mapa para reposicioná-lo.
+   As mudanças são salvas ao concluir cada edição.
+4. Use **Excluir pin** para remover um pin do preset.
+   **Cancelar edição** ou **Esc** abandonam o posicionamento em curso.
 
-**Ilhas** reenquadra a área jogável. **Mapa inteiro** mostra o quadro cartográfico
-completo. Role para ampliar e arraste para deslocar. Os anéis usam o mesmo
-símbolo circular com código abaixo; os demais pontos usam pins. Quando falta
-espaço para os códigos, os objetivos e os anéis de siege têm preferência.
-Os símbolos permanecem ancorados nas coordenadas.
+Use **Ilhas** para enquadrar a área jogável e **Mapa inteiro** para ver toda
+a extensão. Role para ampliar e arraste o terreno para deslocar o mapa.
+Os anéis usam um símbolo circular com código abaixo. Objetivos e marcações
+personalizadas usam pins. Quando falta espaço para um rótulo, os objetivos
+e os anéis de siege têm prioridade.
 
-## Personalizar
+## Ver as marcações no jogo
 
-Duplique **Siege Global v1** em **Camadas e presets** para ajustar cor,
-tamanho, alias, camadas e marcadores. O preset oficial mostra objetivos, anéis
-de siege e anéis de trânsito com posição disponível. O callsign continua
-visível quando você acrescenta um alias. **Restaurar Global** volta às cores e posições
-do preset de referência. O JSON exportado inclui opções do preset, aliases
-e marcadores locais. A instalação que importa o preset precisa do catálogo
-com os mesmos IDs. As posições do catálogo e os registros administrativos
-de calibração ficam em arquivos separados.
+1. Deixe o instalador preparar o mapa de Lower Reshanta com acesso à internet.
+   Depois, o mapa abre offline. Na versão portátil, ou se a conexão cair
+   durante a instalação, use **Baixar mapa** no Siege Command.
+2. Ative **Overlay de Reshanta** no Siege Command ou **Reshanta / Siege**
+   no menu rápido. Os dois controles usam a mesma preferência.
+3. Se for sua primeira configuração, clique em **Selecionar minimapa** e
+   demarque a área de terreno do minimapa no jogo.
+4. Em Lower Reshanta, pressione **M** para ver o mesmo preset sobre o mapa
+   do jogo. Ao fechar o mapa, os marcadores retornam ao minimapa quando
+   o terreno é reconhecido.
+
+O overlay geral mostra as camadas de exploração do mapa reconhecido.
+O controle **Overlay de Reshanta** atua nos objetivos, nos anéis e nos
+pins do preset ativo. A aba **Camadas e presets** controla as categorias
+e a aparência do preset. O modo de mapa com referência fixa usa somente
+a referência importada. O modo automático acompanha a região exibida no jogo.
+
+## Compartilhar marcações
+
+Clique em **Exportar marcações (.json)** no editor para salvar o preset
+ativo. Em outra instalação, use **Importar marcações (.json)**. O programa
+valida e seleciona o preset importado. Se já existir um preset com aquele
+nome, escolha **Importar como novo** para manter ambos ou **Substituir preset**
+para atualizar a cópia com o mesmo nome. O preset oficial é sempre protegido.
+
+A exportação e a importação funcionam offline. O JSON inclui os pins e
+as preferências de visualização do preset. Anéis oficiais, imagens, dados de
+pets e calibrações administrativas têm seus próprios arquivos. Um apelido de
+anel pode ser importado antes do catálogo e passa a aparecer quando o
+respectivo anel estiver disponível.
+
+O [esquema de marcações](../schemas/siege-preset.schema.json) descreve os
+campos aceitos. Use `schema_version` igual a `1`, `map_id` igual a
+`lower-reshanta` e `map_frame` igual a `Abyss_Reshanta_A`. Arquivos antigos
+com versão 1 também são aceitos quando omitem `map_frame`.
+
+- `name` identifica o preset. `layers` controla as camadas desenhadas.
+  Inclua `CustomMarkers` para mostrar os pins.
+- Cada entrada em `markers` tem um `id` único dentro do preset começando
+  com `local-`, um `name` e uma `position` com `x` e `y` numéricos
+  entre 0 e 1. A origem fica no canto superior esquerdo do quadro.
+  Mantenha o ID ao editar ou compartilhar novas revisões do mesmo pin.
+- `color` usa `#RRGGBB` ou `null` para herdar a cor da camada. `scale`
+  multiplica o tamanho do preset entre 0,65 e 1,8. `category` é um nome
+  livre com até 32 caracteres. `visible` indica se o pin aparece.
+- `colors`, `marker_scale`, `aliases` e `use_local_calibration` guardam
+  as preferências de camada, tamanho, apelidos e uso de calibração local.
+
+## Configurar anéis e camadas
+
+**Siege Global v1** mostra os 12 objetivos e os anéis com posição
+disponível. Em **Camadas e presets**, duplique o preset para ajustar cores,
+tamanho, camadas e apelidos. **Restaurar Global** volta ao preset oficial.
+
+Em **Catálogo de anéis**, use **Importar catálogo local** com um
+[catálogo compatível](../schemas/siege-ring-catalogue.schema.json) no
+quadro `Abyss_Reshanta_A/4096-north-up`. Os downloads públicos incluem
+a lista de pendências por zona. As posições individuais de anéis são
+importadas à parte.
 
 Para calibrar um anel, abra **Catálogo de anéis**, escolha o registro, clique
 em **Posicionar no mapa** e selecione a posição conferida. Ajuste X e Y se
@@ -54,7 +89,7 @@ da revisão. Salve e habilite **Aplicar calibrações locais** no preset
 personalizado. Use **Restaurar posição do anel** para remover o ajuste local.
 
 Um anel pendente fica no catálogo sem marcador. Um ponto provisório fica
-pontilhado e indisponível na call. **Fixar novos callsigns** numera os anéis
+pontilhado no mapa. **Fixar novos callsigns** numera os anéis
 conferidos que ainda não têm código, conservando todos os códigos anteriores.
 A ordenação inicial considera faixas de 8 px de norte a sul e posições de
 oeste a leste na mesma faixa. Uma importação posterior pode acrescentar IDs.
@@ -120,11 +155,10 @@ Os contratos de importação ficam em [schemas](../schemas).
 
 ## Arquitetura
 
-`SiegeService` mantém presets, ajustes de anéis e HUD em
-`siege-command.json`. O mapa e o catálogo local ficam em arquivos separados.
-O serviço publica `call_changed` com um estado imutável para uso por outros
-componentes. As camadas do preset alimentam a janela transparente de mapas
-do Azphelumbra. O reconhecimento visual alterna entre o minimapa e o mapa
-grande e recalcula a projeção conforme o terreno muda de posição ou zoom.
-Uma mudança de resolução ou DPI recalcula a área de captura a partir da seleção
-salva. A aba Siege Command continua disponível para planejamento e presets.
+`SiegeService` salva presets, ajustes de anéis e a preferência do overlay
+em `siege-command.json`. O mapa e o catálogo local ficam em arquivos
+separados. O reconhecimento reutiliza a janela transparente do overlay geral
+e projeta as coordenadas normalizadas no minimapa e no mapa aberto com M.
+Uma mudança de resolução ou DPI recalcula a área de captura a partir da
+seleção salva. O código e os dados de Call tática e HUD compacto ficam
+preservados para uso futuro.

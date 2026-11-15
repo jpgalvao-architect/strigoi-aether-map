@@ -4,9 +4,10 @@ import math
 
 
 class FastMapTracker:
-    def __init__(self, reference, *, interval=.5):
+    def __init__(self, reference, *, interval=.5, flow_grace=0.):
         self.reference = reference
         self.interval = interval
+        self.flow_grace = flow_grace
         self.last_verified = -float('inf')
         self.registration = None
         self.previous = None
@@ -24,6 +25,7 @@ class FastMapTracker:
         small=cv2.resize(gray,(round(w*factor),round(h*factor)),interpolation=cv2.INTER_AREA) if factor<1 else gray
         mask=cv2.resize(feature_mask,(small.shape[1],small.shape[0]),interpolation=cv2.INTER_NEAREST) if feature_mask is not None else None
         verification_due = now-self.last_verified >= self.interval
+        motion = None
         if self.registration is not None and (self.reference.minimap or not verification_due):
             # Move the search hint into this frame BEFORE reference verification.
             # Comparing today's terrain to yesterday's camera rejects ordinary
@@ -36,6 +38,8 @@ class FastMapTracker:
         registration=self.reference.find(image,minimum=minimum,feature_mask=feature_mask,
             hint=self.registration if self.reference.minimap else None)
         if registration is None:
+            if motion is not None and now-self.last_verified < self.interval+self.flow_grace:
+                return motion, 'flow'
             self.reset()
             return None,'search'
         self.registration=registration

@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Validated data contract. Coordinates use [0, 1], origin at the top left."""
+from dataclasses import dataclass
 from datetime import datetime, time
 from typing import Literal
 from zoneinfo import ZoneInfo
@@ -205,6 +206,13 @@ class NotificationSettings(Model):
         return sorted(set(value))
 
 
+@dataclass(frozen=True)
+class MapLocation:
+    region_id: str | None = None
+    display_id: str | None = None
+    view: Literal['large', 'minimap'] | None = None
+
+
 class OverlaySettings(Model):
     controls_position: tuple[int,int] | None = None
     enabled: bool = False
@@ -213,7 +221,8 @@ class OverlaySettings(Model):
     scale: float = Field(default=1.0, ge=0.5, le=3)
     threshold: float = Field(default=0.96, ge=0.8, le=1)
     monitor: int = Field(default=1, ge=1, le=16)
-    map_id: str = "altgard"
+    map_id: str = "altgard"  # Previous map and fixed calibration identifier.
+    fallback_map_id: str = ""
     calibration: str = ""
     capture_area: str = ""
     tracking_mode: Literal["dynamic", "fixed"] = "dynamic"

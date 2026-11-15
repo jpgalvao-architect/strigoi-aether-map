@@ -363,5 +363,19 @@
   "Aguardando o jogo para retomar o overlay": "Waiting for the game to resume the overlay",
   "Aguardando o jogo para retomar o sonar": "Waiting for the game to resume Sonar",
   "Selecione o minimapa para retomar o overlay": "Select the minimap to resume the overlay",
-  "O áudio é analisado neste computador e não é gravado. Sua escolha de ativação fica salva; o sonar aguarda o jogo para retomar.": "Audio is analyzed on this PC and is not recorded. Your activation choice is saved; Sonar waits for the game before resuming."
+  "O áudio é analisado neste computador e não é gravado. Sua escolha de ativação fica salva; o sonar aguarda o jogo para retomar.": "Audio is analyzed on this PC and is not recorded. Your activation choice is saved; Sonar waits for the game before resuming.",
+  "Escolha a tela. Para usar o minimapa, selecione somente a área do terreno uma vez.": "Choose the display. To use the minimap, select its terrain once.",
+  "Detecção": "Detection",
+  "Mapa não identificado": "Map unidentified",
+  "Captura pausada": "Capture paused",
+  "Automático": "Automatic",
+  "Referência fixa": "Fixed reference",
+  "Região do personagem": "Character region",
+  "Mapa de fallback": "Fallback map",
+  "Nenhum • automático": "None · automatic",
+  "O fallback prioriza o mapa escolhido durante a busca. Os marcadores aparecem após a confirmação do terreno.": "The fallback map is checked first during a search. Markers appear once the terrain is confirmed.",
+  "Ver região atual": "View current region",
+  "Escolha um mapa de fallback para calibrar a referência fixa.": "Choose a fallback map to calibrate a fixed reference.",
+  "Este mapa não tem referência para o overlay de rotas.": "This map has no reference for the route overlay.",
+  "Nenhum mapa com referência visual está disponível.": "No map with a visual reference is available."
 }

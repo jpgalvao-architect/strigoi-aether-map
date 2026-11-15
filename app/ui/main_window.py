@@ -125,10 +125,11 @@ class MainWindow(QMainWindow):
         self.routine_page = RoutinePage(context,self.routine)
         from app.ui.routes_page import RoutesPage
         self.routes_page=RoutesPage(context,self.routes,self.start_route_overlay,self.overlay)
-        from app.ui.siege_overlay import SiegeOverlay
         from app.ui.siege_page import SiegePage
-        self.siege_overlay = SiegeOverlay(self, runtime=runtime)
-        self.siege_page = SiegePage(context, self.start_siege_overlay, self.siege_overlay.configure_shortcut)
+        self.siege_page = SiegePage(
+            context, self.toggle_reshanta, self.setup_reshanta_minimap,
+            lambda: self.overlay.selected_minimap(context.siege.definition.id) is not None,
+        )
         self.atlas.route_requested.connect(self.show_route_target)
         self.cubes.route_requested.connect(self.show_route_target)
         self.catalog.route_requested.connect(self.show_route_target)
@@ -188,7 +189,8 @@ class MainWindow(QMainWindow):
                                  (self.map_controls, 'hud'),
                                  (self.quick_menu, 'hud'), (self.quick_menu.panel, 'hud')]:
                 self.overlay_visibility.register(window, role)
-            self.siege_overlay.bind_visibility(self.overlay_visibility)
+            self.overlay.set_capture_context(False, 'play')
+            self.overlay_visibility.context_changed.connect(self.overlay.set_capture_context)
             self.overlay_visibility.start()
             QTimer.singleShot(0, self.combat.enable_automatic)
             QTimer.singleShot(0, self.pets.enable_automatic)
@@ -218,54 +220,55 @@ class MainWindow(QMainWindow):
 
     def start_route_overlay(self):
         map_id=self.routes.route.map_id
-        if not any(m.id == map_id for m in self.context.dataset.maps):
-            self.statusBar().showMessage('Lower Reshanta oferece rotas no Atlas e mapa tático no Siege Command.', 7000)
+        if map_id not in dict(self.overlay.references()):
+            self.statusBar().showMessage('Este mapa não tem referência para o overlay de rotas.', 7000)
             return
-        page=self.overlay_page
-        if self.context.prefs.overlay.enabled and (self.context.prefs.overlay.map_id!=map_id or self.context.prefs.overlay.tracking_mode!='dynamic' or self.context.prefs.overlay.map_view!='minimap'):self.overlay.stop()
-        self.context.prefs.overlay.tracking_mode='dynamic'
-        self.context.prefs.overlay.map_id=map_id
-        page.maps.setCurrentIndex(page.maps.findData(map_id))
-        if self.context.prefs.overlay.enabled:return
-        page.view_kind.setCurrentIndex(page.view_kind.findData('minimap'))
-        if not self.context.prefs.overlay.minimap_area:
-            self.navigate('overlay');page.select_area();return
-        page.start()
-        if not self.context.prefs.overlay.enabled:self.navigate('overlay')
-
-    def start_siege_overlay(self):
-        from app.modules.siege.models import MAP_ID
-        self.context.siege.update_overlay(map_markers=True)
         page = self.overlay_page
         prefs = self.context.prefs.overlay
         if prefs.enabled:
-            if prefs.map_id == MAP_ID and prefs.map_view == 'minimap' and prefs.tracking_mode == 'dynamic':
-                self.navigate('overlay')
+            if prefs.tracking_mode == 'dynamic' and prefs.map_view == 'minimap':
                 return
             self.overlay.stop()
-        self.navigate('overlay')
-        page.maps.setCurrentIndex(page.maps.findData(MAP_ID))
         page.view_kind.setCurrentIndex(page.view_kind.findData('minimap'))
+        if not self.context.prefs.overlay.minimap_area:
+            self.navigate('overlay');page.select_area(activate_after=True);return
         page.start()
+        if not self.context.prefs.overlay.enabled:self.navigate('overlay')
+
+    def toggle_reshanta(self, enabled):
+        try:
+            self.context.siege.update_overlay(map_markers=enabled)
+            self.overlay.refresh_siege_layer()
+            if enabled and self.context.siege.definition is None:
+                self.statusBar().showMessage('Baixe o mapa de Lower Reshanta no Siege Command.', 8000)
+            elif enabled and self.overlay.selected_minimap(self.context.siege.definition.id) is None:
+                self.statusBar().showMessage('Selecione o minimapa no Siege Command para ver os pins durante o jogo.', 8000)
+        except (OSError, ValueError) as exc:
+            self.statusBar().showMessage(str(exc), 8000)
+        self.siege_page.refresh()
+        self.quick_menu.refresh()
+
+    def setup_reshanta_minimap(self):
+        self.overlay_page.select_area(for_siege=True)
 
     def show_route_target(self,map_id,resource_id):
         self.routes_page.choose_resource(map_id,resource_id);self.navigate('routes')
 
     def show_pet_route(self,pet_id):
         resource=f'pet-{pet_id}'
-        maps=[p.map_id for p in self.context.atlas_dataset.all_points if p.resource_id==resource]
-        if maps:self.show_route_target(self.context.prefs.map_id if self.context.prefs.map_id in maps else maps[0],resource)
+        maps = [p.map_id for p in self.context.atlas_dataset.all_points if p.resource_id == resource]
+        if maps:
+            preferred = (self.context.map_location.region_id, self.context.prefs.map_id)
+            self.show_route_target(next((map_id for map_id in preferred if map_id in maps), maps[0]), resource)
 
     def show_pet_farm(self, pet_id):
         candidates = self.pets.farm.by_pet.get(pet_id, [])
         maps = {m.id for m in self.context.atlas_dataset.maps}
-        site = next((s for s in candidates if s.map_id == self.context.prefs.map_id),
+        site = next((s for s in candidates if s.map_id == (self.context.map_location.region_id or self.context.prefs.map_id)),
                     next((s for s in candidates if s.map_id in maps), None))
         if site is None:
             return
         self.context.prefs.map_id = site.map_id
-        if any(definition.id == site.map_id for definition in self.context.dataset.maps):
-            self.context.prefs.overlay.map_id = site.map_id
         self.context.prefs.pets.focus_id = pet_id
         self.context.prefs.pets.map_filter = 'all'
         self.context.prefs.disabled_categories.discard('pets')
@@ -340,7 +343,6 @@ class MainWindow(QMainWindow):
         if self.module_resume:self.module_resume.shutdown()
         if self.overlay_visibility: self.overlay_visibility.shutdown()
         self.siege_page.shutdown()
-        self.siege_overlay.shutdown()
         self.quick_menu.shutdown()
         self.pet_panel.shutdown()
         self.routine_panel.shutdown()

@@ -119,8 +119,10 @@ def test_altgard_default_picklists_and_saved_choice(qapp,tmp_path):
     from app.ui.main_window import MainWindow
     context=AppContext(tmp_path)
     window=MainWindow(context)
-    for combo in [window.atlas.maps,window.cubes.maps,window.catalog.map_combo,window.overlay_page.maps]:
+    for combo in [window.atlas.maps,window.cubes.maps,window.catalog.map_combo]:
         assert combo.currentData()=='altgard'
+    assert window.overlay_page.maps.currentData() == ''
+    assert window.overlay_page.map_status.text() == 'Mapa não identificado'
     assert window.atlas.view.map.image=='maps/altgard-world.webp'
     assert window.atlas.view._markers
     # Changing a default is retained on future launches, rather than being forced every time.

@@ -111,7 +111,7 @@ def main() -> int:
                     logging.info('SMOKE_ROUTES_OK: real atlas route generated; no live capture')
                     assert len(window.context.siege.objectives) == 12
                     assert len(window.context.siege.data.rings) == 49 and window.context.siege.rings
-                    assert not window.siege_overlay.hud.isVisible() and not window.overlay.window.isVisible()
+                    assert not hasattr(window, 'siege_overlay') and not window.overlay.window.isVisible()
                     from app.modules.siege.markers import markers_for
                     from app.modules.siege.models import OFFICIAL
                     siege = window.context.siege

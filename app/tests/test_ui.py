@@ -64,7 +64,9 @@ def test_invalid_import_preserves_data(qapp, tmp_path):
 
 
 def test_import_copies_external_map_and_stops_overlay(qapp, tmp_path):
+    from threading import Event
     from PySide6.QtGui import QColor, QImage
+    from app.modules.overlay.service import OverlayService
     context = AppContext(tmp_path / "user-data")
     image_path = tmp_path / "custom.png"
     image = QImage(400, 300, QImage.Format.Format_RGB32)
@@ -74,12 +76,31 @@ def test_import_copies_external_map_and_stops_overlay(qapp, tmp_path):
     dataset.maps[0].image = "custom.png"
     source = tmp_path / "custom.json"
     atomic_json(source, dataset)
+    class Worker:
+        def __init__(self):
+            self.stop_event = Event()
+
+        def wait(self):
+            assert self.stop_event.is_set()
+
+        def deleteLater(self):
+            pass
+
+    service = OverlayService(context)
+    worker = Worker()
+    service.worker = worker
     context.prefs.overlay.enabled = True
-    context.import_dataset(source)
-    copied = Path(context.dataset.maps[0].image)
-    assert copied != image_path and copied.is_file()
-    assert copied.read_bytes() == image_path.read_bytes()
-    assert not context.prefs.overlay.enabled
+    service.window.show()
+    try:
+        context.import_dataset(source)
+        copied = Path(context.dataset.maps[0].image)
+        assert copied != image_path and copied.is_file()
+        assert copied.read_bytes() == image_path.read_bytes()
+        assert not context.prefs.overlay.enabled
+        assert service.worker is None and worker.stop_event.is_set() and not service.window.isVisible()
+    finally:
+        service.stop()
+        service.watchdog.stop()
 
 
 def test_overlay_disappears_and_stale_watchdog(qapp, tmp_path, monkeypatch):

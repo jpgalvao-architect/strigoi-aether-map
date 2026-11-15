@@ -8,7 +8,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal
 
-from app.core.models import Dataset, EventFeed, Preferences
+from app.core.models import Dataset, EventFeed, MapLocation, Preferences
 from app.infrastructure.storage import PACKAGE, atomic_json, load_model, recover_model, resolve_map_image
 from app.modules.notifications.service import AlertEngine
 
@@ -16,7 +16,13 @@ from app.modules.notifications.service import AlertEngine
 class AppContext(QObject):
     changed = Signal()
     events_changed = Signal()
+    map_location_changed = Signal(object)
     error = Signal(str)
+
+    def set_map_location(self, location):
+        if self.map_location != location:
+            self.map_location = location
+            self.map_location_changed.emit(location)
 
     @property
     def calendar_events(self):
@@ -47,6 +53,7 @@ class AppContext(QObject):
     def __init__(self, directory: Path):
         super().__init__()
         self.directory = directory
+        self.map_location = MapLocation()
         directory.mkdir(parents=True, exist_ok=True)
         self.messages: list[str] = []
         self.prefs, warning = recover_model(directory / "preferences.json", Preferences, load_model(PACKAGE / "config/defaults.json", Preferences))

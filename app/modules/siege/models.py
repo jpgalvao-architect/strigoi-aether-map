@@ -2,7 +2,7 @@
 import re
 from typing import Literal
 
-from pydantic import Field, FiniteFloat, model_validator
+from pydantic import Field, FiniteFloat, field_validator, model_validator
 
 from app.core.models import Model
 
@@ -37,8 +37,8 @@ SOURCE_MAX = 420
 
 
 class Coordinate(Model):
-    x: float = Field(ge=0, le=1)
-    y: float = Field(ge=0, le=1)
+    x: float = Field(ge=0, le=1, strict=True)
+    y: float = Field(ge=0, le=1, strict=True)
 
 
 class Objective(Model):
@@ -116,11 +116,26 @@ class CustomMarker(Model):
     id: str = Field(pattern=r'^local-[a-z0-9-]+$', max_length=100)
     name: str = Field(min_length=1, max_length=60)
     position: Coordinate
+    color: str | None = Field(default=None, pattern=r'^#[0-9a-fA-F]{6}$')
+    scale: float = Field(default=1., ge=.65, le=1.8)
+    category: str = Field(default='Tático', min_length=1, max_length=32)
+    visible: bool = Field(default=True, strict=True)
+
+    @field_validator('name', 'category')
+    @classmethod
+    def clean_text(cls, value):
+        value = value.strip()
+        if not value or not value.isprintable():
+            raise ValueError('Texto de pin inválido')
+        return value
 
 
 class Preset(Model):
+    model_config = Model.model_config | {'json_schema_extra': {'required': ['schema_version', 'map_id', 'name']}}
+
     schema_version: Literal[1] = 1
     map_id: Literal['lower-reshanta'] = MAP_ID
+    map_frame: Literal['Abyss_Reshanta_A'] = 'Abyss_Reshanta_A'
     name: str = Field(min_length=1, max_length=70)
     layers: set[Layer] = Field(default_factory=lambda: {'SiegeObjectives', 'SiegeRings'})
     colors: dict[Layer, str] = Field(default_factory=dict)
@@ -129,10 +144,19 @@ class Preset(Model):
     aliases: dict[str, str] = Field(default_factory=dict, max_length=250)
     markers: list[CustomMarker] = Field(default_factory=list, max_length=150)
 
+    @field_validator('schema_version', mode='before')
+    @classmethod
+    def validate_version(cls, value):
+        if type(value) is not int:
+            raise ValueError('Versão de marcações inválida')
+        return value
+
     @model_validator(mode='after')
     def check_customizations(self):
         if any(not re.fullmatch(r'#[0-9a-fA-F]{6}', color) for color in self.colors.values()):
             raise ValueError('Cor de marcador inválida')
+        if any(not re.fullmatch(r'ring-[a-z0-9-]{1,95}', key) for key in self.aliases):
+            raise ValueError('Identificador de anel inválido')
         if any(not alias.strip() or len(alias) > 36 or not alias.isprintable()
                for alias in self.aliases.values()):
             raise ValueError('Apelido inválido')
@@ -151,7 +175,7 @@ class TacticalCall(Model):
 
 
 class OverlayOptions(Model):
-    map_markers: bool = True
+    map_markers: bool = False
     visible: bool = False
     locked: bool = False
     opacity: float = Field(default=.94, ge=.25, le=1)
@@ -164,7 +188,9 @@ class OverlayOptions(Model):
     def migrate_map_shortcut(cls, settings):
         # Previous previews stored a shortcut for a separate map window.
         if isinstance(settings, dict) and 'map_shortcut' in settings:
-            return {key: value for key, value in settings.items() if key != 'map_shortcut'}
+            migrated = {key: value for key, value in settings.items() if key != 'map_shortcut'}
+            migrated.setdefault('map_markers', True)
+            return migrated
         return settings
 
 

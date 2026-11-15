@@ -44,7 +44,8 @@ def test_atlas_menu_updates_all_overlay_modes_without_extra_cube_filter(qapp,tmp
         # Historical settings must no longer veto checked Atlas categories.
         context.prefs.overlay.layers='cubes'
         for mode in ['large','minimap']:
-            context.prefs.overlay.map_view=mode;service.sync()
+            context.prefs.overlay.map_view = mode
+            service.update_location('altgard', mode, observe_minimap=mode == 'minimap')
             expected=filter_points(context.dataset,context.prefs,FilterQuery(map_id='altgard',overlay=True))
             assert len(service.window.markers)==len(expected)
             assert {categories[p.resource_id] for p in expected}=={herb,'cubes'}

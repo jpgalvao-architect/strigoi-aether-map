@@ -4,12 +4,12 @@ from html import escape
 
 from PySide6.QtCore import QPointF, QRectF, Qt, Signal
 from PySide6.QtGui import QColor, QPainterPath, QPen, QBrush
-from PySide6.QtWidgets import QGraphicsItem
+from PySide6.QtWidgets import QApplication, QGraphicsItem
 
 from app.core.i18n import tr
 from app.modules.atlas.view import AtlasView
 from app.modules.overlay.badges import label_indices
-from app.modules.siege.markers import badge_for
+from app.modules.siege.markers import badge_for, pin_badge
 from app.modules.siege.models import COLORS, MAP_ID, SECTORS, Coordinate
 
 # Initial view frames the islands. Full extent remains available via Fit map.
@@ -17,11 +17,12 @@ ISLANDS = (.295, .310, .47, .365)
 
 
 class TacticalMarker(QGraphicsItem):
-    def __init__(self, badge, color, tooltip, callback=None):
+    def __init__(self, badge, color, tooltip, callback=None, *, pin_id=None):
         super().__init__()
         self.badge = badge
         self.color = color
         self.callback = callback
+        self.pin_id = pin_id
         self.draw_label = True
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
         self.setZValue(30 if badge.selected else 10 + badge.priority)
@@ -59,9 +60,11 @@ class TacticalMarker(QGraphicsItem):
 
 
 class SiegeMapView(AtlasView):
-    objective_selected = Signal(int)
     ring_selected = Signal(str)
     coordinate_selected = Signal(object)
+    pin_selected = Signal(str)
+    pin_moved = Signal(str, object)
+    editing_cancelled = Signal()
 
     def __init__(self, context):
         super().__init__()
@@ -69,6 +72,9 @@ class SiegeMapView(AtlasView):
         self.service = context.siege
         self.tactical_items = []
         self.placement = False
+        self.editing_pins = True
+        self.selected_pin = None
+        self.drag = None
         self.exploration = False
         self.frames = {}
         self.badges = []
@@ -140,6 +146,7 @@ class SiegeMapView(AtlasView):
         definition = self.service.definition
         if definition is None:
             return
+        self.cancel_drag()
         self.badges.clear()
         if self.map is not definition:
             self.set_map(definition)
@@ -147,7 +154,7 @@ class SiegeMapView(AtlasView):
         for item in self.tactical_items:
             self.scene().removeItem(item)
         self.tactical_items.clear()
-        preset, call = self.service.preset, self.service.call
+        preset = self.service.preset
         colors = COLORS | preset.colors
         self.frames = {}
         for sector, name in SECTORS.items():
@@ -160,7 +167,7 @@ class SiegeMapView(AtlasView):
                 continue
             color = QColor(colors['SiegeObjectives'])
             fill = QColor(color)
-            fill.setAlpha(32 if sector == call.sector else 14)
+            fill.setAlpha(14)
             border = QPen(color, 2)
             border.setCosmetic(True)
             border.setStyle(Qt.DashLine)
@@ -172,11 +179,8 @@ class SiegeMapView(AtlasView):
                 if objective.status == 'reference':
                     tooltip += '\n' + tr('Posição transcrita da referência visual; validação em jogo pendente.')
                 badge = badge_for('SiegeObjectives', objective.code, preset.marker_scale,
-                                  selected=call.objective == objective.number,
                                   provisional=objective.status != 'verified')
-                self._add(TacticalMarker(badge, colors['SiegeObjectives'], tooltip,
-                                         lambda n=objective.number: self.objective_selected.emit(n)),
-                          objective.map_position)
+                self._add(TacticalMarker(badge, colors['SiegeObjectives'], tooltip), objective.map_position)
         for ring in self.service.rings.values():
             position = self.service.position(ring)
             layer = 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
@@ -190,16 +194,22 @@ class SiegeMapView(AtlasView):
                 if coordinates:
                     note += f'\nX {coordinates[0]:.2f} · Y {coordinates[1]:.2f}'
                 badge = badge_for(layer, code or '?', preset.marker_scale,
-                                  selected=call.ring_id == ring.ring_id,
                                   provisional=position.status == 'provisional')
                 self._add(TacticalMarker(badge, colors[layer], note,
                                          lambda key=ring.ring_id: self.ring_selected.emit(key)),
                           position.map_position)
 
-        if 'CustomMarkers' in preset.layers:
-            for marker in preset.markers:
-                badge = badge_for('CustomMarkers', marker.name[:4], preset.marker_scale)
-                self._add(TacticalMarker(badge, colors['CustomMarkers'], marker.name), marker.position)
+        for marker in preset.markers:
+            selected = self.editing_pins and marker.id == self.selected_pin
+            visible = marker.visible and 'CustomMarkers' in preset.layers
+            if visible or selected:
+                badge = pin_badge(marker, preset, selected=selected)
+                category = tr('Tático') if marker.category == 'Tático' else marker.category
+                item = TacticalMarker(badge, marker.color or colors['CustomMarkers'],
+                                      f'{marker.name} · {category}', pin_id=marker.id)
+                if not visible:
+                    item.setOpacity(.6)
+                self._add(item, marker.position)
         self._refresh_exploration(preset, colors)
         self.position_badges()
 
@@ -220,17 +230,79 @@ class SiegeMapView(AtlasView):
     def pick_position(self, enabled):
         self.placement = enabled
         self.viewport().setCursor(Qt.CrossCursor if enabled else Qt.ArrowCursor)
+        if enabled:
+            self.setFocus()
+
+    def select_pin(self, marker_id):
+        self.selected_pin = marker_id
+        self.refresh()
+
+    def cancel_drag(self):
+        if self.drag:
+            _, item, _, initial, _ = self.drag
+            item.setPos(initial)
+            self.drag = None
+            self.position_badges()
 
     def mousePressEvent(self, event):
-        if self.placement and self.map:
-            if event.button() == Qt.RightButton:
-                self.coordinate_selected.emit(None)
+        if self.map:
+            if event.button() == Qt.RightButton and (self.placement or self.drag):
+                self.editing_cancelled.emit()
                 event.accept()
                 return
             if event.button() == Qt.LeftButton:
-                point = self.mapToScene(event.position().toPoint())
-                if self.sceneRect().contains(point):
-                    self.coordinate_selected.emit(Coordinate(x=point.x()/self.map.width, y=point.y()/self.map.height))
-                event.accept()
-                return
+                cursor = event.position().toPoint()
+                point = self.mapToScene(cursor)
+                if self.placement:
+                    if 0 <= point.x() <= self.map.width and 0 <= point.y() <= self.map.height:
+                        self.coordinate_selected.emit(self._coordinate(point))
+                    event.accept()
+                    return
+                if self.editing_pins:
+                    pin = next((item for item in self.items(cursor)
+                                if isinstance(item, TacticalMarker) and item.pin_id), None)
+                    if pin is not None:
+                        marker_id = pin.pin_id
+                        self.select_pin(marker_id)
+                        pin = next(item for item in self.badges if item.pin_id == marker_id)
+                        self.pin_selected.emit(marker_id)
+                        self.drag = (cursor, pin, point, pin.pos(), False)
+                        event.accept()
+                        return
         super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        if self.drag:
+            cursor, item, start, initial, moved = self.drag
+            pointer = event.position().toPoint()
+            if moved or (pointer-cursor).manhattanLength() >= QApplication.startDragDistance():
+                point = initial + self.mapToScene(pointer) - start
+                coordinate = self._coordinate(point)
+                item.setPos(self._at(coordinate))
+                self.drag = (cursor, item, start, initial, True)
+                self.position_badges()
+            event.accept()
+            return
+        super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        if self.drag and event.button() == Qt.LeftButton:
+            self.mouseMoveEvent(event)
+            _, item, _, initial, moved = self.drag
+            self.drag = None
+            if moved and item.pos() != initial:
+                self.pin_moved.emit(item.pin_id, self._coordinate(item.pos()))
+            event.accept()
+            return
+        super().mouseReleaseEvent(event)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape and (self.placement or self.drag or self.selected_pin):
+            self.editing_cancelled.emit()
+            event.accept()
+            return
+        super().keyPressEvent(event)
+
+    def _coordinate(self, point):
+        return Coordinate(x=max(0., min(1., point.x()/self.map.width)),
+                          y=max(0., min(1., point.y()/self.map.height)))

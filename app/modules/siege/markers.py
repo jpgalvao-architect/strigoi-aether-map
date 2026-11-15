@@ -13,37 +13,43 @@ def badge_for(layer, caption, scale, *, selected=False, provisional=False):
                  ring=ring, priority=priority, size=size, pin_code=objective)
 
 
-def markers_for(siege, dataset):
-    preset, call = siege.preset, siege.call
+def pin_badge(marker, preset, *, selected=False):
+    caption = marker.name if len(marker.name) <= 12 else marker.name[:11] + '…'
+    return badge_for('CustomMarkers', caption, preset.marker_scale * marker.scale, selected=selected)
+
+
+def markers_for(siege, dataset, *, tactical=True, exploration=True):
+    preset = siege.preset
     colors = COLORS | preset.colors
 
-    def badge(position, layer, caption, *, selected=False, provisional=False):
+    def badge(position, layer, caption, *, provisional=False):
         return (position.x, position.y, colors[layer],
-                badge_for(layer, caption, preset.marker_scale, selected=selected, provisional=provisional))
+                badge_for(layer, caption, preset.marker_scale, provisional=provisional))
 
     markers = []
-    if preset.layers & {'Pets', 'Gathering'}:
+    if exploration and preset.layers & {'Pets', 'Gathering'}:
         resources = {resource.id: resource for resource in dataset.resources}
         for point in dataset.points:
             if point.map_id == MAP_ID and point.enabled:
                 layer = 'Pets' if resources[point.resource_id].category == 'pets' else 'Gathering'
                 if layer in preset.layers:
                     markers.append((point.x, point.y, colors[layer], badge_for(layer, '', preset.marker_scale)))
+    if not tactical:
+        return markers
     if 'CustomMarkers' in preset.layers:
-        markers.extend(badge(marker.position, 'CustomMarkers', marker.name[:4]) for marker in preset.markers)
+        markers.extend((marker.position.x, marker.position.y, marker.color or colors['CustomMarkers'],
+                        pin_badge(marker, preset)) for marker in preset.markers if marker.visible)
     for ring in siege.rings.values():
         layer = 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
         if layer not in preset.layers:
             continue
         position = siege.position(ring)
         if position is not None:
-            provisional = position.status == 'provisional'
             markers.append(badge(position.map_position, layer, siege.ring_code(ring) or '?',
-                                 selected=call.ring_id == ring.ring_id, provisional=provisional))
+                                 provisional=position.status == 'provisional'))
     if 'SiegeObjectives' in preset.layers:
         markers.extend(badge(objective.map_position, 'SiegeObjectives', objective.code,
-                             selected=call.objective == objective.number, provisional=objective.status != 'verified')
+                             provisional=objective.status != 'verified')
                        for objective in siege.objectives.values())
-    # Keep the current tactical call above neighboring points.
-    markers.sort(key=lambda marker: (marker[3].selected, marker[3].priority))
+    markers.sort(key=lambda marker: marker[3].priority)
     return markers
