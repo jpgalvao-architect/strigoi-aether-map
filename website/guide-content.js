@@ -500,8 +500,8 @@ window.StrigoiGuide = {
         "en_US": "Map and minimap"
       },
       "description": {
-        "pt_BR": "Selecione o terreno uma vez e acompanhe os dois mapas.",
-        "en_US": "Select terrain once and track both maps."
+        "pt_BR": "Selecione o terreno uma vez e viaje entre regiões com as mesmas camadas.",
+        "en_US": "Select the terrain once and keep your layers as you travel between regions."
       },
       "image": "overlay",
       "steps": [
@@ -511,12 +511,12 @@ window.StrigoiGuide = {
             "en_US": "Choose mode and monitor"
           },
           "where": {
-            "pt_BR": "Overlay → Modo, Mapa e Monitor",
-            "en_US": "Overlay → Mode, Map, and Monitor"
+            "pt_BR": "Overlay → Modo e Monitor",
+            "en_US": "Overlay → Mode and Monitor"
           },
           "body": {
-            "pt_BR": "Minimapa + mapa grande automático é o padrão em novas instalações. Com o jogo aberto, confira o mapa e o monitor. O minimapa suportado é retangular, com norte fixo.",
-            "en_US": "Minimap + automatic full map is the default for new installations. With the game open, check the map and monitor. The supported minimap is rectangular with north fixed."
+            "pt_BR": "Escolha o monitor do jogo e mantenha Minimapa + mapa grande automático. Selecione o recorte do minimapa retangular, com norte fixo. A linha Detecção mostra a região reconhecida.",
+            "en_US": "Choose the game monitor and keep Minimap + automatic full map enabled. Select the rectangular, north-up minimap area. Detection shows the recognized region."
           },
           "tip": {
             "pt_BR": "Para usar só o mapa grande, escolha Mapa grande • monitor inteiro. Nesse modo não precisa selecionar uma área.",
@@ -551,8 +551,8 @@ window.StrigoiGuide = {
             "en_US": "Overlay → Show / Enable overlay"
           },
           "body": {
-            "pt_BR": "Escolha as categorias em Camadas do Atlas e ative o overlay. A primeira seleção pode minimizar o app ao concluir; ativações seguintes mantêm sua janela aberta. A ativação é lembrada ao reiniciar e aguarda o jogo. Os controles abaixo do minimapa só aparecem quando ele é reconhecido.",
-            "en_US": "Choose categories in Atlas layers and enable the overlay. First setup may minimize the app on completion; later activations keep its window open. Activation is remembered across restarts and waits for the game. Controls below the minimap appear only when it is recognized."
+            "pt_BR": "Escolha as categorias em Camadas do Atlas e ative o overlay. Durante a viagem, os marcadores mudam assim que o terreno da nova região é confirmado. A ativação e as camadas são lembradas ao reiniciar.",
+            "en_US": "Choose categories in Atlas layers and enable the overlay. As you travel, the markers switch once the terrain of the new region is confirmed. The app remembers activation and layers across restarts."
           },
           "tip": {
             "pt_BR": "Os símbolos do minimapa têm tamanho 2× maior. Nos cubos, ↑ e ↓ indicam altura acima ou abaixo da mediana do grupo na fonte; não comparam com o personagem. Sem reconhecer o terreno, o app oculta os pontos. Alt+Tab oculta todos os overlays. Menus reconhecidos também ocultam os painéis; o mapa grande mantém seus marcadores. A medição continua.",
@@ -569,8 +569,8 @@ window.StrigoiGuide = {
             "en_US": "Game → M"
           },
           "body": {
-            "pt_BR": "Abra o mapa grande com M. Quando reconhecido, ele tem prioridade sobre o minimapa. Feche para voltar ao minimapa sem trocar o modo no Azphelumbra.",
-            "en_US": "Press M to open the full map. When recognized, it takes priority over the minimap. Close it to return to the minimap without changing Azphelumbra mode."
+            "pt_BR": "Abra o mapa com M para ver os marcadores da região exibida. Se consultar outra região no mapa grande, o app guarda a região do seu personagem. Feche o mapa para voltar ao minimapa.",
+            "en_US": "Press M to see markers for the region on screen. Your character region stays recorded while you browse another region in the full map. Close the map to return to the minimap."
           },
           "tip": {
             "pt_BR": "O app reconhece a imagem do mapa na tela. O mapa grande não exige recorte manual.",
@@ -597,6 +597,16 @@ window.StrigoiGuide = {
         }
       ],
       "help": [
+        {
+          "question": {
+            "pt_BR": "O status mostra Mapa não identificado.",
+            "en_US": "The status says Map unidentified."
+          },
+          "answer": {
+            "pt_BR": "Aguarde o carregamento e confira o recorte do minimapa. Em Ajustes avançados → Mapa de fallback, você pode priorizar uma referência. O overlay mostra os pontos após confirmar o terreno.",
+            "en_US": "Wait for loading and check the minimap crop. In Advanced settings → Fallback map, you can prioritize a reference. Markers appear once the terrain is confirmed."
+          }
+        },
         {
           "question": {
             "pt_BR": "Mapa reconhecido, mas sem pontos.",
@@ -1026,8 +1036,8 @@ window.StrigoiGuide = {
         "en_US": "Siege Command"
       },
       "description": {
-        "pt_BR": "Prepare calls e presets para Lower Reshanta.",
-        "en_US": "Prepare calls and presets for Lower Reshanta."
+        "pt_BR": "Crie e compartilhe pins para Lower Reshanta.",
+        "en_US": "Create and share pins for Lower Reshanta."
       },
       "steps": [
         {
@@ -1048,7 +1058,7 @@ window.StrigoiGuide = {
             "en_US": "Ring positions can be loaded in Ring catalogue → Import local catalogue. The public installer includes pending ring entries by zone."
           },
           "action": {
-            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.13/docs/SIEGE.md",
+            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.14/docs/SIEGE.md",
             "label": {
               "pt_BR": "Abrir guia técnico",
               "en_US": "Open technical guide"
@@ -1057,20 +1067,20 @@ window.StrigoiGuide = {
         },
         {
           "title": {
-            "pt_BR": "Monte e copie a call",
-            "en_US": "Build and copy a call"
+            "pt_BR": "Adicione e edite pins",
+            "en_US": "Add and edit pins"
           },
           "where": {
-            "pt_BR": "Siege Command → Call tática",
-            "en_US": "Siege Command → Tactical call"
+            "pt_BR": "Siege Command → Editar pins",
+            "en_US": "Siege Command → Edit pins"
           },
           "body": {
-            "pt_BR": "Escolha MID, BOT ou TOP. Selecione a ação, o objetivo e, se disponível, um anel numerado. Use Copiar call para passar o texto à área de transferência.",
-            "en_US": "Choose MID, BOT, or TOP. Select an action, objective, and a numbered ring when available. Copy call copies the text to your clipboard."
+            "pt_BR": "Clique em Adicionar pin e marque qualquer ponto do mapa, inclusive sobre a água. Arraste para reposicionar. Ao selecionar um pin, você pode editar nome, categoria, tamanho, cor e visibilidade.",
+            "en_US": "Click Add pin and place it anywhere on the map, including over water. Drag to move it. Select a pin to edit its name, category, size, color, and visibility."
           },
           "tip": {
-            "pt_BR": "Os 12 objetivos foram transcritos da referência visual. Os anéis têm sua própria numeração, e a conferência em SA segue pendente.",
-            "en_US": "The 12 objectives come from the visual reference. Rings have their own numbering, and SA verification is pending."
+            "pt_BR": "O primeiro pin no preset oficial cria uma cópia editável. O app salva as mudanças ao concluir cada edição.",
+            "en_US": "The first pin in the official preset creates an editable copy. The app saves changes as you finish each edit."
           }
         },
         {
@@ -1079,12 +1089,12 @@ window.StrigoiGuide = {
             "en_US": "Show markers in the game"
           },
           "where": {
-            "pt_BR": "Siege Command → Overlay de siege",
-            "en_US": "Siege Command → Siege overlay"
+            "pt_BR": "Siege Command → Overlay de Reshanta",
+            "en_US": "Siege Command → Reshanta overlay"
           },
           "body": {
-            "pt_BR": "Clique em Ativar no mapa e minimapa. Se for a primeira vez, selecione a área do terreno no minimapa. Pressione M no jogo para ver os mesmos marcadores sobre o mapa grande. Ao fechar o mapa, eles retornam ao minimapa.",
-            "en_US": "Click Enable on map and minimap. On first setup, select the terrain area of the minimap. Press M in the game to see the same markers on the full map. Closing the map returns the markers to the minimap."
+            "pt_BR": "Ligue Overlay de Reshanta no Siege Command ou Reshanta / Siege no menu rápido. Selecione o terreno do minimapa uma vez. Os objetivos, anéis e pins aparecem quando o overlay reconhece Lower Reshanta no minimapa ou no mapa aberto com M.",
+            "en_US": "Enable Reshanta overlay in Siege Command or Reshanta / Siege in the quick menu. Select the minimap terrain once. Objectives, rings, and pins appear when the overlay recognizes Lower Reshanta on the minimap or full map."
           },
           "tip": {
             "pt_BR": "Os objetivos usam pins. Os anéis usam círculos com códigos abaixo. Ao reduzir o zoom, os rótulos de menor prioridade dão espaço aos demais.",
@@ -1093,20 +1103,20 @@ window.StrigoiGuide = {
         },
         {
           "title": {
-            "pt_BR": "Crie um preset para o grupo",
-            "en_US": "Create a preset for your group"
+            "pt_BR": "Compartilhe suas marcações",
+            "en_US": "Share your markers"
           },
           "where": {
-            "pt_BR": "Siege Command → Camadas e presets",
-            "en_US": "Siege Command → Layers and presets"
+            "pt_BR": "Siege Command → Editar pins",
+            "en_US": "Siege Command → Edit pins"
           },
           "body": {
-            "pt_BR": "Duplique Siege Global v1 para personalizar apelidos, cores, camadas e marcadores. Exporte o JSON para uso com o mesmo catálogo de anéis.",
-            "en_US": "Duplicate Siege Global v1 to customize aliases, colors, layers, and markers. Export the JSON for use with the same ring catalogue."
+            "pt_BR": "Use Exportar marcações (.json) para salvar o preset ativo. Para receber um preset, clique em Importar marcações (.json). Se o nome já existir, escolha entre criar uma cópia e substituir seu preset personalizado.",
+            "en_US": "Use Export markers (.json) to save the active preset. To receive a preset, click Import markers (.json). If the name already exists, you can create a copy or replace your custom preset."
           },
           "tip": {
-            "pt_BR": "Restaurar Global volta ao preset de referência. Para ver locais de pets em Lower Reshanta, importe um JSON autorizado.",
-            "en_US": "Restore Global returns to the reference preset. To see pet locations in Lower Reshanta, import an authorized JSON."
+            "pt_BR": "O compartilhamento funciona offline. As posições de anéis e pets vêm de seus próprios catálogos.",
+            "en_US": "Sharing works offline. Ring and pet locations come from their own catalogues."
           }
         }
       ],
