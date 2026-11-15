@@ -3,20 +3,38 @@
 from collections import defaultdict
 
 from app.core.models import Category, Gatherable, PointOfInterest, Subcategory
-from app.infrastructure.storage import PACKAGE, load_model
+from app.infrastructure.storage import PACKAGE, atomic_json, load_model, recover_model
 from app.modules.pets.models import PetSites
+from app.modules.siege.service import MAP_SOURCE
 
 
 class PetFarm:
-    def __init__(self, catalogue):
+    def __init__(self, catalogue, directory):
         self.sites = load_model(PACKAGE/'data/pet-sites.json', PetSites)
         self.by_npc = defaultdict(list)
         for site in self.sites.sites:
             self.by_npc[site.npc_code].append(site)
         self.by_pet = {pet.id: [site for source in pet.monsters for site in self.by_npc[source.npc_code]]
                        for pet in catalogue.pets}
-        self._base = None
-        self._view = None
+        self.reshanta_path = directory/'siege-pets.json'
+        empty = PetSites(checked_on='', region='global-reference', coordinate_system='', sites=[])
+        reshanta, self.warning = recover_model(self.reshanta_path, PetSites, empty)
+        self.set_reshanta_sites(reshanta)
+
+    def set_reshanta_sites(self, reshanta):
+        for pet in self.by_pet:
+            self.by_pet[pet] = [site for site in self.by_pet[pet] if site.map_id != 'lower-reshanta']
+        for site in reshanta.sites:
+            if site.map_id == 'lower-reshanta' and site.pet_id in self.by_pet:
+                self.by_pet[site.pet_id].append(site)
+        self._base = self._view = None
+
+    def import_reshanta_sites(self, path):
+        data = load_model(path, PetSites)
+        if not data.sites or any(site.map_id != 'lower-reshanta' or site.pet_id not in self.by_pet for site in data.sites):
+            raise ValueError('Use posições de Lower Reshanta com IDs de pets do catálogo.')
+        atomic_json(self.reshanta_path, data)
+        self.set_reshanta_sites(data)
 
     def dataset(self, base, catalogue):
         if self._base is base:
@@ -24,6 +42,8 @@ class PetFarm:
         # Only join to the original full-image map frames. Imported maps need their own evidence.
         supported = {m.id for m in base.maps if m.image == f'maps/{m.id}-world.webp'
                      and m.width == 8192 and m.height == 8192}
+        supported.update(m.id for m in base.maps if m.id == 'lower-reshanta'
+                         and m.width == m.height == 4096 and m.source == MAP_SOURCE)
         categories, subs, resources, points = [], [], [], []
         if 'pets' in {c.id for c in base.categories} or 'pet-farm' in {s.id for s in base.subcategories}:
             self._base, self._view = base, base
@@ -45,9 +65,9 @@ class PetFarm:
             for site in sites:
                 if f'{key}-{site.id}' in existing_points:
                     continue
-                points.append(PointOfInterest(id=f'{key}-{site.id}', name=names[site.npc_code],
+                points.append(PointOfInterest(id=f'{key}-{site.id}', name=names.get(site.npc_code, pet.name),
                     map_id=site.map_id, resource_id=key, x=site.x, y=site.y,
-                    source=site.source, certainty='possible',
+                    source=site.source, certainty='possible', visible_in_overlay=site.map_id != 'lower-reshanta',
                     notes=f'{pet.name} · Local de referência do monstro; presença atual e compatibilidade SA não confirmadas.'))
         view = base.model_copy(update={'categories':[*base.categories,*categories],
             'subcategories':[*base.subcategories,*subs], 'resources':[*base.resources,*resources],

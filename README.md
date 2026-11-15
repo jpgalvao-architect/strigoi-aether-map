@@ -1,6 +1,11 @@
 # Azphelumbra
 
-**AION 2 Companion App · 0.10.0-beta.10 · Windows x64**
+**AION 2 Companion App · 0.10.0-beta.11 · Windows x64**
+
+A beta 11 acrescenta o **Siege Command**, com calls copiáveis, HUD,
+mapa tático de Lower Reshanta e presets. Importe o mapa, o catálogo
+posicionado e os locais de pets que você tem permissão para usar.
+Veja [como preparar o Siege Command](docs/SIEGE.md).
 
 A beta 10 usa minimapa + mapa grande automático como padrão em novas
 instalações. O toggle abre a seleção quando necessário; ativações seguintes

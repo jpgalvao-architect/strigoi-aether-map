@@ -35,7 +35,9 @@ class PetService(QObject):
         self.bind_timer.timeout.connect(self.flush_pending)
         self.status = 'Abra o jogo para sincronizar sua coleção.'
         self.store = PetStore(context.directory)
-        self.farm = PetFarm(self.store.catalogue)
+        self.farm = PetFarm(self.store.catalogue, context.directory)
+        if self.farm.warning:
+            context.messages.append(self.farm.warning)
         if context.prefs.pets.layer_release != 'pets-v1':
             context.prefs.disabled_categories.add('pets')
             context.prefs.pets.layer_release = 'pets-v1'
@@ -347,7 +349,8 @@ class PetService(QObject):
         return True
 
     def has_farm(self, pet_id):
-        return bool(self.farm.by_pet.get(pet_id))
+        maps = {definition.id for definition in self.context.exploration_dataset.maps}
+        return any(site.map_id in maps for site in self.farm.by_pet.get(pet_id, ()))
 
     def sync_map_preferences(self):
         prefs = self.context.prefs

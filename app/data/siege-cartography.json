@@ -1,0 +1,617 @@
+{
+  "schema_version": 1,
+  "map_frame": "Abyss_Reshanta_A/4096-north-up",
+  "objectives": [
+    {
+      "number": 1,
+      "sector": "MID",
+      "map_position": {
+        "x": 0.51509272,
+        "y": 0.48698171
+      },
+      "reference_pixel": [
+        458,
+        338
+      ],
+      "reference_label": "1",
+      "status": "reference"
+    },
+    {
+      "number": 2,
+      "sector": "MID",
+      "map_position": {
+        "x": 0.49607776,
+        "y": 0.4747561
+      },
+      "reference_pixel": [
+        346,
+        251
+      ],
+      "reference_label": "2",
+      "status": "reference"
+    },
+    {
+      "number": 3,
+      "sector": "MID",
+      "map_position": {
+        "x": 0.48531709,
+        "y": 0.51330623
+      },
+      "reference_pixel": [
+        281,
+        531
+      ],
+      "reference_label": "3",
+      "status": "reference"
+    },
+    {
+      "number": 4,
+      "sector": "MID",
+      "map_position": {
+        "x": 0.51529975,
+        "y": 0.52137202
+      },
+      "reference_pixel": [
+        458,
+        587
+      ],
+      "reference_label": "4",
+      "status": "reference"
+    },
+    {
+      "number": 5,
+      "sector": "BOT",
+      "map_position": {
+        "x": 0.58003804,
+        "y": 0.53907903
+      },
+      "reference_pixel": [
+        866,
+        383
+      ],
+      "reference_label": "5",
+      "status": "reference"
+    },
+    {
+      "number": 6,
+      "sector": "BOT",
+      "map_position": {
+        "x": 0.58746089,
+        "y": 0.55614112
+      },
+      "reference_pixel": [
+        900,
+        513
+      ],
+      "reference_label": "6",
+      "status": "reference"
+    },
+    {
+      "number": 7,
+      "sector": "BOT",
+      "map_position": {
+        "x": 0.598921,
+        "y": 0.55689261
+      },
+      "reference_pixel": [
+        961,
+        514
+      ],
+      "reference_label": "7",
+      "status": "reference"
+    },
+    {
+      "number": 8,
+      "sector": "BOT",
+      "map_position": {
+        "x": 0.60503898,
+        "y": 0.53492883
+      },
+      "reference_pixel": [
+        1001,
+        340
+      ],
+      "reference_label": "8",
+      "status": "reference"
+    },
+    {
+      "number": 9,
+      "sector": "TOP",
+      "map_position": {
+        "x": 0.42857263,
+        "y": 0.44129574
+      },
+      "reference_pixel": [
+        1577,
+        427
+      ],
+      "reference_label": "8",
+      "status": "reference"
+    },
+    {
+      "number": 10,
+      "sector": "TOP",
+      "map_position": {
+        "x": 0.41163766,
+        "y": 0.42699338
+      },
+      "reference_pixel": [
+        1481,
+        357
+      ],
+      "reference_label": "10",
+      "status": "reference"
+    },
+    {
+      "number": 11,
+      "sector": "TOP",
+      "map_position": {
+        "x": 0.40099456,
+        "y": 0.43674172
+      },
+      "reference_pixel": [
+        1434,
+        424
+      ],
+      "reference_label": "11",
+      "status": "reference"
+    },
+    {
+      "number": 12,
+      "sector": "TOP",
+      "map_position": {
+        "x": 0.41757301,
+        "y": 0.45639375
+      },
+      "reference_pixel": [
+        1532,
+        526
+      ],
+      "reference_label": "12",
+      "status": "reference"
+    }
+  ],
+  "rings": [
+    {
+      "ring_id": "ring-pending-reshanta-01",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #01",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-02",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #02",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-03",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #03",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-04",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #04",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-05",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #05",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-06",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #06",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-07",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #07",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-08",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #08",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-09",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #09",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-10",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #10",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-11",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #11",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-12",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #12",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-reshanta-13",
+      "zone_id": "reshanta",
+      "sector": null,
+      "display_name": "Chaotic Lower Reshanta · #13",
+      "geographic_description": "Chaotic Lower Reshanta",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-black-fragments-01",
+      "zone_id": "black-fragments",
+      "sector": null,
+      "display_name": "Black Fragments Area · #01",
+      "geographic_description": "Black Fragments Area",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-black-fragments-02",
+      "zone_id": "black-fragments",
+      "sector": null,
+      "display_name": "Black Fragments Area · #02",
+      "geographic_description": "Black Fragments Area",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-black-fragments-03",
+      "zone_id": "black-fragments",
+      "sector": null,
+      "display_name": "Black Fragments Area · #03",
+      "geographic_description": "Black Fragments Area",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-black-fragments-04",
+      "zone_id": "black-fragments",
+      "sector": null,
+      "display_name": "Black Fragments Area · #04",
+      "geographic_description": "Black Fragments Area",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-black-fragments-05",
+      "zone_id": "black-fragments",
+      "sector": null,
+      "display_name": "Black Fragments Area · #05",
+      "geographic_description": "Black Fragments Area",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-remnants-01",
+      "zone_id": "remnants",
+      "sector": null,
+      "display_name": "Devastated Remnants · #01",
+      "geographic_description": "Devastated Remnants",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-remnants-02",
+      "zone_id": "remnants",
+      "sector": null,
+      "display_name": "Devastated Remnants · #02",
+      "geographic_description": "Devastated Remnants",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-remnants-03",
+      "zone_id": "remnants",
+      "sector": null,
+      "display_name": "Devastated Remnants · #03",
+      "geographic_description": "Devastated Remnants",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-remnants-04",
+      "zone_id": "remnants",
+      "sector": null,
+      "display_name": "Devastated Remnants · #04",
+      "geographic_description": "Devastated Remnants",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-remnants-05",
+      "zone_id": "remnants",
+      "sector": null,
+      "display_name": "Devastated Remnants · #05",
+      "geographic_description": "Devastated Remnants",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-branding-01",
+      "zone_id": "branding",
+      "sector": "TOP",
+      "display_name": "Sulfur Tree Island - Branding Island · #01",
+      "geographic_description": "Sulfur Tree Island - Branding Island",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-branding-02",
+      "zone_id": "branding",
+      "sector": "TOP",
+      "display_name": "Sulfur Tree Island - Branding Island · #02",
+      "geographic_description": "Sulfur Tree Island - Branding Island",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-branding-03",
+      "zone_id": "branding",
+      "sector": "TOP",
+      "display_name": "Sulfur Tree Island - Branding Island · #03",
+      "geographic_description": "Sulfur Tree Island - Branding Island",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-branding-04",
+      "zone_id": "branding",
+      "sector": "TOP",
+      "display_name": "Sulfur Tree Island - Branding Island · #04",
+      "geographic_description": "Sulfur Tree Island - Branding Island",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-kration-01",
+      "zone_id": "kration",
+      "sector": null,
+      "display_name": "Black Fragments Area - Kration Conflict Zone · #01",
+      "geographic_description": "Black Fragments Area - Kration Conflict Zone",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-kration-02",
+      "zone_id": "kration",
+      "sector": null,
+      "display_name": "Black Fragments Area - Kration Conflict Zone · #02",
+      "geographic_description": "Black Fragments Area - Kration Conflict Zone",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-kration-03",
+      "zone_id": "kration",
+      "sector": null,
+      "display_name": "Black Fragments Area - Kration Conflict Zone · #03",
+      "geographic_description": "Black Fragments Area - Kration Conflict Zone",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-kration-04",
+      "zone_id": "kration",
+      "sector": null,
+      "display_name": "Black Fragments Area - Kration Conflict Zone · #04",
+      "geographic_description": "Black Fragments Area - Kration Conflict Zone",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-dusk-01",
+      "zone_id": "dusk",
+      "sector": null,
+      "display_name": "Devastated Remnants - Dusk Battlefield · #01",
+      "geographic_description": "Devastated Remnants - Dusk Battlefield",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-dusk-02",
+      "zone_id": "dusk",
+      "sector": null,
+      "display_name": "Devastated Remnants - Dusk Battlefield · #02",
+      "geographic_description": "Devastated Remnants - Dusk Battlefield",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-dusk-03",
+      "zone_id": "dusk",
+      "sector": null,
+      "display_name": "Devastated Remnants - Dusk Battlefield · #03",
+      "geographic_description": "Devastated Remnants - Dusk Battlefield",
+      "category": "transit",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-01",
+      "zone_id": "siel",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings · #01",
+      "geographic_description": "Archipelago of Siel’s Wings",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-02",
+      "zone_id": "siel",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings · #02",
+      "geographic_description": "Archipelago of Siel’s Wings",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-03",
+      "zone_id": "siel",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings · #03",
+      "geographic_description": "Archipelago of Siel’s Wings",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-right-01",
+      "zone_id": "siel-right",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings - Siel’s Right Wing · #01",
+      "geographic_description": "Archipelago of Siel’s Wings - Siel’s Right Wing",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-right-02",
+      "zone_id": "siel-right",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings - Siel’s Right Wing · #02",
+      "geographic_description": "Archipelago of Siel’s Wings - Siel’s Right Wing",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-right-03",
+      "zone_id": "siel-right",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings - Siel’s Right Wing · #03",
+      "geographic_description": "Archipelago of Siel’s Wings - Siel’s Right Wing",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-left-01",
+      "zone_id": "siel-left",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings - Siel’s Left Wing · #01",
+      "geographic_description": "Archipelago of Siel’s Wings - Siel’s Left Wing",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-left-02",
+      "zone_id": "siel-left",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings - Siel’s Left Wing · #02",
+      "geographic_description": "Archipelago of Siel’s Wings - Siel’s Left Wing",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-left-03",
+      "zone_id": "siel-left",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings - Siel’s Left Wing · #03",
+      "geographic_description": "Archipelago of Siel’s Wings - Siel’s Left Wing",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-rotten-sap-01",
+      "zone_id": "rotten-sap",
+      "sector": "TOP",
+      "display_name": "Sulfur Tree Island - River of Rotten Sap · #01",
+      "geographic_description": "Sulfur Tree Island - River of Rotten Sap",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-rotten-sap-02",
+      "zone_id": "rotten-sap",
+      "sector": "TOP",
+      "display_name": "Sulfur Tree Island - River of Rotten Sap · #02",
+      "geographic_description": "Sulfur Tree Island - River of Rotten Sap",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-root-01",
+      "zone_id": "root",
+      "sector": "MID",
+      "display_name": "Reshanta’s Root · #01",
+      "geographic_description": "Reshanta’s Root",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-root-02",
+      "zone_id": "root",
+      "sector": "MID",
+      "display_name": "Reshanta’s Root · #02",
+      "geographic_description": "Reshanta’s Root",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-sulfur-01",
+      "zone_id": "sulfur",
+      "sector": "TOP",
+      "display_name": "Sulfur Tree Island · #01",
+      "geographic_description": "Sulfur Tree Island",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    },
+    {
+      "ring_id": "ring-pending-siel-heart-01",
+      "zone_id": "siel-heart",
+      "sector": "BOT",
+      "display_name": "Archipelago of Siel’s Wings - Siel’s Heart · #01",
+      "geographic_description": "Archipelago of Siel’s Wings - Siel’s Heart",
+      "category": "siege",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings"
+    }
+  ]
+}

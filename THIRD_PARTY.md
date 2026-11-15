@@ -79,3 +79,14 @@ código da interface ou imagens modificadas desse site.
 Os leitores de coleção, ganho de almas e nível foram implementados a partir
 dos layouts GPLv3 identificados em `native/combat/vendor/PET-PROTOCOL-NOTICE.md`.
 A coleção, a interface e o armazenamento local do Strigoi são próprios.
+
+
+## Lower Reshanta
+
+As posições possíveis de Lesser Odyle foram normalizadas da base comunitária
+do Aion2 Interactive Map (Yihao Liu e colaboradores), com atribuição e
+licença CC BY-NC 4.0 separada da GPLv3. A base raster, o catálogo posicionado
+e as posições de pets usados na prévia pessoal são arquivos locais
+importáveis. A publicação inclui os esquemas de importação, a lista de
+pendências por zona e a transcrição tática fornecida pelo usuário. As fontes,
+o escopo e a transformação constam em [Siege Command](docs/SIEGE.md).

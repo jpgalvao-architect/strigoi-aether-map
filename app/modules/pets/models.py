@@ -49,7 +49,8 @@ class PetCatalogue(Model):
 class FarmSite(Model):
     id: str
     npc_code: int = Field(gt=0)
-    map_id: Literal['altgard', 'verteron']
+    pet_id: int | None = Field(default=None, gt=0)
+    map_id: Literal['altgard', 'verteron', 'lower-reshanta']
     x: float = Field(ge=0, le=1)
     y: float = Field(ge=0, le=1)
     world_lat: float

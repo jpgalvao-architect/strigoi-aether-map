@@ -12,10 +12,24 @@
           "title": "Npc Code",
           "type": "integer"
         },
+        "pet_id": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pet Id"
+        },
         "map_id": {
           "enum": [
             "altgard",
-            "verteron"
+            "verteron",
+            "lower-reshanta"
           ],
           "title": "Map Id",
           "type": "string"

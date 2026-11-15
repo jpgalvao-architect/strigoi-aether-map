@@ -77,11 +77,11 @@ class MainWindow(QMainWindow):
         brand = label(''); brand.setPixmap(emblem_icon().pixmap(38,38)); brand.setToolTip('Azphelumbra')
         side.addWidget(brand,0,Qt.AlignmentFlag.AlignHCenter)
         side.addSpacing(14)
-        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about'),('Pets','pets'),('Rotina','routine'),('Rotas','routes')]
+        entries=[('Início','home'),('Atlas','atlas'),('Coletas','gatherables'),('Cubos ocultos','cube'),('Eventos','events'),('Configurações','settings'),('Overlay','overlay'),('Sonar','sonar'),('Combate','combat'),('Donate','donate'),('Sobre','about'),('Pets','pets'),('Rotina','routine'),('Rotas','routes'),('Siege Command','siege')]
         self.page_indices = {name:index for index, (_, name) in enumerate(entries)}
         self.nav = [None]*len(entries)
         # Stable page identities preserve shortcuts and existing integrations.
-        for index in [0,1,13,11,12,7,8,4,5,9,10,2,3,6]:
+        for index in [0,1,13,14,11,12,7,8,4,5,9,10,2,3,6]:
             text, name = entries[index]
             entry = QToolButton(); entry.setText(text)
             entry.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
@@ -125,11 +125,15 @@ class MainWindow(QMainWindow):
         self.routine_page = RoutinePage(context,self.routine)
         from app.ui.routes_page import RoutesPage
         self.routes_page=RoutesPage(context,self.routes,self.start_route_overlay,self.overlay)
+        from app.ui.siege_overlay import SiegeOverlay
+        from app.ui.siege_page import SiegePage
+        self.siege_overlay = SiegeOverlay(self, runtime=runtime)
+        self.siege_page = SiegePage(context, self.siege_overlay.toggle_expanded, self.siege_overlay.configure_shortcuts)
         self.atlas.route_requested.connect(self.show_route_target)
         self.cubes.route_requested.connect(self.show_route_target)
         self.catalog.route_requested.connect(self.show_route_target)
         self.pets_page.route_requested.connect(lambda pet_id:self.show_pet_route(pet_id))
-        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page(), self.pets_page,self.routine_page,self.routes_page]
+        self.pages = [self.dashboard, self.atlas, self.catalog, self.cubes, self.events, self.settings, self.overlay_page, self.sonar_page, self.combat_page, self.donate, self.about_page(), self.pets_page,self.routine_page,self.routes_page,self.siege_page]
         for page in self.pages:
             scroll = QScrollArea()
             scroll.setWidgetResizable(True)
@@ -184,6 +188,7 @@ class MainWindow(QMainWindow):
                                  (self.map_controls, 'hud'),
                                  (self.quick_menu, 'hud'), (self.quick_menu.panel, 'hud')]:
                 self.overlay_visibility.register(window, role)
+            self.siege_overlay.bind_visibility(self.overlay_visibility)
             self.overlay_visibility.start()
             QTimer.singleShot(0, self.combat.enable_automatic)
             QTimer.singleShot(0, self.pets.enable_automatic)
@@ -207,12 +212,15 @@ class MainWindow(QMainWindow):
         if isinstance(index, str):
             index = self.page_indices[index]
         self.stack.setCurrentIndex(index)
-        if hasattr(self,'inspector'):self.inspector.setVisible(index!=self.page_indices['routes'])
+        if hasattr(self,'inspector'):self.inspector.setVisible(index not in (self.page_indices['routes'], self.page_indices['siege']))
         for number, entry in enumerate(self.nav):
             entry.setChecked(number == index)
 
     def start_route_overlay(self):
         map_id=self.routes.route.map_id
+        if not any(m.id == map_id for m in self.context.dataset.maps):
+            self.statusBar().showMessage('Lower Reshanta oferece rotas no Atlas e mapa tático no Siege Command.', 7000)
+            return
         page=self.overlay_page
         if self.context.prefs.overlay.enabled and (self.context.prefs.overlay.map_id!=map_id or self.context.prefs.overlay.tracking_mode!='dynamic' or self.context.prefs.overlay.map_view!='minimap'):self.overlay.stop()
         self.context.prefs.overlay.tracking_mode='dynamic'
@@ -241,7 +249,8 @@ class MainWindow(QMainWindow):
         if site is None:
             return
         self.context.prefs.map_id = site.map_id
-        self.context.prefs.overlay.map_id = site.map_id
+        if any(definition.id == site.map_id for definition in self.context.dataset.maps):
+            self.context.prefs.overlay.map_id = site.map_id
         self.context.prefs.pets.focus_id = pet_id
         self.context.prefs.pets.map_filter = 'all'
         self.context.prefs.disabled_categories.discard('pets')
@@ -315,6 +324,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         if self.module_resume:self.module_resume.shutdown()
         if self.overlay_visibility: self.overlay_visibility.shutdown()
+        self.siege_overlay.shutdown()
         self.quick_menu.shutdown()
         self.pet_panel.shutdown()
         self.routine_panel.shutdown()

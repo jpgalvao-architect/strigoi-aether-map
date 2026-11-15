@@ -1,0 +1,141 @@
+{
+  "$defs": {
+    "Coordinate": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "title": "Coordinate",
+      "type": "object"
+    },
+    "CustomMarker": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 100,
+          "pattern": "^local-[a-z0-9-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/$defs/Coordinate"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "position"
+      ],
+      "title": "CustomMarker",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "map_id": {
+      "const": "lower-reshanta",
+      "default": "lower-reshanta",
+      "title": "Map Id",
+      "type": "string"
+    },
+    "name": {
+      "maxLength": 70,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "layers": {
+      "items": {
+        "enum": [
+          "SiegeObjectives",
+          "SiegeRings",
+          "TransitRings",
+          "Pets",
+          "Gathering",
+          "CustomMarkers"
+        ],
+        "type": "string"
+      },
+      "title": "Layers",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "colors": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "propertyNames": {
+        "enum": [
+          "SiegeObjectives",
+          "SiegeRings",
+          "TransitRings",
+          "Pets",
+          "Gathering",
+          "CustomMarkers"
+        ]
+      },
+      "title": "Colors",
+      "type": "object"
+    },
+    "use_local_calibration": {
+      "default": false,
+      "title": "Use Local Calibration",
+      "type": "boolean"
+    },
+    "marker_scale": {
+      "default": 1.0,
+      "maximum": 1.8,
+      "minimum": 0.65,
+      "title": "Marker Scale",
+      "type": "number"
+    },
+    "aliases": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "maxProperties": 250,
+      "title": "Aliases",
+      "type": "object"
+    },
+    "markers": {
+      "items": {
+        "$ref": "#/$defs/CustomMarker"
+      },
+      "maxItems": 150,
+      "title": "Markers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "title": "Preset",
+  "type": "object"
+}

@@ -1,0 +1,221 @@
+{
+  "$defs": {
+    "Coordinate": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "title": "Coordinate",
+      "type": "object"
+    },
+    "Ring": {
+      "additionalProperties": false,
+      "properties": {
+        "ring_id": {
+          "maxLength": 100,
+          "pattern": "^ring-[a-z0-9-]+$",
+          "title": "Ring Id",
+          "type": "string"
+        },
+        "map_id": {
+          "const": "lower-reshanta",
+          "default": "lower-reshanta",
+          "title": "Map Id",
+          "type": "string"
+        },
+        "zone_id": {
+          "title": "Zone Id",
+          "type": "string"
+        },
+        "sector": {
+          "anyOf": [
+            {
+              "enum": [
+                "MID",
+                "BOT",
+                "TOP"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sector"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "geographic_description": {
+          "default": "",
+          "title": "Geographic Description",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "siege",
+            "transit"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "position": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RingPosition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "default_callsign": {
+          "anyOf": [
+            {
+              "pattern": "^[MBT][1-9][0-9]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Callsign"
+        }
+      },
+      "required": [
+        "ring_id",
+        "zone_id",
+        "display_name",
+        "category",
+        "source"
+      ],
+      "title": "Ring",
+      "type": "object"
+    },
+    "RingPosition": {
+      "additionalProperties": false,
+      "properties": {
+        "map_position": {
+          "$ref": "#/$defs/Coordinate"
+        },
+        "source": {
+          "maxLength": 420,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "provisional",
+            "verified"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "world_coordinates": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "World Coordinates"
+        },
+        "altitude": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Altitude"
+        }
+      },
+      "required": [
+        "map_position",
+        "source",
+        "status"
+      ],
+      "title": "RingPosition",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "map_frame": {
+      "const": "Abyss_Reshanta_A/4096-north-up",
+      "title": "Map Frame",
+      "type": "string"
+    },
+    "rings": {
+      "items": {
+        "$ref": "#/$defs/Ring"
+      },
+      "maxItems": 250,
+      "minItems": 1,
+      "title": "Rings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "map_frame",
+    "rings"
+  ],
+  "title": "RingCatalogue",
+  "type": "object"
+}

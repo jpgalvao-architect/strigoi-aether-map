@@ -1,0 +1,397 @@
+{
+  "checked_on": "2026-11-14",
+  "map_source_commit": "89ce3984d569ff1a03ee6311d064231211212981",
+  "map_width_px": 4096,
+  "map_height_px": 4096,
+  "tile_sha256": {
+    "0_0": "de0d66f452a0c2dd6ab52dbcf59f78389d48c50825b2b114e152ef9c94a3c3be",
+    "0_1": "ecf5efd322387ea70da433a40c5bacd3e1d841e81e2bf04bfe995afc3ae13eea",
+    "0_2": "31b8bf2019a86f91cbc038a3caa9a08babf8def2b23610980a94c8d3f5faa080",
+    "0_3": "605d0dac1173151534477165aa5b00b6b56e4008469b5c2278676ea5a73e4560",
+    "1_0": "642b06fbe8c06a1fdf7ccb177a45685776277328f61a826ab811043f34768892",
+    "1_1": "b776d8978ac404d341470d19cf94bb0a038d4bda7d8e66d99964eb7e7e853afc",
+    "1_2": "b03905566d06ca77cb49300aece696352af2cb3ae404b22ae2127fb8807f7dbe",
+    "1_3": "0906094cdb210140d8b4bacc0aea223cb8bbeb2fa3e5bde86340bd438368e9df",
+    "2_0": "a93602666cce4b8f688dc1e65885a538058a9912516ede54b2b2794612f70853",
+    "2_1": "5d9e0a8b17cbe38208aabfd5acef88ba32bf70a1af5bd39a5d53dbd295b321bb",
+    "2_2": "22ed3e2d0bccf0636721bf0c701f33dc182c3143df4cbb4c00de32a90b7936bd",
+    "2_3": "b640f204bbfbc47f755b8e23477f10e0162573cae7205f63cdeb493d31343de4",
+    "3_0": "4cfcf83da160c83675b24d5f7fabdd314f29ec29870f03f3548c736ed2e7c10f",
+    "3_1": "196d43dd80e6a03434f121f766b53ba67b650bcdcde3f28c5eb2eabaa7c3545e",
+    "3_2": "eba65728bebb80c4349e3659e0ec8c8bc43cb042320072cab94765da6a77f871",
+    "3_3": "e605356313fded3748fb83940fe3383779107edcb5bff9d8fd0b191182a3fa8e"
+  },
+  "reference_sha256": "207d0baf83a2b98b3c2a723cbc70910a3b2c50092bdec2a858f0bbef16ea6f00",
+  "registration": {
+    "MID": {
+      "anchors": [
+        {
+          "reference": [
+            345,
+            166
+          ],
+          "map_px": [
+            2040,
+            1908
+          ]
+        },
+        {
+          "reference": [
+            579,
+            379
+          ],
+          "map_px": [
+            2188,
+            2016
+          ]
+        },
+        {
+          "reference": [
+            209,
+            496
+          ],
+          "map_px": [
+            1936,
+            2092
+          ]
+        },
+        {
+          "reference": [
+            423,
+            688
+          ],
+          "map_px": [
+            2092,
+            2192
+          ]
+        },
+        {
+          "reference": [
+            497,
+            264
+          ],
+          "map_px": [
+            2136,
+            1952
+          ]
+        },
+        {
+          "reference": [
+            216,
+            303
+          ],
+          "map_px": [
+            1936,
+            1956
+          ]
+        }
+      ],
+      "matrix_to_map_px": [
+        [
+          0.6927586283366504,
+          0.0034056298162770306,
+          1791.3852243743274
+        ],
+        [
+          0.007669504469348352,
+          0.5657136969076176,
+          1799.9532077098593
+        ]
+      ],
+      "leave_one_out_px": [
+        26.46,
+        13.54,
+        19.84,
+        18.91,
+        2.01,
+        32.11
+      ]
+    },
+    "BOT": {
+      "anchors": [
+        {
+          "reference": [
+            919,
+            168
+          ],
+          "map_px": [
+            2406.0,
+            2094.0
+          ]
+        },
+        {
+          "reference": [
+            1028,
+            185
+          ],
+          "map_px": [
+            2508,
+            2108
+          ]
+        },
+        {
+          "reference": [
+            1085,
+            335
+          ],
+          "map_px": [
+            2528,
+            2196
+          ]
+        },
+        {
+          "reference": [
+            800,
+            373
+          ],
+          "map_px": [
+            2320,
+            2208
+          ]
+        },
+        {
+          "reference": [
+            958,
+            526
+          ],
+          "map_px": [
+            2460,
+            2292
+          ]
+        },
+        {
+          "reference": [
+            886,
+            524
+          ],
+          "map_px": [
+            2396,
+            2272
+          ]
+        }
+      ],
+      "matrix_to_map_px": [
+        [
+          0.7689810914001516,
+          0.032758560397276267,
+          1697.3516673690144
+        ],
+        [
+          0.0418271141485112,
+          0.526647904352923,
+          1970.1392623340048
+        ]
+      ],
+      "leave_one_out_px": [
+        9.75,
+        26.0,
+        34.28,
+        22.81,
+        18.26,
+        19.45
+      ]
+    },
+    "TOP": {
+      "anchors": [
+        {
+          "reference": [
+            1536,
+            177
+          ],
+          "map_px": [
+            1736,
+            1616
+          ]
+        },
+        {
+          "reference": [
+            1458,
+            189
+          ],
+          "map_px": [
+            1688,
+            1636
+          ]
+        },
+        {
+          "reference": [
+            1503,
+            226
+          ],
+          "map_px": [
+            1704,
+            1660
+          ]
+        },
+        {
+          "reference": [
+            1616,
+            291
+          ],
+          "map_px": [
+            1816,
+            1712
+          ]
+        },
+        {
+          "reference": [
+            1692,
+            387
+          ],
+          "map_px": [
+            1856,
+            1832
+          ]
+        },
+        {
+          "reference": [
+            1578,
+            605
+          ],
+          "map_px": [
+            1732,
+            1908
+          ]
+        },
+        {
+          "reference": [
+            1450,
+            557
+          ],
+          "map_px": [
+            1636,
+            1860
+          ]
+        },
+        {
+          "reference": [
+            1450,
+            680
+          ],
+          "map_px": [
+            1628,
+            1964
+          ]
+        },
+        {
+          "reference": [
+            1316,
+            526
+          ],
+          "map_px": [
+            1552,
+            1872
+          ]
+        }
+      ],
+      "matrix_to_map_px": [
+        [
+          0.791924081577845,
+          -0.09512987824275494,
+          547.1896568522261
+        ],
+        [
+          0.11622931870572233,
+          0.6774924125297225,
+          1334.9644553486403
+        ]
+      ],
+      "leave_one_out_px": [
+        28.64,
+        8.35,
+        15.96,
+        24.38,
+        71.94,
+        33.14,
+        27.51,
+        4.45,
+        61.71
+      ]
+    }
+  },
+  "reference_correction": "TOP: eastern repeated 8 transcribed as P9. Position and image unchanged.",
+  "ring_count_source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+  "ring_zones": [
+    {
+      "zone_id": "reshanta",
+      "count": 13,
+      "sector": null
+    },
+    {
+      "zone_id": "black-fragments",
+      "count": 5,
+      "sector": null
+    },
+    {
+      "zone_id": "remnants",
+      "count": 5,
+      "sector": null
+    },
+    {
+      "zone_id": "branding",
+      "count": 4,
+      "sector": "TOP"
+    },
+    {
+      "zone_id": "kration",
+      "count": 4,
+      "sector": null
+    },
+    {
+      "zone_id": "dusk",
+      "count": 3,
+      "sector": null
+    },
+    {
+      "zone_id": "siel",
+      "count": 3,
+      "sector": "BOT"
+    },
+    {
+      "zone_id": "siel-right",
+      "count": 3,
+      "sector": "BOT"
+    },
+    {
+      "zone_id": "siel-left",
+      "count": 3,
+      "sector": "BOT"
+    },
+    {
+      "zone_id": "rotten-sap",
+      "count": 2,
+      "sector": "TOP"
+    },
+    {
+      "zone_id": "root",
+      "count": 2,
+      "sector": "MID"
+    },
+    {
+      "zone_id": "sulfur",
+      "count": 1,
+      "sector": "TOP"
+    },
+    {
+      "zone_id": "siel-heart",
+      "count": 1,
+      "sector": "BOT"
+    }
+  ],
+  "gathering_source": "https://data-aion2.tc-imba.com/markers/Abyss_Reshanta_A.json",
+  "pets_source": "https://github.com/SkeeveAN/Aion-DPS-Meter/blob/c933676e6a4f47cc861d7472f892c14e6bc49244/Client/assets/aion2/pets/spawns.json",
+  "ring_positions": {
+    "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+    "endpoint": "https://aion2t.com/api/en/map/locations?zone=2616&types=flight_ring&limit=100",
+    "sha256": "ea0781ee60f9f8011489a164ac2164cb402cb1e5725f92d4d57d1d427f437f6e",
+    "count": 49,
+    "altitude_available": false,
+    "map_coordinates": "((longitude / 100 + 2048) / 4096, (-latitude / 100 + 2048) / 4096)",
+    "map_crosscheck": "Aion2t 4096px overview cross-correlates with the local 4096px tile mosaic at <0.03 px offset at 1024 overview scale. Latesran roots independently match Aion-DPS-Meter world extraction within one world unit. Three AbyssArtifact rows land on the corresponding map structures.",
+    "sector_policy": "Explicit tactical grouping reviewed on the map around the three artifacts and their approaches. It is not an assignment of official subzone names.",
+    "callsign_policy": "Frozen by stable ring ID. North-to-south 8px bands, west-to-east within a band."
+  },
+  "pets_bindings_source": "https://github.com/SkeeveAN/Aion-DPS-Meter/blob/c933676e6a4f47cc861d7472f892c14e6bc49244/Client/assets/aion2/pets/pets.json",
+  "map_pixels_sha256": "4fd42390453a4baa4dd4f9a02e5fb3c4263d0a15ebc03b159e6b60fb08d00d57",
+  "verified_against": "Global client cartography. SA gameplay verification pending."
+}

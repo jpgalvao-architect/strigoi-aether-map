@@ -48,8 +48,8 @@ class CatalogPage(QWidget):
         self.refresh()
 
     def refresh(self):
-        if self.identity is not self.context.dataset:
-            self.identity = self.context.dataset
+        if self.identity is not self.context.exploration_dataset:
+            self.identity = self.context.exploration_dataset
             for combo, items, default in [(self.category, self.identity.categories, "Todas as categorias"), (self.subcategory, self.identity.subcategories, "Subcategorias"), (self.map_combo, self.identity.maps, "Todos os mapas")]:
                 combo.blockSignals(True)
                 combo.clear()
@@ -67,7 +67,7 @@ class CatalogPage(QWidget):
         self.context.save()
 
     def populate(self):
-        dataset = self.context.dataset
+        dataset = self.context.exploration_dataset
         category = self.category.currentData()
         sub = self.subcategory.currentData()
         map_id = self.map_combo.currentData()
@@ -99,7 +99,7 @@ class CatalogPage(QWidget):
         index=self.table.currentRow()
         if index<0:return
         resource=self.table.item(index,1).data(Qt.UserRole)
-        maps=[p.map_id for p in self.context.dataset.all_points if p.resource_id==resource]
+        maps=[p.map_id for p in self.context.exploration_dataset.all_points if p.resource_id==resource]
         preferred=self.map_combo.currentData() or self.context.prefs.map_id
         if maps:self.route_requested.emit(preferred if preferred in maps else maps[0],resource)
 
@@ -109,7 +109,7 @@ class CatalogPage(QWidget):
         QDesktopServices.openUrl(QUrl("https://aion2maps.com/gathering/"))
 
     def toggle_all(self, enabled):
-        self.context.prefs.disabled_resources = set() if enabled else {r.id for r in self.context.dataset.resources}
+        self.context.prefs.disabled_resources = set() if enabled else {r.id for r in self.context.exploration_dataset.resources}
         if enabled:
             self.context.prefs.disabled_categories.clear()
         self.context.save()

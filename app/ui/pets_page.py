@@ -137,6 +137,11 @@ class PetsPage(QWidget):
         self.map_choice.addItem('Todos os mapas','')
         for map_id,name in [('altgard','Altgard'),('verteron','Verteron')]:
             self.map_choice.addItem(name,map_id)
+        def add_reshanta():
+            if context.siege.definition and self.map_choice.findData('lower-reshanta') < 0:
+                self.map_choice.addItem('Chaotic Lower Reshanta', 'lower-reshanta')
+        context.siege.map_changed.connect(add_reshanta)
+        add_reshanta()
         self.map_choice.setAccessibleName('Mapa dos locais de farm')
         self.state = QComboBox()
         for text, key in [('Todo o progresso',''), ('Ainda não adquiridos','missing'),

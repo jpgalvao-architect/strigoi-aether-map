@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Transient visibility policy, separate from module preferences and capture."""
-from PySide6.QtCore import QObject, QTimer
+from PySide6.QtCore import QObject, QTimer, Signal
 from PySide6.QtWidgets import QApplication, QWidget
 
 
@@ -27,6 +27,8 @@ class OverlayVisibilityMixin:
 
 
 class OverlayVisibility(QObject):
+    context_changed = Signal(bool, str)
+
     def __init__(self, main, probe=None):
         super().__init__(main)
         from app.modules.overlay.foreground import ForegroundProbe
@@ -53,6 +55,7 @@ class OverlayVisibility(QObject):
         return self.active and (self.mode == 'play' or role == 'map' and self.mode == 'map')
 
     def set_context(self, active, mode='play'):
+        changed = (self.active, self.mode) != (bool(active), mode)
         self.active, self.mode = bool(active), mode
         routes=getattr(self.main,'routes',None)
         if routes:
@@ -64,6 +67,8 @@ class OverlayVisibility(QObject):
             if not self.allows(window._overlay_role) and window._overlay_role == 'alert':
                 window._overlay_wanted = False
             window.apply_overlay_visibility()
+        if changed:
+            self.context_changed.emit(self.active, self.mode)
 
     def associated_popups(self):
         result=[]

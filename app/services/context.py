@@ -35,9 +35,14 @@ class AppContext(QObject):
         return selected
 
     @property
+    def exploration_dataset(self):
+        return self.siege.atlas_data(self.dataset)
+
+    @property
     def atlas_dataset(self):
         pets = getattr(self, 'pets', None)
-        return pets.farm.dataset(self.dataset, pets.store.catalogue) if pets else self.dataset
+        base = self.exploration_dataset
+        return pets.farm.dataset(base, pets.store.catalogue) if pets else base
 
     def __init__(self, directory: Path):
         super().__init__()
@@ -81,6 +86,11 @@ class AppContext(QObject):
         self.alerts = AlertEngine(directory / "alerts.json")
         from app.modules.events.boss_timer import BossTimer
         self.boss_timer=BossTimer(self)
+        from app.modules.siege.service import SiegeService
+        self.siege = SiegeService(directory)
+        if self.siege.warning:
+            self.messages.append(self.siege.warning)
+        self.siege.map_changed.connect(self.changed.emit)
         self.normalize_map()
         if self.prefs.map_defaults_release != "altgard-v021":
             if any(m.id == "altgard" for m in self.dataset.maps):
@@ -130,14 +140,15 @@ class AppContext(QObject):
             self.feed = updated
 
     def normalize_map(self):
-        ids = {m.id for m in self.dataset.maps}
+        ids = {m.id for m in self.exploration_dataset.maps}
         default = "altgard" if "altgard" in ids else self.dataset.maps[0].id
         if self.prefs.map_id not in ids:
             self.prefs.map_id = default
         if self.prefs.catalog_map_id and self.prefs.catalog_map_id not in ids:
             self.prefs.catalog_map_id = default
-        if self.prefs.overlay.map_id not in ids:
-            self.prefs.overlay.map_id = self.prefs.map_id
+        overlay_ids = {m.id for m in self.dataset.maps}
+        if self.prefs.overlay.map_id not in overlay_ids:
+            self.prefs.overlay.map_id = self.prefs.map_id if self.prefs.map_id in overlay_ids else default
 
     def upgrade_bundled_event_additions(self):
         manifest=json.loads((PACKAGE/'data/event-additions.json').read_text(encoding='utf-8'))
