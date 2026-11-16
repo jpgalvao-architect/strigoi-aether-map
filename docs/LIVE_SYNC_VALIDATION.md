@@ -6,11 +6,16 @@
 | --- | --- |
 | Implementado | Wizard BYOC, Worker, Durable Object SQLite, revogação, publicação manual, recepção automática e guias PT-BR, EN-US e ES-419 |
 | Validado localmente | Empacotamento Wrangler, prova de posse, HTTP/WebSocket de loopback, dois processos Qt separados, hibernação forçada, isolamento entre sessões, validação dos snapshots e preservação do preset pessoal |
-| Validado na Cloudflare real | Pendente |
-| Pendente de validação | HTTPS/WSS público, implantação e consentimento reais, consumo de cotas por conta, capacidade de produção e inspeção visual no mapa grande e no minimapa do AION 2 |
-| Bloqueado por autorização | Publicar o branch no GitHub, abrir o PR e provisionar uma implantação em conta Free do proprietário |
+| Validado na Cloudflare real | Implantação do modelo, HTTPS/WSS, vinculação, sessão com dois clientes, sincronização, reconexão, revogação e encerramento |
+| Pendente de validação | Consumo de cotas em escala, capacidade de produção e inspeção visual no mapa grande e no minimapa do AION 2 |
 
-O [repositório oficial](https://github.com/jpgalvao-architect/strigoi-aether-map) e o [site oficial](https://jpgalvao-architect.github.io/strigoi-aether-map/) respondiam na verificação. A pasta de implantação ainda retornava 404 em `main`. O assistente aponta para `backend/live-sync` no repositório oficial, e o guia sai no GitHub Pages após a entrada dessas mudanças em `main`. O [workflow de Pages](../.github/workflows/pages.yml) publica o diretório `website`.
+A [release 0.10.0-beta.16](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.16) apresenta o Live Sync como Beta. O modelo está em `backend/live-sync` no repositório oficial. A [página do Azphelumbra](https://jpgalvao-architect.github.io/strigoi-aether-map/) oferece o instalador, o código-fonte, os checksums publicados na release e o guia nos três idiomas.
+
+## Piloto na Cloudflare real
+
+A implantação pelo modelo provisionou o Worker e seu Durable Object com SQLite. O assistente verificou a posse da chave e a conexão HTTPS/WSS. Em processos Qt com diretórios separados, o jogador entrou pelo convite, permaneceu na revisão anterior durante as edições do caller, recebeu os novos pins, o movimento de P1, o círculo, a seta, o retângulo e a exclusão de um pin. Ao reconectar, tomou a última revisão após perder duas publicações. O preset pessoal permaneceu byte a byte. A rotação invalidou o convite anterior e a sessão foi encerrada.
+
+No primeiro ensaio, a resposta HTTPS carregava o ETag fraco `W/"..."` e o SHA-256 do corpo coincidia. O cliente foi corrigido para aceitar o prefixo e continuou exigindo o hash correto do corpo e do aviso WebSocket. O piloto repetido passou com o mesmo Worker. [ETags na Cloudflare](https://developers.cloudflare.com/cache/reference/etag-headers/).
 
 ## Testes locais
 
@@ -21,7 +26,7 @@ O [repositório oficial](https://github.com/jpgalvao-architect/strigoi-aether-ma
 - **Hibernação.** O Miniflare desalojou o Durable Object com o socket aberto. Ao reativar, o objeto recuperou a contagem, enviou a nova revisão pelo mesmo socket e removeu a conexão da contagem após a saída.
 - **Overlay.** O teste conferiu pins, P1, exclusões e formas no pipeline de renderização compartilhado. A verificação visual no cliente do jogo continua pendente para mapa grande e minimapa.
 - **Pacote.** Wrangler 4.163.0 reuniu script, SQLite, migração e limites no build a seco. `npm audit --omit=dev` retornou zero vulnerabilidades na consulta. As chaves repetidas dos testes são fixtures locais. A chave real do host fica no segredo da sua implantação e protegida pelo Windows no aplicativo.
-- **Regressão e site.** A suíte Python passou com 420 testes, incluindo os cenários Qt locais. Os quatro testes de protocolo e o teste de hibernação passaram. O Microsoft Edge renderizou o guia em PT-BR, EN-US e ES-419, com um único artigo visível em cada idioma.
+- **Regressão e site.** A suíte Python passou com 422 testes, incluindo os cenários Qt locais. Os quatro testes de protocolo e o teste de hibernação passaram. A instalação em uma VM Windows do GitHub Actions também passou. O Microsoft Edge renderizou o guia em PT-BR, EN-US e ES-419, com um único artigo visível em cada idioma.
 
 ## Carga em Windows
 
@@ -45,12 +50,13 @@ A matriz progressiva usou o mesmo bundle do Wrangler em um socket direto do Work
 
 **Cotas e capacidade.** Em contas Workers Free, cada cota de 100.000 solicitações/dia é compartilhada pelas atividades da conta. No cenário de 2.000, 6.003 operações representam cerca de 6% de cada cota diária, como estimativa conservadora que conta todas as tentativas no transporte. O cenário inclui entrada, uma publicação e reconexão. Na prática cada participante faz um GET inicial para entrar, além dos upgrades. O limite local de 8.000 operações por IP em 60 s pode ser atingido numa rede que compartilhe um IP. Os avisos de saída por WebSocket e os pings de protocolo têm tratamento próprio na cobrança. A Cloudflare documenta um limite flexível de 1.000 solicitações por segundo por objeto individual e até 32.768 WebSockets hibernáveis por objeto, sujeito ao consumo do serviço. CPU, memória do isolate, duração faturada e capacidade real continuam por medir em conta autorizada. [Cotas de Workers](https://developers.cloudflare.com/workers/platform/limits/) · [Cotas e duração de Durable Objects](https://developers.cloudflare.com/durable-objects/platform/pricing/) · [Limites do objeto](https://developers.cloudflare.com/durable-objects/platform/limits/) · [WebSocket Hibernation](https://developers.cloudflare.com/durable-objects/api/state/).
 
-## Procedimento pendente
+## Validações da beta
 
-1. Após aprovação, enviar o branch local ao repositório oficial, abrir PR, validar o workflow e confirmar o guia e o modelo públicos depois da integração. A distribuição pública para jogadores também requer uma versão desktop que inclua Live Sync.
-2. Abrir **Configurar Cloudflare** em uma instância Azphelumbra com Live Sync. O proprietário escolhe sua conta Free e confirma a implantação no navegador. O assistente gera a chave de vinculação e o proprietário cola a chave na Cloudflare. Senhas e tokens administrativos permanecem com o proprietário.
-3. Vincular o endpoint de produção, criar uma sala descartável, publicar um cenário de teste e entrar de outra instalação ou perfil. Confirmar HTTPS, WSS, persistência SQLite, revisão recebida, reconexão, revogação e encerramento.
-4. Com duas instâncias do jogo ou dois jogadores, conferir pins e formas no mapa grande e minimapa. Encerrar a sala após o teste. Combinar uma rodada separada com limites definidos antes de aplicar carga em conta real.
+1. Com dois jogadores no AION 2, conferir os pins e formas no mapa grande e no minimapa durante a siege.
+2. Acompanhar solicitações e reconexões na conta do caller. Para qualquer teste de carga em produção, combinar a janela e os limites com o titular da conta.
+3. Ao reportar um problema, informar versão do aplicativo e do Windows, número aproximado de usuários, sintoma e etapas de reprodução. Remover chaves, tokens, convites privados e dados pessoais de anexos.
+
+Para rollback, feche o Azphelumbra e faça uma cópia de `%LOCALAPPDATA%/StrigoiAetherMap`. Desinstale a beta.16 e instale a [beta.15 publicada](https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.15). O desinstalador preserva o diretório de dados.
 
 O cliente se comunica com o Worker do caller. O GitHub do projeto hospeda o modelo e o guia; os snapshots das guildas ficam na conta que implantou o Worker.
 

@@ -1,23 +1,26 @@
 {
   "prerelease": true,
   "repository": "jpgalvao-architect/strigoi-aether-map",
-  "version": "0.10.0-beta.15",
-  "tag": "v0.10.0-beta.15",
+  "version": "0.10.0-beta.16",
+  "tag": "v0.10.0-beta.16",
+  "published_at": "2026-11-16T14:50:36Z",
+  "previous_tag": "v0.10.0-beta.15",
+  "release_url": "https://github.com/jpgalvao-architect/strigoi-aether-map/releases/tag/v0.10.0-beta.16",
   "files": [
     {
-      "file": "StrigoiAetherMap-Setup-0.10.0-beta.15.exe",
-      "bytes": 234870668,
-      "sha256": "8d428ec03a83975f6ad07e6b19215040855dab18729101be6c1381e14d60c362"
+      "file": "StrigoiAetherMap-Setup-0.10.0-beta.16.exe",
+      "bytes": 236169242,
+      "sha256": "7b986f4c840c0c6c674c84fe105e05900ba8d4ce3fa371a572f0f94c07960792"
     },
     {
-      "file": "Azphelumbra-0.10.0-beta.15-windows-x64.zip",
-      "bytes": 275574521,
-      "sha256": "222a6034265bab1bbba1aa68c2aa6ae53079044e7ff4ba6a73ebcb5d9e1847c2"
+      "file": "Azphelumbra-0.10.0-beta.16-windows-x64.zip",
+      "bytes": 276964624,
+      "sha256": "a26fc556497219c8a6280c434932ed3203d883181274a79ba4f73bc4903c6534"
     },
     {
       "file": "strigoi-aether-map-source.zip",
-      "bytes": 86742223,
-      "sha256": "b6bebeef79257ed6b1f8f177126fc03b15a6b52cefc455cc1f858550dda7cb82"
+      "bytes": 87895885,
+      "sha256": "ca32e2cd7f767ed14e808b5bbfa05a461106c6a6205eeba00d6059f3c55d6b43"
     }
   ]
 }

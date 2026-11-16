@@ -31,12 +31,15 @@
     'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
     'showcase.combat.title': 'Seu grupo. Seu dano observado.',
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
-    'download.beta': "A beta.15 traz espanhol latino-americano, um aviso mais simples no Sonar e desenhos táticos no Siege Command. O instalador prepara o mapa de Lower Reshanta para uso offline.",
+    'download.beta': "A beta.16 inclui o Live Sync opcional. Capacidade em produção e verificação visual durante uma siege ainda estão em avaliação.",
     'download.siege': "Configurar Siege Command",
     'showcase.sonar.title': 'O som vira uma pista na tela.',
     'showcase.sonar.description': 'Ative o Sonar para receber um aviso visual quando o som de um Cubo Oculto for reconhecido.',
   });
   const en = {
+    'download.release': "GitHub release notes",
+    'download.previous': "Previous version · beta.15",
+    'download.stable': "Stable release · v0.8.0",
     "live.feature.title": "Live Sync Beta — Share strategies in real time",
     "live.feature.intro": "Share Lower Reshanta pins, flight rings and tactical drawings with your group during a siege.",
     "live.feature.host": "Host on your Cloudflare account",
@@ -90,7 +93,7 @@
     'screen.combat': 'Combat module with observed damage, DPS and group share',
     'showcase.combat.title': 'Your group. Your observed damage.',
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
-    'download.beta': "Beta.15 adds Latin American Spanish, a simpler Sonar alert, and tactical drawings in Siege Command. Setup prepares the Lower Reshanta map for offline use.",
+    'download.beta': "Beta.16 includes optional Live Sync. Production capacity and in-game siege visuals are still being evaluated.",
     'download.siege': "Set up Siege Command",
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
     'showcase.sonar.description': 'Enable Sonar to receive a visual alert when it recognizes the sound of a Hidden Cube.',
@@ -140,6 +143,9 @@
     'legal.license': 'Read the complete GPLv3 license →',
   };
   const es = {
+    'download.release': "Notas en GitHub Releases",
+    'download.previous': "Versión anterior · beta.15",
+    'download.stable': "Versión estable · v0.8.0",
     "live.feature.title": "Live Sync Beta — Estrategias compartidas en tiempo real",
     "live.feature.intro": "Comparte pines, anillos de vuelo y dibujos tácticos de Lower Reshanta con tu grupo durante el asedio.",
     "live.feature.host": "Hospeda en tu cuenta de Cloudflare",
@@ -207,7 +213,7 @@
     "screen.combat": "Módulo de combate con daño registrado, DPS y participación de cada integrante del grupo",
     "showcase.combat.title": "Revisa el daño que hizo tu grupo",
     "showcase.combat.description": "La medición espera al juego y el panel aparece en las instancias reconocidas. Al salir de la instancia, el panel se oculta y la medición continúa. Puedes ocultarlo desde el menú rápido. Los resultados quedan en el historial.",
-    "download.beta": "La beta.15 incorpora español latinoamericano, un aviso más sencillo en el Sonar y dibujos tácticos en Siege Command. El instalador prepara el mapa de Lower Reshanta para usarlo sin conexión.",
+    "download.beta": "La beta.16 incluye Live Sync opcional. La capacidad en producción y la verificación visual durante un asedio siguen en evaluación.",
     "download.siege": "Configurar Siege Command",
     "showcase.sonar.title": "Una alerta visual para el sonido del cubo",
     "showcase.sonar.description": "Activa el Sonar para recibir un aviso visual cuando reconozca el sonido de un Cubo Oculto.",
@@ -313,6 +319,11 @@
     const t = translations[next];
     document.documentElement.lang = languageTags[next];
     document.documentElement.dataset.locale = next;
+    document.querySelectorAll('time[data-release-date]').forEach(date => {
+      date.textContent = new Intl.DateTimeFormat(languageTags[next], {
+        dateStyle: 'medium', timeZone: 'UTC',
+      }).format(new Date(date.dateTime + 'T00:00:00Z'));
+    });
     const liveGuide = document.body.dataset.page === 'live-sync';
     document.title = liveGuide ? liveGuides[next][0] : t[document.body.dataset.page === 'terms' ? 'legal.page.title' : document.body.dataset.page === 'guide' ? 'guide.page.title' : 'page.title'];
     document.querySelectorAll('[data-i18n]').forEach(el => {
