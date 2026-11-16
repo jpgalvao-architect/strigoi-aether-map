@@ -11,9 +11,9 @@ from PySide6.QtNetwork import QNetworkRequest
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
-from app.modules.siege.live_sync import LiveSync
+from app.modules.siege.live_sync import LiveSync, Reply
 from app.modules.siege.live_sync_credentials import PairingStore
-from app.modules.siege.live_sync_protocol import Invite, endpoint_url, read_snapshot, snapshot_bytes
+from app.modules.siege.live_sync_protocol import Invite, digest, endpoint_url, read_snapshot, snapshot_bytes
 from app.modules.siege.drawing import visible_drawings
 from app.modules.siege.markers import markers_for
 from app.modules.siege.models import Coordinate
@@ -88,6 +88,19 @@ def test_shared_preset_keeps_local_state(app, tmp_path):
     assert "Local" not in {badge.text for _, _, _, badge in markers_for(siege, atlas, shared=siege.session_preset)}
     siege.set_session_preset(None)
     assert siege.path.read_bytes() == before
+
+
+@pytest.mark.parametrize('matches', [True, False])
+def test_weak_snapshot_etag_still_requires_matching_checksum(app, tmp_path, monkeypatch, matches):
+    siege = SiegeService(tmp_path)
+    sync = LiveSync(siege, tmp_path)
+    monkeypatch.setattr(sync, 'open_room', lambda: None)
+    body = snapshot_bytes(siege.exportable_preset())
+    checksum = digest(body) if matches else '0' * 64
+    sync.accept_snapshot(Reply(200, body, b'1', f'W/"{checksum}"'.encode('ascii')), initial=True)
+    assert sync.version == (1 if matches else 0)
+    assert (siege.session_preset is not None) is matches
+    sync.shutdown()
 
 
 class LoopbackSync(LiveSync):

@@ -441,7 +441,10 @@ class LiveSync(QObject):
                     raise ValueError
                 version = int(reply.version)
                 checksum = digest(reply.body)
-                if (not version or reply.etag != f'"{checksum}"'.encode('ascii')
+                # A proxy can weaken an ETag during transfer encoding. The
+                # checksum must still match the full body and any socket notice.
+                etag = reply.etag.removeprefix(b'W/')
+                if (not version or etag != f'"{checksum}"'.encode('ascii')
                         or (version == self.wanted and self.wanted_hash != checksum)
                         or (version == self.version and self.checksum != checksum)):
                     raise ValueError
