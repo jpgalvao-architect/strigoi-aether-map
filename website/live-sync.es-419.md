@@ -1,7 +1,7 @@
 # Live Sync en Azphelumbra
 
 Comparte pines, anillos de vuelo y dibujos tácticos de Lower Reshanta en el mapa y el minimapa de AION 2. El caller publica cada versión desde Siege Command. Los jugadores reciben la estrategia con una invitación.
-Usa una versión de Azphelumbra que muestre **Live Sync** en Siege Command.
+Usa la **0.10.0-beta.17** o una versión más reciente para seguir las capturas y usar los accesos rápidos de esta guía.
 
 ## Configuración rápida para callers
 
@@ -9,7 +9,23 @@ Usa una versión de Azphelumbra que muestre **Live Sync** en Siege Command.
 2. Selecciona **Configurar Cloudflare** para generar la clave de vinculación e iniciar la implementación en el navegador.
 3. Cuando Cloudflare termine, pega la dirección de producción `.workers.dev` en Azphelumbra y selecciona **Verificar y vincular**.
 4. Selecciona **Crear sesión** y luego **Copiar invitación**. Comparte la invitación con el grupo.
-5. Edita las marcas y los dibujos en Siege Command. Cuando la estrategia esté lista, regresa a Live Sync y selecciona **Publicar cambios**. El panel indica la versión publicada y cuántos jugadores están conectados.
+5. Usa las **Herramientas rápidas** en Live Sync. Selecciona el ícono de marcador, rectángulo, círculo o flecha para marcar el mapa.
+6. Selecciona **Publicar cambios** cuando la estrategia esté lista. Consulta la versión publicada y cuántos jugadores están conectados en el mismo panel.
+
+![Panel del caller con Herramientas rápidas, cambios pendientes y el botón Publicar cambios](assets/live-sync-host-es-419.webp)
+
+## Dibuja y publica la estrategia
+
+Haz clic en el mapa para colocar un marcador. Para crear una figura, haz clic
+y arrastra. Mantén **Mayús** para dibujar un cuadrado o círculo. Presiona
+**Esc** o selecciona el ícono **×** para cancelar la herramienta activa.
+
+Usa **Seleccionar y mover** para arrastrar una marca. Para cambiar su
+etiqueta, color o visibilidad, selecciónala y elige **Editar propiedades**.
+El **Editor táctico** reúne los marcadores, objetivos y figuras del ajuste
+preestablecido activo. También puedes comenzar en el editor y publicar desde Live Sync.
+
+![Editor táctico con la flecha seleccionada y la lista de marcas debajo de la barra](assets/app-siege-editor-es-419.webp)
 
 ## Guía ilustrada de implementación
 
@@ -19,7 +35,7 @@ Si necesitas una cuenta, [regístrate en Cloudflare](https://dash.cloudflare.com
 
 Cloudflare puede pedir permiso para copiar la plantilla a un repositorio y conectar la integración **Workers Builds**. Revisa la cuenta, el repositorio y los permisos que aparecen. Si tienes la opción, concede acceso únicamente al repositorio de esta implementación.
 
-![Primera pantalla del asistente en portugués, con los botones para copiar la clave e implementar](assets/live-sync-deploy.webp)
+![Primera pantalla del asistente con los botones para copiar la clave e implementar en Cloudflare](assets/live-sync-deploy-es-419.webp)
 
 Pega la clave en `LIVE_SYNC_OWNER_KEY` en Cloudflare y confirma. La plantilla prepara el Worker y su Durable Object con SQLite. Mantén abierto el asistente de Azphelumbra mientras termina la implementación. [Cómo funciona Deploy to Cloudflare](https://developers.cloudflare.com/workers/platform/deploy-buttons/).
 
@@ -27,7 +43,7 @@ Pega la clave en `LIVE_SYNC_OWNER_KEY` en Cloudflare y confirma. La plantilla pr
 
 Copia la dirección HTTPS de producción que termina en `.workers.dev`. Pégala en Azphelumbra y selecciona **Verificar y vincular**. Azphelumbra verifica el Worker, la clave, el almacenamiento y la conexión de sincronización. Cuando aparezca **Cloudflare está lista para hospedar sesiones**, puedes crear una sesión.
 
-![Segunda pantalla del asistente en portugués, con el campo HTTPS y el botón para verificar](assets/live-sync-verify.webp)
+![Segunda pantalla del asistente con el campo HTTPS y el botón Verificar y vincular](assets/live-sync-verify-es-419.webp)
 
 Si ya tienes un Worker en tu cuenta, elige **Ya tengo la dirección del Worker** e ingresa la clave que usaste para esa implementación. Guarda esa clave para ti y comparte solo la invitación de la sesión.
 
@@ -38,6 +54,8 @@ Si ya tienes un Worker en tu cuenta, elige **Ya tengo la dirección del Worker**
 3. Activa el **overlay de Reshanta** y entra a Lower Reshanta. Si falta configurar el área, usa **Seleccionar minimapa**.
 4. Presiona **M** para ver la estrategia publicada en el mapa grande. La aplicación recibe automáticamente las nuevas versiones.
 5. Selecciona **Salir de la sesión** para recuperar tus marcas en el overlay. Tus ajustes preestablecidos permanecen en tu computadora.
+
+![Panel del jugador con un campo para pegar la invitación y el botón Unirse a la sesión](assets/live-sync-join-es-419.webp)
 
 El caller puede seleccionar **Finalizar sesión** para desconectar al grupo y eliminar la estrategia publicada del Worker. El Atlas, Siege Command local y los demás módulos funcionan sin conexión.
 

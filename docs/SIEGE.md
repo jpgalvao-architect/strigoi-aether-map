@@ -3,18 +3,18 @@
 O Siege Command é o editor tático de Chaotic Lower Reshanta. O mapa também
 fica disponível no Atlas para consulta de Coletas e Pets.
 
-## Editar pins
+## Editar pins no Editor tático
 
 **Siege Global — Default** começa com P1–P12 nas coordenadas de
-referência. Abra **Siege Command → Editar pins** para editar o preset ativo.
+referência. Abra **Siege Command → Editor tático** para editar o preset ativo.
 
 1. Clique em um pin no mapa ou selecione-o na lista. Edite nome, categoria,
    cor, tamanho e visibilidade. Arraste o pin para reposicioná-lo.
-2. Use **Adicionar pin** para marcar qualquer ponto, inclusive sobre a água.
+2. Use o ícone **Adicionar pin** para marcar qualquer ponto, inclusive sobre a água.
    Para criar um objetivo como P13, dê esse nome ao pin e use a categoria
    **Objetivo de siege**.
-3. Clique em **Excluir pin** e confirme para remover o pin do preset.
-   **Cancelar edição** ou **Esc** abandonam o posicionamento em curso.
+3. Use o ícone de lixeira e confirme para remover o pin selecionado.
+   Use o ícone **×** ou **Esc** para cancelar a ferramenta ativa.
 
 As mudanças são salvas ao concluir cada edição. Use **Restaurar marcações
 padrão** para recuperar P1–P12 no preset atual. Confirme para substituir
@@ -25,24 +25,28 @@ a extensão. Role para ampliar e arraste o terreno para deslocar o mapa.
 Os anéis usam um símbolo circular com código abaixo. Todos os pins usam o
 mesmo formato e podem herdar a cor da camada.
 
-## Desenhos táticos
+## Desenhar no Editor tático
 
-1. Abra **Siege Command → Desenhos táticos** e escolha **Retângulo**,
-   **Círculo / elipse** ou **Seta**. Arraste no mapa para desenhar. Segure
+1. No **Editor tático**, escolha o ícone de retângulo, círculo ou seta.
+   Arraste no mapa para desenhar. Segure
    **Shift** para fazer um quadrado ou círculo.
 2. Clique na forma ou escolha-a na lista. Arraste a forma para mover ou
    arraste uma das alças para redimensionar. Na seta, arraste as pontas
    para mudar a direção.
 3. Ajuste cor, espessura, opacidade, traço e, se quiser, adicione um rótulo.
    Na seta, também dá para ajustar o tamanho da ponta.
-4. Use **Duplicar forma** para criar uma cópia ou **Excluir forma** para
-   removê-la do preset. Use **Esc** ou **Cancelar** para abandonar o gesto.
+4. Use **Duplicar forma** para criar uma cópia ou o ícone de lixeira para
+   remover a seleção. Use **Esc** ou **×** para abandonar o gesto.
    **Formas táticas** controla a camada. **Forma visível** controla apenas a
    seleção atual.
 
 Presets novos começam sem desenhos. O editor salva as mudanças ao concluir
 cada edição. As formas aparecem no minimapa e no mapa aberto com M quando
 a camada e o **Overlay de Reshanta** estão ativos.
+
+Ao hospedar pelo **Live Sync**, use **Ferramentas rápidas** para editar o
+mesmo mapa. Clique em **Publicar alterações** para enviar o plano ao grupo.
+[Guia ilustrado do Live Sync](../website/live-sync.md).
 
 ## Ver as marcações no jogo
 

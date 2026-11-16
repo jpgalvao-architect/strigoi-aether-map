@@ -379,6 +379,7 @@ def test_free_pin_editor_persists_positions_and_properties(qapp, tmp_path, monke
     window.show()
     qapp.processEvents()
     page = window.siege_page
+    editor = page.editor
     view = page.board.view
     view.fit_full()
     left = Qt.MouseButton.LeftButton
@@ -387,24 +388,37 @@ def test_free_pin_editor_persists_positions_and_properties(qapp, tmp_path, monke
         locations = [siege.objectives[n].map_position for n in (10, 2, 6)]
         # Black Fragments and open water outside the three sets of objectives.
         locations += [Coordinate(x=.55, y=.42), Coordinate(x=.34, y=.26)]
-        for position in locations:
+        for index, position in enumerate(locations):
             point = view.mapFromScene(QPointF(position.x * 4096, position.y * 4096))
-            page.marker.click()
+            if index == 0:
+                page.section.setCurrentIndex(page.section.findData('live'))
+                assert not editor.quick_tools.isVisible()
+                page.live_panel.mode.setCurrentIndex(page.live_panel.mode.findData('host'))
+                assert editor.quick_tools.isVisible()
+                editor.quick_toolbar.buttons['pin'].click()
+                assert editor.quick_toolbar.buttons['pin'].isChecked()
+                assert editor.toolbar.buttons['pin'].isChecked()
+            else:
+                editor.toolbar.buttons['pin'].click()
             QTest.mouseClick(view.viewport(), left, pos=point)
-            pin = page.selected_marker()
+            pin = editor.selected_marker()
             assert pin is not None and pin.visible
             assert pin.position.x == pytest.approx(position.x, abs=.003)
             assert pin.position.y == pytest.approx(position.y, abs=.003)
+            if index == 0:
+                editor.properties.click()
+                assert page.section.currentData() == 'editor'
+                assert editor.selected_marker() == pin
         assert len(siege.preset.markers) == 17 and 'CustomMarkers' in siege.preset.layers
         assert siege.preset.name == OFFICIAL
-        marker = page.selected_marker()
+        marker = editor.selected_marker()
         point = view.mapFromScene(view._at(marker.position)) - QPoint(0, 5)
         end = point + QPoint(65, 20)
         delta = view.mapToScene(end) - view.mapToScene(point)
         QTest.mousePress(view.viewport(), left, pos=point)
         QTest.mouseMove(view.viewport(), end)
         QTest.mouseRelease(view.viewport(), left, pos=end)
-        moved = page.selected_marker()
+        moved = editor.selected_marker()
         assert moved.id == marker.id
         assert moved.position.x == pytest.approx(marker.position.x + delta.x()/4096)
         assert moved.position.y == pytest.approx(marker.position.y + delta.y()/4096)
@@ -412,23 +426,31 @@ def test_free_pin_editor_persists_positions_and_properties(qapp, tmp_path, monke
         view.horizontalScrollBar().setValue(view.horizontalScrollBar().minimum())
         window.resize(1230, 820)
         qapp.processEvents()
-        assert page.selected_marker().position == moved.position
-        page.pin_name.setText('Vigia')
-        page.pin_name.editingFinished.emit()
-        page.edit_pin(color='#2a8bef', category='Defesa', scale=1.4, visible=False)
+        assert editor.selected_marker().position == moved.position
+        editor.pin_name.setText('Vigia')
+        editor.pin_name.editingFinished.emit()
+        editor.edit_pin(color='#2a8bef', category='Defesa', scale=1.4, visible=False)
         reopened = SiegeService(tmp_path)
         pin = next(mark for mark in reopened.preset.markers if mark.id == marker.id)
         assert (pin.name, pin.color, pin.category, pin.scale, pin.visible) == ('Vigia', '#2a8bef', 'Defesa', 1.4, False)
         assert pin.position == moved.position
-        page.marker.click()
+        editor.toolbar.buttons['pin'].click()
         QTest.keyClick(view, Qt.Key_Escape)
         assert not view.placement and len(siege.preset.markers) == 17
-        page.select_pin(marker.id)
-        page.delete_marker()
+        editor.select(f'pin:{marker.id}')
+        editor.toolbar.buttons['delete'].click()
         assert len(SiegeService(tmp_path).preset.markers) == 16
         assert len(siege.objectives) == 12
         siege.select_preset(OFFICIAL)
         assert len(siege.preset.markers) == 16
+        page.section.setCurrentIndex(page.section.findData('live'))
+        editor.quick_toolbar.buttons['arrow'].click()
+        assert view.drawing.tool == 'arrow'
+        page.live_panel.mode.setCurrentIndex(page.live_panel.mode.findData('player'))
+        assert view.session_preview and not view.editing_pins and not view.drawing.tool
+        assert not editor.quick_tools.isVisible() and not view.placement
+        page.show_editor()
+        assert view.editing_pins and not view.session_preview
     finally:
         window.close()
 
@@ -559,6 +581,7 @@ def test_standard_objectives_edit_like_other_pins_and_restore_on_confirmation(qa
     window.show()
     qapp.processEvents()
     page = window.siege_page
+    editor = page.editor
     view = page.board.view
     view.fit_full()
     defaults = {marker.id: marker for marker in siege.standard_markers()}
@@ -568,7 +591,7 @@ def test_standard_objectives_edit_like_other_pins_and_restore_on_confirmation(qa
         badge = next(item for item in view.badges if item.pin_id == marker_id)
         point = view.mapFromScene(badge.pos()) - QPoint(0, 8)
         QTest.mouseClick(view.viewport(), left, pos=point)
-        assert page.selected_marker().id == marker_id
+        assert editor.selected_marker().id == marker_id
         return point
 
     try:
@@ -577,33 +600,33 @@ def test_standard_objectives_edit_like_other_pins_and_restore_on_confirmation(qa
         QTest.mousePress(view.viewport(), left, pos=start)
         QTest.mouseMove(view.viewport(), destination)
         QTest.mouseRelease(view.viewport(), left, pos=destination)
-        moved = page.selected_marker()
+        moved = editor.selected_marker()
         expected = view._at(defaults[moved.id].position) + view.mapToScene(destination) - view.mapToScene(start)
         assert moved.position.x == pytest.approx(expected.x()/view.map.width)
         assert moved.position.y == pytest.approx(expected.y()/view.map.height)
         assert moved.position != defaults[moved.id].position
 
-        page.select_pin('objective-p2')
-        page.pin_name.setText('Defesa')
-        page.pin_name.editingFinished.emit()
-        page.select_pin('objective-p3')
+        editor.items.setCurrentIndex(editor.items.findData('pin:objective-p2'))
+        editor.pin_name.setText('Defesa')
+        editor.pin_name.editingFinished.emit()
+        editor.select('pin:objective-p3')
         monkeypatch.setattr(QColorDialog, 'getColor', lambda *_: QColor('#32b688'))
-        page.choose_pin_color()
-        page.pin_scale.setValue(1.4)
-        page.pin_scale.editingFinished.emit()
-        page.pin_visibility.setChecked(False)
-        page.select_pin('objective-p4')
+        editor.choose_pin_color()
+        editor.pin_scale.setValue(1.4)
+        editor.pin_scale.editingFinished.emit()
+        editor.pin_visibility.setChecked(False)
+        editor.select('pin:objective-p4')
         monkeypatch.setattr(QMessageBox, 'question', lambda *_: QMessageBox.Cancel)
-        page.delete_marker()
-        assert page.selected_marker().id == 'objective-p4'
+        editor.toolbar.buttons['delete'].click()
+        assert editor.selected_marker().id == 'objective-p4'
         monkeypatch.setattr(QMessageBox, 'question', lambda *_: QMessageBox.Yes)
-        page.delete_marker()
+        editor.toolbar.buttons['delete'].click()
         assert all(item.pin_id != 'objective-p4' for item in view.badges)
         extra = siege.add_marker('P13', Coordinate(x=.12, y=.33))
-        page.select_pin(extra.id)
-        page.pin_category.setText('Objetivo de siege')
-        page.pin_category.editingFinished.emit()
-        extra = page.selected_marker()
+        editor.select(f'pin:{extra.id}')
+        editor.pin_category.setText('Objetivo de siege')
+        editor.pin_category.editingFinished.emit()
+        extra = editor.selected_marker()
         assert extra.category == OBJECTIVE_CATEGORY and extra.origin == 'custom'
         lookout = siege.add_marker('Vigia', Coordinate(x=.21, y=.35))
         assert SiegeService(tmp_path).preset == siege.preset

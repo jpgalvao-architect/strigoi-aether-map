@@ -6,7 +6,8 @@ from time import monotonic
 from types import SimpleNamespace
 
 import pytest
-from PySide6.QtCore import QUrl
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QColor, QImage
 from PySide6.QtNetwork import QNetworkRequest
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
@@ -229,8 +230,27 @@ def live_sync_player(pipe, directory):
 
 
 @pytest.mark.skipif(os.getenv('AZPHELUMBRA_LIVE_SYNC_LOCAL_TEST') != '1', reason='requires isolated Wrangler on port 8976')
-def test_live_sync_between_independent_processes(app, tmp_path):
-    host = LoopbackSync(SiegeService(tmp_path / 'host'), tmp_path / 'host')
+def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
+    from app.services.context import AppContext
+    from app.ui import siege_page
+
+    monkeypatch.setattr(siege_page, 'LiveSync', LoopbackSync)
+    host_context = AppContext(tmp_path / 'host')
+    siege = host_context.siege
+    image = QImage(32, 32, QImage.Format_RGB32)
+    image.fill(QColor('#172435'))
+    assert image.save(str(siege.map_path))
+    siege._set_map()
+    page = siege_page.SiegePage(host_context, lambda _: None, lambda: None, lambda: True)
+    page.resize(1120, 760)
+    page.show()
+    app.processEvents()
+    page.section.setCurrentIndex(page.section.findData('live'))
+    panel = page.live_panel
+    panel.mode.setCurrentIndex(panel.mode.findData('host'))
+    view = page.board.view
+    view.fit_full()
+    host = page.live_sync
     context = get_context('spawn')
     pipe, player_pipe = context.Pipe()
     player = context.Process(target=live_sync_player, args=(player_pipe, tmp_path / 'player'))
@@ -257,29 +277,42 @@ def test_live_sync_between_independent_processes(app, tmp_path):
         pytest.fail(f'Player never received revision {version}')
 
     try:
-        host.set_mode('host')
         host.pair(FAKE_ENDPOINT, 'a' * 64)
         wait_for(lambda: host.owner is not None)
         host.create()
         wait_for(lambda: host.state == 'Conectado.')
-        siege = host.siege
         removed = siege.add_marker('Remove me', Coordinate(x=.3, y=.3))
-        host.publish()
+        wait_for(panel.publish_button.isEnabled)
+        panel.publish_button.click()
         wait_for(lambda: host.version == 1)
         ask('join', host.invite.encode())
         first = sync_version(1)
         assert 'Remove me' in first['pins'] and 'Personal' not in first['pins']
-        siege.add_marker('Strategy', Coordinate(x=.5, y=.5))
+        tools = page.editor.quick_toolbar.buttons
+        center = view.mapFromScene(view._at(Coordinate(x=.5, y=.5)))
+        tools['pin'].click()
+        assert tools['pin'].isChecked()
+        QTest.mouseClick(view.viewport(), Qt.LeftButton, pos=center)
+        pin = page.editor.selected_marker()
+        assert pin and pin.name == 'Pin 1'
         siege.edit_marker('objective-p1', position=Coordinate(x=.4, y=.6))
         for shape in ('arrow', 'ellipse', 'rectangle'):
-            siege.add_drawing(shape, Coordinate(x=.4, y=.4), Coordinate(x=.6, y=.6))
+            tools[shape].click()
+            assert tools[shape].isChecked()
+            start = view.mapFromScene(view._at(Coordinate(x=.35, y=.38)))
+            end = view.mapFromScene(view._at(Coordinate(x=.6, y=.57)))
+            QTest.mousePress(view.viewport(), Qt.LeftButton, pos=start)
+            QTest.mouseMove(view.viewport(), end)
+            QTest.mouseRelease(view.viewport(), Qt.LeftButton, pos=end)
+            assert tools['select'].isChecked()
         siege.delete_marker(removed.id)
         QTest.qWait(1600)
         assert ask('state') == first
-        host.publish()
+        assert panel.publish_button.isEnabled()
+        panel.publish_button.click()
         second = sync_version(2)
         assert second['pins']['P1'] == (.4, .6)
-        assert second['pins']['Strategy'] == (.5, .5)
+        assert second['pins']['Pin 1'] == (pin.position.x, pin.position.y)
         assert 'Remove me' not in second['pins']
         assert set(second['shapes']) == {'arrow', 'ellipse', 'rectangle'}
         offline = ask('offline')
@@ -297,7 +330,8 @@ def test_live_sync_between_independent_processes(app, tmp_path):
         if host.invite and not host.busy:
             host.close_room()
             wait_for(lambda: not host.invite)
-        host.shutdown()
+        page.shutdown()
+        page.close()
         if player.is_alive():
             with suppress(OSError):
                 pipe.send(('stop', None))

@@ -95,9 +95,6 @@ class DrawingCanvas:
     def set_tool(self, tool):
         self.cancel()
         self.tool = tool
-        self.view.viewport().setCursor(Qt.CrossCursor if tool else Qt.ArrowCursor)
-        if tool:
-            self.view.setFocus()
 
     def cancel(self):
         if self.preview is not None:
@@ -121,7 +118,7 @@ class DrawingCanvas:
             return
         preset = self.view.preset
         for drawing in preset.drawings:
-            selected = self.enabled and drawing.id == self.selected
+            selected = self.enabled and not self.tool and drawing.id == self.selected
             visible = drawing.visible and 'TacticalShapes' in preset.layers
             if visible or selected:
                 item = DrawingItem(drawing, drawing_color(drawing, preset), self.view, selected)
@@ -136,10 +133,16 @@ class DrawingCanvas:
         if self.preview is not None:
             self.preview.update_projection()
 
-    def select(self, drawing_id):
-        if self.selected != drawing_id:
-            self.selected = drawing_id
-            self.refresh()
+    def press_handle(self, cursor):
+        selected = self.items.get(self.selected)
+        if selected is None:
+            return False
+        for key, point in (('start', selected.projected.start), ('end', selected.projected.end)):
+            if (self.view.mapFromScene(point)-cursor).manhattanLength() <= 12:
+                anchor = self.view._coordinate(self.view.mapToScene(cursor))
+                self.gesture = DrawingGesture(cursor, anchor, selected.drawing, key, False)
+                return True
+        return False
 
     def press(self, cursor):
         view = self.view
@@ -154,17 +157,10 @@ class DrawingCanvas:
                 self.gesture = DrawingGesture(cursor, anchor, drawing, 'end', True)
             return True
 
-        selected = self.items.get(self.selected)
-        if selected is not None:
-            for key, position in (('start', selected.projected.start), ('end', selected.projected.end)):
-                if (view.mapFromScene(position)-cursor).manhattanLength() <= 12:
-                    self.gesture = DrawingGesture(cursor, anchor, selected.drawing, key, False)
-                    return True
         item = next((item for item in view.items(cursor) if isinstance(item, DrawingItem)), None)
         if item is None:
             return False
         drawing = item.drawing
-        self.select(drawing.id)
         view.drawing_selected.emit(drawing.id)
         self.gesture = DrawingGesture(cursor, anchor, drawing, None, False)
         return True

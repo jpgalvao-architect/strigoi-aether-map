@@ -1,7 +1,7 @@
 # Live Sync in Azphelumbra
 
 Share Lower Reshanta pins, flight rings, and tactical drawings on the AION 2 map and minimap. The caller publishes each revision from Siege Command. Players receive the strategy through an invite.
-Use a version of Azphelumbra that shows **Live Sync** in Siege Command.
+Use **0.10.0-beta.17** or later to follow the screenshots and use the shortcuts in this guide.
 
 ## Quick setup for callers
 
@@ -9,7 +9,23 @@ Use a version of Azphelumbra that shows **Live Sync** in Siege Command.
 2. Select **Set up Cloudflare** to generate a pairing key and start deployment in your browser.
 3. When Cloudflare finishes, paste the production `.workers.dev` address into Azphelumbra and select **Verify and link**.
 4. Select **Create session**, then **Copy invite**, and share the invite with your group.
-5. Edit your markers and drawings in Siege Command. When the strategy is ready, return to Live Sync and select **Publish changes**. The panel shows the published version and how many players are connected.
+5. In Live Sync, use **Quick tools**. Select the pin, rectangle, circle, or arrow icon to mark the map.
+6. Select **Publish changes** when the strategy is ready. Check the published version and the number of connected players in the same panel.
+
+![Caller panel with Quick tools, unpublished local changes, and the Publish changes button](assets/live-sync-host-en_US.webp)
+
+## Draw and publish the strategy
+
+Click the map to place a pin. To draw a shape, click and drag. Hold **Shift**
+to draw a square or a circle. Press **Esc** or select the **×** icon to cancel
+the current tool.
+
+Use **Select and move** to drag a marking. To change its label, color, or
+visibility, select it and choose **Edit properties**. The **Tactical editor**
+lists pins, objectives, and shapes from the active preset. You can also start
+in the editor and publish from Live Sync.
+
+![Tactical editor with the arrow selected and the markings list below the toolbar](assets/app-siege-editor-en_US.webp)
 
 ## Illustrated deployment guide
 
@@ -19,7 +35,7 @@ If you need an account, [sign up for Cloudflare](https://dash.cloudflare.com/sig
 
 Cloudflare may ask to copy the template to a repository and connect the **Workers Builds** integration. Check the account, repository, and permissions on screen. If offered a choice, give the integration access to the deployment repository only.
 
-![The first setup screen in Portuguese, with Copy pairing key and Deploy to Cloudflare](assets/live-sync-deploy.webp)
+![The first setup screen with Copy pairing key and Deploy to Cloudflare](assets/live-sync-deploy-en_US.webp)
 
 Paste the key into `LIVE_SYNC_OWNER_KEY` on Cloudflare and confirm the deployment. The template provisions the Worker and its SQLite-backed Durable Object. Keep the Azphelumbra setup window open while it deploys. [How Deploy to Cloudflare works](https://developers.cloudflare.com/workers/platform/deploy-buttons/).
 
@@ -27,7 +43,7 @@ Paste the key into `LIVE_SYNC_OWNER_KEY` on Cloudflare and confirm the deploymen
 
 Copy the production HTTPS address ending in `.workers.dev`. Paste it into Azphelumbra and select **Verify and link**. Azphelumbra checks the Worker, pairing key, storage, and synchronization connection. When the panel says **Cloudflare is ready to host**, you can create a session.
 
-![The second setup screen in Portuguese, with the HTTPS address field and Verify and link](assets/live-sync-verify.webp)
+![The second setup screen with the HTTPS address field and Verify and link](assets/live-sync-verify-en_US.webp)
 
 For an existing Worker in your account, select **I already have the Worker address** and enter the pairing key you used for that deployment. Keep that key private. Share only the session invite.
 
@@ -38,6 +54,8 @@ For an existing Worker in your account, select **I already have the Worker addre
 3. Enable **Reshanta overlay** and enter Lower Reshanta to see the strategy in the game. Use **Select minimap** if you still need to set the minimap area.
 4. Press **M** to see the published strategy on the large map. The app receives new published versions automatically.
 5. Select **Leave session** to restore your own overlay markers. Personal presets stay on your computer.
+
+![Player panel with an invite field and the Join session button](assets/live-sync-join-en_US.webp)
 
 The caller can select **End session** to disconnect the group and clear the published strategy from the Worker. The Atlas, local Siege Command, and other modules are available offline.
 

@@ -35,24 +35,35 @@
     <a class="legal-back" href="guide.html" data-i18n="live.back">← Guia do Azphelumbra</a>
 <article class="legal-document live-guide" lang="pt-BR" data-legal-language="pt_BR"><h1 id="pt_BR-live-sync-no-azphelumbra">Live Sync no Azphelumbra</h1>
 <p>Compartilhe os pins, anéis e desenhos táticos de Lower Reshanta no mapa e no minimapa do AION 2. O caller publica cada versão pelo Siege Command. Os jogadores recebem a estratégia com um convite.
-Use uma versão do Azphelumbra que mostre <strong>Live Sync</strong> no Siege Command.</p>
+Use a <strong>0.10.0-beta.17</strong> ou uma versão mais recente para acompanhar as telas e usar os atalhos deste guia.</p>
 <h2 id="pt_BR-configuracao-rapida-para-callers">Configuração rápida para callers</h2>
 <ol>
 <li>Abra <strong>Siege Command</strong>, selecione <strong>Live Sync</strong> e escolha <strong>Hospedar sessão (Caller)</strong>.</li>
 <li>Clique em <strong>Configurar Cloudflare</strong>. O assistente gera uma chave de vinculação e abre a implantação na Cloudflare.</li>
 <li>Quando a Cloudflare terminar, cole no assistente o endereço <code>.workers.dev</code> e clique em <strong>Verificar e vincular</strong>.</li>
 <li>Clique em <strong>Criar sessão</strong> e depois em <strong>Copiar convite</strong>. Compartilhe o convite com o grupo.</li>
-<li>Edite os pins e os desenhos nas abas do Siege Command. Volte ao Live Sync e clique em <strong>Publicar alterações</strong> quando o plano estiver pronto. A versão publicada e a quantidade de jogadores conectados aparecem no painel.</li>
+<li>Use as <strong>Ferramentas rápidas</strong> no próprio Live Sync. Escolha o ícone de pin, retângulo, círculo ou seta para marcar o mapa.</li>
+<li>Clique em <strong>Publicar alterações</strong> quando o plano estiver pronto. Confira a versão publicada e a quantidade de jogadores conectados no mesmo painel.</li>
 </ol>
+<p><img src="assets/live-sync-host-pt_BR.webp" alt="Painel do caller com Ferramentas rápidas, alterações pendentes e botão Publicar alterações" /></p>
+<h2 id="pt_BR-desenhe-e-publique-a-estrategia">Desenhe e publique a estratégia</h2>
+<p>Clique no mapa para colocar um pin. Para criar uma forma, clique e arraste.
+Segure <strong>Shift</strong> para desenhar um quadrado ou círculo. Use <strong>Esc</strong> ou o
+ícone <strong>×</strong> para cancelar a ferramenta ativa.</p>
+<p>Use <strong>Selecionar e mover</strong> para arrastar uma marcação. Para editar o rótulo,
+a cor ou a visibilidade, selecione a marcação e clique em <strong>Editar propriedades</strong>.
+O <strong>Editor tático</strong> reúne pins, objetivos e formas no preset ativo. Você também
+pode começar por ele e depois publicar pelo Live Sync.</p>
+<p><img src="assets/app-siege-editor-pt_BR.webp" alt="Editor tático com a seta selecionada e a lista de marcações abaixo da barra" /></p>
 <h2 id="pt_BR-guia-ilustrado-de-implantacao">Guia ilustrado de implantação</h2>
 <h3 id="pt_BR-copie-a-chave-e-abra-a-implantacao">1. Copie a chave e abra a implantação</h3>
 <p>Se você ainda não tem conta, <a href="https://dash.cloudflare.com/sign-up">crie uma conta Cloudflare</a>, confirme seu e-mail e fique no plano <strong>Free</strong>. No Azphelumbra, clique em <strong>Copiar chave de vinculação</strong> e em <strong>Implantar na Cloudflare</strong>. Entre na Cloudflare pelo navegador e selecione sua conta.</p>
 <p>A Cloudflare pode pedir autorização para copiar o modelo a um repositório e conectar a integração <strong>Workers Builds</strong>. Confira a conta, o repositório e as permissões exibidas na tela. Quando houver a opção, limite o acesso da integração ao repositório da implantação.</p>
-<p><img src="assets/live-sync-deploy.webp" alt="Primeira etapa do assistente com os botões Copiar chave de vinculação e Implantar na Cloudflare" /></p>
+<p><img src="assets/live-sync-deploy-pt_BR.webp" alt="Primeira etapa do assistente com os botões Copiar chave de vinculação e Implantar na Cloudflare" /></p>
 <p>Na tela da Cloudflare, cole a chave no campo <code>LIVE_SYNC_OWNER_KEY</code>. Confirme a implantação. O modelo inclui o Worker, o Durable Object e o armazenamento SQLite necessários à sessão. Mantenha o assistente do Azphelumbra aberto enquanto a Cloudflare prepara a infraestrutura. <a href="https://developers.cloudflare.com/workers/platform/deploy-buttons/">Como funciona o Deploy to Cloudflare</a>.</p>
 <h3 id="pt_BR-verifique-a-conexao">2. Verifique a conexão</h3>
 <p>Quando o Worker estiver implantado, copie o endereço público HTTPS mostrado pela Cloudflare. Cole o endereço que termina em <code>.workers.dev</code> e clique em <strong>Verificar e vincular</strong>. O Azphelumbra verifica o Worker, a chave, o armazenamento e a conexão de sincronização. Quando o painel indicar <strong>Cloudflare pronta para hospedar</strong>, você já pode criar a sessão.</p>
-<p><img src="assets/live-sync-verify.webp" alt="Segunda etapa do assistente com o campo de endereço HTTPS e o botão Verificar e vincular" /></p>
+<p><img src="assets/live-sync-verify-pt_BR.webp" alt="Segunda etapa do assistente com o campo de endereço HTTPS e o botão Verificar e vincular" /></p>
 <p>Se o Worker já estiver implantado em sua conta, use <strong>Já tenho o endereço do Worker</strong> e informe a chave configurada na implantação anterior. Compartilhe apenas o convite com os jogadores. Guarde a chave de vinculação para você.</p>
 <h2 id="pt_BR-entrada-em-sessoes-para-jogadores">Entrada em sessões para jogadores</h2>
 <ol>
@@ -62,6 +73,7 @@ Use uma versão do Azphelumbra que mostre <strong>Live Sync</strong> no Siege Co
 <li>Abra o mapa do jogo com <strong>M</strong> para ver a estratégia no mapa grande. O aplicativo acompanha cada nova publicação.</li>
 <li>Use <strong>Sair da sessão</strong> para voltar aos seus pins no overlay. Os presets pessoais ficam salvos no computador.</li>
 </ol>
+<p><img src="assets/live-sync-join-pt_BR.webp" alt="Painel do jogador com campo para colar o convite e botão Entrar na sessão" /></p>
 <p>Use <strong>Encerrar sessão</strong> no painel do caller para desconectar o grupo e descartar a estratégia publicada no Worker. O Atlas, o Siege Command local e os outros módulos continuam disponíveis offline.</p>
 <h2 id="pt_BR-solucao-de-problemas">Solução de problemas</h2>
 <ul>
@@ -91,24 +103,35 @@ Use uma versão do Azphelumbra que mostre <strong>Live Sync</strong> no Siege Co
 <p>Informe a versão do Azphelumbra, a versão do Windows, o sintoma, quantos participantes havia e como reproduzir. Remova chaves, tokens, convites privados e dados pessoais antes de anexar logs ou capturas. <a href="https://github.com/jpgalvao-architect/strigoi-aether-map/issues/new">GitHub Issues</a>.</p></article>
 <article class="legal-document live-guide" lang="en-US" data-legal-language="en_US" hidden><h1 id="en_US-live-sync-in-azphelumbra">Live Sync in Azphelumbra</h1>
 <p>Share Lower Reshanta pins, flight rings, and tactical drawings on the AION 2 map and minimap. The caller publishes each revision from Siege Command. Players receive the strategy through an invite.
-Use a version of Azphelumbra that shows <strong>Live Sync</strong> in Siege Command.</p>
+Use <strong>0.10.0-beta.17</strong> or later to follow the screenshots and use the shortcuts in this guide.</p>
 <h2 id="en_US-quick-setup-for-callers">Quick setup for callers</h2>
 <ol>
 <li>Open <strong>Siege Command</strong>, select <strong>Live Sync</strong>, and choose <strong>Host a session (Caller)</strong>.</li>
 <li>Select <strong>Set up Cloudflare</strong> to generate a pairing key and start deployment in your browser.</li>
 <li>When Cloudflare finishes, paste the production <code>.workers.dev</code> address into Azphelumbra and select <strong>Verify and link</strong>.</li>
 <li>Select <strong>Create session</strong>, then <strong>Copy invite</strong>, and share the invite with your group.</li>
-<li>Edit your markers and drawings in Siege Command. When the strategy is ready, return to Live Sync and select <strong>Publish changes</strong>. The panel shows the published version and how many players are connected.</li>
+<li>In Live Sync, use <strong>Quick tools</strong>. Select the pin, rectangle, circle, or arrow icon to mark the map.</li>
+<li>Select <strong>Publish changes</strong> when the strategy is ready. Check the published version and the number of connected players in the same panel.</li>
 </ol>
+<p><img src="assets/live-sync-host-en_US.webp" alt="Caller panel with Quick tools, unpublished local changes, and the Publish changes button" /></p>
+<h2 id="en_US-draw-and-publish-the-strategy">Draw and publish the strategy</h2>
+<p>Click the map to place a pin. To draw a shape, click and drag. Hold <strong>Shift</strong>
+to draw a square or a circle. Press <strong>Esc</strong> or select the <strong>×</strong> icon to cancel
+the current tool.</p>
+<p>Use <strong>Select and move</strong> to drag a marking. To change its label, color, or
+visibility, select it and choose <strong>Edit properties</strong>. The <strong>Tactical editor</strong>
+lists pins, objectives, and shapes from the active preset. You can also start
+in the editor and publish from Live Sync.</p>
+<p><img src="assets/app-siege-editor-en_US.webp" alt="Tactical editor with the arrow selected and the markings list below the toolbar" /></p>
 <h2 id="en_US-illustrated-deployment-guide">Illustrated deployment guide</h2>
 <h3 id="en_US-copy-the-key-and-start-deployment">1. Copy the key and start deployment</h3>
 <p>If you need an account, <a href="https://dash.cloudflare.com/sign-up">sign up for Cloudflare</a>, confirm your email, and stay on the <strong>Free</strong> plan. In Azphelumbra, select <strong>Copy pairing key</strong>, then <strong>Deploy to Cloudflare</strong>. Sign in through your browser and choose your own Cloudflare account.</p>
 <p>Cloudflare may ask to copy the template to a repository and connect the <strong>Workers Builds</strong> integration. Check the account, repository, and permissions on screen. If offered a choice, give the integration access to the deployment repository only.</p>
-<p><img src="assets/live-sync-deploy.webp" alt="The first setup screen in Portuguese, with Copy pairing key and Deploy to Cloudflare" /></p>
+<p><img src="assets/live-sync-deploy-en_US.webp" alt="The first setup screen with Copy pairing key and Deploy to Cloudflare" /></p>
 <p>Paste the key into <code>LIVE_SYNC_OWNER_KEY</code> on Cloudflare and confirm the deployment. The template provisions the Worker and its SQLite-backed Durable Object. Keep the Azphelumbra setup window open while it deploys. <a href="https://developers.cloudflare.com/workers/platform/deploy-buttons/">How Deploy to Cloudflare works</a>.</p>
 <h3 id="en_US-verify-the-connection">2. Verify the connection</h3>
 <p>Copy the production HTTPS address ending in <code>.workers.dev</code>. Paste it into Azphelumbra and select <strong>Verify and link</strong>. Azphelumbra checks the Worker, pairing key, storage, and synchronization connection. When the panel says <strong>Cloudflare is ready to host</strong>, you can create a session.</p>
-<p><img src="assets/live-sync-verify.webp" alt="The second setup screen in Portuguese, with the HTTPS address field and Verify and link" /></p>
+<p><img src="assets/live-sync-verify-en_US.webp" alt="The second setup screen with the HTTPS address field and Verify and link" /></p>
 <p>For an existing Worker in your account, select <strong>I already have the Worker address</strong> and enter the pairing key you used for that deployment. Keep that key private. Share only the session invite.</p>
 <h2 id="en_US-joining-as-a-player">Joining as a player</h2>
 <ol>
@@ -118,6 +141,7 @@ Use a version of Azphelumbra that shows <strong>Live Sync</strong> in Siege Comm
 <li>Press <strong>M</strong> to see the published strategy on the large map. The app receives new published versions automatically.</li>
 <li>Select <strong>Leave session</strong> to restore your own overlay markers. Personal presets stay on your computer.</li>
 </ol>
+<p><img src="assets/live-sync-join-en_US.webp" alt="Player panel with an invite field and the Join session button" /></p>
 <p>The caller can select <strong>End session</strong> to disconnect the group and clear the published strategy from the Worker. The Atlas, local Siege Command, and other modules are available offline.</p>
 <h2 id="en_US-troubleshooting">Troubleshooting</h2>
 <ul>
@@ -146,24 +170,35 @@ Use a version of Azphelumbra that shows <strong>Live Sync</strong> in Siege Comm
 <p>Include the Azphelumbra version, Windows version, symptom, approximate player count, and steps to reproduce. Remove keys, tokens, private invites, and personal data before attaching logs or screenshots. <a href="https://github.com/jpgalvao-architect/strigoi-aether-map/issues/new">GitHub Issues</a>.</p></article>
 <article class="legal-document live-guide" lang="es-419" data-legal-language="es-419" hidden><h1 id="es-419-live-sync-en-azphelumbra">Live Sync en Azphelumbra</h1>
 <p>Comparte pines, anillos de vuelo y dibujos tácticos de Lower Reshanta en el mapa y el minimapa de AION 2. El caller publica cada versión desde Siege Command. Los jugadores reciben la estrategia con una invitación.
-Usa una versión de Azphelumbra que muestre <strong>Live Sync</strong> en Siege Command.</p>
+Usa la <strong>0.10.0-beta.17</strong> o una versión más reciente para seguir las capturas y usar los accesos rápidos de esta guía.</p>
 <h2 id="es-419-configuracion-rapida-para-callers">Configuración rápida para callers</h2>
 <ol>
 <li>Abre <strong>Siege Command</strong>, selecciona <strong>Live Sync</strong> y elige <strong>Hospedar sesión (Caller)</strong>.</li>
 <li>Selecciona <strong>Configurar Cloudflare</strong> para generar la clave de vinculación e iniciar la implementación en el navegador.</li>
 <li>Cuando Cloudflare termine, pega la dirección de producción <code>.workers.dev</code> en Azphelumbra y selecciona <strong>Verificar y vincular</strong>.</li>
 <li>Selecciona <strong>Crear sesión</strong> y luego <strong>Copiar invitación</strong>. Comparte la invitación con el grupo.</li>
-<li>Edita las marcas y los dibujos en Siege Command. Cuando la estrategia esté lista, regresa a Live Sync y selecciona <strong>Publicar cambios</strong>. El panel indica la versión publicada y cuántos jugadores están conectados.</li>
+<li>Usa las <strong>Herramientas rápidas</strong> en Live Sync. Selecciona el ícono de marcador, rectángulo, círculo o flecha para marcar el mapa.</li>
+<li>Selecciona <strong>Publicar cambios</strong> cuando la estrategia esté lista. Consulta la versión publicada y cuántos jugadores están conectados en el mismo panel.</li>
 </ol>
+<p><img src="assets/live-sync-host-es-419.webp" alt="Panel del caller con Herramientas rápidas, cambios pendientes y el botón Publicar cambios" /></p>
+<h2 id="es-419-dibuja-y-publica-la-estrategia">Dibuja y publica la estrategia</h2>
+<p>Haz clic en el mapa para colocar un marcador. Para crear una figura, haz clic
+y arrastra. Mantén <strong>Mayús</strong> para dibujar un cuadrado o círculo. Presiona
+<strong>Esc</strong> o selecciona el ícono <strong>×</strong> para cancelar la herramienta activa.</p>
+<p>Usa <strong>Seleccionar y mover</strong> para arrastrar una marca. Para cambiar su
+etiqueta, color o visibilidad, selecciónala y elige <strong>Editar propiedades</strong>.
+El <strong>Editor táctico</strong> reúne los marcadores, objetivos y figuras del ajuste
+preestablecido activo. También puedes comenzar en el editor y publicar desde Live Sync.</p>
+<p><img src="assets/app-siege-editor-es-419.webp" alt="Editor táctico con la flecha seleccionada y la lista de marcas debajo de la barra" /></p>
 <h2 id="es-419-guia-ilustrada-de-implementacion">Guía ilustrada de implementación</h2>
 <h3 id="es-419-copia-la-clave-e-inicia-la-implementacion">1. Copia la clave e inicia la implementación</h3>
 <p>Si necesitas una cuenta, <a href="https://dash.cloudflare.com/sign-up">regístrate en Cloudflare</a>, confirma tu correo y conserva el plan <strong>Free</strong>. En Azphelumbra, selecciona <strong>Copiar clave de vinculación</strong> y después <strong>Implementar en Cloudflare</strong>. Inicia sesión desde el navegador y selecciona tu cuenta de Cloudflare.</p>
 <p>Cloudflare puede pedir permiso para copiar la plantilla a un repositorio y conectar la integración <strong>Workers Builds</strong>. Revisa la cuenta, el repositorio y los permisos que aparecen. Si tienes la opción, concede acceso únicamente al repositorio de esta implementación.</p>
-<p><img src="assets/live-sync-deploy.webp" alt="Primera pantalla del asistente en portugués, con los botones para copiar la clave e implementar" /></p>
+<p><img src="assets/live-sync-deploy-es-419.webp" alt="Primera pantalla del asistente con los botones para copiar la clave e implementar en Cloudflare" /></p>
 <p>Pega la clave en <code>LIVE_SYNC_OWNER_KEY</code> en Cloudflare y confirma. La plantilla prepara el Worker y su Durable Object con SQLite. Mantén abierto el asistente de Azphelumbra mientras termina la implementación. <a href="https://developers.cloudflare.com/workers/platform/deploy-buttons/">Cómo funciona Deploy to Cloudflare</a>.</p>
 <h3 id="es-419-verifica-la-conexion">2. Verifica la conexión</h3>
 <p>Copia la dirección HTTPS de producción que termina en <code>.workers.dev</code>. Pégala en Azphelumbra y selecciona <strong>Verificar y vincular</strong>. Azphelumbra verifica el Worker, la clave, el almacenamiento y la conexión de sincronización. Cuando aparezca <strong>Cloudflare está lista para hospedar sesiones</strong>, puedes crear una sesión.</p>
-<p><img src="assets/live-sync-verify.webp" alt="Segunda pantalla del asistente en portugués, con el campo HTTPS y el botón para verificar" /></p>
+<p><img src="assets/live-sync-verify-es-419.webp" alt="Segunda pantalla del asistente con el campo HTTPS y el botón Verificar y vincular" /></p>
 <p>Si ya tienes un Worker en tu cuenta, elige <strong>Ya tengo la dirección del Worker</strong> e ingresa la clave que usaste para esa implementación. Guarda esa clave para ti y comparte solo la invitación de la sesión.</p>
 <h2 id="es-419-como-unirse-como-jugador">Cómo unirse como jugador</h2>
 <ol>
@@ -173,6 +208,7 @@ Usa una versión de Azphelumbra que muestre <strong>Live Sync</strong> en Siege 
 <li>Presiona <strong>M</strong> para ver la estrategia publicada en el mapa grande. La aplicación recibe automáticamente las nuevas versiones.</li>
 <li>Selecciona <strong>Salir de la sesión</strong> para recuperar tus marcas en el overlay. Tus ajustes preestablecidos permanecen en tu computadora.</li>
 </ol>
+<p><img src="assets/live-sync-join-es-419.webp" alt="Panel del jugador con un campo para pegar la invitación y el botón Unirse a la sesión" /></p>
 <p>El caller puede seleccionar <strong>Finalizar sesión</strong> para desconectar al grupo y eliminar la estrategia publicada del Worker. El Atlas, Siege Command local y los demás módulos funcionan sin conexión.</p>
 <h2 id="es-419-solucion-de-problemas">Solución de problemas</h2>
 <ul>

@@ -1270,7 +1270,7 @@ window.StrigoiGuide = {
             "es-419": "Puedes cargar las posiciones de los anillos en Catálogo de anillos → Importar catálogo local. El instalador público incluye la lista de anillos pendientes por zona."
           },
           "action": {
-            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.15/docs/SIEGE.md",
+            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.17/docs/SIEGE.md",
             "label": {
               "pt_BR": "Abrir guia técnico",
               "en_US": "Open technical guide",
@@ -1285,20 +1285,21 @@ window.StrigoiGuide = {
             "es-419": "Añade y edita marcadores"
           },
           "where": {
-            "pt_BR": "Siege Command → Editar pins",
-            "en_US": "Siege Command → Edit pins",
-            "es-419": "Siege Command → Editar marcadores"
+            "pt_BR": "Siege Command → Editor tático",
+            "en_US": "Siege Command → Tactical editor",
+            "es-419": "Siege Command → Editor táctico"
           },
           "body": {
-            "pt_BR": "Clique em Adicionar pin e marque qualquer ponto do mapa, inclusive sobre a água. Arraste para reposicionar. Ao selecionar um pin, você pode editar nome, categoria, tamanho, cor e visibilidade.",
-            "en_US": "Click Add pin and place it anywhere on the map, including over water. Drag to move it. Select a pin to edit its name, category, size, color, and visibility.",
-            "es-419": "Haz clic en Añadir marcador y colócalo donde quieras en el mapa, incluso sobre el agua. Arrástralo para moverlo. Al seleccionarlo puedes ajustar su nombre, categoría, tamaño, color y visibilidad."
+            "pt_BR": "Escolha o ícone de pin e clique no mapa, inclusive sobre a água. Em Selecionar e mover, arraste o pin para reposicionar. Selecione o pin para editar nome, categoria, tamanho, cor e visibilidade.",
+            "en_US": "Choose the pin icon and click anywhere on the map, including over water. Use Select and move to drag the pin. Select it to edit its name, category, size, color, and visibility.",
+            "es-419": "Elige el ícono de marcador y haz clic donde quieras en el mapa, incluso sobre el agua. Usa Seleccionar y mover para arrastrarlo. Selecciónalo para editar su nombre, categoría, tamaño, color y visibilidad."
           },
           "tip": {
             "pt_BR": "Os 12 objetivos padrão também são editáveis. O app salva cada alteração no preset ativo.",
             "en_US": "You can edit the 12 default objectives. Each change is saved to the active preset.",
             "es-419": "Puedes editar los 12 objetivos predeterminados. Cada cambio se guarda en el preajuste activo."
-          }
+          },
+          "image": "siege-editor"
         },
         {
           "title": {
@@ -1329,9 +1330,9 @@ window.StrigoiGuide = {
             "es-419": "Comparte tus marcadores"
           },
           "where": {
-            "pt_BR": "Siege Command → Editar pins",
-            "en_US": "Siege Command → Edit pins",
-            "es-419": "Siege Command → Editar marcadores"
+            "pt_BR": "Siege Command → Editor tático",
+            "en_US": "Siege Command → Tactical editor",
+            "es-419": "Siege Command → Editor táctico"
           },
           "body": {
             "pt_BR": "Use Exportar marcações (.json) para salvar o preset ativo. O JSON leva pins, desenhos e calibrações manuais de anéis quando habilitadas. Ao importar, escolha criar um preset ou substituir o atual.",
@@ -1342,7 +1343,8 @@ window.StrigoiGuide = {
             "pt_BR": "O compartilhamento funciona offline. Os catálogos de origem dos anéis e pets são importados à parte.",
             "en_US": "Sharing works offline. The source catalogues for rings and pets are imported separately.",
             "es-419": "Puedes compartir el archivo sin conexión. Los catálogos de origen de anillos y mascotas se importan por separado."
-          }
+          },
+          "image": "siege-editor"
         },
         {
           "title": {
@@ -1351,9 +1353,9 @@ window.StrigoiGuide = {
             "es-419": "Dibuja en el mapa"
           },
           "where": {
-            "pt_BR": "Siege Command → Desenhos táticos",
-            "en_US": "Siege Command → Tactical drawings",
-            "es-419": "Siege Command → Dibujos tácticos"
+            "pt_BR": "Siege Command → Editor tático",
+            "en_US": "Siege Command → Tactical editor",
+            "es-419": "Siege Command → Editor táctico"
           },
           "body": {
             "pt_BR": "Escolha retângulo, elipse ou seta e arraste no mapa. Use Shift para quadrados e círculos. Selecione a forma para mover, redimensionar e ajustar cor, traço ou rótulo.",
@@ -1365,7 +1367,33 @@ window.StrigoiGuide = {
             "en_US": "With Tactical shapes and Reshanta overlay enabled, drawings appear on the minimap and the full map opened with M.",
             "es-419": "Activa Figuras tácticas y Superposición de Reshanta para ver los dibujos en el minimapa y en el mapa grande que abres con M."
           },
-          "image": "siege-drawings"
+          "image": "siege-editor"
+        },
+        {
+          "title": {
+            "pt_BR": "Publique a estratégia pelo Live Sync",
+            "en_US": "Publish the strategy with Live Sync",
+            "es-419": "Publica la estrategia con Live Sync"
+          },
+          "where": {
+            "pt_BR": "Siege Command → Live Sync",
+            "en_US": "Siege Command → Live Sync",
+            "es-419": "Siege Command → Live Sync"
+          },
+          "body": {
+            "pt_BR": "Hospede uma sessão e compartilhe o convite. Use as Ferramentas rápidas para desenhar no mapa e clique em Publicar alterações quando o plano estiver pronto.",
+            "en_US": "Host a session and share the invite. Use Quick tools to mark the map, then select Publish changes when the plan is ready.",
+            "es-419": "Hospeda una sesión y comparte la invitación. Usa las Herramientas rápidas para marcar el mapa y selecciona Publicar cambios cuando el plan esté listo."
+          },
+          "image": "live-sync-host",
+          "action": {
+            "href": "live-sync.html",
+            "label": {
+              "pt_BR": "Ver configuração e entrada na sessão",
+              "en_US": "See how to set up and join a session",
+              "es-419": "Ver cómo configurar y unirse a una sesión"
+            }
+          }
         }
       ],
       "help": []

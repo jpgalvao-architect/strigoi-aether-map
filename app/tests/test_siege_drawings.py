@@ -30,8 +30,7 @@ def test_editor_draw_move_resize_style_duplicate_and_delete(qapp, tmp_path, monk
     window.show()
     qapp.processEvents()
     page = window.siege_page
-    page.section.setCurrentIndex(page.section.findText('Desenhos táticos'))
-    panel = page.drawings
+    panel = page.editor
     view = page.board.view
     view.fit_full()
     left = Qt.MouseButton.LeftButton
@@ -50,10 +49,12 @@ def test_editor_draw_move_resize_style_duplicate_and_delete(qapp, tmp_path, monk
             ('ellipse', (.51, .24, .63, .36)),
             ('arrow', (.28, .55, .46, .71)),
         ):
-            panel.tool.setCurrentIndex(panel.tool.findData(kind))
+            panel.toolbar.buttons[kind].click()
+            assert panel.toolbar.buttons[kind].isChecked()
             begin, end = point(*bounds[:2]), point(*bounds[2:])
             drag(begin, end)
-            drawing = panel.current()
+            drawing = panel.selected_drawing()
+            assert panel.toolbar.buttons['select'].isChecked()
             assert drawing.kind == kind
             assert drawing.stroke == ('solid' if kind == 'arrow' else 'dashed')
             assert abs(drawing.start.x-bounds[0]) < .003
@@ -64,14 +65,14 @@ def test_editor_draw_move_resize_style_duplicate_and_delete(qapp, tmp_path, monk
             center = (begin+end)/2
             delta = QPoint(22, 16)
             drag(center, center+delta)
-            moved = panel.current()
+            moved = panel.selected_drawing()
             assert moved.id == drawing.id
             expected = view.mapToScene(center+delta)-view.mapToScene(center)
             assert moved.start.x-drawing.start.x == pytest.approx(expected.x()/view.map.width, abs=.001)
             assert moved.end.y-drawing.end.y == pytest.approx(expected.y()/view.map.height, abs=.001)
             handle = point(moved.end.x, moved.end.y)
             drag(handle, handle+QPoint(25, 27))
-            resized = panel.current()
+            resized = panel.selected_drawing()
             assert resized.start == moved.start and resized.end.x > moved.end.x
             assert resized.end.y > moved.end.y
 
@@ -85,31 +86,31 @@ def test_editor_draw_move_resize_style_duplicate_and_delete(qapp, tmp_path, monk
         panel.head_size.editingFinished.emit()
         panel.stroke.setCurrentIndex(panel.stroke.findData('dashed'))
         monkeypatch.setattr(QColorDialog, 'getColor', lambda *_: QColor('#6acccc'))
-        panel.choose_color()
-        arrow = panel.current()
+        panel.choose_drawing_color()
+        arrow = panel.selected_drawing()
         assert (arrow.label, arrow.width, arrow.opacity, arrow.head_size, arrow.stroke, arrow.color) == (
             'Avançar', 4.25, .65, 23, 'dashed', '#6acccc',
         )
         panel.duplicate()
-        copied = panel.current()
+        copied = panel.selected_drawing()
         assert copied.id != arrow.id and copied.kind == 'arrow' and copied.start != arrow.start
         metadata = {'id', 'start', 'end'}
         assert copied.model_dump(exclude=metadata) == arrow.model_dump(exclude=metadata)
         assert SiegeService(tmp_path).preset == siege.preset
 
-        panel.tool.setCurrentIndex(panel.tool.findData('rectangle'))
+        panel.toolbar.buttons['rectangle'].click()
         QTest.mousePress(view.viewport(), left, pos=point(.3, .8))
         QTest.mouseMove(view.viewport(), point(.45, .9))
         QTest.keyClick(view, Qt.Key_Escape)
         QTest.mouseRelease(view.viewport(), left, pos=point(.45, .9))
         assert len(siege.preset.drawings) == 4 and not view.drawing.tool
         monkeypatch.setattr(QMessageBox, 'question', lambda *_: QMessageBox.Cancel)
-        panel.delete()
+        panel.toolbar.buttons['delete'].click()
         assert len(siege.preset.drawings) == 4
         monkeypatch.setattr(QMessageBox, 'question', lambda *_: QMessageBox.Yes)
         for drawing in list(siege.preset.drawings):
-            panel.select(drawing.id)
-            panel.delete()
+            panel.items.setCurrentIndex(panel.items.findData(f'drawing:{drawing.id}'))
+            panel.toolbar.buttons['delete'].click()
             assert drawing.id not in view.drawing.items
         assert not SiegeService(tmp_path).preset.drawings
         assert len(siege.preset.markers) == 12

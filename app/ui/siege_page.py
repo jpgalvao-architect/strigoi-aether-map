@@ -3,38 +3,25 @@
 from pathlib import Path
 import sys
 
-from PySide6.QtCore import QProcess, QSignalBlocker, Qt, Signal
+from PySide6.QtCore import QProcess, Qt, Signal
 from PySide6.QtWidgets import (
-    QApplication, QButtonGroup, QColorDialog, QFileDialog, QHBoxLayout, QInputDialog, QStackedWidget,
+    QApplication, QButtonGroup, QColorDialog, QFileDialog, QHBoxLayout, QInputDialog, QScrollArea, QStackedWidget,
     QVBoxLayout,
 )
 from PySide6.QtGui import QColor
 
 from app.core.i18n import Verbatim, tr, validation_text
-from app.modules.siege.drawing import drawing_color
 from app.modules.siege.live_sync import LiveSync
-from app.modules.siege.markers import pin_color
-from app.modules.siege.models import COLORS, LAYERS, OBJECTIVE_CATEGORY, SECTORS, Coordinate, RingPosition
-from app.ui.localized_widgets import QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QLineEdit, QMessageBox, QWidget
+from app.modules.siege.models import COLORS, LAYERS, SECTORS, Coordinate, RingPosition
+from app.ui.localized_widgets import (
+    QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QLineEdit, QMessageBox, QWidget,
+)
 from app.ui.live_sync_panel import LiveSyncPanel
-from app.ui.siege_drawings import translated
+from app.ui.siege_editor import TacticalEditor, choice, update
 from app.ui.siege_map import SiegeMapView
 from app.ui.widgets import button, card, label, page_header, row
 
 ACTION_LABELS = {'regroup': 'Reagrupar', 'attack': 'Atacar', 'defend': 'Defender', 'retreat': 'Recuar'}
-
-
-def choice(combo, current, entries):
-    with QSignalBlocker(combo):
-        combo.clear()
-        for caption, value in entries:
-            combo.addItem(caption, value)
-        combo.setCurrentIndex(max(0, combo.findData(current)))
-
-
-def update(widget, setter, value):
-    with QSignalBlocker(widget):
-        getattr(widget, setter)(value)
 
 
 class SiegeCallControls(QWidget):
@@ -183,194 +170,14 @@ class SiegeBoard(QWidget):
         refresh()
 
 
-class DrawingPanel(QWidget):
-    tools = {'rectangle': 'Retângulo', 'ellipse': 'Círculo / elipse', 'arrow': 'Seta'}
-
-    def __init__(self, page):
-        super().__init__()
-        self.page, self.service, self.view = page, page.service, page.board.view
-        self.selected = None
-        self.preset_name = None
-        box = QVBoxLayout(self)
-        box.setContentsMargins(0, 0, 0, 0)
-        self.presets = QComboBox()
-        self.presets.currentIndexChanged.connect(lambda: page.guard(self.service.select_preset, self.presets.currentData()))
-        box.addWidget(self.presets)
-        self.tool = QComboBox()
-        self.tool.addItem('Selecionar forma', '')
-        for kind, title in self.tools.items():
-            self.tool.addItem(title, kind)
-        self.tool.currentIndexChanged.connect(self.change_tool)
-        box.addLayout(row(self.tool, button('Cancelar', self.cancel)))
-        box.addWidget(label('Arraste para desenhar ou mover. Use Shift para criar um quadrado ou círculo. Arraste as alças para redimensionar.', 'subtitle', True))
-        self.layer = QCheckBox('Formas táticas')
-        self.layer.toggled.connect(lambda enabled: page.change_layer('TacticalShapes', enabled))
-        box.addWidget(self.layer)
-
-        self.items = QComboBox()
-        self.items.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-        self.items.currentIndexChanged.connect(lambda: self.select(self.items.currentData()))
-        box.addWidget(self.items)
-        self.details = QWidget()
-        form = self.form = QFormLayout(self.details)
-        form.setContentsMargins(0, 0, 0, 0)
-        self.label = QLineEdit()
-        self.label.setMaxLength(60)
-        self.label.editingFinished.connect(lambda: self.edit(label=self.label.text()))
-        form.addRow('Rótulo', self.label)
-        self.color = button('Escolher cor', self.choose_color)
-        form.addRow('Cor da forma', self.color)
-        self.width = QDoubleSpinBox()
-        self.width.setRange(.75, 10)
-        self.width.setSingleStep(.25)
-        self.width.setSuffix(' px')
-        self.width.editingFinished.connect(lambda: self.edit(width=self.width.value()))
-        form.addRow('Espessura', self.width)
-        self.opacity = QDoubleSpinBox()
-        self.opacity.setRange(10, 100)
-        self.opacity.setDecimals(0)
-        self.opacity.setSingleStep(5)
-        self.opacity.setSuffix('%')
-        self.opacity.editingFinished.connect(lambda: self.edit(opacity=self.opacity.value()/100))
-        form.addRow('Opacidade', self.opacity)
-        self.stroke = QComboBox()
-        self.stroke.addItem('Tracejado', 'dashed')
-        self.stroke.addItem('Sólido', 'solid')
-        self.stroke.currentIndexChanged.connect(lambda: self.edit(stroke=self.stroke.currentData()))
-        form.addRow('Traço', self.stroke)
-        self.head_size = QDoubleSpinBox()
-        self.head_size.setRange(4, 36)
-        self.head_size.setSuffix(' px')
-        self.head_size.editingFinished.connect(lambda: self.edit(head_size=self.head_size.value()))
-        form.addRow('Ponta da seta', self.head_size)
-        self.visible = QCheckBox('Forma visível')
-        self.visible.toggled.connect(lambda visible: self.edit(visible=visible))
-        form.addRow(self.visible)
-        box.addWidget(self.details)
-        self.actions = QWidget()
-        actions = QVBoxLayout(self.actions)
-        actions.setContentsMargins(0, 0, 0, 0)
-        actions.addLayout(row(button('Duplicar forma', self.duplicate), button('Excluir forma', self.delete)))
-        box.addWidget(self.actions)
-        box.addWidget(button('Importar marcações (.json)', page.import_preset))
-        box.addWidget(button('Exportar marcações (.json)', page.export_preset))
-        box.addStretch()
-        self.view.drawing_created.connect(self.create)
-        self.view.drawing_selected.connect(self.select)
-        self.view.drawing_changed.connect(self.move)
-        self.view.drawing_cancelled.connect(self.cancel)
-
-    def activate(self, active):
-        self.view.drawing.enabled = active
-        self.cancel()
-        self.view.drawing.refresh()
-
-    def retranslate(self):
-        super().retranslate()
-        self.refresh()
-
-    def change_tool(self):
-        self.view.drawing.set_tool(self.tool.currentData() or '')
-        if self.tool.currentData():
-            self.page.message('Clique e arraste no mapa para desenhar.')
-        else:
-            self.page.message('')
-
-    def cancel(self):
-        update(self.tool, 'setCurrentIndex', 0)
-        self.view.drawing.set_tool('')
-        self.page.message('')
-
-    def create(self, kind, start, end):
-        drawing = self.page.guard(self.service.add_drawing, kind, start, end)
-        if drawing is not None:
-            self.cancel()
-            self.select(drawing.id)
-
-    def select(self, drawing_id):
-        self.selected = drawing_id
-        self.view.drawing.select(drawing_id)
-        self.refresh()
-
-    def current(self):
-        return next((drawing for drawing in self.service.preset.drawings if drawing.id == self.selected), None)
-
-    def edit(self, **changes):
-        drawing = self.current()
-        if drawing is not None:
-            self.page.guard(self.service.edit_drawing, drawing.id, **changes)
-            self.refresh()
-
-    def move(self, drawing_id, start, end):
-        self.page.guard(self.service.edit_drawing, drawing_id, start=start, end=end)
-
-    def duplicate(self):
-        drawing = self.current()
-        if drawing is None:
-            return
-        shift = translated(drawing, .015, .015)
-        if shift == {'start': drawing.start, 'end': drawing.end}:
-            shift = translated(drawing, -.015, -.015)
-        style = drawing.model_dump(exclude={'id', 'kind', 'start', 'end'})
-        copy = self.page.guard(self.service.add_drawing, drawing.kind, **shift, **style)
-        if copy is not None:
-            self.select(copy.id)
-
-    def delete(self):
-        drawing = self.current()
-        if drawing is not None and QMessageBox.question(
-                self, tr('Excluir forma'), tr('Excluir esta forma do preset atual?'),
-                QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel) == QMessageBox.Yes:
-            self.page.guard(self.service.delete_drawing, drawing.id)
-
-    def choose_color(self):
-        drawing = self.current()
-        if drawing is not None:
-            selected = QColorDialog.getColor(QColor(drawing_color(drawing, self.service.preset)), self, tr('Cor da forma'))
-            if selected.isValid():
-                self.edit(color=selected.name())
-
-    def refresh(self):
-        preset = self.service.preset
-        if preset.name != self.preset_name:
-            if self.view.drawing.tool:
-                self.cancel()
-            self.preset_name = preset.name
-            self.selected = None
-            self.view.drawing.select(None)
-        if self.selected and self.current() is None:
-            self.selected = None
-            self.view.drawing.select(None)
-        choice(self.presets, preset.name, [(Verbatim(p.name), p.name) for p in self.service.state.presets])
-        choice(self.items, self.selected, [('Selecione uma forma', None), *(
-            (Verbatim(drawing.label or f'{tr(self.tools[drawing.kind])} {index}'), drawing.id)
-            for index, drawing in enumerate(preset.drawings, 1)
-        )])
-        update(self.layer, 'setChecked', 'TacticalShapes' in preset.layers)
-        self.tool.setEnabled(self.service.definition is not None)
-        drawing = self.current()
-        self.details.setVisible(drawing is not None)
-        self.actions.setVisible(drawing is not None)
-        self.form.setRowVisible(self.head_size, drawing is not None and drawing.kind == 'arrow')
-        update(self.label, 'setText', drawing.label if drawing else '')
-        update(self.width, 'setValue', drawing.width if drawing else 2)
-        update(self.opacity, 'setValue', drawing.opacity*100 if drawing else 90)
-        update(self.stroke, 'setCurrentIndex', self.stroke.findData(drawing.stroke if drawing else 'dashed'))
-        update(self.head_size, 'setValue', drawing.head_size if drawing else 15)
-        update(self.visible, 'setChecked', bool(drawing and drawing.visible))
-        tint = drawing_color(drawing, preset) if drawing else COLORS['TacticalShapes']
-        self.color.setStyleSheet(f'border-left: 4px solid {tint};')
-
-
 class SiegePage(QWidget):
     def __init__(self, context, toggle_reshanta, setup_minimap, minimap_ready):
         super().__init__()
         self.context = context
         self.service = context.siege
-        self.pin_id = None
-        self.pin_preset = None
         self.minimap_ready = minimap_ready
-        self.placement = None
+        self.ring_placement = None
+        self._last_shared = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(24, 18, 24, 18)
         layout.addWidget(page_header('Siege Command', 'Edite marcações de Lower Reshanta e veja o plano no mapa do jogo.'))
@@ -395,32 +202,34 @@ class SiegePage(QWidget):
         self.setup_minimap = button('Selecionar minimapa', setup_minimap)
         side.addWidget(self.setup_minimap)
         context.changed.connect(self.refresh_minimap_button)
-        self.section.addItems(['Editar pins', 'Catálogo de anéis', 'Camadas e presets', 'Desenhos táticos', 'Live Sync'])
+        for caption, key in (
+            ('Editor tático', 'editor'), ('Catálogo de anéis', 'rings'),
+            ('Camadas e presets', 'presets'), ('Live Sync', 'live'),
+        ):
+            self.section.addItem(caption, key)
         side.addWidget(self.section)
         self.sections = QStackedWidget()
         side.addWidget(self.sections, 1)
-        self.section.currentIndexChanged.connect(self.change_section)
-        self.sections.addWidget(self.pin_page())
-        self.sections.addWidget(self.catalogue_page())
-        self.sections.addWidget(self.preset_page())
-        self.drawings = DrawingPanel(self)
-        self.sections.addWidget(self.drawings)
+        self.editor = TacticalEditor(self)
+        self.add_section(self.editor)
+        self.add_section(self.catalogue_page())
+        self.add_section(self.preset_page())
         self.live_sync = LiveSync(self.service, context.directory, parent=self)
-        self.live_panel = LiveSyncPanel(self.live_sync)
-        self.sections.addWidget(self.live_panel)
+        self.live_panel = LiveSyncPanel(self.live_sync, quick_tools=self.editor.quick_tools)
+        self.add_section(self.live_panel)
         self.live_sync.changed.connect(self.refresh_live_preview)
         self.service.session_changed.connect(self.refresh_live_preview)
         self.board.view.ring_selected.connect(self.select_ring_on_map)
         self.board.view.coordinate_selected.connect(self.placement_chosen)
-        self.board.view.pin_selected.connect(self.select_pin_on_map)
-        self.board.view.pin_moved.connect(self.move_pin)
-        self.board.view.editing_cancelled.connect(self.cancel_placement)
+        self.board.view.editing_cancelled.connect(self.cancel_editing)
+        self.section.currentIndexChanged.connect(self.change_section)
         body.addWidget(sidebar)
         layout.addLayout(body, 1)
         self.feedback = label(self.service.warning, 'subtitle', True)
         layout.addWidget(self.feedback)
         self.service.changed.connect(self.refresh)
         self.refresh()
+        self.refresh_live_preview()
 
     def message(self, text):
         self.feedback.setText(text)
@@ -432,31 +241,44 @@ class SiegePage(QWidget):
             self.message(validation_text(error))
         return None
 
+    def show_editor(self):
+        self.section.setCurrentIndex(self.section.findData('editor'))
+
+    def add_section(self, widget):
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setWidget(widget)
+        self.sections.addWidget(scroll)
+
     def change_section(self, index):
+        self.cancel_ring_placement()
         self.sections.setCurrentIndex(index)
-        self.board.view.editing_pins = index == 0
-        self.cancel_placement()
-        self.drawings.activate(self.sections.currentWidget() is self.drawings)
         self.refresh_live_preview()
 
     def refresh_live_preview(self):
         view = self.board.view
-        show = self.sections.currentWidget() is self.live_panel and self.live_sync.mode == 'player'
+        section = self.section.currentData()
+        mode = self.live_sync.mode
+        show = section == 'live' and mode == 'player'
         shared = self.service.session_preset if show else None
-        if view.session_preview != show or getattr(view, '_last_shared', None) is not shared:
+        self.editor.set_active(section == 'editor' or (section == 'live' and mode == 'host'))
+        if view.session_preview != show or self._last_shared is not shared:
             view.session_preview = show
-            view._last_shared = shared
+            self._last_shared = shared
             view.refresh()
 
-    def cancel_placement(self):
-        view = self.board.view
-        self.placement = None
-        view.pick_position(False)
-        view.cancel_drag()
-        self.message('')
-        self.pin_id = None
-        view.select_pin(None)
-        self.refresh_pins()
+    def cancel_editing(self):
+        if self.ring_placement is not None:
+            self.cancel_ring_placement()
+        else:
+            self.editor.cancel()
+
+    def cancel_ring_placement(self):
+        if self.ring_placement is not None:
+            self.ring_placement = None
+            self.board.view.pick_position(False)
+            self.message('')
 
     def import_map(self):
         name, _ = QFileDialog.getOpenFileName(self, tr('Importar mapa local'), '', 'PNG (*.png)')
@@ -592,38 +414,28 @@ class SiegePage(QWidget):
         self.freeze.setEnabled(ring.sector is not None)
 
     def select_ring_on_map(self, ring_id):
-        self.section.setCurrentIndex(1)
+        self.section.setCurrentIndex(self.section.findData('rings'))
         self.ring_filter.setCurrentIndex(0)
         self.catalogue.setCurrentIndex(self.catalogue.findData(ring_id))
 
     def start_ring_placement(self):
-        self.placement = ('ring', self.catalogue.currentData())
+        ring_id = self.catalogue.currentData()
+        if ring_id is None:
+            return
+        self.ring_placement = ring_id
         self.board.view.pick_position(True)
         self.message('Clique na posição conhecida. Use o botão direito para cancelar.')
 
     def placement_chosen(self, position):
-        placement = self.placement
-        self.placement = None
-        self.board.view.pick_position(False)
-        if position is None or placement is None:
-            return
-        kind, key = placement
-        if kind == 'ring':
+        if self.ring_placement is not None:
+            key = self.ring_placement
+            self.cancel_ring_placement()
             self.catalogue.setCurrentIndex(self.catalogue.findData(key))
             self.x.setValue(position.x)
             self.y.setValue(position.y)
             self.message('Informe a fonte e salve a posição.')
-        else:
-            names = {pin.name for pin in self.service.preset.markers}
-            number = 1
-            while f'Pin {number}' in names:
-                number += 1
-            marker = self.guard(self.service.add_marker, f'Pin {number}', position)
-            if marker is not None:
-                self.select_pin(marker.id)
-                self.pin_name.setFocus()
-                self.pin_name.selectAll()
-                self.message('Pin adicionado. Arraste no mapa para ajustar.')
+        elif self.editor.tool == 'pin' and self.editor.map_ready:
+            self.editor.place_pin(position)
 
     def save_calibration(self):
         def save():
@@ -736,13 +548,8 @@ class SiegePage(QWidget):
         if dialog.clickedButton() not in (new, overwrite):
             return
         self.service.accept_preset(preset, replace=dialog.clickedButton() is overwrite)
-        if self.sections.currentWidget() is self.drawings:
-            self.drawings.cancel()
-            drawings = self.service.preset.drawings
-            self.drawings.select(drawings[0].id if drawings else None)
-        elif self.service.preset.markers:
-            self.section.setCurrentIndex(0)
-            self.select_pin(self.service.preset.markers[0].id)
+        self.show_editor()
+        self.editor.select_first()
         self.message('Marcações importadas.')
 
     def export_preset(self):
@@ -789,125 +596,6 @@ class SiegePage(QWidget):
                     aliases.pop(ring_id, None)
                 self.guard(self.service.edit_preset, aliases=aliases)
 
-    def pin_page(self):
-        widget = QWidget()
-        box = QVBoxLayout(widget)
-        box.setContentsMargins(0, 0, 0, 0)
-        self.pin_presets = QComboBox()
-        self.pin_presets.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-        self.pin_presets.currentIndexChanged.connect(
-            lambda: self.guard(self.service.select_preset, self.pin_presets.currentData()))
-        box.addWidget(self.pin_presets)
-        self.marker = button('Adicionar pin', self.start_marker, True)
-        box.addLayout(row(self.marker, button('Cancelar edição', self.cancel_placement)))
-        self.pin_list = QComboBox()
-        self.pin_list.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-        self.pin_list.currentIndexChanged.connect(lambda: self.select_pin(self.pin_list.currentData()))
-        box.addWidget(self.pin_list)
-        self.pin_details = QWidget()
-        form = QFormLayout(self.pin_details)
-        form.setContentsMargins(0, 0, 0, 0)
-        self.pin_name = QLineEdit()
-        self.pin_name.setMaxLength(60)
-        self.pin_name.editingFinished.connect(lambda: self.edit_pin(name=self.pin_name.text()))
-        self.pin_category = QLineEdit()
-        self.pin_category.setMaxLength(32)
-        self.pin_category.setToolTip('Use Objetivo de siege para incluir o pin na camada de objetivos.')
-        self.pin_category.editingFinished.connect(self.edit_pin_category)
-        self.pin_scale = QDoubleSpinBox()
-        self.pin_scale.setRange(.65, 1.8)
-        self.pin_scale.setSingleStep(.1)
-        self.pin_scale.setSuffix('×')
-        self.pin_scale.editingFinished.connect(lambda: self.edit_pin(scale=self.pin_scale.value()))
-        self.pin_visibility = QCheckBox('Pin visível')
-        self.pin_visibility.toggled.connect(lambda visible: self.edit_pin(visible=visible))
-        self.pin_color = button('Escolher cor', self.choose_pin_color)
-        form.addRow('Nome do pin', self.pin_name)
-        form.addRow('Categoria', self.pin_category)
-        form.addRow('Tamanho do pin', self.pin_scale)
-        form.addRow('Cor do pin', self.pin_color)
-        form.addRow(self.pin_visibility)
-        form.addRow(button('Excluir pin', self.delete_marker))
-        box.addWidget(self.pin_details)
-        box.addWidget(button('Importar marcações (.json)', self.import_preset))
-        box.addWidget(button('Exportar marcações (.json)', self.export_preset))
-        box.addWidget(button('Restaurar marcações padrão', self.restore_preset))
-        box.addStretch()
-        return widget
-
-    def start_marker(self):
-        self.placement = ('marker', None)
-        self.board.view.pick_position(True)
-        self.message('Clique no mapa para adicionar um pin. Esc cancela.')
-
-    def select_pin(self, marker_id):
-        self.pin_id = marker_id
-        self.board.view.select_pin(marker_id)
-        self.refresh_pins()
-
-    def select_pin_on_map(self, marker_id):
-        self.pin_id = marker_id
-        self.refresh_pins()
-
-    def selected_marker(self):
-        return next((pin for pin in self.service.preset.markers if pin.id == self.pin_id), None)
-
-    def edit_pin(self, **changes):
-        pin = self.selected_marker()
-        if pin and any(getattr(pin, key) != value for key, value in changes.items()):
-            self.guard(self.service.edit_marker, pin.id, **changes)
-            self.refresh_pins()
-
-    def edit_pin_category(self):
-        category = self.pin_category.text()
-        if category.casefold() in {tr('Objetivo de siege').casefold(), 'objetivo de siege', 'siege objective'}:
-            category = OBJECTIVE_CATEGORY
-        elif category == tr('Tático'):
-            category = 'Tático'
-        self.edit_pin(category=category)
-
-    def move_pin(self, marker_id, position):
-        try:
-            self.service.edit_marker(marker_id, position=position)
-        except (OSError, ValueError) as error:
-            self.message(validation_text(error))
-            self.board.view.refresh()
-
-    def choose_pin_color(self):
-        marker = self.selected_marker()
-        if marker:
-            color = pin_color(marker, self.service.preset)
-            selected = QColorDialog.getColor(QColor(color), self, tr('Cor do pin'))
-            if selected.isValid():
-                self.edit_pin(color=selected.name())
-
-    def delete_marker(self):
-        marker = self.selected_marker()
-        if marker is None:
-            return
-        reply = QMessageBox.question(
-            self, tr('Excluir pin'),
-            tr('Excluir este pin do preset atual?'),
-            QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel,
-        )
-        if reply == QMessageBox.Yes:
-            self.guard(self.service.delete_marker, marker.id)
-
-    def refresh_pins(self):
-        preset = self.service.preset
-        names = [('Selecionar pin', None), *((Verbatim(pin.name), pin.id) for pin in preset.markers)]
-        choice(self.pin_list, self.pin_id, names)
-        pin = self.selected_marker()
-        self.pin_details.setEnabled(pin is not None)
-        update(self.pin_name, 'setText', pin.name if pin else '')
-        category = pin.category if pin else ''
-        label_for_category = {'Tático': 'Tático', OBJECTIVE_CATEGORY: 'Objetivo de siege'}
-        update(self.pin_category, 'setText', label_for_category.get(category, Verbatim(category)))
-        update(self.pin_scale, 'setValue', pin.scale if pin else 1.)
-        update(self.pin_visibility, 'setChecked', bool(pin and pin.visible))
-        color = pin_color(pin, preset) if pin else COLORS['CustomMarkers']
-        self.pin_color.setStyleSheet(f'border-left: 4px solid {color};')
-
     def refresh(self):
         service = self.service
         count = sum(service.position(r) is not None for r in service.rings.values())
@@ -915,18 +603,11 @@ class SiegePage(QWidget):
         self.refresh_catalogue()
         entries = [(Verbatim(p.name), p.name) for p in service.state.presets]
         choice(self.presets, service.preset.name, entries)
-        choice(self.pin_presets, service.preset.name, entries)
-        if self.pin_preset != service.preset.name or (self.pin_id and not self.selected_marker()):
-            self.pin_preset = service.preset.name
-            self.pin_id = None
-            self.board.view.select_pin(None)
-        self.refresh_pins()
-        self.drawings.refresh()
+        self.editor.refresh()
         for key, checkbox in self.layers.items():
             update(checkbox, 'setChecked', key in service.preset.layers)
         update(self.local_calibration, 'setChecked', service.preset.use_local_calibration)
         update(self.marker_scale, 'setValue', service.preset.marker_scale)
-        self.marker.setEnabled(service.definition is not None)
         update(self.overlay_toggle, 'setChecked', service.state.overlay.map_markers)
         self.refresh_minimap_button()
 

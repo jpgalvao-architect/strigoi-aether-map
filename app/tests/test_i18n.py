@@ -107,12 +107,14 @@ def test_es419_live_switch_and_tactical_json(qapp, tmp_path):
         assert window.sonar_page.presence.text() == 'Cubo detectado'
 
         page = window.siege_page
-        assert page.section.itemText(0) == 'Editar marcadores'
-        assert page.section.itemText(3) == 'Dibujos tácticos'
-        assert page.drawings.tool.findText('Flecha') >= 0
-        assert page.pin_list.itemText(page.pin_list.findData(pin.id)) == 'Início'
-        assert page.drawings.items.itemText(page.drawings.items.findData(drawing.id)) == 'Objetivo'
-        assert page.pin_presets.currentText() == 'Minha coleção'
+        editor = page.editor
+        assert page.section.itemText(0) == 'Editor táctico'
+        assert page.section.count() == 4
+        assert editor.toolbar.buttons['arrow'].toolTip() == 'Dibujar flecha'
+        assert editor.quick_toolbar.buttons['ellipse'].accessibleName() == 'Dibujar círculo o elipse'
+        assert editor.items.itemText(editor.items.findData(f'pin:{pin.id}')) == 'Início'
+        assert editor.items.itemText(editor.items.findData(f'drawing:{drawing.id}')) == 'Objetivo'
+        assert editor.presets.currentText() == 'Minha coleção'
         assert tr('P1 · M2 · B3 · BF1 · DR2 · LR3') == 'P1 · M2 · B3 · BF1 · DR2 · LR3'
         assert display_time(datetime(2026, 10, 12, 18, tzinfo=UTC), 'America/Sao_Paulo') == '12/10 • 15:00 UTC-03:00'
 
@@ -124,10 +126,13 @@ def test_es419_live_switch_and_tactical_json(qapp, tmp_path):
         assert AppContext(tmp_path / 'source').prefs.ui_language == 'es-419'
         window.settings.language.setCurrentIndex(window.settings.language.findData('en_US'))
         assert window.nav[0].text() == 'Home'
-        assert page.section.itemText(3) == 'Tactical drawings'
-        assert page.pin_list.itemText(page.pin_list.findData(pin.id)) == 'Início'
+        assert page.section.itemText(0) == 'Tactical editor'
+        assert editor.toolbar.buttons['arrow'].toolTip() == 'Draw arrow'
+        assert editor.quick_toolbar.buttons['ellipse'].accessibleName() == 'Draw circle or ellipse'
+        assert editor.items.itemText(editor.items.findData(f'pin:{pin.id}')) == 'Início'
         window.settings.language.setCurrentIndex(window.settings.language.findData('pt_BR'))
         assert window.nav[0].text() == 'Início'
+        assert editor.toolbar.buttons['arrow'].toolTip() == 'Desenhar seta'
     finally:
         window.sonar_alert.close()
         window.close()

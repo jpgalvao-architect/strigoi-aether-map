@@ -69,7 +69,6 @@ class SiegeMapView(AtlasView):
     drawing_selected = Signal(str)
     drawing_created = Signal(str, object, object)
     drawing_changed = Signal(str, object, object)
-    drawing_cancelled = Signal()
 
     def __init__(self, context):
         super().__init__()
@@ -78,7 +77,7 @@ class SiegeMapView(AtlasView):
         self.service = context.siege
         self.tactical_items = []
         self.placement = False
-        self.editing_pins = True
+        self.editing_pins = False
         self.selected_pin = None
         self.drag = None
         self.exploration = False
@@ -214,13 +213,30 @@ class SiegeMapView(AtlasView):
 
     def pick_position(self, enabled):
         self.placement = enabled
-        self.viewport().setCursor(Qt.CrossCursor if enabled else Qt.ArrowCursor)
+        self.update_cursor()
         if enabled:
             self.setFocus()
 
-    def select_pin(self, marker_id):
-        self.selected_pin = marker_id
-        self.refresh()
+    def update_cursor(self):
+        self.viewport().setCursor(Qt.CrossCursor if self.placement or self.drawing.tool else Qt.ArrowCursor)
+
+    def set_editor_tool(self, tool):
+        selecting = tool == 'select'
+        redraw_selection = self.editing_pins != selecting
+        self.cancel_drag()
+        self.editing_pins = selecting
+        self.drawing.enabled = selecting or tool in ('rectangle', 'ellipse', 'arrow')
+        self.drawing.set_tool(tool if self.drawing.enabled and not selecting else '')
+        self.pick_position(tool == 'pin')
+        if self.drawing.tool:
+            self.setFocus()
+        if redraw_selection:
+            self.refresh()
+
+    def select_element(self, pin_id, drawing_id):
+        if (pin_id, drawing_id) != (self.selected_pin, self.drawing.selected):
+            self.selected_pin, self.drawing.selected = pin_id, drawing_id
+            self.refresh()
 
     def cancel_drag(self):
         if self.drag:
@@ -231,18 +247,14 @@ class SiegeMapView(AtlasView):
 
     def mousePressEvent(self, event):
         if self.map:
-            if self.drawing.enabled and event.button() == Qt.RightButton and (self.drawing.gesture or self.drawing.tool):
-                self.drawing_cancelled.emit()
-                event.accept()
-                return
-            if event.button() == Qt.RightButton and (self.placement or self.drag):
+            if event.button() == Qt.RightButton and (self.placement or self.drag or self.drawing.tool or self.drawing.gesture):
                 self.editing_cancelled.emit()
                 event.accept()
                 return
             if event.button() == Qt.LeftButton:
                 cursor = event.position().toPoint()
                 point = self.mapToScene(cursor)
-                if self.drawing.enabled and self.drawing.press(cursor):
+                if self.drawing.tool and self.drawing.press(cursor):
                     event.accept()
                     return
                 if self.placement:
@@ -251,14 +263,19 @@ class SiegeMapView(AtlasView):
                     event.accept()
                     return
                 if self.editing_pins:
-                    pin = next((item for item in self.items(cursor)
-                                if isinstance(item, TacticalMarker) and item.pin_id), None)
+                    if self.drawing.press_handle(cursor):
+                        event.accept()
+                        return
+                    markers = [item for item in self.items(cursor) if isinstance(item, TacticalMarker)]
+                    pin = next((item for item in markers if item.pin_id), None)
                     if pin is not None:
                         marker_id = pin.pin_id
-                        self.select_pin(marker_id)
-                        pin = next(item for item in self.badges if item.pin_id == marker_id)
                         self.pin_selected.emit(marker_id)
+                        pin = next(item for item in self.badges if item.pin_id == marker_id)
                         self.drag = (cursor, pin, point, pin.pos(), False)
+                        event.accept()
+                        return
+                    if not any(item.callback for item in markers) and self.drawing.press(cursor):
                         event.accept()
                         return
         super().mousePressEvent(event)
@@ -296,11 +313,7 @@ class SiegeMapView(AtlasView):
         super().mouseReleaseEvent(event)
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Escape and self.drawing.enabled:
-            self.drawing_cancelled.emit()
-            event.accept()
-            return
-        if event.key() == Qt.Key_Escape and (self.placement or self.drag or self.selected_pin):
+        if event.key() == Qt.Key_Escape and (self.placement or self.drawing.enabled or self.drag):
             self.editing_cancelled.emit()
             event.accept()
             return

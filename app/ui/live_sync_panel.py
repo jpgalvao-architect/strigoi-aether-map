@@ -140,7 +140,7 @@ class SetupDialog(QDialog):
 
 
 class LiveSyncPanel(QWidget):
-    def __init__(self, sync, parent=None):
+    def __init__(self, sync, parent=None, *, quick_tools=None):
         super().__init__(parent)
         self.sync = sync
         layout = QVBoxLayout(self)
@@ -157,7 +157,7 @@ class LiveSyncPanel(QWidget):
         layout.addWidget(self.overlay_hint)
         off = self.page()
         off.addWidget(label('Compartilhe marcações táticas de Lower Reshanta durante a siege.', 'subtitle', True))
-        self.host_page()
+        self.host_page(quick_tools)
         self.player_page()
         self.state = label('', 'subtitle', True)
         self.message = label('', 'subtitle', True)
@@ -176,8 +176,10 @@ class LiveSyncPanel(QWidget):
         self.views.addWidget(widget)
         return layout
 
-    def host_page(self):
+    def host_page(self, quick_tools):
         layout = self.page()
+        if quick_tools is not None:
+            layout.addWidget(quick_tools)
         self.cloud = label('', 'subtitle', True)
         self.host_session = label('', 'subtitle', True)
         self.dirty = label('', 'subtitle', True)

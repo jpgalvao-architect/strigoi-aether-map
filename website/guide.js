@@ -89,7 +89,8 @@
     }
     const image = $('guide-image');
     const screen = step.image ?? topic.image;
-    image.src = screen === 'quick-menu' ? `assets/quick-menu-${language}.webp` : `assets/app-${screen}-${language}.webp`;
+    const prefix = screen === 'quick-menu' || screen === 'live-sync-host' ? '' : 'app-';
+    image.src = `assets/${prefix}${screen}-${language}.webp`;
     image.alt = t('guide.imageAlt', {topic: text(topic.title)});
     const compact = screen === 'quick-menu';
     image.width = compact ? (language === 'es-419' ? 265 : 288) : 1380;
