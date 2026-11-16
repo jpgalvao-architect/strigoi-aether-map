@@ -37,6 +37,8 @@ npx wrangler dev --local --ip 127.0.0.1 --port 8976 --var ('LIVE_SYNC_OWNER_KEY:
 
 Em outro terminal, execute `npm test`. Na raiz do projeto Python, defina `AZPHELUMBRA_LIVE_SYNC_LOCAL_TEST=1` para executar também o teste de integração Qt em `app/tests/test_live_sync.py`. O valor acima é público e serve para o emulador local.
 
+Para forçar a hibernação de um Durable Object e testar o socket após reativação, gere o bundle com `npx wrangler deploy --dry-run --outdir .wrangler/bench-bundle` e execute `node --test hibernation.test.mjs`.
+
 Para desenvolvimento com uma conta própria e autorização explícita, `npx wrangler login` abre o consentimento no navegador. Depois use `npm run deploy` e `npx wrangler secret put LIVE_SYNC_OWNER_KEY` para implantar este mesmo modelo e registrar a chave que o Azphelumbra gerou. O assistente do app permite usar o endereço criado. Para remover essa implantação, confirme a conta e o nome do Worker no painel antes de excluí-lo.
 
 ## Testes de carga
