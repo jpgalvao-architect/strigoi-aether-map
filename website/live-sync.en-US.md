@@ -67,3 +67,7 @@ A publication to 1,000 connected players can trigger roughly 1,000 snapshot down
 - **Remove the Worker.** End active sessions, open **Workers & Pages**, select your Live Sync Worker, and use **Settings → Delete**. You can then disconnect the repository integration if desired. Invites to that address stop working. [Worker deletion](https://developers.cloudflare.com/workers/wrangler/commands/general/#delete).
 
 The caller owns the Worker and the published strategy resides in that account. Players connect directly to the caller's endpoint.
+
+## Report an issue
+
+Include the Azphelumbra version, Windows version, symptom, approximate player count, and steps to reproduce. Remove keys, tokens, private invites, and personal data before attaching logs or screenshots. [GitHub Issues](https://github.com/jpgalvao-architect/strigoi-aether-map/issues/new).

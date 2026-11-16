@@ -1,0 +1,48 @@
+name: Validate Windows installer
+on:
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'installer/**'
+      - 'scripts/prepare-installer.py'
+      - 'scripts/check-clean-installer.ps1'
+      - 'strigoi.spec'
+      - 'requirements-lock.txt'
+      - '.github/workflows/windows-installer.yml'
+permissions:
+  contents: read
+jobs:
+  install:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install build dependencies
+        run: |
+          python -m pip install -r requirements-lock.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $compiler = Join-Path ${env:ProgramFiles(x86)} 'NSIS/makensis.exe'
+          if (-not (Test-Path -LiteralPath $compiler)) {
+            choco install nsis --yes --no-progress
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Build the production installer
+        run: |
+          $output = Join-Path $env:RUNNER_TEMP 'azphelumbra-build'
+          python -m PyInstaller --noconfirm --distpath "$output/dist" --workpath "$output/freeze" strigoi.spec
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $payload = Join-Path $output 'dist/StrigoiAetherMap'
+          New-Item -ItemType Directory -Path "$payload/source" | Out-Null
+          git archive --format=zip --prefix=strigoi-aether-map/ -o "$payload/source/strigoi-aether-map-source.zip" HEAD
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item LICENSE,LICENSE-NOTICE.md,THIRD_PARTY.md,README.md,README.en-US.md -Destination $payload
+          Copy-Item docs,third-party-notices -Destination $payload -Recurse
+          $compiler = Join-Path ${env:ProgramFiles(x86)} 'NSIS/makensis.exe'
+          python scripts/prepare-installer.py --payload $payload --output "$output/Setup.exe" --compiler $compiler
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Install, launch, reinstall, and uninstall
+        run: |
+          & ./scripts/check-clean-installer.ps1 -Setup "$env:RUNNER_TEMP/azphelumbra-build/Setup.exe"

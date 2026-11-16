@@ -67,3 +67,7 @@ Una publicación para 1.000 jugadores conectados puede generar unas 1.000 descar
 - **Eliminar el Worker.** Finaliza las sesiones, abre **Workers & Pages**, selecciona el Worker de Live Sync y usa **Settings → Delete**. Después puedes desconectar la integración con el repositorio. Las invitaciones de esa dirección dejarán de funcionar. [Cómo eliminar un Worker](https://developers.cloudflare.com/workers/wrangler/commands/general/#delete).
 
 El caller es dueño del Worker y la estrategia publicada reside en su cuenta. Los jugadores se conectan directamente a la dirección del caller.
+
+## Reportar un problema
+
+Incluye la versión de Azphelumbra, la versión de Windows, el síntoma, la cantidad aproximada de jugadores y los pasos para reproducirlo. Quita las claves, los tokens, las invitaciones privadas y los datos personales antes de adjuntar registros o capturas. [GitHub Issues](https://github.com/jpgalvao-architect/strigoi-aether-map/issues/new).

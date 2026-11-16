@@ -68,3 +68,7 @@ Como referência, uma publicação para 1.000 jogadores conectados pode gerar ap
 - **Remover o Worker.** Encerre as sessões. No painel Cloudflare, abra **Workers & Pages**, selecione o Worker do Live Sync e use **Settings → Delete**. Confira se o recurso removido é o da sua sessão. Se quiser, desconecte a integração com o repositório criado para o modelo. Excluir a implantação interrompe os convites desse endereço. [Configuração do Worker](https://developers.cloudflare.com/workers/wrangler/commands/#delete).
 
 O Worker pertence à conta do caller. A senha da Cloudflare é usada na página oficial no navegador. O Azphelumbra guarda apenas a vinculação no Windows e os convites dão acesso de leitura à sessão.
+
+## Reporte problemas
+
+Informe a versão do Azphelumbra, a versão do Windows, o sintoma, quantos participantes havia e como reproduzir. Remova chaves, tokens, convites privados e dados pessoais antes de anexar logs ou capturas. [GitHub Issues](https://github.com/jpgalvao-architect/strigoi-aether-map/issues/new).
