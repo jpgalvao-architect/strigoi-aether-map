@@ -1385,6 +1385,11 @@ window.StrigoiGuide = {
             "en_US": "Host a session and share the invite. Use Quick tools to mark the map, then select Publish changes when the plan is ready.",
             "es-419": "Hospeda una sesión y comparte la invitación. Usa las Herramientas rápidas para marcar el mapa y selecciona Publicar cambios cuando el plan esté listo."
           },
+          "tip": {
+            "pt_BR": "Quem entrou pelo convite recebe a nova versão automaticamente. Confira no painel quantos jogadores estão conectados.",
+            "en_US": "Players who joined through the invite receive the new version automatically. The panel shows how many players are connected.",
+            "es-419": "Quienes ingresaron con la invitación reciben la nueva versión automáticamente. Consulta cuántos jugadores están conectados en el panel."
+          },
           "image": "live-sync-host",
           "action": {
             "href": "live-sync.html",

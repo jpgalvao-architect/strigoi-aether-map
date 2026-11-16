@@ -92,10 +92,13 @@
     const prefix = screen === 'quick-menu' || screen === 'live-sync-host' ? '' : 'app-';
     image.src = `assets/${prefix}${screen}-${language}.webp`;
     image.alt = t('guide.imageAlt', {topic: text(topic.title)});
-    const compact = screen === 'quick-menu';
-    image.width = compact ? (language === 'es-419' ? 265 : 288) : 1380;
-    image.height = compact ? (language === 'es-419' ? 504 : 322) : 900;
-    $('guide-zoom').classList.toggle('compact-screen', compact);
+    const siegePanel = screen === 'siege-editor' || screen === 'live-sync-host';
+    const [width, height] = siegePanel ? [320, 643] : screen === 'quick-menu'
+      ? (language === 'es-419' ? [265, 504] : [288, 322])
+      : [1380, 900];
+    image.width = width;
+    image.height = height;
+    $('guide-zoom').classList.toggle('compact-screen', siegePanel || screen === 'quick-menu');
     $('guide-dialog-image').src = image.src; $('guide-dialog-image').alt = image.alt;
     $('guide-previous').disabled = stepIndex === 0;
     const nextTopic = stepIndex === topic.steps.length - 1;
