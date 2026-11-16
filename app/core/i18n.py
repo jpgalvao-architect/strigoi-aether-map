@@ -17,9 +17,9 @@ LANGUAGES = {
 DEFAULT_LANGUAGE = 'pt_BR'
 _LANGUAGE_FILES = {
     'en_US': tuple(f'{prefix}en_US.json' for prefix in (
-        '', 'combat_', 'quick_menu_', 'pets_', 'vigilia_', 'routine_', 'events_', 'routes_', 'siege_',
+        '', 'combat_', 'quick_menu_', 'pets_', 'vigilia_', 'routine_', 'events_', 'routes_', 'siege_', 'live_sync_',
     )),
-    'es-419': ('es-419.json',),
+    'es-419': ('es-419.json', 'live_sync_es-419.json'),
 }
 _ASSETS = Path(__file__).resolve().parents[1] / 'assets/i18n'
 _QT_CATALOGS = {'pt_BR': 'qtbase_pt_BR.qm', 'es-419': 'qtbase_es.qm'}

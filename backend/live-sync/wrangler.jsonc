@@ -1,0 +1,14 @@
+{
+  "name": "azphelumbra-live-sync",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": false },
+  "durable_objects": { "bindings": [{ "name": "SESSIONS", "class_name": "SiegeSession" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SiegeSession"] }],
+  "ratelimits": [
+    { "name": "CLIENT_LIMIT", "namespace_id": "16671", "simple": { "limit": 8000, "period": 60 } },
+    { "name": "OWNER_LIMIT", "namespace_id": "16672", "simple": { "limit": 20, "period": 60 } }
+  ]
+}

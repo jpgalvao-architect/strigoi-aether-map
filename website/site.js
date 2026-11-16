@@ -37,6 +37,17 @@
     'showcase.sonar.description': 'Ative o Sonar para receber um aviso visual quando o som de um Cubo Oculto for reconhecido.',
   });
   const en = {
+    "live.feature.title": "Live Sync Beta — Share strategies in real time",
+    "live.feature.intro": "Share Lower Reshanta pins, flight rings and tactical drawings with your group during a siege.",
+    "live.feature.host": "Host on your Cloudflare account",
+    "live.feature.hostBody": "The caller creates the session in their own account and decides when to publish the strategy.",
+    "live.feature.join": "Join with an invite",
+    "live.feature.joinBody": "Players can join without a Cloudflare account and automatically receive each published revision.",
+    "live.feature.map": "See the plan on the game map",
+    "live.feature.mapBody": "Markers appear in the Reshanta overlay. Your personal data and local presets stay on your computer.",
+    "live.feature.guide": "Open the Live Sync guide",
+    "live.feature.feedback": "Report an issue",
+    "live.feature.limit": "The 2,000-client test used a local emulator. Capacity for a real session still needs to be measured.",
     'skip': 'Skip to content', 'navigation': 'Main navigation', 'language': 'Language',
     'page.title': 'Azphelumbra — your next discovery', 'legal.page.title': 'Terms of use — Azphelumbra',
     'nav.explore': 'Explore', 'nav.sonar': 'Sonar', 'nav.download': 'Downloads',
@@ -129,6 +140,17 @@
     'legal.license': 'Read the complete GPLv3 license →',
   };
   const es = {
+    "live.feature.title": "Live Sync Beta — Estrategias compartidas en tiempo real",
+    "live.feature.intro": "Comparte pines, anillos de vuelo y dibujos tácticos de Lower Reshanta con tu grupo durante el asedio.",
+    "live.feature.host": "Hospeda en tu cuenta de Cloudflare",
+    "live.feature.hostBody": "El caller crea la sesión en su cuenta y decide cuándo publicar la estrategia.",
+    "live.feature.join": "Únete con una invitación",
+    "live.feature.joinBody": "Los jugadores se unen sin cuenta de Cloudflare y reciben automáticamente cada revisión publicada.",
+    "live.feature.map": "Consulta el plan en el mapa del juego",
+    "live.feature.mapBody": "Las marcas aparecen en el overlay de Reshanta. Tus datos personales y ajustes locales permanecen en tu equipo.",
+    "live.feature.guide": "Abrir la guía de Live Sync",
+    "live.feature.feedback": "Reportar un problema",
+    "live.feature.limit": "La prueba con 2.000 clientes se hizo en un emulador local. La capacidad de una sesión real aún está por medir.",
     "skip": "Saltar al contenido",
     "navigation": "Navegación principal",
     "language": "Idioma",
@@ -252,6 +274,11 @@
   Object.assign(en, window.StrigoiGuide?.ui.en_US || {'nav.guide':'User guide','start.guide':'Open interactive guide'});
   Object.assign(es, window.StrigoiGuide?.ui['es-419'] || {'nav.guide':'Guía de uso','start.guide':'Abrir guía interactiva'});
   const translations = { pt_BR: pt, en_US: en, 'es-419': es };
+  const liveGuides = {
+    pt_BR: ['Live Sync — Guia de configuração do Azphelumbra', '← Guia do Azphelumbra'],
+    en_US: ['Live Sync — Azphelumbra setup guide', '← Azphelumbra guide'],
+    'es-419': ['Live Sync — Guía de configuración de Azphelumbra', '← Guía de Azphelumbra'],
+  };
   const languageTags = { pt_BR: 'pt-BR', en_US: 'en-US', 'es-419': 'es-419' };
   const supports = locale => Object.hasOwn(translations, locale);
   const htmlKeys = new Set(['hero.title', 'explore.title', 'sonar.title', 'guide.title']);
@@ -286,9 +313,10 @@
     const t = translations[next];
     document.documentElement.lang = languageTags[next];
     document.documentElement.dataset.locale = next;
-    document.title = t[document.body.dataset.page === 'terms' ? 'legal.page.title' : document.body.dataset.page === 'guide' ? 'guide.page.title' : 'page.title'];
+    const liveGuide = document.body.dataset.page === 'live-sync';
+    document.title = liveGuide ? liveGuides[next][0] : t[document.body.dataset.page === 'terms' ? 'legal.page.title' : document.body.dataset.page === 'guide' ? 'guide.page.title' : 'page.title'];
     document.querySelectorAll('[data-i18n]').forEach(el => {
-      const text = t[el.dataset.i18n];
+      const text = el.dataset.i18n === 'live.back' ? liveGuides[next][1] : t[el.dataset.i18n];
       if (text === undefined) return;
       if (htmlKeys.has(el.dataset.i18n)) el.innerHTML = text;
       else el.textContent = text;
@@ -306,7 +334,7 @@
     document.dispatchEvent(new CustomEvent('strigoi:language', {detail: {language: next}}));
     document.querySelectorAll('a[href]').forEach(link => {
       const href = link.getAttribute('href');
-      if (!/^(?:index|guide|terms)\.html(?:[?#]|$)/.test(href)) return;
+      if (!/^(?:index|guide|terms|live-sync)\.html(?:[?#]|$)/.test(href)) return;
       const url = new URL(link.href);
       url.searchParams.set('lang', next);
       link.setAttribute('href', href.split(/[?#]/, 1)[0] + url.search + url.hash);

@@ -1,6 +1,6 @@
 # Instalação do Azphelumbra
 
-Execute `StrigoiAetherMap-Setup-0.10.0-beta.15.exe`. Escolha português do
+Execute `StrigoiAetherMap-Setup-0.10.0-beta.16.exe`. Escolha português do
 Brasil, inglês dos EUA ou espanhol. A tela de termos exige marcar o aceite.
 A caixa começa desmarcada. Sem aceite, não é possível avançar para instalar.
 Os termos gerais vêm primeiro, seguidos da descrição técnica e, na seção 5,

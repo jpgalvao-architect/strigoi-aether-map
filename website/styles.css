@@ -26,3 +26,5 @@
   .languages button { min-height: 24px; padding-inline: 6px; }
   .sonar-visual::before { inset: -14px; }
 }
+
+.live-sync-section .steps article{padding-left:0}.live-sync-actions{margin-top:24px}

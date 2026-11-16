@@ -223,5 +223,6 @@ própria janela, sem captura do desktop. Testes usam pastas isoladas.
 - [Mascote, ícones e prompts](docs/BRANDING.md)
 - [Fontes e dados](docs/SOURCES.md)
 - [Overlay](docs/OVERLAY.md)
+- [Live Sync para callers e jogadores](website/live-sync.md)
 - [Validação e limites](docs/VALIDATION.md)
 - [Avisos de terceiros](THIRD_PARTY.md)

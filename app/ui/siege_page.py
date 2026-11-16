@@ -12,9 +12,11 @@ from PySide6.QtGui import QColor
 
 from app.core.i18n import Verbatim, tr, validation_text
 from app.modules.siege.drawing import drawing_color
+from app.modules.siege.live_sync import LiveSync
 from app.modules.siege.markers import pin_color
 from app.modules.siege.models import COLORS, LAYERS, OBJECTIVE_CATEGORY, SECTORS, Coordinate, RingPosition
 from app.ui.localized_widgets import QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QLineEdit, QMessageBox, QWidget
+from app.ui.live_sync_panel import LiveSyncPanel
 from app.ui.siege_drawings import translated
 from app.ui.siege_map import SiegeMapView
 from app.ui.widgets import button, card, label, page_header, row
@@ -393,7 +395,7 @@ class SiegePage(QWidget):
         self.setup_minimap = button('Selecionar minimapa', setup_minimap)
         side.addWidget(self.setup_minimap)
         context.changed.connect(self.refresh_minimap_button)
-        self.section.addItems(['Editar pins', 'Catálogo de anéis', 'Camadas e presets', 'Desenhos táticos'])
+        self.section.addItems(['Editar pins', 'Catálogo de anéis', 'Camadas e presets', 'Desenhos táticos', 'Live Sync'])
         side.addWidget(self.section)
         self.sections = QStackedWidget()
         side.addWidget(self.sections, 1)
@@ -403,6 +405,11 @@ class SiegePage(QWidget):
         self.sections.addWidget(self.preset_page())
         self.drawings = DrawingPanel(self)
         self.sections.addWidget(self.drawings)
+        self.live_sync = LiveSync(self.service, context.directory, parent=self)
+        self.live_panel = LiveSyncPanel(self.live_sync)
+        self.sections.addWidget(self.live_panel)
+        self.live_sync.changed.connect(self.refresh_live_preview)
+        self.service.session_changed.connect(self.refresh_live_preview)
         self.board.view.ring_selected.connect(self.select_ring_on_map)
         self.board.view.coordinate_selected.connect(self.placement_chosen)
         self.board.view.pin_selected.connect(self.select_pin_on_map)
@@ -430,6 +437,16 @@ class SiegePage(QWidget):
         self.board.view.editing_pins = index == 0
         self.cancel_placement()
         self.drawings.activate(self.sections.currentWidget() is self.drawings)
+        self.refresh_live_preview()
+
+    def refresh_live_preview(self):
+        view = self.board.view
+        show = self.sections.currentWidget() is self.live_panel and self.live_sync.mode == 'player'
+        shared = self.service.session_preset if show else None
+        if view.session_preview != show or getattr(view, '_last_shared', None) is not shared:
+            view.session_preview = show
+            view._last_shared = shared
+            view.refresh()
 
     def cancel_placement(self):
         view = self.board.view
@@ -471,6 +488,7 @@ class SiegePage(QWidget):
         self.message('O download do mapa está indisponível. Confira a conexão e tente novamente.')
 
     def shutdown(self):
+        self.live_sync.shutdown()
         if self.map_downloader.state() != QProcess.NotRunning:
             self.map_downloader.blockSignals(True)
             self.map_downloader.kill()

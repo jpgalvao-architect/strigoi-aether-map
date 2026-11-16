@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0e18">
+  <meta name="description" content="Configure o Live Sync no Azphelumbra, hospede sessões na sua conta Cloudflare e compartilhe a estratégia de Lower Reshanta.">
+  <link rel="canonical" href="https://jpgalvao-architect.github.io/strigoi-aether-map/live-sync.html">
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="styles.css?v=es419">
+  <script src="site.js?v=live-sync" defer></script>
+  <title>Live Sync — Guia de configuração do Azphelumbra</title>
+  <style>
+    .live-guide h1 { margin: 0 0 22px; }
+    .live-guide h3 { font-size: 16px; margin-top: 22px; }
+    .live-guide p, .live-guide li { font-size: 14px; line-height: 1.7; }
+    .live-guide ol, .live-guide ul { padding-left: 24px; }
+    .live-guide li + li { margin-top: .6em; }
+    .live-guide a { color: var(--aqua); text-decoration: underline; }
+    .live-guide code { overflow-wrap: anywhere; }
+    .live-guide img { display: block; max-width: 100%; height: auto; margin-block: 18px; border-radius: 8px; }
+  </style>
+</head>
+<body data-page="live-sync">
+  <a class="skip-link" href="#main" data-i18n="skip">Ir para o conteúdo</a>
+  <header class="site-header"><div class="container nav-row">
+    <a class="brand" href="index.html"><img src="assets/azphelumbra-emblem.webp" width="48" height="48" alt=""><span>AZPHELUMBRA<small>AION 2 COMPANION</small></span></a>
+    <div class="nav-actions"><div class="languages" aria-label="Idioma" data-i18n-aria="language">
+      <button type="button" data-language="pt_BR" lang="pt-BR" aria-label="Português (Brasil)" aria-pressed="true">PT</button>
+      <button type="button" data-language="en_US" lang="en-US" aria-label="English (United States)" aria-pressed="false">EN</button>
+      <button type="button" data-language="es-419" lang="es-419" aria-label="Español (Latinoamérica)" aria-pressed="false">ES</button>
+    </div></div>
+  </div></header>
+  <main id="main" class="container legal-main">
+    <a class="legal-back" href="guide.html" data-i18n="live.back">← Guia do Azphelumbra</a>
+<article class="legal-document live-guide" lang="pt-BR" data-legal-language="pt_BR"><h1 id="pt_BR-live-sync-no-azphelumbra">Live Sync no Azphelumbra</h1>
+<p>Compartilhe os pins, anéis e desenhos táticos de Lower Reshanta no mapa e no minimapa do AION 2. O caller publica cada versão pelo Siege Command. Os jogadores recebem a estratégia com um convite.
+Use uma versão do Azphelumbra que mostre <strong>Live Sync</strong> no Siege Command.</p>
+<h2 id="pt_BR-configuracao-rapida-para-callers">Configuração rápida para callers</h2>
+<ol>
+<li>Abra <strong>Siege Command</strong>, selecione <strong>Live Sync</strong> e escolha <strong>Hospedar sessão (Caller)</strong>.</li>
+<li>Clique em <strong>Configurar Cloudflare</strong>. O assistente gera uma chave de vinculação e abre a implantação na Cloudflare.</li>
+<li>Quando a Cloudflare terminar, cole no assistente o endereço <code>.workers.dev</code> e clique em <strong>Verificar e vincular</strong>.</li>
+<li>Clique em <strong>Criar sessão</strong> e depois em <strong>Copiar convite</strong>. Compartilhe o convite com o grupo.</li>
+<li>Edite os pins e os desenhos nas abas do Siege Command. Volte ao Live Sync e clique em <strong>Publicar alterações</strong> quando o plano estiver pronto. A versão publicada e a quantidade de jogadores conectados aparecem no painel.</li>
+</ol>
+<h2 id="pt_BR-guia-ilustrado-de-implantacao">Guia ilustrado de implantação</h2>
+<h3 id="pt_BR-copie-a-chave-e-abra-a-implantacao">1. Copie a chave e abra a implantação</h3>
+<p>Se você ainda não tem conta, <a href="https://dash.cloudflare.com/sign-up">crie uma conta Cloudflare</a>, confirme seu e-mail e fique no plano <strong>Free</strong>. No Azphelumbra, clique em <strong>Copiar chave de vinculação</strong> e em <strong>Implantar na Cloudflare</strong>. Entre na Cloudflare pelo navegador e selecione sua conta.</p>
+<p>A Cloudflare pode pedir autorização para copiar o modelo a um repositório e conectar a integração <strong>Workers Builds</strong>. Confira a conta, o repositório e as permissões exibidas na tela. Quando houver a opção, limite o acesso da integração ao repositório da implantação.</p>
+<p><img src="assets/live-sync-deploy.webp" alt="Primeira etapa do assistente com os botões Copiar chave de vinculação e Implantar na Cloudflare" /></p>
+<p>Na tela da Cloudflare, cole a chave no campo <code>LIVE_SYNC_OWNER_KEY</code>. Confirme a implantação. O modelo inclui o Worker, o Durable Object e o armazenamento SQLite necessários à sessão. Mantenha o assistente do Azphelumbra aberto enquanto a Cloudflare prepara a infraestrutura. <a href="https://developers.cloudflare.com/workers/platform/deploy-buttons/">Como funciona o Deploy to Cloudflare</a>.</p>
+<h3 id="pt_BR-verifique-a-conexao">2. Verifique a conexão</h3>
+<p>Quando o Worker estiver implantado, copie o endereço público HTTPS mostrado pela Cloudflare. Cole o endereço que termina em <code>.workers.dev</code> e clique em <strong>Verificar e vincular</strong>. O Azphelumbra verifica o Worker, a chave, o armazenamento e a conexão de sincronização. Quando o painel indicar <strong>Cloudflare pronta para hospedar</strong>, você já pode criar a sessão.</p>
+<p><img src="assets/live-sync-verify.webp" alt="Segunda etapa do assistente com o campo de endereço HTTPS e o botão Verificar e vincular" /></p>
+<p>Se o Worker já estiver implantado em sua conta, use <strong>Já tenho o endereço do Worker</strong> e informe a chave configurada na implantação anterior. Compartilhe apenas o convite com os jogadores. Guarde a chave de vinculação para você.</p>
+<h2 id="pt_BR-entrada-em-sessoes-para-jogadores">Entrada em sessões para jogadores</h2>
+<ol>
+<li>Abra <strong>Siege Command → Live Sync → Participar de sessão (Jogador)</strong>.</li>
+<li>Cole o convite inteiro que o caller enviou e clique em <strong>Entrar na sessão</strong>. Uma conta Cloudflare é necessária apenas para o caller.</li>
+<li>Para ver o plano no mapa e no minimapa do jogo, ative <strong>Overlay de Reshanta</strong> e entre em Lower Reshanta. Se precisar, use <strong>Selecionar minimapa</strong> para configurar a área que o app acompanha.</li>
+<li>Abra o mapa do jogo com <strong>M</strong> para ver a estratégia no mapa grande. O aplicativo acompanha cada nova publicação.</li>
+<li>Use <strong>Sair da sessão</strong> para voltar aos seus pins no overlay. Os presets pessoais ficam salvos no computador.</li>
+</ol>
+<p>Use <strong>Encerrar sessão</strong> no painel do caller para desconectar o grupo e descartar a estratégia publicada no Worker. O Atlas, o Siege Command local e os outros módulos continuam disponíveis offline.</p>
+<h2 id="pt_BR-solucao-de-problemas">Solução de problemas</h2>
+<ul>
+<li><strong>O endereço ainda não responde como Live Sync.</strong> Aguarde o término da implantação e copie o endereço HTTPS de produção do Worker. Se a Cloudflare criou apenas um projeto de exemplo ou a compilação falhou, veja o histórico de implantação no painel.</li>
+<li><strong>Endereço inválido.</strong> Cole o endereço de produção terminado em <code>.workers.dev</code> que aparece no painel do Worker.</li>
+<li><strong>A implantação pede um plano ou permissão.</strong> Confira se a conta escolhida usa Workers Free e se seu perfil tem permissão para implantar Workers. O modelo usa Durable Objects com SQLite, compatíveis com o Free. Se aparecer uma oferta de upgrade, volte e confira o plano, a conta e o modelo selecionados.</li>
+<li><strong>A chave está ausente ou é diferente.</strong> Confira <code>LIVE_SYNC_OWNER_KEY</code> em <strong>Settings → Variables and Secrets</strong> no Worker. Se você perdeu a chave, abra uma nova configuração no Azphelumbra, copie a nova chave, atualize o segredo no Worker e vincule pelo endereço existente.</li>
+<li><strong>O canal de sincronização está indisponível.</strong> Confira se a implantação terminou. Experimente outra conexão para verificar se a rede permite WebSockets seguros.</li>
+<li><strong>Aguardando a primeira publicação.</strong> O caller precisa clicar em <strong>Publicar alterações</strong>. As edições locais ficam pendentes até esse clique.</li>
+<li><strong>Reconectando.</strong> O app mantém a última estratégia recebida enquanto tenta reconectar. Ao recuperar a conexão, ele consulta a versão atual. Se o caller gerou um novo convite, peça esse convite para entrar de novo.</li>
+<li><strong>Convite expirado ou sessão encerrada.</strong> Peça ao caller um convite de uma sessão ativa.</li>
+<li><strong>A estratégia não aparece no jogo.</strong> Confira se a versão recebida é maior que zero, se você está em Lower Reshanta e se <strong>Overlay de Reshanta</strong> está ativo. O app reutiliza a região e a calibração do overlay atual.</li>
+<li><strong>Limite temporário ou erro 1027 da Cloudflare.</strong> Aguarde e confira o uso da conta. Se o limite diário do Workers Free foi atingido, ele é renovado à meia-noite UTC.</li>
+</ul>
+<h2 id="pt_BR-limites-do-plano-free">Limites do plano Free</h2>
+<p>Na consulta de novembro de 2026, a Cloudflare documentava <strong>100 mil solicitações de Workers por dia</strong> e <strong>100 mil solicitações de Durable Objects por dia</strong>. A cota diária de duração dos Durable Objects era de <strong>13 mil GB-s</strong>. Para SQLite, o plano incluía <strong>5 milhões de linhas lidas e 100 mil linhas gravadas por dia</strong>, com <strong>5 GB</strong> de armazenamento total. As cotas são da conta. Outros projetos na mesma conta podem consumir parte delas. <a href="https://developers.cloudflare.com/workers/platform/limits/">Limites do Workers</a> · <a href="https://developers.cloudflare.com/durable-objects/platform/pricing/">Cotas de Durable Objects</a>.</p>
+<p>Como referência, uma publicação para 1.000 jogadores conectados pode gerar aproximadamente 1.000 downloads individuais, além de conexões, reconexões e pedidos de status. A capacidade efetiva depende do uso e do ambiente. O app limita cada estratégia a 512 KiB e encerra sessões após 12 horas.</p>
+<h2 id="pt_BR-atualizar-ou-remover-a-infraestrutura">Atualizar ou remover a infraestrutura</h2>
+<ul>
+<li><strong>Atualizar.</strong> Encerre as sessões abertas e aplique a versão recomendada do conteúdo de <code>backend/live-sync</code> ao repositório criado pela Cloudflare. Confirme a nova implantação no painel. Preserve o nome do Worker, o segredo <code>LIVE_SYNC_OWNER_KEY</code> e as migrações anteriores para manter o endereço de vinculação.</li>
+<li><strong>Revogar um convite.</strong> Clique em <strong>Gerar novo convite</strong>. O antigo perde o acesso e os jogadores conectados terão de entrar com o novo convite.</li>
+<li><strong>Desvincular este computador.</strong> Clique em <strong>Encerrar sessão</strong> e depois <strong>Desconectar Cloudflare</strong>. A vinculação salva é removida do Windows.</li>
+<li><strong>Remover o Worker.</strong> Encerre as sessões. No painel Cloudflare, abra <strong>Workers &amp; Pages</strong>, selecione o Worker do Live Sync e use <strong>Settings → Delete</strong>. Confira se o recurso removido é o da sua sessão. Se quiser, desconecte a integração com o repositório criado para o modelo. Excluir a implantação interrompe os convites desse endereço. <a href="https://developers.cloudflare.com/workers/wrangler/commands/#delete">Configuração do Worker</a>.</li>
+</ul>
+<p>O Worker pertence à conta do caller. A senha da Cloudflare é usada na página oficial no navegador. O Azphelumbra guarda apenas a vinculação no Windows e os convites dão acesso de leitura à sessão.</p>
+<h2 id="pt_BR-reporte-problemas">Reporte problemas</h2>
+<p>Informe a versão do Azphelumbra, a versão do Windows, o sintoma, quantos participantes havia e como reproduzir. Remova chaves, tokens, convites privados e dados pessoais antes de anexar logs ou capturas. <a href="https://github.com/jpgalvao-architect/strigoi-aether-map/issues/new">GitHub Issues</a>.</p></article>
+<article class="legal-document live-guide" lang="en-US" data-legal-language="en_US" hidden><h1 id="en_US-live-sync-in-azphelumbra">Live Sync in Azphelumbra</h1>
+<p>Share Lower Reshanta pins, flight rings, and tactical drawings on the AION 2 map and minimap. The caller publishes each revision from Siege Command. Players receive the strategy through an invite.
+Use a version of Azphelumbra that shows <strong>Live Sync</strong> in Siege Command.</p>
+<h2 id="en_US-quick-setup-for-callers">Quick setup for callers</h2>
+<ol>
+<li>Open <strong>Siege Command</strong>, select <strong>Live Sync</strong>, and choose <strong>Host a session (Caller)</strong>.</li>
+<li>Select <strong>Set up Cloudflare</strong> to generate a pairing key and start deployment in your browser.</li>
+<li>When Cloudflare finishes, paste the production <code>.workers.dev</code> address into Azphelumbra and select <strong>Verify and link</strong>.</li>
+<li>Select <strong>Create session</strong>, then <strong>Copy invite</strong>, and share the invite with your group.</li>
+<li>Edit your markers and drawings in Siege Command. When the strategy is ready, return to Live Sync and select <strong>Publish changes</strong>. The panel shows the published version and how many players are connected.</li>
+</ol>
+<h2 id="en_US-illustrated-deployment-guide">Illustrated deployment guide</h2>
+<h3 id="en_US-copy-the-key-and-start-deployment">1. Copy the key and start deployment</h3>
+<p>If you need an account, <a href="https://dash.cloudflare.com/sign-up">sign up for Cloudflare</a>, confirm your email, and stay on the <strong>Free</strong> plan. In Azphelumbra, select <strong>Copy pairing key</strong>, then <strong>Deploy to Cloudflare</strong>. Sign in through your browser and choose your own Cloudflare account.</p>
+<p>Cloudflare may ask to copy the template to a repository and connect the <strong>Workers Builds</strong> integration. Check the account, repository, and permissions on screen. If offered a choice, give the integration access to the deployment repository only.</p>
+<p><img src="assets/live-sync-deploy.webp" alt="The first setup screen in Portuguese, with Copy pairing key and Deploy to Cloudflare" /></p>
+<p>Paste the key into <code>LIVE_SYNC_OWNER_KEY</code> on Cloudflare and confirm the deployment. The template provisions the Worker and its SQLite-backed Durable Object. Keep the Azphelumbra setup window open while it deploys. <a href="https://developers.cloudflare.com/workers/platform/deploy-buttons/">How Deploy to Cloudflare works</a>.</p>
+<h3 id="en_US-verify-the-connection">2. Verify the connection</h3>
+<p>Copy the production HTTPS address ending in <code>.workers.dev</code>. Paste it into Azphelumbra and select <strong>Verify and link</strong>. Azphelumbra checks the Worker, pairing key, storage, and synchronization connection. When the panel says <strong>Cloudflare is ready to host</strong>, you can create a session.</p>
+<p><img src="assets/live-sync-verify.webp" alt="The second setup screen in Portuguese, with the HTTPS address field and Verify and link" /></p>
+<p>For an existing Worker in your account, select <strong>I already have the Worker address</strong> and enter the pairing key you used for that deployment. Keep that key private. Share only the session invite.</p>
+<h2 id="en_US-joining-as-a-player">Joining as a player</h2>
+<ol>
+<li>Open <strong>Siege Command → Live Sync → Join a session (Player)</strong>.</li>
+<li>Paste the full invite and select <strong>Join session</strong>. Players can join without a Cloudflare account.</li>
+<li>Enable <strong>Reshanta overlay</strong> and enter Lower Reshanta to see the strategy in the game. Use <strong>Select minimap</strong> if you still need to set the minimap area.</li>
+<li>Press <strong>M</strong> to see the published strategy on the large map. The app receives new published versions automatically.</li>
+<li>Select <strong>Leave session</strong> to restore your own overlay markers. Personal presets stay on your computer.</li>
+</ol>
+<p>The caller can select <strong>End session</strong> to disconnect the group and clear the published strategy from the Worker. The Atlas, local Siege Command, and other modules are available offline.</p>
+<h2 id="en_US-troubleshooting">Troubleshooting</h2>
+<ul>
+<li><strong>Worker missing or deployment failed.</strong> Wait for deployment to finish. Open the build history in Cloudflare if the production address still does not respond.</li>
+<li><strong>Invalid address.</strong> Copy the production Worker address ending in <code>.workers.dev</code> from Cloudflare.</li>
+<li><strong>Pairing failed.</strong> Check <code>LIVE_SYNC_OWNER_KEY</code> under <strong>Settings → Variables and Secrets</strong>. If you lost the key, generate a new one in Azphelumbra, update the Worker secret, and link the existing address again.</li>
+<li><strong>Cloudflare asks for a plan or permission.</strong> Check that the account uses Workers Free and your role can deploy Workers. The template uses SQLite-backed Durable Objects, which are available on Free. If you see an upgrade offer, check the selected account, plan, and template first.</li>
+<li><strong>Invite expired or session ended.</strong> Ask the caller for a fresh invite to an active session.</li>
+<li><strong>Waiting for the first publication.</strong> The caller must select <strong>Publish changes</strong>.</li>
+<li><strong>Reconnecting.</strong> The last strategy remains visible. The app fetches the latest revision once it reconnects. If the caller rotated the invite, ask for the new one.</li>
+<li><strong>Strategy missing in the game.</strong> Confirm that you received a version above zero, are in Lower Reshanta, and have enabled <strong>Reshanta overlay</strong>.</li>
+<li><strong>Temporary limit or Cloudflare error 1027.</strong> Check account usage. The Workers Free daily limit resets at midnight UTC.</li>
+</ul>
+<h2 id="en_US-free-plan-limits">Free plan limits</h2>
+<p>In November 2026, Cloudflare documented <strong>100,000 Workers requests</strong> and <strong>100,000 Durable Objects requests per day</strong>. Durable Objects include <strong>13,000 GB-s of daily duration</strong>. SQLite includes <strong>5 million rows read per day, 100,000 rows written per day, and 5 GB of total storage</strong>. Other projects in the same account share those quotas. <a href="https://developers.cloudflare.com/workers/platform/limits/">Workers limits</a> · <a href="https://developers.cloudflare.com/durable-objects/platform/pricing/">Durable Objects quotas</a>.</p>
+<p>A publication to 1,000 connected players can trigger roughly 1,000 snapshot downloads, in addition to connections and status requests. Actual capacity depends on how the service is used. Each strategy has a 512 KiB size limit, and sessions expire after 12 hours.</p>
+<h2 id="en_US-updating-or-removing-the-worker">Updating or removing the Worker</h2>
+<ul>
+<li><strong>Update.</strong> End active sessions and update the Cloudflare-created repository with the recommended version of <code>backend/live-sync</code>. Keep the Worker name, the <code>LIVE_SYNC_OWNER_KEY</code> secret, and previous migrations. Verify the new deployment in Cloudflare.</li>
+<li><strong>Revoke an invite.</strong> Select <strong>Generate new invite</strong>. The old invite loses access, and connected players must rejoin with the new one.</li>
+<li><strong>Unlink this computer.</strong> End your session and select <strong>Disconnect Cloudflare</strong> to remove the pairing from Windows.</li>
+<li><strong>Remove the Worker.</strong> End active sessions, open <strong>Workers &amp; Pages</strong>, select your Live Sync Worker, and use <strong>Settings → Delete</strong>. You can then disconnect the repository integration if desired. Invites to that address stop working. <a href="https://developers.cloudflare.com/workers/wrangler/commands/general/#delete">Worker deletion</a>.</li>
+</ul>
+<p>The caller owns the Worker and the published strategy resides in that account. Players connect directly to the caller's endpoint.</p>
+<h2 id="en_US-report-an-issue">Report an issue</h2>
+<p>Include the Azphelumbra version, Windows version, symptom, approximate player count, and steps to reproduce. Remove keys, tokens, private invites, and personal data before attaching logs or screenshots. <a href="https://github.com/jpgalvao-architect/strigoi-aether-map/issues/new">GitHub Issues</a>.</p></article>
+<article class="legal-document live-guide" lang="es-419" data-legal-language="es-419" hidden><h1 id="es-419-live-sync-en-azphelumbra">Live Sync en Azphelumbra</h1>
+<p>Comparte pines, anillos de vuelo y dibujos tácticos de Lower Reshanta en el mapa y el minimapa de AION 2. El caller publica cada versión desde Siege Command. Los jugadores reciben la estrategia con una invitación.
+Usa una versión de Azphelumbra que muestre <strong>Live Sync</strong> en Siege Command.</p>
+<h2 id="es-419-configuracion-rapida-para-callers">Configuración rápida para callers</h2>
+<ol>
+<li>Abre <strong>Siege Command</strong>, selecciona <strong>Live Sync</strong> y elige <strong>Hospedar sesión (Caller)</strong>.</li>
+<li>Selecciona <strong>Configurar Cloudflare</strong> para generar la clave de vinculación e iniciar la implementación en el navegador.</li>
+<li>Cuando Cloudflare termine, pega la dirección de producción <code>.workers.dev</code> en Azphelumbra y selecciona <strong>Verificar y vincular</strong>.</li>
+<li>Selecciona <strong>Crear sesión</strong> y luego <strong>Copiar invitación</strong>. Comparte la invitación con el grupo.</li>
+<li>Edita las marcas y los dibujos en Siege Command. Cuando la estrategia esté lista, regresa a Live Sync y selecciona <strong>Publicar cambios</strong>. El panel indica la versión publicada y cuántos jugadores están conectados.</li>
+</ol>
+<h2 id="es-419-guia-ilustrada-de-implementacion">Guía ilustrada de implementación</h2>
+<h3 id="es-419-copia-la-clave-e-inicia-la-implementacion">1. Copia la clave e inicia la implementación</h3>
+<p>Si necesitas una cuenta, <a href="https://dash.cloudflare.com/sign-up">regístrate en Cloudflare</a>, confirma tu correo y conserva el plan <strong>Free</strong>. En Azphelumbra, selecciona <strong>Copiar clave de vinculación</strong> y después <strong>Implementar en Cloudflare</strong>. Inicia sesión desde el navegador y selecciona tu cuenta de Cloudflare.</p>
+<p>Cloudflare puede pedir permiso para copiar la plantilla a un repositorio y conectar la integración <strong>Workers Builds</strong>. Revisa la cuenta, el repositorio y los permisos que aparecen. Si tienes la opción, concede acceso únicamente al repositorio de esta implementación.</p>
+<p><img src="assets/live-sync-deploy.webp" alt="Primera pantalla del asistente en portugués, con los botones para copiar la clave e implementar" /></p>
+<p>Pega la clave en <code>LIVE_SYNC_OWNER_KEY</code> en Cloudflare y confirma. La plantilla prepara el Worker y su Durable Object con SQLite. Mantén abierto el asistente de Azphelumbra mientras termina la implementación. <a href="https://developers.cloudflare.com/workers/platform/deploy-buttons/">Cómo funciona Deploy to Cloudflare</a>.</p>
+<h3 id="es-419-verifica-la-conexion">2. Verifica la conexión</h3>
+<p>Copia la dirección HTTPS de producción que termina en <code>.workers.dev</code>. Pégala en Azphelumbra y selecciona <strong>Verificar y vincular</strong>. Azphelumbra verifica el Worker, la clave, el almacenamiento y la conexión de sincronización. Cuando aparezca <strong>Cloudflare está lista para hospedar sesiones</strong>, puedes crear una sesión.</p>
+<p><img src="assets/live-sync-verify.webp" alt="Segunda pantalla del asistente en portugués, con el campo HTTPS y el botón para verificar" /></p>
+<p>Si ya tienes un Worker en tu cuenta, elige <strong>Ya tengo la dirección del Worker</strong> e ingresa la clave que usaste para esa implementación. Guarda esa clave para ti y comparte solo la invitación de la sesión.</p>
+<h2 id="es-419-como-unirse-como-jugador">Cómo unirse como jugador</h2>
+<ol>
+<li>Abre <strong>Siege Command → Live Sync → Unirse a una sesión (Jugador)</strong>.</li>
+<li>Pega la invitación completa y selecciona <strong>Unirse a la sesión</strong>. Los jugadores pueden entrar sin una cuenta de Cloudflare.</li>
+<li>Activa el <strong>overlay de Reshanta</strong> y entra a Lower Reshanta. Si falta configurar el área, usa <strong>Seleccionar minimapa</strong>.</li>
+<li>Presiona <strong>M</strong> para ver la estrategia publicada en el mapa grande. La aplicación recibe automáticamente las nuevas versiones.</li>
+<li>Selecciona <strong>Salir de la sesión</strong> para recuperar tus marcas en el overlay. Tus ajustes preestablecidos permanecen en tu computadora.</li>
+</ol>
+<p>El caller puede seleccionar <strong>Finalizar sesión</strong> para desconectar al grupo y eliminar la estrategia publicada del Worker. El Atlas, Siege Command local y los demás módulos funcionan sin conexión.</p>
+<h2 id="es-419-solucion-de-problemas">Solución de problemas</h2>
+<ul>
+<li><strong>No se encuentra el Worker o falló la implementación.</strong> Espera a que termine. Si la dirección de producción sigue sin responder, revisa el historial de compilación en Cloudflare.</li>
+<li><strong>Dirección no válida.</strong> Copia en Cloudflare la dirección de producción del Worker que termina en <code>.workers.dev</code>.</li>
+<li><strong>Falló la vinculación.</strong> Revisa <code>LIVE_SYNC_OWNER_KEY</code> en <strong>Settings → Variables and Secrets</strong>. Si perdiste la clave, genera otra en Azphelumbra, actualiza el secreto en el Worker y vincula de nuevo la misma dirección.</li>
+<li><strong>Cloudflare pide otro plan o permiso.</strong> Verifica que la cuenta use Workers Free y que tu perfil pueda implementar Workers. La plantilla usa Durable Objects con SQLite, disponibles en Free. Si aparece una oferta para subir de plan, revisa la cuenta, el plan y la plantilla.</li>
+<li><strong>La invitación venció o la sesión finalizó.</strong> Pídele al caller una invitación a una sesión activa.</li>
+<li><strong>Esperando la primera publicación.</strong> El caller debe seleccionar <strong>Publicar cambios</strong>.</li>
+<li><strong>Reconectando.</strong> La última estrategia sigue visible. La aplicación busca la versión actual al reconectarse. Si el caller cambió la invitación, pídele la nueva.</li>
+<li><strong>No veo la estrategia en el juego.</strong> Verifica que la versión recibida sea mayor que cero, que estés en Lower Reshanta y que el overlay de Reshanta esté activo.</li>
+<li><strong>Límite temporal o error 1027 de Cloudflare.</strong> Consulta el consumo de la cuenta. El límite diario de Workers Free se renueva a medianoche UTC.</li>
+</ul>
+<h2 id="es-419-limites-del-plan-free">Límites del plan Free</h2>
+<p>En noviembre de 2026, Cloudflare documentaba <strong>100.000 solicitudes de Workers</strong> y <strong>100.000 solicitudes de Durable Objects por día</strong>. Durable Objects incluye <strong>13.000 GB-s de duración diaria</strong>. SQLite incluye <strong>5 millones de filas leídas por día, 100.000 filas escritas por día y 5 GB de almacenamiento total</strong>. Los demás proyectos de la cuenta comparten las cuotas. <a href="https://developers.cloudflare.com/workers/platform/limits/">Límites de Workers</a> · <a href="https://developers.cloudflare.com/durable-objects/platform/pricing/">Cuotas de Durable Objects</a>.</p>
+<p>Una publicación para 1.000 jugadores conectados puede generar unas 1.000 descargas, además de conexiones y consultas de estado. La capacidad efectiva depende del uso de la cuenta. Cada estrategia admite hasta 512 KiB y las sesiones vencen después de 12 horas.</p>
+<h2 id="es-419-actualizar-o-eliminar-el-worker">Actualizar o eliminar el Worker</h2>
+<ul>
+<li><strong>Actualizar.</strong> Finaliza las sesiones activas y actualiza el repositorio creado por Cloudflare con la versión recomendada de <code>backend/live-sync</code>. Conserva el nombre del Worker, el secreto <code>LIVE_SYNC_OWNER_KEY</code> y las migraciones previas. Verifica la implementación en Cloudflare.</li>
+<li><strong>Revocar una invitación.</strong> Selecciona <strong>Generar nueva invitación</strong>. La anterior pierde su acceso y los jugadores deben entrar con la nueva.</li>
+<li><strong>Desvincular la computadora.</strong> Finaliza la sesión y selecciona <strong>Desconectar Cloudflare</strong> para quitar la vinculación de Windows.</li>
+<li><strong>Eliminar el Worker.</strong> Finaliza las sesiones, abre <strong>Workers &amp; Pages</strong>, selecciona el Worker de Live Sync y usa <strong>Settings → Delete</strong>. Después puedes desconectar la integración con el repositorio. Las invitaciones de esa dirección dejarán de funcionar. <a href="https://developers.cloudflare.com/workers/wrangler/commands/general/#delete">Cómo eliminar un Worker</a>.</li>
+</ul>
+<p>El caller es dueño del Worker y la estrategia publicada reside en su cuenta. Los jugadores se conectan directamente a la dirección del caller.</p>
+<h2 id="es-419-reportar-un-problema">Reportar un problema</h2>
+<p>Incluye la versión de Azphelumbra, la versión de Windows, el síntoma, la cantidad aproximada de jugadores y los pasos para reproducirlo. Quita las claves, los tokens, las invitaciones privadas y los datos personales antes de adjuntar registros o capturas. <a href="https://github.com/jpgalvao-architect/strigoi-aether-map/issues/new">GitHub Issues</a>.</p></article>
+  </main>
+</body>
+</html>
