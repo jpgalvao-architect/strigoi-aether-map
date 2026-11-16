@@ -21,7 +21,7 @@ data += collect_data_files('app', includes=['assets/icons/classes/*.png'])
 data += collect_data_files('app', includes=['assets/pets/*.png'])
 data += [('data-sources/siege-reshanta.json', 'data-sources')]
 a = Analysis(['launcher.py'], pathex=['.'], binaries=[('app/assets/sonar/sonar-capture.exe', 'app/assets/sonar'), ('app/assets/combat/strigoi-combat.exe', 'app/assets/combat')], datas=data,
-             hiddenimports=['cv2', 'mss', 'numpy', 'PySide6.QtSvg', 'PySide6.QtSvgWidgets'],
+             hiddenimports=['cv2', 'mss', 'numpy', 'PySide6.QtSvg', 'PySide6.QtSvgWidgets', 'PySide6.QtWebSockets'],
              excludes=['PySide6.QtWebEngineCore', 'PySide6.QtWebEngineWidgets', 'PySide6.QtPdf', 'pytest'], noarchive=False)
 pyz = PYZ(a.pure)
 exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name='StrigoiAetherMap',

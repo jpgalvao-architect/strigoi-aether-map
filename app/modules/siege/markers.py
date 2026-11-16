@@ -29,8 +29,9 @@ def pin_badge(marker, preset, *, selected=False):
     return badge_for(pin_layer(marker), caption, preset.marker_scale * marker.scale, selected=selected)
 
 
-def markers_for(siege, dataset, *, tactical=True, exploration=True):
-    preset = siege.preset
+def markers_for(siege, dataset, *, tactical=True, exploration=True, shared=None):
+    local = siege.preset
+    preset = shared if shared is not None else local
     colors = COLORS | preset.colors
 
     def badge(position, layer, caption, *, provisional=False):
@@ -38,24 +39,24 @@ def markers_for(siege, dataset, *, tactical=True, exploration=True):
                 badge_for(layer, caption, preset.marker_scale, provisional=provisional))
 
     markers = []
-    if exploration and preset.layers & {'Pets', 'Gathering'}:
+    if exploration and local.layers & {'Pets', 'Gathering'}:
+        local_colors = COLORS | local.colors
         resources = {resource.id: resource for resource in dataset.resources}
         for point in dataset.points:
             if point.map_id == MAP_ID and point.enabled:
                 layer = 'Pets' if resources[point.resource_id].category == 'pets' else 'Gathering'
-                if layer in preset.layers:
-                    markers.append((point.x, point.y, colors[layer], badge_for(layer, '', preset.marker_scale)))
+                if layer in local.layers:
+                    markers.append((point.x, point.y, local_colors[layer], badge_for(layer, '', local.marker_scale)))
     if not tactical:
         return markers
     markers.extend((marker.position.x, marker.position.y, pin_color(marker, preset), pin_badge(marker, preset))
                    for marker in preset.markers if pin_visible(marker, preset))
-    for ring in siege.rings.values():
+    for ring, position, code in siege.display_rings(preset, shared=shared is not None):
         layer = 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
         if layer not in preset.layers:
             continue
-        position = siege.position(ring)
         if position is not None:
-            markers.append(badge(position.map_position, layer, siege.ring_code(ring) or '?',
+            markers.append(badge(position.map_position, layer, code or '?',
                                  provisional=position.status == 'provisional'))
     markers.sort(key=lambda marker: marker[3].priority)
     return markers

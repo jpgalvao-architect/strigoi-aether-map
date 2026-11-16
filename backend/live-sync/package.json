@@ -1,0 +1,26 @@
+{
+  "name": "azphelumbra-live-sync",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "test": "node --test worker.test.mjs",
+    "load": "node load.mjs"
+  },
+  "cloudflare": {
+    "bindings": {
+      "LIVE_SYNC_OWNER_KEY": {
+        "description": "Paste the pairing key generated in Azphelumbra → Siege Command → Live Sync. Do not use a Cloudflare password or API token."
+      }
+    }
+  },
+  "dependencies": {
+    "ajv": "8.20.0"
+  },
+  "devDependencies": {
+    "miniflare": "5.20261116.0-beta",
+    "wrangler": "4.163.0",
+    "ws": "8.23.0"
+  }
+}

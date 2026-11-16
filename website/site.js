@@ -252,6 +252,11 @@
   Object.assign(en, window.StrigoiGuide?.ui.en_US || {'nav.guide':'User guide','start.guide':'Open interactive guide'});
   Object.assign(es, window.StrigoiGuide?.ui['es-419'] || {'nav.guide':'Guía de uso','start.guide':'Abrir guía interactiva'});
   const translations = { pt_BR: pt, en_US: en, 'es-419': es };
+  const liveGuides = {
+    pt_BR: ['Live Sync — Guia de configuração do Azphelumbra', '← Guia do Azphelumbra'],
+    en_US: ['Live Sync — Azphelumbra setup guide', '← Azphelumbra guide'],
+    'es-419': ['Live Sync — Guía de configuración de Azphelumbra', '← Guía de Azphelumbra'],
+  };
   const languageTags = { pt_BR: 'pt-BR', en_US: 'en-US', 'es-419': 'es-419' };
   const supports = locale => Object.hasOwn(translations, locale);
   const htmlKeys = new Set(['hero.title', 'explore.title', 'sonar.title', 'guide.title']);
@@ -286,9 +291,10 @@
     const t = translations[next];
     document.documentElement.lang = languageTags[next];
     document.documentElement.dataset.locale = next;
-    document.title = t[document.body.dataset.page === 'terms' ? 'legal.page.title' : document.body.dataset.page === 'guide' ? 'guide.page.title' : 'page.title'];
+    const liveGuide = document.body.dataset.page === 'live-sync';
+    document.title = liveGuide ? liveGuides[next][0] : t[document.body.dataset.page === 'terms' ? 'legal.page.title' : document.body.dataset.page === 'guide' ? 'guide.page.title' : 'page.title'];
     document.querySelectorAll('[data-i18n]').forEach(el => {
-      const text = t[el.dataset.i18n];
+      const text = el.dataset.i18n === 'live.back' ? liveGuides[next][1] : t[el.dataset.i18n];
       if (text === undefined) return;
       if (htmlKeys.has(el.dataset.i18n)) el.innerHTML = text;
       else el.textContent = text;
@@ -306,7 +312,7 @@
     document.dispatchEvent(new CustomEvent('strigoi:language', {detail: {language: next}}));
     document.querySelectorAll('a[href]').forEach(link => {
       const href = link.getAttribute('href');
-      if (!/^(?:index|guide|terms)\.html(?:[?#]|$)/.test(href)) return;
+      if (!/^(?:index|guide|terms|live-sync)\.html(?:[?#]|$)/.test(href)) return;
       const url = new URL(link.href);
       url.searchParams.set('lang', next);
       link.setAttribute('href', href.split(/[?#]/, 1)[0] + url.search + url.hash);

@@ -136,6 +136,16 @@ class SiegeMapView(AtlasView):
         super().resizeEvent(event)
         self.position_badges()
 
+    session_preview = False
+
+    @property
+    def shared_preset(self):
+        return self.service.session_preset if self.session_preview else None
+
+    @property
+    def preset(self):
+        return self.shared_preset or self.service.preset
+
     def refresh(self):
         definition = self.service.definition
         if definition is None:
@@ -149,15 +159,17 @@ class SiegeMapView(AtlasView):
         for item in self.tactical_items:
             self.scene().removeItem(item)
         self.tactical_items.clear()
-        preset = self.service.preset
+        shared = self.shared_preset is not None
+        preset = self.preset
         colors = COLORS | preset.colors
-        for ring in self.service.rings.values():
-            position = self.service.position(ring)
+        for ring, position, code in self.service.display_rings(preset, shared=shared):
             layer = 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
             if position is not None and layer in preset.layers:
-                code = self.service.ring_code(ring)
+                alias = preset.aliases.get(ring.ring_id)
+                title = code or ring.display_name
+                title = f'{title} · {alias}' if alias else title
                 state = tr('Verificado') if position.status == 'verified' else tr('Provisório')
-                note = f'{self.service.ring_label(ring)}\n{ring.display_name}\n{state} · {position.source}'
+                note = f'{title}\n{ring.display_name}\n{state} · {position.source}'
                 if position.altitude is not None:
                     note += f'\n{tr("Altitude")} {position.altitude:g}'
                 coordinates = position.world_coordinates
@@ -165,9 +177,8 @@ class SiegeMapView(AtlasView):
                     note += f'\nX {coordinates[0]:.2f} · Y {coordinates[1]:.2f}'
                 badge = badge_for(layer, code or '?', preset.marker_scale,
                                   provisional=position.status == 'provisional')
-                self._add(TacticalMarker(badge, colors[layer], note,
-                                         lambda key=ring.ring_id: self.ring_selected.emit(key)),
-                          position.map_position)
+                select = None if shared else lambda key=ring.ring_id: self.ring_selected.emit(key)
+                self._add(TacticalMarker(badge, colors[layer], note, select), position.map_position)
 
         for marker in preset.markers:
             selected = self.editing_pins and marker.id == self.selected_pin
@@ -182,7 +193,8 @@ class SiegeMapView(AtlasView):
                 if not visible:
                     item.setOpacity(.6)
                 self._add(item, marker.position)
-        self._refresh_exploration(preset, colors)
+        local = self.service.preset
+        self._refresh_exploration(local, COLORS | local.colors)
         self.drawing.refresh()
         self.position_badges()
 

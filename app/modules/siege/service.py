@@ -27,6 +27,7 @@ ACTIONS = {'regroup': 'REAGRUPAR', 'attack': 'ATACAR', 'defend': 'DEFENDER', 're
 class SiegeService(QObject):
     changed = Signal()
     map_changed = Signal()
+    session_changed = Signal()
     call_changed = Signal(object)  # Immutable TacticalCall values for local consumers.
 
     def __init__(self, directory):
@@ -39,6 +40,8 @@ class SiegeService(QObject):
         original = RingCatalogue(map_frame=self.data.map_frame, rings=self.data.rings)
         catalogue, catalogue_warning = recover_model(self.ring_path, RingCatalogue, original)
         self.catalogue = {ring.ring_id: ring for ring in catalogue.rings}
+        self.official_rings = {ring.ring_id: ring for ring in original.rings}
+        self.session_preset = None
         self.objectives = {objective.number: objective for objective in self.data.objectives}
         self.state, self.warning = recover_model(self.path, SiegeState, SiegeState())
         self.warning = self.warning or catalogue_warning
@@ -293,7 +296,23 @@ class SiegeService(QObject):
             name = self.available_name(name)
         self.save_preset(preset.model_copy(update={'name': name}), replace=replace)
 
-    def export_preset(self, path):
+    def set_session_preset(self, preset):
+        if preset != self.session_preset:
+            self.session_preset = preset
+            self.session_changed.emit()
+
+    def display_rings(self, preset, *, shared=False):
+        if not shared:
+            return ((ring, self.position(ring), self.ring_code(ring)) for ring in self.rings.values())
+        rings = self.official_rings
+        if preset.use_local_calibration:
+            rings = rings | {ring.ring_id: ring for ring in preset.calibrated_rings}
+        return (
+            (ring, ring.position, TRANSIT_CODES.get(ring.ring_id) if ring.category == 'transit' else ring.default_callsign)
+            for ring in rings.values()
+        )
+
+    def exportable_preset(self):
         preset = self.preset
         if preset.use_local_calibration:
             calibrated = {ring.ring_id: self.portable_ring(ring, ring.position) for ring in preset.calibrated_rings}
@@ -302,7 +321,10 @@ class SiegeService(QObject):
                 if ring is not None and ring_id not in calibrated:
                     calibrated[ring_id] = self.portable_ring(ring, position)
             preset = Preset.model_validate({**preset.model_dump(), 'calibrated_rings': list(calibrated.values())})
-        atomic_json(path, preset)
+        return preset
+
+    def export_preset(self, path):
+        atomic_json(path, self.exportable_preset())
 
     def portable_ring(self, ring, position):
         official = self.catalogue.get(ring.ring_id) or ring

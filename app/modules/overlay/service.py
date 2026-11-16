@@ -332,6 +332,7 @@ class OverlayService(QObject):
         self.watchdog.start()
         context.changed.connect(self.sync)
         context.siege.changed.connect(self.sync)
+        context.siege.session_changed.connect(self.sync)
 
     def attach_routes(self,routes):
         self.routes=routes;routes.changed.connect(self.sync_routes)
@@ -695,10 +696,11 @@ class OverlayService(QObject):
         if map_id == MAP_ID:
             from app.modules.siege.markers import markers_for
             tactical = siege.state.overlay.map_markers
-            markers = markers_for(siege, dataset, tactical=tactical, exploration=exploration) if siege.definition else []
+            markers = markers_for(siege, dataset, tactical=tactical, exploration=exploration,
+                                  shared=siege.session_preset) if siege.definition else []
             if tactical and siege.definition:
                 from app.modules.siege.drawing import visible_drawings
-                drawings = visible_drawings(siege.preset)
+                drawings = visible_drawings(siege.session_preset or siege.preset)
         elif exploration:
             resources = {r.id: r for r in dataset.resources}
             categories = {c.id: c for c in dataset.categories}

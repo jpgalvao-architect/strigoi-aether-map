@@ -119,7 +119,7 @@ class DrawingCanvas:
         self.clear()
         if self.view.map is None:
             return
-        preset = self.view.service.preset
+        preset = self.view.preset
         for drawing in preset.drawings:
             selected = self.enabled and drawing.id == self.selected
             visible = drawing.visible and 'TacticalShapes' in preset.layers
