@@ -3,6 +3,11 @@
 Share Lower Reshanta pins, flight rings, and tactical drawings on the AION 2 map and minimap. The caller publishes each revision from Siege Command. Players receive the strategy through an invite.
 Use **0.10.0-beta.17** or later to follow the screenshots and use the shortcuts in this guide.
 
+**Beta.19** loads all 49 rings in Siege Command and publishes their
+positions and names with the strategy. Update the app on the caller’s
+and players’ computers. If you already host, update your Worker using
+the infrastructure update instructions below.
+
 ## Quick setup for callers
 
 1. Open **Siege Command**, select **Live Sync**, and choose **Host a session (Caller)**.

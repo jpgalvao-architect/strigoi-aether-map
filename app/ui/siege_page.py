@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Siege Command workspace and controls shared with the expanded overlay."""
+import json
 from pathlib import Path
 import sys
 
@@ -326,6 +327,9 @@ class SiegePage(QWidget):
         self.catalogue = QComboBox()
         self.catalogue.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
         self.catalogue.setMinimumContentsLength(22)
+        self.catalogue_notice = label('', 'subtitle', True)
+        layout.addWidget(self.catalogue_notice)
+        layout.addWidget(button('Copiar diagnóstico do catálogo', self.copy_catalogue_diagnostics))
         layout.addWidget(button('Importar catálogo local', self.import_catalogue))
         layout.addWidget(self.ring_filter)
         layout.addWidget(self.catalogue)
@@ -356,6 +360,11 @@ class SiegePage(QWidget):
         self.ring_filter.currentIndexChanged.connect(self.refresh_catalogue)
         self.catalogue.currentIndexChanged.connect(self.refresh_ring)
         return widget
+
+    def copy_catalogue_diagnostics(self):
+        report = json.dumps(self.service.catalogue_diagnostics(), ensure_ascii=False, indent=2)
+        QApplication.clipboard().setText(report)
+        self.message('Diagnóstico do catálogo copiado.')
 
     def import_catalogue(self):
         path, _ = QFileDialog.getOpenFileName(self, tr('Importar catálogo local'), '', 'JSON (*.json)')
@@ -553,7 +562,12 @@ class SiegePage(QWidget):
         self.service.accept_preset(preset, replace=dialog.clickedButton() is overwrite)
         self.show_editor()
         self.editor.select_first()
-        self.message('Marcações importadas.')
+        if preset.ring_catalogue is None:
+            self.message('Preset antigo importado. Confira as posições dos anéis no catálogo.')
+        elif any(self.service.position(ring) is None for ring in self.service.rings.values()):
+            self.message('Marcações importadas. O preset inclui anéis com posição pendente.')
+        else:
+            self.message('Marcações importadas.')
 
     def export_preset(self):
         path, _ = QFileDialog.getSaveFileName(self, tr('Exportar marcações (.json)'), 'siege-preset.json', 'JSON (*.json)')
@@ -594,6 +608,10 @@ class SiegePage(QWidget):
         service = self.service
         count = sum(service.position(r) is not None for r in service.rings.values())
         self.summary.setText(f'{len(service.preset.markers)} pins · {count}/{len(service.rings)} anéis posicionados')
+        notice = service.catalogue_warning or ('O catálogo contém anéis sem posição confirmada.' if
+                                                count < len(service.rings) else '')
+        self.catalogue_notice.setText(notice)
+        self.catalogue_notice.setVisible(bool(notice))
         self.refresh_catalogue()
         entries = [(Verbatim(p.name), p.name) for p in service.state.presets]
         choice(self.presets, service.preset.name, entries)

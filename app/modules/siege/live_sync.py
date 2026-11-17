@@ -13,7 +13,8 @@ from PySide6.QtWebSockets import QWebSocket
 
 from app.modules.siege.live_sync_credentials import PairingStore
 from app.modules.siege.live_sync_protocol import (
-    Invite, KEY, MAX_BYTES, digest, endpoint_url, read_snapshot, sign, snapshot_bytes, version_notice,
+    IncompatibleCatalogue, Invite, KEY, MAX_BYTES, digest, endpoint_url, read_snapshot, sign, snapshot_bytes,
+    version_notice,
 )
 
 ERRORS = {
@@ -454,6 +455,10 @@ class LiveSync(QObject):
                     self.siege.set_session_preset(preset)
             elif reply.status not in (204, 304):
                 raise ValueError
+        except IncompatibleCatalogue:
+            self.reset_room()
+            self.report('Erro.', 'O catálogo da sessão exige uma versão mais recente do Azphelumbra.')
+            return
         except (ValueError, UnicodeError, RecursionError):
             if initial:
                 self.reset_room()
@@ -509,8 +514,25 @@ class LiveSync(QObject):
         except ValueError:
             self.report(self.state, 'A estratégia local não pôde ser validada.')
             return
-        self.host_action('PUT', '/snapshot', body, {b'X-Base-Version': str(self.version).encode('ascii')},
-                         'Estratégia publicada.')
+        version = self.version
+        self.busy = True
+        self.report('Publicando…')
+
+        def check_catalogue(reply):
+            self.busy = False
+            try:
+                supported = reply.status == 200 and reply.object().get('ring_catalogue') == 1
+            except (ValueError, UnicodeError):
+                supported = False
+            if not supported:
+                self.report('Conectado.' if self.socket else 'Reconectando…',
+                            'Atualize o Worker para publicar o catálogo de anéis.' if reply.status == 200
+                            else self.error(reply))
+                return
+            self.host_action('PUT', '/snapshot', body, {b'X-Base-Version': str(version).encode('ascii')},
+                             'Estratégia publicada.')
+
+        self.request(self.invite.endpoint + '/v1/health', check_catalogue)
 
     def rotate(self):
         if not self.publisher or not self.invite or self.busy:

@@ -20,7 +20,7 @@ test('deploy template includes current preset schema and SQLite binding', async 
 
 test('verifies deployed protocol, ownership, Durable Objects, and WSS', async () => {
   const health = await http('/v1/health');
-  assert.deepEqual(await health.json(), { protocol: 1, configured: true });
+  assert.deepEqual(await health.json(), { protocol: 1, configured: true, ring_catalogue: 1 });
   assert.equal((await http('/v1/health', { headers: { Origin: 'https://example.test' } })).status, 403);
   const nonce = token();
   const watch = listen('/v1/setup/' + nonce);

@@ -176,6 +176,148 @@
       "title": "CustomMarker",
       "type": "object"
     },
+    "PublishedRing": {
+      "additionalProperties": false,
+      "properties": {
+        "ring_id": {
+          "maxLength": 100,
+          "pattern": "^ring-[a-z0-9-]+$",
+          "title": "Ring Id",
+          "type": "string"
+        },
+        "map_id": {
+          "const": "lower-reshanta",
+          "default": "lower-reshanta",
+          "title": "Map Id",
+          "type": "string"
+        },
+        "zone_id": {
+          "title": "Zone Id",
+          "type": "string"
+        },
+        "sector": {
+          "anyOf": [
+            {
+              "enum": [
+                "MID",
+                "BOT",
+                "TOP"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sector"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "geographic_description": {
+          "default": "",
+          "title": "Geographic Description",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "siege",
+            "transit"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "position": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RingPosition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "default_callsign": {
+          "anyOf": [
+            {
+              "pattern": "^[MBT][1-9][0-9]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Callsign"
+        },
+        "display_code": {
+          "anyOf": [
+            {
+              "maxLength": 16,
+              "pattern": "^[A-Z]{1,2}[1-9][0-9]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display Code"
+        }
+      },
+      "required": [
+        "ring_id",
+        "zone_id",
+        "display_name",
+        "category",
+        "source"
+      ],
+      "title": "PublishedRing",
+      "type": "object"
+    },
+    "PublishedRingCatalogue": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "base_revision": {
+          "pattern": "^[a-z0-9-]{1,64}$",
+          "title": "Base Revision",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "rings": {
+          "items": {
+            "$ref": "#/$defs/PublishedRing"
+          },
+          "maxItems": 250,
+          "title": "Rings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "base_revision",
+        "sha256",
+        "rings"
+      ],
+      "title": "PublishedRingCatalogue",
+      "type": "object"
+    },
     "RingPosition": {
       "additionalProperties": false,
       "properties": {
@@ -477,6 +619,17 @@
       "maxItems": 250,
       "title": "Calibrated Rings",
       "type": "array"
+    },
+    "ring_catalogue": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PublishedRingCatalogue"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     }
   },
   "required": [

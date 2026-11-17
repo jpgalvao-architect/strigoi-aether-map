@@ -16,7 +16,8 @@ from app.modules.siege.map_setup import LOCAL_MAP, MAP_SIZE, MAP_SOURCE, PREPARE
 from app.modules.siege.models import (
     COLORS, LEGACY_OFFICIAL, MAP_ID, OBJECTIVE_CATEGORY, OFFICIAL, PREFIX, SECTORS,
     CalibratedRing, Cartography, Coordinate, CustomMarker,
-    Preset, RingCatalogue, RingPosition, SiegeState, TacticalCall, TacticalDrawing,
+    Preset, PublishedRing, PublishedRingCatalogue, RingCatalogue, RingPosition, SiegeState, TacticalCall,
+    TacticalDrawing, ring_catalogue_hash,
 )
 from app.modules.siege.transit_codes import TRANSIT_CODES
 
@@ -37,14 +38,27 @@ class SiegeService(QObject):
         self.prepared_map_path = directory / PREPARED_MAP
         self.data = load_model(PACKAGE / 'data/siege-cartography.json', Cartography)
         self.ring_path = directory / 'siege-ring-catalogue.json'
-        original = RingCatalogue(map_frame=self.data.map_frame, rings=self.data.rings)
-        catalogue, catalogue_warning = recover_model(self.ring_path, RingCatalogue, original)
-        self.catalogue = {ring.ring_id: ring for ring in catalogue.rings}
-        self.official_rings = {ring.ring_id: ring for ring in original.rings}
+        fallback = RingCatalogue(map_frame=self.data.map_frame, rings=self.data.rings)
+        self.catalogue_warning = ''
+        try:
+            self.ring_base = load_model(PACKAGE / 'data/siege-ring-base.json', RingCatalogue)
+            if len(self.ring_base.rings) != 49:
+                raise ValueError('Unexpected count in Lower Reshanta base catalogue')
+        except (ValueError, OSError) as error:
+            # Log the file and error class only. Catalogue records can include user-provided text.
+            logging.getLogger(__name__).error('Falha no catálogo empacotado de Reshanta (%s)', type(error).__name__)
+            self.catalogue_warning = 'Falha ao carregar o catálogo base de Lower Reshanta.'
+            self.ring_base = fallback
+        catalogue, local_warning = recover_model(self.ring_path, RingCatalogue, self.ring_base)
+        if local_warning:
+            self.catalogue_warning = 'O catálogo local de anéis está inválido. Consulte os logs.'
+        self.official_rings = {ring.ring_id: ring for ring in self.ring_base.rings}
+        self.local_catalogue = None if catalogue is self.ring_base else catalogue
+        self.catalogue = self.merge_catalogue()
         self.session_preset = None
         self.objectives = {objective.number: objective for objective in self.data.objectives}
         self.state, self.warning = recover_model(self.path, SiegeState, SiegeState())
-        self.warning = self.warning or catalogue_warning
+        self.warning = self.warning or self.catalogue_warning
         self._migrate_state()
         self._clear_unusable_call(self.state)
         self.definition = None
@@ -80,13 +94,40 @@ class SiegeService(QObject):
         self.map_changed.emit()
         self.changed.emit()
 
+    def merge_catalogue(self):
+        if self.local_catalogue is None:
+            return self.official_rings.copy()
+        merged = {key: ring for key, ring in self.official_rings.items() if not key.startswith('ring-pending-')}
+        reserved = {ring.default_callsign: ring for ring in merged.values() if ring.default_callsign}
+        for ring in self.local_catalogue.rings:
+            base = merged.get(ring.ring_id)
+            if base and base.position and base.position.status == 'verified' and (
+                ring.position is None or ring.position.status != 'verified'
+            ):
+                continue
+            owner = reserved.get(ring.default_callsign)
+            if owner and owner.ring_id != ring.ring_id:
+                # Keep the existing on-disk catalogue intact. Prefer a positioned
+                # base ring over a conflicting code from a legacy local import.
+                if owner.position is not None:
+                    ring = ring.model_copy(update={'default_callsign': None})
+                else:
+                    merged[owner.ring_id] = merged[owner.ring_id].model_copy(update={'default_callsign': None})
+            merged[ring.ring_id] = ring
+        return merged
+
     def import_catalogue(self, path):
         incoming = load_model(path, RingCatalogue)
         if any(ring.ring_id.startswith('ring-pending-') for ring in incoming.rings):
             raise ValueError('O catálogo local precisa usar identificadores de origem.')
-        active = {key: ring for key, ring in self.catalogue.items() if not key.startswith('ring-pending-')}
+        active = {ring.ring_id: ring for ring in self.local_catalogue.rings
+                  if not ring.ring_id.startswith('ring-pending-')} if self.local_catalogue else {}
         for ring in incoming.rings:
-            previous = active.get(ring.ring_id)
+            previous = active.get(ring.ring_id) or self.official_rings.get(ring.ring_id)
+            if previous and previous.position and previous.position.status == 'verified' and (
+                ring.position is None or ring.position.status != 'verified'
+            ):
+                continue
             if previous is not None and (previous.default_callsign != ring.default_callsign
                                          or previous.sector != ring.sector):
                 raise ValueError('O catálogo não pode trocar o callsign ou setor já fixado de um anel.')
@@ -97,9 +138,12 @@ class SiegeService(QObject):
         local = self.state.local_callsigns.items()
         if any(code in official and official[code] != ring_id for ring_id, code in (*local, *portable)):
             raise ValueError('O catálogo conflita com um callsign local já fixado.')
-        complete = RingCatalogue(map_frame=incoming.map_frame, rings=list(active.values()))
+        if not active:
+            return
+        complete = RingCatalogue(revision=incoming.revision, map_frame=incoming.map_frame, rings=list(active.values()))
         atomic_json(self.ring_path, complete)
-        self.catalogue = active
+        self.local_catalogue = complete
+        self.catalogue = self.merge_catalogue()
         previous = self.call
         self._clear_unusable_call(self.state)
         if self.call != previous:
@@ -176,6 +220,7 @@ class SiegeService(QObject):
         })
         if self.path.is_file() and previous != self.state:
             try:
+                self.backup_profile()
                 atomic_json(self.path, self.state)
             except OSError:
                 logging.getLogger(__name__).exception('Falha ao gravar a migração dos presets de siege')
@@ -191,18 +236,32 @@ class SiegeService(QObject):
 
     def rings_for(self, state):
         preset = next(p for p in state.presets if p.name == state.selected_preset)
-        if not preset.use_local_calibration or not preset.calibrated_rings:
-            return self.catalogue
-        imported = {ring.ring_id: ring for ring in preset.calibrated_rings}
-        return imported | self.catalogue
+        if preset.ring_catalogue is not None:
+            return {ring.ring_id: ring for ring in preset.ring_catalogue.rings}
+        legacy_ids = preset.aliases.keys() | (state.local_rings.keys() if preset.use_local_calibration else set())
+        legacy = {ring.ring_id: ring for ring in self.data.rings if ring.ring_id in legacy_ids}
+        imported = {ring.ring_id: ring for ring in preset.calibrated_rings} if preset.use_local_calibration else {}
+        return legacy | imported | self.catalogue
 
     @property
     def call(self):
         return self.state.tactical_call
 
+    def backup_profile(self):
+        if self.path.is_file():
+            backup = self.path.with_name('siege-command.pre-catalogue.json')
+            try:
+                with backup.open('xb') as stream:
+                    stream.write(self.path.read_bytes())
+            except FileExistsError:
+                pass
+
     def _commit(self, **changes):
         candidate = SiegeState.model_validate({**self.state.model_dump(), **changes})
         self._clear_unusable_call(candidate)
+        if (any(preset.ring_catalogue is not None for preset in candidate.presets)
+                and all(preset.ring_catalogue is None for preset in self.state.presets)):
+            self.backup_profile()
         atomic_json(self.path, candidate)
         previous = self.call
         self.state = candidate
@@ -285,7 +344,7 @@ class SiegeService(QObject):
         name = preset.name.strip()
         numbered = {ring.default_callsign: ring.ring_id for ring in self.catalogue.values() if ring.default_callsign}
         numbered.update({code: ring_id for ring_id, code in self.state.local_callsigns.items()})
-        for ring in preset.calibrated_rings:
+        for ring in preset.calibrated_rings if preset.ring_catalogue is None else ():
             known = self.catalogue.get(ring.ring_id)
             if ((known is not None and known.sector != ring.sector)
                     or numbered.get(ring.default_callsign, ring.ring_id) != ring.ring_id):
@@ -301,12 +360,36 @@ class SiegeService(QObject):
             self.session_preset = preset
             self.session_changed.emit()
 
+    def catalogue_diagnostics(self):
+        from app import __version__
+
+        preset = self.preset
+        positions = [self.position(ring) for ring in self.rings.values()]
+        revision = preset.ring_catalogue.base_revision if preset.ring_catalogue else self.ring_base.revision
+        return {
+            'app_version': __version__,
+            'catalogue_revision': revision,
+            'catalogue_origin': 'preset' if preset.ring_catalogue else 'base+local' if self.local_catalogue else 'base',
+            'catalogue_sha256': (preset.ring_catalogue.sha256 if preset.ring_catalogue
+                                 else ring_catalogue_hash(self.ring_base.rings)),
+            'local_catalogue_revision': self.local_catalogue.revision if self.local_catalogue else None,
+            'known': len(positions),
+            'verified': sum(pos is not None and pos.status == 'verified' for pos in positions),
+            'provisional': sum(pos is not None and pos.status == 'provisional' for pos in positions),
+            'pending': positions.count(None),
+            'active_preset': 'default' if preset.name == OFFICIAL else 'custom',
+            'local_overrides_enabled': preset.use_local_calibration,
+            'has_local_overrides': bool(self.state.local_rings or preset.calibrated_rings or preset.aliases),
+            'catalogue_load_error': bool(self.catalogue_warning),
+            'profile_load_or_migration_error': self.warning != self.catalogue_warning,
+        }
+
     def display_rings(self, preset, *, shared=False):
         if not shared:
             return ((ring, self.position(ring), self.ring_code(ring)) for ring in self.rings.values())
-        # A participant can resolve source IDs with an imported catalogue.
-        # Published calibrations take precedence over both catalogues.
-        rings = self.catalogue | {key: ring for key, ring in self.official_rings.items() if ring.position is not None}
+        if preset.ring_catalogue is not None:
+            return ((ring, ring.position, ring.display_code) for ring in preset.ring_catalogue.rings)
+        rings = self.official_rings
         if preset.use_local_calibration:
             rings = rings | {ring.ring_id: ring for ring in preset.calibrated_rings}
         return (
@@ -316,14 +399,16 @@ class SiegeService(QObject):
 
     def exportable_preset(self):
         preset = self.preset
-        if preset.use_local_calibration:
-            calibrated = {ring.ring_id: self.portable_ring(ring, ring.position) for ring in preset.calibrated_rings}
-            for ring_id, position in self.state.local_rings.items():
-                ring = self.catalogue.get(ring_id)
-                if ring is not None and ring_id not in calibrated:
-                    calibrated[ring_id] = self.portable_ring(ring, position)
-            preset = Preset.model_validate({**preset.model_dump(), 'calibrated_rings': list(calibrated.values())})
-        return preset
+        records = [
+            PublishedRing.model_validate({
+                **ring.model_dump(), 'display_code': code, 'position': position,
+                'default_callsign': self.ring_code(ring) if ring.sector else None,
+            })
+            for ring, position, code in self.display_rings(preset)
+        ]
+        revision = preset.ring_catalogue.base_revision if preset.ring_catalogue else self.ring_base.revision
+        catalogue = PublishedRingCatalogue(base_revision=revision, sha256=ring_catalogue_hash(records), rings=records)
+        return preset.model_copy(update={'ring_catalogue': catalogue, 'calibrated_rings': [], 'use_local_calibration': False})
 
     def export_preset(self, path):
         atomic_json(path, self.exportable_preset())
@@ -334,7 +419,7 @@ class SiegeService(QObject):
         if not ring.sector or not code or not code.startswith(PREFIX[ring.sector]):
             code = None
         return CalibratedRing.model_validate({
-            **ring.model_dump(), 'position': position, 'source': position.source,
+            **ring.model_dump(exclude={'display_code'}), 'position': position, 'source': position.source,
             'geographic_description': '', 'default_callsign': code,
         })
 
@@ -394,11 +479,14 @@ class SiegeService(QObject):
             imported = next((r for r in preset.calibrated_rings if r.ring_id == ring.ring_id), None)
             if imported is not None:
                 return imported.position
-            return state.local_rings.get(ring.ring_id) or ring.position
+            if preset.ring_catalogue is None:
+                return state.local_rings.get(ring.ring_id) or ring.position
         return ring.position
 
     def local_position(self, ring_id):
         imported = next((ring for ring in self.preset.calibrated_rings if ring.ring_id == ring_id), None)
+        if self.preset.ring_catalogue is not None and imported is None:
+            return None
         return imported.position if imported is not None else self.state.local_rings.get(ring_id)
 
     def callsign(self, ring, *, state=None):
@@ -410,6 +498,8 @@ class SiegeService(QObject):
             return ring.default_callsign
         preset = next(p for p in state.presets if p.name == state.selected_preset)
         imported_code = next((r.default_callsign for r in preset.calibrated_rings if r.ring_id == ring.ring_id), None)
+        if isinstance(ring, PublishedRing):
+            return imported_code if preset.use_local_calibration else None
         code = (imported_code if preset.use_local_calibration else None) or state.local_callsigns.get(ring.ring_id, '')
         if ring.sector and re.fullmatch(
             PREFIX[ring.sector] + r'[1-9][0-9]*', code
@@ -418,6 +508,8 @@ class SiegeService(QObject):
         return None
 
     def ring_code(self, ring):
+        if isinstance(ring, PublishedRing):
+            return ring.display_code or self.callsign(ring)
         if ring.category == 'transit':
             return TRANSIT_CODES.get(ring.ring_id)
         return self.callsign(ring) or ring.default_callsign
@@ -443,7 +535,11 @@ class SiegeService(QObject):
         if ring_id not in self.rings:
             raise ValueError('Anel fora do catálogo atual.')
         calibrated = self.preset.calibrated_rings
-        if any(ring.ring_id == ring_id for ring in calibrated):
+        if self.preset.ring_catalogue is not None:
+            ring = self.rings[ring_id]
+            changes = [item for item in calibrated if item.ring_id != ring_id]
+            self.edit_preset(calibrated_rings=[*changes, self.portable_ring(ring, position)])
+        elif any(ring.ring_id == ring_id for ring in calibrated):
             self.edit_preset(calibrated_rings=[
                 self.portable_ring(ring, position) if ring.ring_id == ring_id else ring for ring in calibrated
             ])
@@ -454,7 +550,7 @@ class SiegeService(QObject):
         calibrated = self.preset.calibrated_rings
         if any(ring.ring_id == ring_id for ring in calibrated):
             self.edit_preset(calibrated_rings=[ring for ring in calibrated if ring.ring_id != ring_id])
-        elif ring_id in self.state.local_rings:
+        elif self.preset.ring_catalogue is None and ring_id in self.state.local_rings:
             local = dict(self.state.local_rings)
             del local[ring_id]
             self._commit(local_rings=local)
@@ -477,6 +573,17 @@ class SiegeService(QObject):
             point = position.map_position
             altitude = position.altitude if position.altitude is not None else 0
             return (round(point.y * MAP_SIZE / 8), point.x, point.y, altitude, ring.ring_id)
+
+        if self.preset.ring_catalogue is not None:
+            if eligible:
+                eligible = sorted(eligible, key=order)
+                entries = [self.portable_ring(ring, self.local_position(ring.ring_id) or ring.position)
+                           .model_copy(update={'default_callsign': f'{prefix}{index}'})
+                           for index, ring in enumerate(eligible, latest + 1)]
+                kept = [ring for ring in self.preset.calibrated_rings if ring.ring_id not in
+                        {item.ring_id for item in eligible}]
+                self.edit_preset(calibrated_rings=[*kept, *entries], use_local_calibration=True)
+            return len(eligible)
 
         for index, ring in enumerate(sorted(eligible, key=order), latest + 1):
             codes[ring.ring_id] = f'{prefix}{index}'

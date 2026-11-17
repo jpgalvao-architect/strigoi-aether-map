@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Entrypoint. --smoke-test exercises startup and exits without any capture."""
 import argparse
+import json
 import logging
 from pathlib import Path
 import sys
@@ -120,6 +121,7 @@ def main() -> int:
                         assert {badge.text for _, _, _, badge in markers if not badge.ring} == {
                             marker.name for marker in siege.standard_markers()
                         }
+                    logging.info('SMOKE_SIEGE_CATALOGUE %s', json.dumps(context.siege.catalogue_diagnostics()))
                     logging.info('SMOKE_SIEGE_OK: tactical workspace and catalog rendered without live capture')
                     from PySide6.QtGui import QImageReader
                     assert window.pets.store.catalogue.pets

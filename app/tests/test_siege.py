@@ -45,7 +45,14 @@ def test_reference_numbers_and_relative_positions_replay_from_calibration(tmp_pa
         assert np.allclose([objective.map_position.x, objective.map_position.y], position/4096, atol=1e-8)
         assert objective.status == 'reference'
     assert len(service.rings) == 49
-    assert all(r.position is None and not service.callsign(r) for r in service.rings.values())
+    assert not service.ring_path.exists()
+    assert len({service.ring_code(r) for r in service.rings.values()}) == 49
+    assert all(r.position and r.position.status == 'verified' for r in service.rings.values())
+    er1 = service.rings['ring-reshanta-295279']
+    assert service.ring_code(er1) == 'ER1'
+    assert er1.position.map_position == Coordinate(x=.5955110549926758, y=.4081948566436768)
+    another = SiegeService(tmp_path / 'another-installation')
+    assert service.exportable_preset().ring_catalogue == another.exportable_preset().ring_catalogue
 
 
 def test_setup_uses_cached_map_and_loads_it_in_the_atlas(tmp_path, monkeypatch):
@@ -87,16 +94,16 @@ def test_map_setup_keeps_partial_download_out_of_the_profile(tmp_path, monkeypat
 
 def test_catalogue_updates_keep_frozen_callsigns_and_old_records(tmp_path):
     service = SiegeService(tmp_path)
-    old = ring(1, callsign='B1')
+    old = ring(1, callsign='B21')
     import_rings(service, tmp_path, old)
-    newer = ring(2, x=.51, y=.42, callsign='B2')
+    newer = ring(2, x=.51, y=.42, callsign='B22')
     import_rings(service, tmp_path, newer)
-    assert set(service.rings) == {old.ring_id, newer.ring_id}
+    assert set(service.rings) == set(service.official_rings) | {old.ring_id, newer.ring_id}
     with pytest.raises(ValueError, match='callsign'):
-        import_rings(service, tmp_path, ring(1, callsign='B3'))
+        import_rings(service, tmp_path, ring(1, callsign='B23'))
     service = SiegeService(tmp_path)
-    assert service.callsign(service.rings[old.ring_id]) == 'B1'
-    assert service.callsign(service.rings[newer.ring_id]) == 'B2'
+    assert service.callsign(service.rings[old.ring_id]) == 'B21'
+    assert service.callsign(service.rings[newer.ring_id]) == 'B22'
 
 
 def test_transit_codes_use_source_identity_even_with_a_partial_catalogue(tmp_path):
@@ -159,7 +166,8 @@ def test_ring_names_in_tactical_editor_and_presets(qapp, tmp_path):
     view.fit_full()
 
     def badge_for_ring():
-        return next(item for item in view.badges if item.badge.ring)
+        return next(item for item in view.badges if item.badge.ring and
+                    item.pos() == view._at(transit.position.map_position))
 
     try:
         marker = badge_for_ring()
@@ -206,7 +214,7 @@ def test_ring_names_in_tactical_editor_and_presets(qapp, tmp_path):
 
 def test_local_calibration_and_aliases_stay_out_of_official_preset(tmp_path):
     service = SiegeService(tmp_path)
-    official = ring(1, callsign='B1')
+    official = ring(1, callsign='B21')
     unnumbered = ring(2, x=.52, status='provisional')
     import_rings(service, tmp_path, official, unnumbered)
     service.save_preset(Preset(name='Guild', use_local_calibration=True, aliases={official.ring_id:'Ponte'}))
@@ -214,7 +222,7 @@ def test_local_calibration_and_aliases_stay_out_of_official_preset(tmp_path):
     local = RingPosition(map_position=Coordinate(x=.60, y=.62), status='verified', source='Local check')
     service.calibrate_ring(unnumbered.ring_id, local)
     assert service.freeze_callsigns('BOT') == 1
-    assert service.callsign(unnumbered) == 'B2'
+    assert service.callsign(unnumbered) == 'B22'
     service.calibrate_ring(official.ring_id, local.model_copy(update={'status':'provisional'}))
     assert service.callsign(official) is None
     export = tmp_path/'guild.json'
@@ -222,31 +230,34 @@ def test_local_calibration_and_aliases_stay_out_of_official_preset(tmp_path):
     raw = json.loads(export.read_text(encoding='utf-8'))
     assert raw['aliases'][official.ring_id] == 'Ponte' and len(raw['markers']) == 1
     assert 'local_rings' not in raw and 'world_coordinates' not in raw
-    assert len(raw['calibrated_rings']) == 2
-    assert all(r['position']['source'] == 'Local check' for r in raw['calibrated_rings'])
+    assert raw['ring_catalogue']['version'] == 1
+    positioned = [r for r in raw['ring_catalogue']['rings'] if r['ring_id'] in {official.ring_id, unnumbered.ring_id}]
+    assert len(positioned) == 2
+    assert all(r['position']['source'] == 'Local check' for r in positioned)
     receiver = SiegeService(tmp_path/'clean')
     receiver.import_preset(export)
-    assert receiver.ring_code(receiver.rings[unnumbered.ring_id]) == 'B2'
+    assert receiver.ring_code(receiver.rings[unnumbered.ring_id]) == 'B22'
     assert receiver.position(receiver.rings[unnumbered.ring_id]) == local
     assert receiver.position(receiver.rings[official.ring_id]).status == 'provisional'
     assert receiver.callsign(receiver.rings[official.ring_id]) is None
-    assert receiver.ring_label(receiver.rings[official.ring_id]) == 'B1 · Ponte'
+    assert receiver.ring_label(receiver.rings[official.ring_id]) == 'B21 · Ponte'
     from app.modules.siege.markers import markers_for
     fresh = SiegeService(tmp_path / 'session-only')
     session_markers = markers_for(fresh, SimpleNamespace(resources=[], points=[]), shared=receiver.preset)
     assert any((x, y) == (.60, .62) and badge.ring and badge.text == 'Ponte'
                for x, y, _, badge in session_markers)
     receiver.calibrate_ring(unnumbered.ring_id, local.model_copy(update={'map_position': Coordinate(x=.6, y=.8)}))
+    receiver.edit_preset(use_local_calibration=True)
     assert receiver.position(receiver.rings[unnumbered.ring_id]).map_position.y == .8
     receiver.select_preset(OFFICIAL)
     assert unnumbered.ring_id not in receiver.rings
     receiver.select_preset('Guild')
     receiver.reset_ring(unnumbered.ring_id)
-    assert unnumbered.ring_id not in receiver.rings
+    assert receiver.position(receiver.rings[unnumbered.ring_id]) == local
     assert SiegeService(tmp_path/'clean').preset == receiver.preset
     service.select_preset(OFFICIAL)
     assert service.position(official) == official.position
-    assert service.callsign(official) == 'B1'
+    assert service.callsign(official) == 'B21'
     assert len(service.preset.markers) == 12 and not service.preset.aliases
     with pytest.raises(ValueError, match='Já existe'):
         service.create_preset(OFFICIAL)
@@ -255,8 +266,7 @@ def test_local_calibration_and_aliases_stay_out_of_official_preset(tmp_path):
 def test_known_calls_copy_and_hud_visibility_respects_game_context(qapp, tmp_path):
     context = AppContext(tmp_path)
     service = context.siege
-    rally = ring(3, callsign='B3')
-    import_rings(service, tmp_path, rally)
+    rally = next(r for r in service.rings.values() if r.default_callsign == 'B3')
     window = MainWindow(context)
     overlay = SiegeOverlay(window, runtime=False)
     controls = SiegeCallControls(service)
@@ -320,7 +330,7 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
 
     context = AppContext(tmp_path)
     siege = context.siege
-    rally = ring(3, callsign='B3')
+    rally = next(r for r in siege.rings.values() if r.default_callsign == 'B3')
     objective = siege.objectives[7].map_position
     transit = Ring(ring_id='ring-fixture-transit', zone_id='fixture', category='transit',
         display_name='Transit fixture', source='Controlled test',
@@ -387,7 +397,7 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
             assert with_area or not shared.isVisible()
             overlay.on_registration(registration, {'area':area})
             assert shared.isVisible() and overlay.window is shared
-            assert len(shared.markers) == 15
+            assert len(shared.markers) == 63
             caption = next(shape for _, _, _, shape in shared.markers if isinstance(shape, Badge) and shape.text == 'P7')
             assert not caption.selected and not caption.ring
             visible = shared.visible_markers(registration)
@@ -395,7 +405,8 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
             assert pin == pytest.approx((center[0]+.02*zoom/area.pixel_ratio, center[1]))
             point = next((x, y) for x, y, _, shape in visible if shape == caption)
             assert point == pytest.approx(center)
-            transit_point = next((x, y) for x, y, color, _ in visible if color == COLORS['TransitRings'])
+            transit_point = next((x, y) for x, y, color, badge in visible
+                                 if color == COLORS['TransitRings'] and badge.text == '?')
             assert transit_point == pytest.approx((center[0]-.02*zoom/area.pixel_ratio, center[1]))
             swatch = shared.symbol('#f7cb74', caption).toImage()
             assert swatch.pixelColor(0, 0).alpha() == 0
@@ -420,7 +431,7 @@ def test_siege_uses_shared_overlay_for_minimap_full_map_and_return(qapp, tmp_pat
         assert siege.preset.name == 'Só objetivos'
         assert {badge.text: (x, y, color) for x, y, color, badge in shared.markers} == by_label
         siege.select_preset(OFFICIAL)
-        assert len(shared.markers) == 15 and 'P4' not in {badge.text for *_, badge in shared.markers}
+        assert len(shared.markers) == 63 and 'P4' not in {badge.text for *_, badge in shared.markers}
         siege.update_overlay(map_markers=False)
         assert not shared.markers
         assert observations[-1][1] == []
@@ -550,7 +561,7 @@ def test_share_pin_preset_offline_and_validate_before_replacement(tmp_path):
     assert exported['schema_version'] == 3 and exported['map_frame'] == 'Abyss_Reshanta_A'
     target = SiegeService(tmp_path/'clean')
     target.import_preset(export)
-    assert target.preset == source.preset
+    assert target.preset == source.exportable_preset()
     ids = {marker.id: marker for marker in target.preset.markers}
     assert ids[a.id].color == '#458efa' and not ids[a.id].visible
     assert ids['objective-p1'].position == moved and 'objective-p4' not in ids
@@ -563,7 +574,7 @@ def test_share_pin_preset_offline_and_validate_before_replacement(tmp_path):
     assert len(target.state.presets) == 3 and target.preset.name.endswith(' (2)')
     active_name = target.preset.name
     target.import_preset(export, replace=True)
-    assert target.preset == source.preset.model_copy(update={'name': active_name})
+    assert target.preset == source.exportable_preset().model_copy(update={'name': active_name})
     assert len(target.state.presets) == 3
     state = target.state.model_dump()
     for field, value in [('schema_version', 99), ('schema_version', True), ('map_frame', 'another-map'),
@@ -581,6 +592,7 @@ def test_share_pin_preset_offline_and_validate_before_replacement(tmp_path):
             target.import_preset(export)
     legacy = {key: value for key, value in exported.items() if key != 'map_frame'}
     legacy.pop('aliases')
+    legacy.pop('ring_catalogue')
     legacy['name'] = LEGACY_OFFICIAL
     legacy['schema_version'] = 1
     legacy['markers'] = [{key: pin[key] for key in ('id', 'name', 'position')}
@@ -624,17 +636,17 @@ def test_reshanta_can_start_independently_and_share_the_existing_capture(qapp, t
         assert overlay.siege_only and not regular_box.isChecked() and not overlay.capture_area.map_id
         assert not surface.markers
         overlay.update_location(MAP_ID, 'minimap', observe_minimap=True)
-        assert len(surface.markers) == 12
-        flight_ring = ring(1, callsign='B1')
+        assert len(surface.markers) == 61
+        flight_ring = ring(1, callsign='B21')
         import_rings(siege, tmp_path, flight_ring)
-        original = next(marker for marker in surface.markers if marker[3].ring)
+        original = next(marker for marker in surface.markers if marker[3].text == 'B21')
         siege.set_ring_alias(flight_ring.ring_id, 'Entrada Norte')
         for mode in ('minimap', 'large'):
             overlay.update_location(MAP_ID, mode)
-            renamed = next(marker for marker in surface.markers if marker[3].ring)
+            renamed = next(marker for marker in surface.markers if marker[3].text == 'Entrada Norte')
             assert renamed[:3] == original[:3] and renamed[3].text == 'Entrada Norte'
         siege.set_ring_alias(flight_ring.ring_id, '')
-        assert next(marker for marker in surface.markers if marker[3].ring) == original
+        assert next(marker for marker in surface.markers if marker[3].text == 'B21') == original
         overlay.update_location(MAP_ID, 'minimap', observe_minimap=True)
         assert overlay.worker.area.view_kind == 'minimap'
         assert not context.prefs.overlay.enabled and not context.prefs.overlay.resume_enabled

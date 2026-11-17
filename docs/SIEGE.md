@@ -112,10 +112,10 @@ mantém os pins como estavam e começa com a lista de formas vazia.
   a opacidade, o estilo, o tamanho da ponta, o rótulo e a visibilidade.
 - `layers`, `colors`, `marker_scale`, `aliases` e `use_local_calibration`
   guardam as preferências de visualização, os apelidos e o uso de calibração
-  local. Quando habilitadas, as calibrações manuais dos anéis são
-  exportadas em `calibrated_rings` e aplicadas ao preset importado.
-  A base do mapa, o catálogo de origem dos anéis e os locais de pets
-  têm arquivos próprios.
+  local. A exportação inclui em `ring_catalogue` os anéis efetivamente
+  usados, com IDs, códigos, posições, fonte, estado, revisão e SHA-256.
+  O preset importado usa esse catálogo e aceita novos ajustes próprios.
+  Presets antigos podem depender do catálogo ou da calibração local.
 
 ## Configurar anéis e camadas
 
@@ -125,9 +125,9 @@ Você também pode ajustar cores, tamanho, camadas e apelidos dos anéis.
 
 Em **Catálogo de anéis**, use **Importar catálogo local** com um
 [catálogo compatível](../schemas/siege-ring-catalogue.schema.json) no
-quadro `Abyss_Reshanta_A/4096-north-up`. Os downloads públicos incluem
-a lista de pendências por zona. As posições individuais de anéis são
-importadas à parte.
+quadro `Abyss_Reshanta_A/4096-north-up`. O app carrega automaticamente
+os 49 anéis do catálogo base. O catálogo local complementa a base sem
+substituir uma posição verificada por um registro pendente.
 
 Para calibrar um anel, abra **Catálogo de anéis**, escolha o registro, clique
 em **Posicionar no mapa** e selecione a posição conferida. Ajuste X e Y se
@@ -168,7 +168,9 @@ tática do Azphelumbra e permanece estável ao aplicar uma calibração local.
 - **Anéis.** A revisão de 14/11/2026 encontrou **49** registros individuais
   publicados para Lower Reshanta. No quadro do Atlas, X é
   `(2048 + longitude/100)/4096` e Y é
-  `(2048 - latitude/100)/4096`. O mosaico foi comparado ao quadro da fonte.
+  `(2048 + latitude/100)/4096`. Os 49 pares X/Y coincidem entre o
+  catálogo do perfil de referência e a cópia de trabalho.
+  O mosaico foi comparado ao quadro da fonte.
   Os Kibelisks Latesran Eastern Root e Western Root, e os três artefatos,
   foram usados para conferir orientação, origem e escala. O catálogo local
   fixa 2 anéis em MID, 10 em BOT e 7 em TOP. A classificação é tática
@@ -177,11 +179,12 @@ tática do Azphelumbra e permanece estável ao aplicar uma calibração local.
   ficam em aberto.
   [Coordenadas no mapa Aion2t](https://aion2t.com/map?zone=2616&types=flight_ring),
   [contagem e cobertura do MetaBot](https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings).
-- **Catálogo local.** A resposta de coordenadas foi conferida para a prévia
-  pessoal. Os termos da fonte condicionam a cópia e redistribuição à
-  permissão. O repositório tem o catálogo de pendências por zona. A prévia
-  lê o catálogo posicionado de um arquivo local separado, sem consulta de
-  rede em tempo de execução.
+- **Catálogo empacotado.** A revisão `lower-reshanta-positions-1` usa
+  os IDs estáveis e as coordenadas X/Y normalizadas conferidas na referência.
+  A revisão é cartográfica. A altitude e a confirmação de cada anel no
+  servidor SA continuam pendentes. A distribuição foi aprovada pelo
+  mantenedor. Os termos da fonte condicionam a redistribuição à permissão.
+  O catálogo local continua separado e seus ajustes são preservados.
   [Termos do Aion2t](https://aion2t.com/terms).
 - **Exploração.** A camada Coletas contém 240 posições possíveis de Lesser
   Odyle. A camada Pets liga 990 posições de monstros a 23 pets do catálogo

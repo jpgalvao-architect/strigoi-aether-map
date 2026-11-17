@@ -3,6 +3,11 @@
 Comparte pines, anillos de vuelo y dibujos tácticos de Lower Reshanta en el mapa y el minimapa de AION 2. El caller publica cada versión desde Siege Command. Los jugadores reciben la estrategia con una invitación.
 Usa la **0.10.0-beta.17** o una versión más reciente para seguir las capturas y usar los accesos rápidos de esta guía.
 
+La **beta.19** carga los 49 anillos en Siege Command y publica sus
+posiciones y nombres con la estrategia. Actualiza la aplicación en los
+equipos del caller y de los jugadores. Si ya hospedas una sesión, actualiza
+tu Worker siguiendo las instrucciones de infraestructura de esta guía.
+
 ## Configuración rápida para callers
 
 1. Abre **Siege Command**, selecciona **Live Sync** y elige **Hospedar sesión (Caller)**.

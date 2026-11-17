@@ -1,8 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-only
+import hashlib
+import json
 import re
 from typing import Literal
 
-from pydantic import Field, FiniteFloat, field_serializer, field_validator, model_validator
+from pydantic import Field, FiniteFloat, field_serializer, field_validator, model_serializer, model_validator
 
 from app.core.models import Model
 
@@ -88,7 +90,7 @@ class Ring(Model):
 
     @model_validator(mode='after')
     def check_callsign_position(self):
-        if self.default_callsign and (self.position is None or self.position.status != 'verified'):
+        if self.default_callsign and self.position is not None and self.position.status != 'verified':
             raise ValueError('Callsign oficial exige posição verificada no setor')
         return self
 
@@ -104,6 +106,7 @@ class CalibratedRing(Ring):
 
 class RingCatalogue(Model):
     schema_version: Literal[1] = 1
+    revision: str = Field(default='legacy-1', pattern=r'^[a-z0-9-]{1,64}$')
     map_frame: Literal['Abyss_Reshanta_A/4096-north-up']
     rings: list[Ring] = Field(min_length=1, max_length=250)
 
@@ -179,6 +182,37 @@ class TacticalDrawing(Model):
         return self
 
 
+class PublishedRing(Ring):
+    display_code: str | None = Field(default=None, pattern=r'^[A-Z]{1,2}[1-9][0-9]*$', max_length=16)
+
+    @model_validator(mode='after')
+    def check_callsign_position(self):
+        return self
+
+
+def ring_catalogue_hash(rings):
+    records = [ring.model_dump(mode='json') for ring in rings]
+    wire = json.dumps(records, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+    return hashlib.sha256(wire.encode('utf-8')).hexdigest()
+
+
+class PublishedRingCatalogue(Model):
+    version: Literal[1] = 1
+    base_revision: str = Field(pattern=r'^[a-z0-9-]{1,64}$')
+    sha256: str = Field(pattern=r'^[a-f0-9]{64}$')
+    rings: list[PublishedRing] = Field(max_length=250)
+
+    @model_validator(mode='after')
+    def verify_catalogue(self):
+        ids = {ring.ring_id for ring in self.rings}
+        codes = [ring.display_code for ring in self.rings if ring.display_code]
+        if len(ids) != len(self.rings) or len(set(codes)) != len(codes):
+            raise ValueError('Identidade de anel duplicada')
+        if self.sha256 != ring_catalogue_hash(self.rings):
+            raise ValueError('O catálogo de anéis não corresponde à revisão publicada.')
+        return self
+
+
 class Preset(Model):
     model_config = Model.model_config | {'json_schema_extra': {
         'required': ['schema_version', 'map_id', 'name'],
@@ -200,6 +234,14 @@ class Preset(Model):
     markers: list[CustomMarker] = Field(default_factory=list)
     drawings: list[TacticalDrawing] = Field(default_factory=list)
     calibrated_rings: list[CalibratedRing] = Field(default_factory=list, max_length=250)
+    ring_catalogue: PublishedRingCatalogue | None = None
+
+    @model_serializer(mode='wrap')
+    def serialize_preset(self, serialize):
+        data = serialize(self)
+        if self.ring_catalogue is None:
+            data.pop('ring_catalogue', None)
+        return data
 
     @field_serializer('layers', when_used='json')
     def serialize_layers(self, layers):

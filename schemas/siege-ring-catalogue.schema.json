@@ -197,6 +197,12 @@
       "title": "Schema Version",
       "type": "integer"
     },
+    "revision": {
+      "default": "legacy-1",
+      "pattern": "^[a-z0-9-]{1,64}$",
+      "title": "Revision",
+      "type": "string"
+    },
     "map_frame": {
       "const": "Abyss_Reshanta_A/4096-north-up",
       "title": "Map Frame",

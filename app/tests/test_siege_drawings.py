@@ -131,7 +131,7 @@ def test_share_drawings_and_migrate_v2_without_recreating_pins(qapp, tmp_path):
     assert payload['schema_version'] == 3 and len(payload['drawings']) == 3
     other = SiegeService(tmp_path/'imported')
     other.import_preset(export, replace=True)
-    assert other.preset == source.preset
+    assert other.preset == source.exportable_preset()
     same = tmp_path/'exported-again.json'
     other.export_preset(same)
     assert same.read_bytes() == export.read_bytes()
@@ -156,9 +156,9 @@ def test_share_drawings_and_migrate_v2_without_recreating_pins(qapp, tmp_path):
         export.write_text(json.dumps({**payload, 'drawings': invalid}), encoding='utf8')
         with pytest.raises(ValueError, match='JSON de marcações inválido'):
             other.import_preset(export, replace=True)
-        assert other.preset == source.preset
+        assert other.preset == source.exportable_preset()
 
-    legacy = {key: value for key, value in payload.items() if key != 'drawings'}
+    legacy = {key: value for key, value in payload.items() if key not in ('drawings', 'ring_catalogue')}
     legacy['schema_version'] = 2
     legacy['layers'].remove('TacticalShapes')
     export.write_text(json.dumps(legacy), encoding='utf8')

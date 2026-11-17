@@ -1265,12 +1265,12 @@ window.StrigoiGuide = {
             "es-419": "El instalador descarga el mapa calibrado automáticamente. Si usas la edición portátil o se interrumpió la descarga, elige Descargar mapa en Siege Command. Luego podrás usar la región sin conexión en ambos módulos."
           },
           "tip": {
-            "pt_BR": "As posições dos anéis podem ser carregadas em Catálogo de anéis → Importar catálogo local. O instalador público inclui a lista de pendências por zona.",
-            "en_US": "Ring positions can be loaded in Ring catalogue → Import local catalogue. The public installer includes pending ring entries by zone.",
-            "es-419": "Puedes cargar las posiciones de los anillos en Catálogo de anillos → Importar catálogo local. El instalador público incluye la lista de anillos pendientes por zona."
+            "pt_BR": "A beta.19 carrega automaticamente o catálogo com os 49 anéis. Em Catálogo de anéis, use Copiar diagnóstico do catálogo se precisar de suporte.",
+            "en_US": "Beta.19 automatically loads the catalogue with all 49 rings. For support, use Copy catalogue diagnostics in Ring catalogue.",
+            "es-419": "La beta.19 carga automáticamente el catálogo con los 49 anillos. Para pedir ayuda, usa Copiar diagnóstico del catálogo en Catálogo de anillos."
           },
           "action": {
-            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.18/docs/SIEGE.md",
+            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.19/docs/SIEGE.md",
             "label": {
               "pt_BR": "Abrir guia técnico",
               "en_US": "Open technical guide",

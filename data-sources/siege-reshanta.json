@@ -386,7 +386,10 @@
     "sha256": "ea0781ee60f9f8011489a164ac2164cb402cb1e5725f92d4d57d1d427f437f6e",
     "count": 49,
     "altitude_available": false,
-    "map_coordinates": "((longitude / 100 + 2048) / 4096, (-latitude / 100 + 2048) / 4096)",
+    "map_coordinates": "((longitude / 100 + 2048) / 4096, (latitude / 100 + 2048) / 4096)",
+    "bundled_catalogue": "app/data/siege-ring-base.json",
+    "catalogue_revision": "lower-reshanta-positions-1",
+    "catalogue_file_sha256": "1eab315da3817974ce81b4a50010d7255781a80b9b6cdba4d775d9b3317a4240",
     "map_crosscheck": "Aion2t 4096px overview cross-correlates with the local 4096px tile mosaic at <0.03 px offset at 1024 overview scale. Latesran roots independently match Aion-DPS-Meter world extraction within one world unit. Three AbyssArtifact rows land on the corresponding map structures.",
     "sector_policy": "Explicit tactical grouping reviewed on the map around the three artifacts and their approaches. It is not an assignment of official subzone names.",
     "callsign_policy": "Frozen by stable ring ID. North-to-south 8px bands, west-to-east within a band."

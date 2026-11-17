@@ -39,6 +39,14 @@ $log = Get-Content -LiteralPath (Join-Path $data 'logs/strigoi.log') -Raw
 if ($log -notmatch 'SMOKE_OK: all 15 pages rendered' -or $log -notmatch 'SMOKE_SIEGE_OK') {
     throw 'Application or Siege smoke test did not complete.'
 }
+$check = [regex]::Match($log, 'SMOKE_SIEGE_CATALOGUE (\{[^\r\n]+\})')
+if (-not $check.Success) { throw 'Missing Flight Ring catalogue diagnostics.' }
+$catalogue = $check.Groups[1].Value | ConvertFrom-Json
+if ($catalogue.known -ne 49 -or $catalogue.verified -ne 49 -or $catalogue.pending -ne 0 -or
+    $catalogue.catalogue_origin -ne 'base' -or $catalogue.catalogue_load_error) {
+    throw 'The clean installation did not load all Flight Rings from the packaged catalogue.'
+}
+Write-Output "Packaged Flight Rings: $($catalogue.catalogue_revision) $($catalogue.catalogue_sha256)"
 $prefs = Join-Path $data 'preferences.json'
 $preset = Join-Path $data 'siege-command.json'
 $fixture = '{"schema_version":3,"selected_preset":"CI","presets":[{"schema_version":3,"map_id":"lower-reshanta","name":"CI","layers":["CustomMarkers"],"markers":[{"id":"local-ci","name":"CI fixture","position":{"x":0.2,"y":0.4}}],"drawings":[]}]}'

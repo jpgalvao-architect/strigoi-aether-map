@@ -68,19 +68,23 @@ function distinct(values) {
 function validPreset(preset) {
   if (preset?.schema_version !== 3 || !validate(preset) || !validText(preset.name) || !preset.name.trim()) return false;
   const { markers, drawings, calibrated_rings: rings = [], aliases = {}, colors = {} } = preset;
+  const published = preset.ring_catalogue?.rings ?? [];
+  const uniqueRings = list => distinct(list.map(ring => ring.ring_id))
+    && distinct(list.map(ring => ring.default_callsign).filter(Boolean));
   if (!distinct(markers.map(pin => pin.id)) || !distinct(drawings.map(shape => shape.id))
-      || !distinct(rings.map(ring => ring.ring_id)) || !distinct(rings.map(ring => ring.default_callsign).filter(Boolean))) return false;
+      || !uniqueRings(rings) || !uniqueRings(published)
+      || !distinct(published.map(ring => ring.display_code).filter(Boolean))) return false;
   return markers.every(pin => validText(pin.name) && pin.name.trim() && validText(pin.category ?? ''))
     && drawings.every(shape => {
       const dx = Math.abs(shape.end.x - shape.start.x);
       const dy = Math.abs(shape.end.y - shape.start.y);
       return validText(shape.label ?? '') && (shape.kind === 'arrow' ? Math.max(dx, dy) : Math.min(dx, dy)) >= 1e-6;
     })
-    && rings.every(ring => {
+    && [...rings, ...published].every(ring => {
       const prefix = { MID: 'M', BOT: 'B', TOP: 'T' }[ring.sector];
       return (ring.category === 'siege') === Boolean(prefix)
         && (!ring.default_callsign || ring.default_callsign.startsWith(prefix))
-        && [ring.display_name, ring.zone_id, ring.source, ring.position.source, ring.geographic_description ?? '']
+        && [ring.display_name, ring.zone_id, ring.source, ring.position?.source ?? '', ring.geographic_description ?? '']
           .every(text => text.length <= 512 && validText(text));
     })
     && Object.entries(aliases).every(([id, alias]) => /^ring-[a-z0-9-]{1,95}$/.test(id)
@@ -98,7 +102,7 @@ export default {
       const ip = request.headers.get('CF-Connecting-IP') || 'local';
       if (!(await env.CLIENT_LIMIT.limit({ key: ip })).success) return fail(429, 'rate');
       if (pathname === '/v1/health' && request.method === 'GET') {
-        return json({ protocol: 1, configured: Boolean(owner) });
+        return json({ protocol: 1, configured: Boolean(owner), ring_catalogue: 1 });
       }
       const setup = /^\/v1\/setup\/([a-f0-9]{64})$/.exec(pathname);
       if (setup && request.method === 'GET') {

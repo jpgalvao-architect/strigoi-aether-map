@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 import os
+import json
 from contextlib import suppress
 from multiprocessing import get_context
 from time import monotonic
@@ -15,7 +16,7 @@ from PySide6.QtWidgets import QApplication
 from app.infrastructure.storage import atomic_json
 from app.modules.siege.live_sync import LiveSync, Reply
 from app.modules.siege.live_sync_credentials import PairingStore
-from app.modules.siege.live_sync_protocol import Invite, digest, endpoint_url, read_snapshot, snapshot_bytes
+from app.modules.siege.live_sync_protocol import IncompatibleCatalogue, Invite, digest, endpoint_url, read_snapshot, snapshot_bytes
 from app.modules.siege.drawing import visible_drawings
 from app.modules.siege.markers import markers_for
 from app.modules.siege.models import Coordinate, Ring, RingCatalogue, RingPosition
@@ -90,6 +91,37 @@ def test_shared_preset_keeps_local_state(app, tmp_path):
     assert "Local" not in {badge.text for _, _, _, badge in markers_for(siege, atlas, shared=siege.session_preset)}
     siege.set_session_preset(None)
     assert siege.path.read_bytes() == before
+
+
+def test_catalogue_digest_and_version_checked_before_rendering(tmp_path):
+    siege = SiegeService(tmp_path)
+    snapshot = json.loads(snapshot_bytes(siege.exportable_preset()))
+    snapshot['ring_catalogue']['version'] = 2
+    with pytest.raises(IncompatibleCatalogue):
+        read_snapshot(json.dumps(snapshot).encode())
+    snapshot['ring_catalogue']['version'] = 1
+    snapshot['ring_catalogue']['rings'][0]['position']['map_position']['x'] = .1
+    with pytest.raises(ValueError, match='não corresponde'):
+        read_snapshot(json.dumps(snapshot).encode())
+
+
+def test_publisher_reports_old_worker_before_upload(app, tmp_path, monkeypatch):
+    siege = SiegeService(tmp_path)
+    sync = LiveSync(siege, tmp_path)
+    sync.invite = Invite(FAKE_ENDPOINT, 'c' * 32, 'b' * 64)
+    sync.publisher = 'a' * 64
+    requests = []
+
+    def old_worker(url, callback, **kwargs):
+        requests.append(url)
+        callback(Reply(200, b'{"protocol":1,"configured":true}', b'', b''))
+
+    monkeypatch.setattr(sync, 'request', old_worker)
+    sync.publish()
+    assert requests == [FAKE_ENDPOINT + '/v1/health']
+    assert sync.feedback == 'Atualize o Worker para publicar o catálogo de anéis.'
+    assert not sync.busy and sync.version == 0
+    sync.shutdown()
 
 
 @pytest.mark.parametrize('matches', [True, False])
@@ -268,7 +300,10 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
     context = get_context('spawn')
     pipe, player_pipe = context.Pipe()
     player_directory = tmp_path / 'player'
-    atomic_json(player_directory / 'siege-ring-catalogue.json', catalogue)
+    player_ring = flight_ring.model_copy(update={'position': flight_ring.position.model_copy(
+        update={'map_position': Coordinate(x=.11, y=.12)})})
+    atomic_json(player_directory / 'siege-ring-catalogue.json', catalogue.model_copy(update={'rings': [player_ring]}))
+    before_catalogue = (player_directory / 'siege-ring-catalogue.json').read_bytes()
     player = context.Process(target=live_sync_player, args=(player_pipe, player_directory))
     player.start()
     player_pipe.close()
@@ -304,7 +339,7 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
         ask('join', host.invite.encode())
         first = sync_version(1)
         assert 'Remove me' in first['pins'] and 'Personal' not in first['pins']
-        assert first['rings'] == {'BF3': (.67, .33)}
+        assert len(first['rings']) == 49 and first['rings']['BF3'] == (.67, .33)
         tools = page.editor.quick_toolbar.buttons
         center = view.mapFromScene(view._at(Coordinate(x=.5, y=.5)))
         tools['pin'].click()
@@ -339,7 +374,9 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
         assert second['pins']['Pin 1'] == (pin.position.x, pin.position.y)
         assert 'Remove me' not in second['pins']
         assert set(second['shapes']) == {'arrow', 'ellipse', 'rectangle'}
-        assert second['rings'] == {'Entrada Norte': (.67, .33)}
+        expected_rings = first['rings'].copy()
+        expected_rings['Entrada Norte'] = expected_rings.pop('BF3')
+        assert second['rings'] == expected_rings
         offline = ask('offline')
         assert offline['version'] == 2 and not offline['connected']
         siege.set_ring_alias(flight_ring.ring_id, '')
@@ -352,10 +389,11 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
         ask('online')
         reconnected = sync_version(4)
         assert 'Revision 4' in reconnected['pins']
-        assert reconnected['rings'] == {'BF3': (.67, .33)}
+        assert reconnected['rings'] == first['rings']
         local = ask('leave')
         assert 'Personal' in local['pins'] and local['preserved']
-        assert local['rings'] == {'Nome pessoal': (.67, .33)}
+        assert len(local['rings']) == 49 and local['rings']['Nome pessoal'] == (.11, .12)
+        assert (player_directory / 'siege-ring-catalogue.json').read_bytes() == before_catalogue
     finally:
         if host.invite and not host.busy:
             host.close_room()

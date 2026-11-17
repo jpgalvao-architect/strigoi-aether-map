@@ -8,7 +8,7 @@ O aplicativo usa Deploy to Cloudflare porque a distribuição de um cliente OAut
 
 | Pedido | Permissão | Resposta |
 | --- | --- | --- |
-| `GET /v1/health` | Pública | Protocolo e presença de uma chave válida |
+| `GET /v1/health` | Pública | Protocolo, presença de chave válida e suporte a `ring_catalogue: 1` |
 | `GET /v1/setup/:nonce` | Pública, upgrade WebSocket | `ready` com HMAC-SHA256 de `setup-v1:<nonce>`. A resposta vem de um Durable Object SQLite |
 | `POST /v1/sessions/:id` | Prova de vinculação | Cria a sessão na versão 0 |
 | `GET /v1/sessions/:id` | Publicação | Versão e quantidade de sockets de jogadores |
@@ -17,6 +17,19 @@ O aplicativo usa Deploy to Cloudflare porque a distribuição de um cliente OAut
 | `PUT /v1/sessions/:id/snapshot` | Publicação | Recebe o preset v3 e `X-Base-Version`. Retorna `409` com a revisão atual em caso de conflito |
 | `PUT /v1/sessions/:id/invite` | Publicação | Recebe a nova chave de leitura como texto ASCII. Revoga a anterior |
 | `DELETE /v1/sessions/:id` | Publicação | Remove o snapshot, fecha os sockets e encerra a sessão |
+
+### Catálogo de anéis
+
+A beta.19 publica o catálogo efetivo com a revisão de origem, um SHA-256
+dos registros e a lista de posições, estados e códigos. O cliente valida
+o hash antes de renderizar. O catálogo recebido pertence à estratégia da
+sessão e permanece em memória.
+
+Para usar a beta.19, atualize o Worker com o diretório `backend/live-sync`
+desta versão. Preserve o nome, o segredo e as migrações do Worker. Ao
+publicar, o caller verifica se sua implantação anuncia `ring_catalogue: 1`.
+Jogadores e caller devem usar a beta.19 ou posterior para ler esse catálogo.
+O Worker atualizado continua aceitando publicações v3 anteriores.
 
 O identificador usa 16 bytes aleatórios em hex. As chaves de leitura e publicação são distintas, cada uma com 32 bytes aleatórios em hex. Use `Authorization: Bearer <chave>` nas chamadas de sessão. Na criação, o corpo contém `reader`, `publisher` e `time` (Unix em milissegundos). O bearer é o HMAC-SHA256 de `create-v1:<id>:<time>:<reader>:<publisher>`, calculado com a representação ASCII de `LIVE_SYNC_OWNER_KEY`. A assinatura expira em cinco minutos. A chave de vinculação fica no segredo do Worker e protegida pelo DPAPI no Windows. A sessão armazena apenas os hashes das chaves de leitura e publicação.
 

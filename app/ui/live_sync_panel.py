@@ -155,6 +155,8 @@ class LiveSyncPanel(QWidget):
         layout.addWidget(self.views)
         self.overlay_hint = label('Para ver a estratégia no jogo, ative Overlay de Reshanta acima.', 'subtitle', True)
         layout.addWidget(self.overlay_hint)
+        self.catalogue_note = label('', 'subtitle', True)
+        layout.addWidget(self.catalogue_note)
         off = self.page()
         off.addWidget(label('Compartilhe marcações táticas de Lower Reshanta durante a siege.', 'subtitle', True))
         self.host_page(quick_tools)
@@ -281,6 +283,12 @@ class LiveSyncPanel(QWidget):
         self.join_button.setVisible(not joining)
         self.player_session.setVisible(joining)
         self.overlay_hint.setVisible(joining)
+        preset = sync.siege.session_preset if joining else None
+        warning = 'Sessão antiga. Peça ao caller para atualizar o aplicativo e publicar o catálogo.' if (
+            preset is not None and preset.ring_catalogue is None
+        ) else ''
+        self.catalogue_note.setText(warning)
+        self.catalogue_note.setVisible(bool(warning))
         self.leave_button.setVisible(joining)
         if joining:
             self.player_session.setText(f'Sessão {room.session[:6].upper()} · versão recebida {sync.version}')

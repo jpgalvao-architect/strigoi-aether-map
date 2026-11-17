@@ -1,0 +1,780 @@
+{
+  "schema_version": 1,
+  "revision": "lower-reshanta-positions-1",
+  "map_frame": "Abyss_Reshanta_A/4096-north-up",
+  "rings": [
+    {
+      "ring_id": "ring-reshanta-293719",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.41310432434082034,
+          "y": 0.5855327892303467
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-293726",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5039836931228637,
+          "y": 0.43375607013702394
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-293832",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.41955095291137695,
+          "y": 0.49790696129202844
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-293834",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.4320249128341675,
+          "y": 0.5659255981445312
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-293910",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5399612426757813,
+          "y": 0.43956825256347654
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-293952",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5764754629135131,
+          "y": 0.4273694896697998
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-293953",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5392351293563843,
+          "y": 0.5173700904846191
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294009",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.528442828655243,
+          "y": 0.3940013122558594
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294022",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5903260517120361,
+          "y": 0.4813351821899414
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294023",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "MID",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "M2",
+      "position": {
+        "map_position": {
+          "x": 0.48149520039558413,
+          "y": 0.5294847130775452
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294034",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B7",
+      "position": {
+        "map_position": {
+          "x": 0.6093004035949707,
+          "y": 0.5698231554031372
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294171",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.42509386539459226,
+          "y": 0.5558226823806762
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294237",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5592585039138794,
+          "y": 0.4447026586532593
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294293",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B4",
+      "position": {
+        "map_position": {
+          "x": 0.585519323348999,
+          "y": 0.5632626295089722
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294307",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "TOP",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "T1",
+      "position": {
+        "map_position": {
+          "x": 0.45143118858337405,
+          "y": 0.3989916706085205
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294507",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.47499698638916016,
+          "y": 0.5555223941802978
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294543",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B5",
+      "position": {
+        "map_position": {
+          "x": 0.6332261848449707,
+          "y": 0.5645741319656372
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294565",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.46605625152587893,
+          "y": 0.5309093165397644
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294599",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "TOP",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "T6",
+      "position": {
+        "map_position": {
+          "x": 0.39640966415405277,
+          "y": 0.4638126754760742
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294620",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.45667377948760984,
+          "y": 0.48383968591690063
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294785",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5751136636734009,
+          "y": 0.5048394650220871
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294875",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B10",
+      "position": {
+        "map_position": {
+          "x": 0.6091052341461182,
+          "y": 0.605431604385376
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294876",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B6",
+      "position": {
+        "map_position": {
+          "x": 0.5370347785949707,
+          "y": 0.5692128038406372
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-294932",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5536368417739869,
+          "y": 0.4150808238983154
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295062",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "TOP",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "T2",
+      "position": {
+        "map_position": {
+          "x": 0.38064374923706057,
+          "y": 0.41950830459594723
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295063",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.4491462421417236,
+          "y": 0.5485189151763916
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295096",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B2",
+      "position": {
+        "map_position": {
+          "x": 0.5255238485336303,
+          "y": 0.5478521919250489
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295097",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "TOP",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "T5",
+      "position": {
+        "map_position": {
+          "x": 0.3748748207092285,
+          "y": 0.4570143222808838
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295161",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.49980333391577003,
+          "y": 0.5576161241531372
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295186",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.45557875633239747,
+          "y": 0.5714814758300781
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295193",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "TOP",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "T4",
+      "position": {
+        "map_position": {
+          "x": 0.4222025203704834,
+          "y": 0.4492576360702515
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295248",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.44418643951416015,
+          "y": 0.5293090152740478
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295252",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.4390459108352661,
+          "y": 0.49467745900154114
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295279",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5955110549926758,
+          "y": 0.4081948566436768
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295311",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B1",
+      "position": {
+        "map_position": {
+          "x": 0.5558228778839112,
+          "y": 0.5276810765266419
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295313",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5062394267320633,
+          "y": 0.3906973171234131
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295321",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.4114790153503418,
+          "y": 0.5245823073387146
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295366",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B8",
+      "position": {
+        "map_position": {
+          "x": 0.6367238330841064,
+          "y": 0.5951548385620117
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295373",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5420915603637695,
+          "y": 0.4620893263816833
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295410",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "MID",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "M1",
+      "position": {
+        "map_position": {
+          "x": 0.48109241724014284,
+          "y": 0.4652822256088257
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295427",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5683688116073609,
+          "y": 0.4694951891899109
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295450",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.5939011096954345,
+          "y": 0.49209426283836366
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295519",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.4828799629211426,
+          "y": 0.6010033130645752
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295528",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "TOP",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "T7",
+      "position": {
+        "map_position": {
+          "x": 0.4394381523132324,
+          "y": 0.4665486621856689
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295773",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B3",
+      "position": {
+        "map_position": {
+          "x": 0.5748190784454346,
+          "y": 0.5586082410812377
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295790",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.4982194729149342,
+          "y": 0.6108538150787354
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295872",
+      "zone_id": "2616",
+      "category": "transit",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "position": {
+        "map_position": {
+          "x": 0.576574182510376,
+          "y": 0.44426306247711184
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295873",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "TOP",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "T3",
+      "position": {
+        "map_position": {
+          "x": 0.436305456161499,
+          "y": 0.43208343505859376
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    },
+    {
+      "ring_id": "ring-reshanta-295909",
+      "zone_id": "2616",
+      "category": "siege",
+      "sector": "BOT",
+      "display_name": "Chaotic Lower Reshanta",
+      "source": "https://metabot.gg/en/aion-2/map/chaotic-lower-reshanta/flight-rings",
+      "default_callsign": "B9",
+      "position": {
+        "map_position": {
+          "x": 0.560765585899353,
+          "y": 0.597440357208252
+        },
+        "source": "https://aion2t.com/map?zone=2616&types=flight_ring",
+        "status": "verified"
+      }
+    }
+  ]
+}

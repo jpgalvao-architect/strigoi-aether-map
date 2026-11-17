@@ -60,10 +60,17 @@ def snapshot_bytes(preset):
                       separators=(',', ':'), allow_nan=False).encode('utf-8')
 
 
+class IncompatibleCatalogue(ValueError):
+    pass
+
+
 def read_snapshot(body):
     if len(body) > MAX_BYTES:
         raise ValueError
     fields = json.loads(body.decode('utf-8'))
+    catalogue = fields.get('ring_catalogue') if isinstance(fields, dict) else None
+    if isinstance(catalogue, dict) and catalogue.get('version') != 1:
+        raise IncompatibleCatalogue
     if (not isinstance(fields, dict) or fields.get('schema_version') != 3
             or fields.get('map_id') != 'lower-reshanta' or not {'markers', 'drawings'} <= fields.keys()
             or not isinstance(fields.get('name'), str) or not fields['name'].strip().isprintable()):
