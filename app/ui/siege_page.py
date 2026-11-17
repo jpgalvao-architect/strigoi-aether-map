@@ -414,6 +414,9 @@ class SiegePage(QWidget):
         self.freeze.setEnabled(ring.sector is not None)
 
     def select_ring_on_map(self, ring_id):
+        if self.editor.active:
+            self.editor.select(f'ring:{ring_id}')
+            return
         self.section.setCurrentIndex(self.section.findData('rings'))
         self.ring_filter.setCurrentIndex(0)
         self.catalogue.setCurrentIndex(self.catalogue.findData(ring_id))
@@ -581,20 +584,11 @@ class SiegePage(QWidget):
             self.guard(self.service.edit_preset, colors=colors)
 
     def edit_alias(self):
-        rings = list(self.service.rings.values())
-        captions = [self.service.ring_label(ring) for ring in rings]
-        title, accepted = QInputDialog.getItem(self, tr('Editar apelido do anel'), tr('Anel'), captions, 0, False)
-        if accepted:
-            ring_id = rings[captions.index(title)].ring_id
-            aliases = dict(self.service.preset.aliases)
-            value, ok = QInputDialog.getText(self, tr('Editar apelido do anel'), tr('Apelido'),
-                                            text=aliases.get(ring_id, ''))
-            if ok:
-                if value.strip():
-                    aliases[ring_id] = value.strip()
-                else:
-                    aliases.pop(ring_id, None)
-                self.guard(self.service.edit_preset, aliases=aliases)
+        ring = self.editor.selected_ring() or next(iter(self.service.rings.values()), None)
+        if ring:
+            self.show_editor()
+            self.editor.select(f'ring:{ring.ring_id}')
+            self.editor.items.showPopup()
 
     def refresh(self):
         service = self.service

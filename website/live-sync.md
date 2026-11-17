@@ -27,6 +27,12 @@ pode começar por ele e depois publicar pelo Live Sync.
 
 ![Editor tático com a seta selecionada e a lista de marcações abaixo da barra](assets/app-siege-editor-pt_BR.webp)
 
+Na **0.10.0-beta.18**, selecione um Flight Ring no mapa ou na lista do
+**Editor tático**. Preencha **Nome personalizado** e pressione **Enter**.
+Use **Restaurar nome original** para recuperar o código do anel. O nome fica
+salvo no preset e chega aos jogadores ao clicar em **Publicar alterações**.
+O overlay usa a posição do catálogo local ou de uma calibração publicada.
+
 ## Guia ilustrado de implantação
 
 ### 1. Copie a chave e abra a implantação

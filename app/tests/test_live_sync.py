@@ -12,12 +12,13 @@ from PySide6.QtNetwork import QNetworkRequest
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
+from app.infrastructure.storage import atomic_json
 from app.modules.siege.live_sync import LiveSync, Reply
 from app.modules.siege.live_sync_credentials import PairingStore
 from app.modules.siege.live_sync_protocol import Invite, digest, endpoint_url, read_snapshot, snapshot_bytes
 from app.modules.siege.drawing import visible_drawings
 from app.modules.siege.markers import markers_for
-from app.modules.siege.models import Coordinate
+from app.modules.siege.models import Coordinate, Ring, RingCatalogue, RingPosition
 from app.modules.siege.service import SiegeService
 from app.ui.live_sync_panel import LiveSyncPanel, SetupDialog
 
@@ -170,11 +171,11 @@ def test_qt_client_and_local_worker(app, tmp_path):
         assert player.siege.session_preset is None
         assert player.siege.path.read_bytes() == local_bytes
         player.join(host.invite.encode())
-        wait_for(lambda: player.version == 2)
+        wait_for(lambda: player.version == 2 and player.state == 'Atualizado.')
         host.rotate()
         wait_for(lambda: player.invite is None and not host.busy)
         player.join(host.invite.encode())
-        wait_for(lambda: player.version == 2)
+        wait_for(lambda: player.version == 2 and player.state == 'Atualizado.')
         host.close_room()
         wait_for(lambda: not player.invite and not host.invite)
         assert player.siege.path.read_bytes() == local_bytes
@@ -191,6 +192,8 @@ def live_sync_player(pipe, directory):
     siege = SiegeService(directory)
     client = LoopbackSync(siege, directory)
     siege.add_marker('Personal', Coordinate(x=.2, y=.2))
+    siege.edit_preset(layers=siege.preset.layers | {'TransitRings'})
+    siege.set_ring_alias('ring-reshanta-293952', 'Nome pessoal')
     original = siege.path.read_bytes()
     client.set_mode('player')
     try:
@@ -219,6 +222,7 @@ def live_sync_player(pipe, directory):
             pipe.send({
                 'version': client.version,
                 'pins': {badge.text: (x, y) for x, y, _, badge in markers if not badge.ring},
+                'rings': {badge.text: (x, y) for x, y, _, badge in markers if badge.ring},
                 'shapes': [drawing.kind for drawing, _ in visible_drawings(preset or siege.preset)],
                 'preserved': siege.path.read_bytes() == original,
                 'connected': client.socket is not None,
@@ -237,6 +241,16 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
     monkeypatch.setattr(siege_page, 'LiveSync', LoopbackSync)
     host_context = AppContext(tmp_path / 'host')
     siege = host_context.siege
+    ring_point = Coordinate(x=.67, y=.33)
+    flight_ring = Ring(
+        ring_id='ring-reshanta-293952', zone_id='fixture', category='transit',
+        display_name='Flight Circle', source='Controlled test',
+        position=RingPosition(map_position=ring_point, status='verified', source='Controlled test'),
+    )
+    catalogue = RingCatalogue(map_frame=siege.data.map_frame, rings=[flight_ring])
+    atomic_json(tmp_path / 'catalogue.json', catalogue)
+    siege.import_catalogue(tmp_path / 'catalogue.json')
+    siege.edit_preset(layers=siege.preset.layers | {'TransitRings'})
     image = QImage(32, 32, QImage.Format_RGB32)
     image.fill(QColor('#172435'))
     assert image.save(str(siege.map_path))
@@ -253,7 +267,9 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
     host = page.live_sync
     context = get_context('spawn')
     pipe, player_pipe = context.Pipe()
-    player = context.Process(target=live_sync_player, args=(player_pipe, tmp_path / 'player'))
+    player_directory = tmp_path / 'player'
+    atomic_json(player_directory / 'siege-ring-catalogue.json', catalogue)
+    player = context.Process(target=live_sync_player, args=(player_pipe, player_directory))
     player.start()
     player_pipe.close()
 
@@ -288,6 +304,7 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
         ask('join', host.invite.encode())
         first = sync_version(1)
         assert 'Remove me' in first['pins'] and 'Personal' not in first['pins']
+        assert first['rings'] == {'BF3': (.67, .33)}
         tools = page.editor.quick_toolbar.buttons
         center = view.mapFromScene(view._at(Coordinate(x=.5, y=.5)))
         tools['pin'].click()
@@ -306,6 +323,13 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
             QTest.mouseRelease(view.viewport(), Qt.LeftButton, pos=end)
             assert tools['select'].isChecked()
         siege.delete_marker(removed.id)
+        page.show_editor()
+        editor = page.editor
+        editor.items.setCurrentIndex(editor.items.findData(f'ring:{flight_ring.ring_id}'))
+        editor.ring_name.setText('Entrada Norte')
+        QTest.keyClick(editor.ring_name, Qt.Key_Return)
+        assert any(item.badge.text == 'Entrada Norte' for item in view.badges if item.badge.ring)
+        page.section.setCurrentIndex(page.section.findData('live'))
         QTest.qWait(1600)
         assert ask('state') == first
         assert panel.publish_button.isEnabled()
@@ -315,8 +339,10 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
         assert second['pins']['Pin 1'] == (pin.position.x, pin.position.y)
         assert 'Remove me' not in second['pins']
         assert set(second['shapes']) == {'arrow', 'ellipse', 'rectangle'}
+        assert second['rings'] == {'Entrada Norte': (.67, .33)}
         offline = ask('offline')
         assert offline['version'] == 2 and not offline['connected']
+        siege.set_ring_alias(flight_ring.ring_id, '')
         for version in (3, 4):
             QTest.qWait(1600)
             siege.add_marker(f'Revision {version}', Coordinate(x=.65, y=.65))
@@ -324,8 +350,12 @@ def test_live_sync_between_independent_processes(app, tmp_path, monkeypatch):
             wait_for(lambda: host.version == version)
         assert ask('state') == offline
         ask('online')
-        assert 'Revision 4' in sync_version(4)['pins']
-        assert 'Personal' in ask('leave')['pins']
+        reconnected = sync_version(4)
+        assert 'Revision 4' in reconnected['pins']
+        assert reconnected['rings'] == {'BF3': (.67, .33)}
+        local = ask('leave')
+        assert 'Personal' in local['pins'] and local['preserved']
+        assert local['rings'] == {'Nome pessoal': (.67, .33)}
     finally:
         if host.invite and not host.busy:
             host.close_room()

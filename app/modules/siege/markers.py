@@ -29,14 +29,20 @@ def pin_badge(marker, preset, *, selected=False):
     return badge_for(pin_layer(marker), caption, preset.marker_scale * marker.scale, selected=selected)
 
 
+def ring_layer(ring):
+    return 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
+
+
+def ring_badge(ring, position, code, preset, *, selected=False):
+    caption = preset.aliases.get(ring.ring_id) or code or '?'
+    return badge_for(ring_layer(ring), caption, preset.marker_scale, selected=selected,
+                     provisional=position.status == 'provisional')
+
+
 def markers_for(siege, dataset, *, tactical=True, exploration=True, shared=None):
     local = siege.preset
     preset = shared if shared is not None else local
     colors = COLORS | preset.colors
-
-    def badge(position, layer, caption, *, provisional=False):
-        return (position.x, position.y, colors[layer],
-                badge_for(layer, caption, preset.marker_scale, provisional=provisional))
 
     markers = []
     if exploration and local.layers & {'Pets', 'Gathering'}:
@@ -52,11 +58,9 @@ def markers_for(siege, dataset, *, tactical=True, exploration=True, shared=None)
     markers.extend((marker.position.x, marker.position.y, pin_color(marker, preset), pin_badge(marker, preset))
                    for marker in preset.markers if pin_visible(marker, preset))
     for ring, position, code in siege.display_rings(preset, shared=shared is not None):
-        layer = 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
-        if layer not in preset.layers:
-            continue
-        if position is not None:
-            markers.append(badge(position.map_position, layer, code or '?',
-                                 provisional=position.status == 'provisional'))
+        layer = ring_layer(ring)
+        if position is not None and layer in preset.layers:
+            markers.append((position.map_position.x, position.map_position.y, colors[layer],
+                            ring_badge(ring, position, code, preset)))
     markers.sort(key=lambda marker: marker[3].priority)
     return markers

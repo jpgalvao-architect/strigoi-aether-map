@@ -27,6 +27,13 @@ preestablecido activo. También puedes comenzar en el editor y publicar desde Li
 
 ![Editor táctico con la flecha seleccionada y la lista de marcas debajo de la barra](assets/app-siege-editor-es-419.webp)
 
+En la **0.10.0-beta.18**, selecciona un anillo de vuelo en el mapa o en la
+lista del **Editor táctico**. Escribe un **Nombre personalizado** y presiona
+**Enter**. Usa **Restaurar nombre original** para volver al código del
+anillo. El nombre se guarda en el ajuste preestablecido y llega a los
+jugadores al seleccionar **Publicar cambios**. El overlay usa la posición
+del catálogo local o de una calibración publicada.
+
 ## Guía ilustrada de implementación
 
 ### 1. Copia la clave e inicia la implementación

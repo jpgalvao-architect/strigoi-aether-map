@@ -81,6 +81,8 @@ def test_es419_live_switch_and_tactical_json(qapp, tmp_path):
     siege.create_preset('Minha coleção')
     pin = siege.add_marker('Início', Coordinate(x=.3, y=.4))
     drawing = siege.add_drawing('arrow', Coordinate(x=.3, y=.4), Coordinate(x=.4, y=.5), label='Objetivo')
+    ring_id = next(iter(siege.rings))
+    siege.set_ring_alias(ring_id, 'Tático')
     source = tmp_path / 'pt.json'
     siege.export_preset(source)
     window = MainWindow(context, runtime=False)
@@ -112,6 +114,10 @@ def test_es419_live_switch_and_tactical_json(qapp, tmp_path):
         assert page.section.count() == 4
         assert editor.toolbar.buttons['arrow'].toolTip() == 'Dibujar flecha'
         assert editor.quick_toolbar.buttons['ellipse'].accessibleName() == 'Dibujar círculo o elipse'
+        assert editor.ring_name.accessibleName() == 'Nombre personalizado'
+        assert editor.ring_reset.text() == 'Restaurar nombre original'
+        editor.items.setCurrentIndex(editor.items.findData(f'ring:{ring_id}'))
+        assert editor.ring_name.text() == 'Tático'
         assert editor.items.itemText(editor.items.findData(f'pin:{pin.id}')) == 'Início'
         assert editor.items.itemText(editor.items.findData(f'drawing:{drawing.id}')) == 'Objetivo'
         assert editor.presets.currentText() == 'Minha coleção'
@@ -129,10 +135,14 @@ def test_es419_live_switch_and_tactical_json(qapp, tmp_path):
         assert page.section.itemText(0) == 'Tactical editor'
         assert editor.toolbar.buttons['arrow'].toolTip() == 'Draw arrow'
         assert editor.quick_toolbar.buttons['ellipse'].accessibleName() == 'Draw circle or ellipse'
+        assert editor.ring_name.accessibleName() == 'Custom name'
+        assert editor.ring_reset.text() == 'Restore original name'
+        assert editor.ring_name.text() == 'Tático'
         assert editor.items.itemText(editor.items.findData(f'pin:{pin.id}')) == 'Início'
         window.settings.language.setCurrentIndex(window.settings.language.findData('pt_BR'))
         assert window.nav[0].text() == 'Início'
         assert editor.toolbar.buttons['arrow'].toolTip() == 'Desenhar seta'
+        assert editor.ring_name.accessibleName() == 'Nome personalizado'
     finally:
         window.sonar_alert.close()
         window.close()

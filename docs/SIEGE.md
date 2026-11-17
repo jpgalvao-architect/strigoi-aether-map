@@ -22,7 +22,7 @@ as edições desses 12 pins e manter as outras marcações.
 
 Use **Ilhas** para enquadrar a área jogável e **Mapa inteiro** para ver toda
 a extensão. Role para ampliar e arraste o terreno para deslocar o mapa.
-Os anéis usam um símbolo circular com código abaixo. Todos os pins usam o
+Os anéis usam um símbolo circular com o nome ou código abaixo. Todos os pins usam o
 mesmo formato e podem herdar a cor da camada.
 
 ## Desenhar no Editor tático
@@ -47,6 +47,16 @@ a camada e o **Overlay de Reshanta** estão ativos.
 Ao hospedar pelo **Live Sync**, use **Ferramentas rápidas** para editar o
 mesmo mapa. Clique em **Publicar alterações** para enviar o plano ao grupo.
 [Guia ilustrado do Live Sync](../website/live-sync.md).
+
+## Personalizar nomes dos anéis
+
+No **Editor tático**, selecione um anel no mapa ou na lista de marcações.
+Digite o **Nome personalizado** e confirme com **Enter**. Use
+**Restaurar nome original** para voltar ao código do anel.
+
+O nome faz parte do preset. Ao exportar um JSON ou publicar pelo **Live Sync**,
+o nome segue junto com as marcações. Para exibir o anel, o aplicativo precisa
+de sua posição no catálogo ou em uma calibração do preset.
 
 ## Ver as marcações no jogo
 

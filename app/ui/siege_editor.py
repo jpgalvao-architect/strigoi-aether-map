@@ -73,12 +73,12 @@ class TacticalToolbar(QWidget):
             self.buttons[key] = control
         layout.addStretch()
 
-    def show_state(self, tool, map_ready, selected):
+    def show_state(self, tool, map_ready, deletable):
         for key, control in self.buttons.items():
             if control.isCheckable():
                 control.setChecked(tool == key)
             elif key == 'delete':
-                control.setEnabled(selected)
+                control.setEnabled(deletable)
                 continue
             elif key == 'cancel':
                 control.setEnabled(tool not in (None, 'select'))
@@ -148,6 +148,22 @@ class TacticalEditor(QWidget):
         form.addRow('Cor do pin', self.pin_color)
         form.addRow(self.pin_visibility)
         box.addWidget(self.pin_details)
+
+        self.ring_details = QWidget()
+        form = QFormLayout(self.ring_details)
+        form.setContentsMargins(0, 0, 0, 0)
+        self.ring_original = QLineEdit()
+        self.ring_original.setReadOnly(True)
+        self.ring_original.setAccessibleName('Identificador original do anel')
+        form.addRow('Identificador original', self.ring_original)
+        self.ring_name = QLineEdit()
+        self.ring_name.setAccessibleName('Nome personalizado')
+        self.ring_name.setToolTip('Use até 36 caracteres. Deixe vazio para usar o nome original.')
+        self.ring_name.editingFinished.connect(lambda: self.edit_ring_name(self.ring_name.text()))
+        form.addRow('Nome personalizado', self.ring_name)
+        self.ring_reset = button('Restaurar nome original', lambda: self.edit_ring_name(''))
+        form.addRow(self.ring_reset)
+        box.addWidget(self.ring_details)
 
         self.drawing_details = QWidget()
         form = self.form = QFormLayout(self.drawing_details)
@@ -254,7 +270,7 @@ class TacticalEditor(QWidget):
         tool = self.tool if self.map_ready else None
         selected = self.selection is not None and self.active
         for toolbar in (self.toolbar, self.quick_toolbar):
-            toolbar.show_state(tool, self.map_ready, selected)
+            toolbar.show_state(tool, self.map_ready, selected and not self.selection.startswith('ring:'))
         hint = self.tool_hints[tool] if tool else 'Baixe o mapa de Lower Reshanta para usar as ferramentas.'
         self.tool_hint.setText(hint)
         self.quick_hint.setText(hint if tool != 'select' else 'As marcações só são enviadas ao publicar.')
@@ -288,6 +304,16 @@ class TacticalEditor(QWidget):
         if self.selection and self.selection.startswith('drawing:'):
             drawing_id = self.selection.removeprefix('drawing:')
             return next((shape for shape in self.service.preset.drawings if shape.id == drawing_id), None)
+
+    def selected_ring(self):
+        if self.selection and self.selection.startswith('ring:'):
+            return self.service.rings.get(self.selection.removeprefix('ring:'))
+
+    def edit_ring_name(self, text):
+        ring = self.selected_ring()
+        if ring:
+            self.page.guard(self.service.set_ring_alias, ring.ring_id, text)
+            self.refresh_ring()
 
     def place_pin(self, position):
         names = {pin.name for pin in self.service.preset.markers}
@@ -390,10 +416,10 @@ class TacticalEditor(QWidget):
             self.selection = None
             if self.active:
                 self.cancel()
-        pin, shape = self.selected_marker(), self.selected_drawing()
-        if pin is None and shape is None:
+        pin, shape, ring = self.selected_marker(), self.selected_drawing(), self.selected_ring()
+        if pin is None and shape is None and ring is None:
             self.selection = None
-        self.view.select_element(pin.id if pin else None, shape.id if shape else None)
+        self.view.select_element(pin.id if pin else None, shape.id if shape else None, ring.ring_id if ring else None)
         choice(self.presets, preset.name, [(Verbatim(p.name), p.name) for p in self.service.state.presets])
         with QSignalBlocker(self.items):
             self.items.clear()
@@ -404,11 +430,32 @@ class TacticalEditor(QWidget):
                 caption = shape.label or f'{tr(self.shape_names[shape.kind])} {index}'
                 icon = navigation_icon(TACTICAL_TOOLS[shape.kind][0])
                 self.items.addItem(icon, Verbatim(caption), f'drawing:{shape.id}')
+            rings = self.service.rings
+            if rings:
+                self.items.insertSeparator(self.items.count())
+            for ring in rings.values():
+                caption = self.service.ring_label(ring)
+                if not self.service.ring_code(ring):
+                    caption = f'{caption} · {ring.ring_id}'
+                self.items.addItem(navigation_icon('tactical-ring'), Verbatim(caption), f'ring:{ring.ring_id}')
             self.items.setCurrentIndex(max(0, self.items.findData(self.selection)))
         update(self.layer, 'setChecked', 'TacticalShapes' in preset.layers)
         self.refresh_pins()
         self.refresh_drawings()
+        self.refresh_ring()
         self.refresh_tools()
+
+    def refresh_ring(self):
+        ring = self.selected_ring()
+        ring_id = ring.ring_id if ring else ''
+        original = (self.service.ring_code(ring) or ring_id) if ring else ''
+        alias = self.service.preset.aliases.get(ring_id, '')
+        update(self.ring_original, 'setText', original)
+        self.ring_original.setToolTip(Verbatim(ring_id))
+        with QSignalBlocker(self.ring_name):
+            self.ring_name.setText(alias)
+            self.ring_details.setVisible(ring is not None)
+        self.ring_reset.setEnabled(bool(alias))
 
     def refresh_pins(self):
         preset = self.service.preset

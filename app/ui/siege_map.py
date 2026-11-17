@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QApplication, QGraphicsItem
 from app.core.i18n import tr
 from app.modules.atlas.view import AtlasView
 from app.modules.overlay.badges import label_indices
-from app.modules.siege.markers import badge_for, pin_badge, pin_color, pin_visible
+from app.modules.siege.markers import badge_for, pin_badge, pin_color, pin_visible, ring_badge, ring_layer
 from app.modules.siege.models import COLORS, MAP_ID, OBJECTIVE_CATEGORY, Coordinate
 from app.ui.siege_drawings import DrawingCanvas
 
@@ -79,6 +79,7 @@ class SiegeMapView(AtlasView):
         self.placement = False
         self.editing_pins = False
         self.selected_pin = None
+        self.selected_ring = None
         self.drag = None
         self.exploration = False
         self.badges = []
@@ -162,8 +163,9 @@ class SiegeMapView(AtlasView):
         preset = self.preset
         colors = COLORS | preset.colors
         for ring, position, code in self.service.display_rings(preset, shared=shared):
-            layer = 'SiegeRings' if ring.category == 'siege' else 'TransitRings'
-            if position is not None and layer in preset.layers:
+            layer = ring_layer(ring)
+            selected = self.editing_pins and ring.ring_id == self.selected_ring
+            if position is not None and (layer in preset.layers or selected):
                 alias = preset.aliases.get(ring.ring_id)
                 title = code or ring.display_name
                 title = f'{title} · {alias}' if alias else title
@@ -174,10 +176,12 @@ class SiegeMapView(AtlasView):
                 coordinates = position.world_coordinates
                 if coordinates:
                     note += f'\nX {coordinates[0]:.2f} · Y {coordinates[1]:.2f}'
-                badge = badge_for(layer, code or '?', preset.marker_scale,
-                                  provisional=position.status == 'provisional')
-                select = None if shared else lambda key=ring.ring_id: self.ring_selected.emit(key)
-                self._add(TacticalMarker(badge, colors[layer], note, select), position.map_position)
+                badge = ring_badge(ring, position, code, preset, selected=selected)
+                select = None if self.session_preview else lambda key=ring.ring_id: self.ring_selected.emit(key)
+                item = TacticalMarker(badge, colors[layer], note, select)
+                if layer not in preset.layers:
+                    item.setOpacity(.6)
+                self._add(item, position.map_position)
 
         for marker in preset.markers:
             selected = self.editing_pins and marker.id == self.selected_pin
@@ -233,9 +237,9 @@ class SiegeMapView(AtlasView):
         if redraw_selection:
             self.refresh()
 
-    def select_element(self, pin_id, drawing_id):
-        if (pin_id, drawing_id) != (self.selected_pin, self.drawing.selected):
-            self.selected_pin, self.drawing.selected = pin_id, drawing_id
+    def select_element(self, pin_id, drawing_id, ring_id):
+        if (pin_id, drawing_id, ring_id) != (self.selected_pin, self.drawing.selected, self.selected_ring):
+            self.selected_pin, self.drawing.selected, self.selected_ring = pin_id, drawing_id, ring_id
             self.refresh()
 
     def cancel_drag(self):

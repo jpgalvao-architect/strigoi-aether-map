@@ -134,6 +134,76 @@ def test_ring_labels_are_centred_below_and_declutter_by_priority(qapp):
     assert label_indices([(34, 40, transit), (80, 40, siege), (131, 50, pin)], 1., viewport) == {0, 1, 2}
 
 
+def test_ring_names_in_tactical_editor_and_presets(qapp, tmp_path):
+    from PySide6.QtGui import QColor, QImage
+    from PySide6.QtTest import QTest
+
+    context = AppContext(tmp_path)
+    siege = context.siege
+    transit = Ring(ring_id='ring-reshanta-293952', zone_id='fixture', category='transit',
+                   display_name='Flight Circle', source='Controlled test', position=ring(1, x=.27, y=.31).position)
+    pending = ring(2).model_copy(update={'position': None})
+    import_rings(siege, tmp_path, transit, pending)
+    siege.edit_preset(layers=siege.preset.layers | {'TransitRings'})
+    catalogue = siege.ring_path.read_bytes()
+    image = QImage(32, 32, QImage.Format_RGB32)
+    image.fill(QColor('#172435'))
+    assert image.save(str(siege.map_path))
+    siege._set_map()
+    window = MainWindow(context, runtime=False)
+    window.navigate('siege')
+    window.show()
+    qapp.processEvents()
+    page = window.siege_page
+    editor, view = page.editor, page.board.view
+    view.fit_full()
+
+    def badge_for_ring():
+        return next(item for item in view.badges if item.badge.ring)
+
+    try:
+        marker = badge_for_ring()
+        assert marker.badge.text == 'BF3'
+        original_position = marker.pos()
+        QTest.mouseClick(view.viewport(), Qt.LeftButton, pos=view.mapFromScene(original_position))
+        assert page.section.currentData() == 'editor'
+        assert editor.ring_details.isVisible()
+        assert editor.ring_original.isReadOnly() and editor.ring_original.text() == 'BF3'
+        assert editor.ring_original.toolTip() == transit.ring_id
+        assert not editor.ring_reset.isEnabled() and not editor.toolbar.buttons['delete'].isEnabled()
+
+        editor.ring_name.setText(' Entrada Norte ')
+        QTest.keyClick(editor.ring_name, Qt.Key_Return)
+        assert editor.ring_name.text() == 'Entrada Norte'
+        renamed = badge_for_ring()
+        assert renamed.badge.text == 'Entrada Norte' and renamed.badge.selected
+        assert renamed.pos() == original_position
+        assert siege.rings[transit.ring_id] == transit and siege.ring_path.read_bytes() == catalogue
+        assert SiegeService(tmp_path).preset.aliases == {transit.ring_id: 'Entrada Norte'}
+
+        editor.items.setCurrentIndex(editor.items.findData(f'ring:{pending.ring_id}'))
+        assert editor.ring_original.text() == pending.ring_id
+        editor.ring_name.setText('Anel pendente')
+        QTest.keyClick(editor.ring_name, Qt.Key_Return)
+        assert siege.preset.aliases[pending.ring_id] == 'Anel pendente' and siege.position(pending) is None
+
+        path = tmp_path / 'guild.json'
+        siege.export_preset(path)
+        receiver = SiegeService(tmp_path / 'receiver')
+        import_rings(receiver, tmp_path, transit, pending)
+        receiver.import_preset(path)
+        assert receiver.preset.aliases == siege.preset.aliases
+        assert receiver.position(receiver.rings[transit.ring_id]) == transit.position
+
+        editor.items.setCurrentIndex(editor.items.findData(f'ring:{transit.ring_id}'))
+        editor.ring_reset.click()
+        assert badge_for_ring().badge.text == 'BF3'
+        assert badge_for_ring().pos() == original_position
+        assert SiegeService(tmp_path).preset.aliases == {pending.ring_id: 'Anel pendente'}
+    finally:
+        window.close()
+
+
 def test_local_calibration_and_aliases_stay_out_of_official_preset(tmp_path):
     service = SiegeService(tmp_path)
     official = ring(1, callsign='B1')
@@ -161,6 +231,11 @@ def test_local_calibration_and_aliases_stay_out_of_official_preset(tmp_path):
     assert receiver.position(receiver.rings[official.ring_id]).status == 'provisional'
     assert receiver.callsign(receiver.rings[official.ring_id]) is None
     assert receiver.ring_label(receiver.rings[official.ring_id]) == 'B1 · Ponte'
+    from app.modules.siege.markers import markers_for
+    fresh = SiegeService(tmp_path / 'session-only')
+    session_markers = markers_for(fresh, SimpleNamespace(resources=[], points=[]), shared=receiver.preset)
+    assert any((x, y) == (.60, .62) and badge.ring and badge.text == 'Ponte'
+               for x, y, _, badge in session_markers)
     receiver.calibrate_ring(unnumbered.ring_id, local.model_copy(update={'map_position': Coordinate(x=.6, y=.8)}))
     assert receiver.position(receiver.rings[unnumbered.ring_id]).map_position.y == .8
     receiver.select_preset(OFFICIAL)
@@ -505,6 +580,7 @@ def test_share_pin_preset_offline_and_validate_before_replacement(tmp_path):
         with pytest.raises(ValueError, match='JSON de marcações inválido'):
             target.import_preset(export)
     legacy = {key: value for key, value in exported.items() if key != 'map_frame'}
+    legacy.pop('aliases')
     legacy['name'] = LEGACY_OFFICIAL
     legacy['schema_version'] = 1
     legacy['markers'] = [{key: pin[key] for key in ('id', 'name', 'position')}
@@ -512,6 +588,7 @@ def test_share_pin_preset_offline_and_validate_before_replacement(tmp_path):
     export.write_text(json.dumps(legacy), encoding='utf-8')
     target.import_preset(export, replace=True)
     assert target.preset.name == active_name and target.preset.markers[0].visible
+    assert not target.preset.aliases
     assert len([marker for marker in target.preset.markers if marker.origin == 'default']) == 12
     target.select_preset(OFFICIAL)
     assert target.preset == target.default_preset()
@@ -548,6 +625,17 @@ def test_reshanta_can_start_independently_and_share_the_existing_capture(qapp, t
         assert not surface.markers
         overlay.update_location(MAP_ID, 'minimap', observe_minimap=True)
         assert len(surface.markers) == 12
+        flight_ring = ring(1, callsign='B1')
+        import_rings(siege, tmp_path, flight_ring)
+        original = next(marker for marker in surface.markers if marker[3].ring)
+        siege.set_ring_alias(flight_ring.ring_id, 'Entrada Norte')
+        for mode in ('minimap', 'large'):
+            overlay.update_location(MAP_ID, mode)
+            renamed = next(marker for marker in surface.markers if marker[3].ring)
+            assert renamed[:3] == original[:3] and renamed[3].text == 'Entrada Norte'
+        siege.set_ring_alias(flight_ring.ring_id, '')
+        assert next(marker for marker in surface.markers if marker[3].ring) == original
+        overlay.update_location(MAP_ID, 'minimap', observe_minimap=True)
         assert overlay.worker.area.view_kind == 'minimap'
         assert not context.prefs.overlay.enabled and not context.prefs.overlay.resume_enabled
         window.quick_menu.switches['reshanta'].setChecked(False)

@@ -304,7 +304,9 @@ class SiegeService(QObject):
     def display_rings(self, preset, *, shared=False):
         if not shared:
             return ((ring, self.position(ring), self.ring_code(ring)) for ring in self.rings.values())
-        rings = self.official_rings
+        # A participant can resolve source IDs with an imported catalogue.
+        # Published calibrations take precedence over both catalogues.
+        rings = self.catalogue | {key: ring for key, ring in self.official_rings.items() if ring.position is not None}
         if preset.use_local_calibration:
             rings = rings | {ring.ring_id: ring for ring in preset.calibrated_rings}
         return (
@@ -424,6 +426,18 @@ class SiegeService(QObject):
         label = self.ring_code(ring) or ring.display_name
         alias = self.preset.aliases.get(ring.ring_id)
         return f'{label} · {alias}' if alias else label
+
+    def set_ring_alias(self, ring_id, text):
+        if ring_id not in self.rings:
+            raise ValueError('Anel fora do catálogo atual.')
+        aliases = self.preset.aliases.copy()
+        alias = text.strip()
+        if alias:
+            aliases[ring_id] = alias
+        else:
+            aliases.pop(ring_id, None)
+        if aliases != self.preset.aliases:
+            self.edit_preset(aliases=aliases)
 
     def calibrate_ring(self, ring_id, position):
         if ring_id not in self.rings:

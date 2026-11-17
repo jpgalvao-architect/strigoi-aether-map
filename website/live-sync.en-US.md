@@ -27,6 +27,12 @@ in the editor and publish from Live Sync.
 
 ![Tactical editor with the arrow selected and the markings list below the toolbar](assets/app-siege-editor-en_US.webp)
 
+In **0.10.0-beta.18**, select a flight ring on the map or in the **Tactical
+editor** list. Enter a **Custom name** and press **Enter**. Use **Restore
+original name** to restore the ring code. The name is saved in the preset
+and reaches players when you select **Publish changes**. The overlay uses
+the position from the local catalogue or a published calibration.
+
 ## Illustrated deployment guide
 
 ### 1. Copy the key and start deployment

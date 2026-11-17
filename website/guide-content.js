@@ -1270,7 +1270,7 @@ window.StrigoiGuide = {
             "es-419": "Puedes cargar las posiciones de los anillos en Catálogo de anillos → Importar catálogo local. El instalador público incluye la lista de anillos pendientes por zona."
           },
           "action": {
-            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.17/docs/SIEGE.md",
+            "href": "https://github.com/jpgalvao-architect/strigoi-aether-map/blob/v0.10.0-beta.18/docs/SIEGE.md",
             "label": {
               "pt_BR": "Abrir guia técnico",
               "en_US": "Open technical guide",
