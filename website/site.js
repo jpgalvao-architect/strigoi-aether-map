@@ -31,14 +31,14 @@
     'screen.combat': 'Módulo Combate com dano observado, DPS e participação do grupo',
     'showcase.combat.title': 'Seu grupo. Seu dano observado.',
     'showcase.combat.description': 'A medição aguarda o jogo e o painel aparece nas instâncias reconhecidas. Ao sair, ele se oculta; a leitura continua. O menu rápido permite desativar a exibição, e o histórico fica preservado.',
-    'download.beta': "A beta.17 reúne pins e desenhos no Editor tático e adiciona ferramentas rápidas ao Live Sync.",
+    'download.beta': "A beta.18 permite dar nomes personalizados aos anéis de voo e compartilhá-los pelo Live Sync.",
     'download.siege': "Configurar Siege Command",
     'showcase.sonar.title': 'O som vira uma pista na tela.',
     'showcase.sonar.description': 'Ative o Sonar para receber um aviso visual quando o som de um Cubo Oculto for reconhecido.',
   });
   const en = {
     'download.release': "GitHub release notes",
-    'download.previous': "Previous version · beta.16",
+    'download.previous': "Previous version · beta.17",
     'download.stable': "Stable release · v0.8.0",
     "live.feature.title": "Live Sync Beta — Share strategies in real time",
     "live.feature.intro": "Share Lower Reshanta pins, flight rings and tactical drawings with your group during a siege.",
@@ -93,7 +93,7 @@
     'screen.combat': 'Combat module with observed damage, DPS and group share',
     'showcase.combat.title': 'Your group. Your observed damage.',
     'showcase.combat.description': 'Capture waits for the game and the panel appears in recognized instances. On exit it hides while capture continues. Quick controls can disable panel display, and history is preserved.',
-    'download.beta': "Beta.17 brings pins and drawings together in the Tactical editor and adds quick tools to Live Sync.",
+    'download.beta': "Beta.18 adds custom flight ring names that callers can share through Live Sync.",
     'download.siege': "Set up Siege Command",
     'showcase.sonar.title': 'Sound becomes a clue on screen.',
     'showcase.sonar.description': 'Enable Sonar to receive a visual alert when it recognizes the sound of a Hidden Cube.',
@@ -144,7 +144,7 @@
   };
   const es = {
     'download.release': "Notas en GitHub Releases",
-    'download.previous': "Versión anterior · beta.16",
+    'download.previous': "Versión anterior · beta.17",
     'download.stable': "Versión estable · v0.8.0",
     "live.feature.title": "Live Sync Beta — Estrategias compartidas en tiempo real",
     "live.feature.intro": "Comparte pines, anillos de vuelo y dibujos tácticos de Lower Reshanta con tu grupo durante el asedio.",
@@ -213,7 +213,7 @@
     "screen.combat": "Módulo de combate con daño registrado, DPS y participación de cada integrante del grupo",
     "showcase.combat.title": "Revisa el daño que hizo tu grupo",
     "showcase.combat.description": "La medición espera al juego y el panel aparece en las instancias reconocidas. Al salir de la instancia, el panel se oculta y la medición continúa. Puedes ocultarlo desde el menú rápido. Los resultados quedan en el historial.",
-    "download.beta": "La beta.17 reúne marcadores y dibujos en el Editor táctico y agrega herramientas rápidas a Live Sync.",
+    "download.beta": "La beta.18 incorpora nombres personalizados para los anillos de vuelo y permite compartirlos por Live Sync.",
     "download.siege": "Configurar Siege Command",
     "showcase.sonar.title": "Una alerta visual para el sonido del cubo",
     "showcase.sonar.description": "Activa el Sonar para recibir un aviso visual cuando reconozca el sonido de un Cubo Oculto.",
