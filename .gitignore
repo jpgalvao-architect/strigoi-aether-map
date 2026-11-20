@@ -14,3 +14,21 @@ dist/
 installer-build/
 native/combat/bin/
 native/combat/obj/
+
+# Local Cloudflare secrets and deployment state.
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.wrangler/
+
+# Personal application profiles and game capture files.
+live-sync-connection.json
+preferences.json
+siege-command.json
+siege-command.*.json
+siege-ring-catalogue.json
+pets-collection.json
+routine.json
+routes.json
+*.pcap
+*.pcapng
